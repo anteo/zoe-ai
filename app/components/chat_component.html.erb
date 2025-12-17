@@ -1,0 +1,27 @@
+<div class="overflow-y-auto p-4 rounded-field shadow-sm bg-base-100" id="chat-messages" data-controller="dialog">
+  <% if new? %>
+    <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
+      <div class="animate-[float_6s_ease-in-out_infinite]">
+        <div class="dialog-empty-image-dark">
+          <%= image_tag "empty_dark.png", alt: "", class: "max-w-full max-h-80" %>
+        </div>
+        <div class="dialog-empty-image-light">
+          <%= image_tag "empty_light.png", alt: "", class: "max-w-full max-h-80" %>
+        </div>
+      </div>
+      <p class="mt-6 text-lg text-center text-base-content">
+        <%= t(:text_greeting_html).html_safe %>
+      </p>
+    </div>
+  <% else %>
+    <%= turbo_stream_from chat %>
+
+    <% messages.each do |message| %>
+      <%= helpers.component :message, message:, current_user: %>
+    <% end %>
+
+    <% if RespondJob.get_execution(chat) %>
+      <%= helpers.component :message_placeholder, chat:, current_user: %>
+    <% end %>
+  <% end %>
+</div>

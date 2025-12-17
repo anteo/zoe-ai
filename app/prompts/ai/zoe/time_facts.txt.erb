@@ -1,0 +1,6 @@
+<% grouped_facts.each do |_, desc, facts| %>
+## Events for <%= character %> that <%= desc %>:
+<% facts.each do |fact| %>
+- <%= fact %> <% if false %> (time=<%= fact.time %>, from=<%= fact.date_from %>, to=<%= fact.date_to %>, mentioned=<%= fact.mentioned_at %>) <% end %>
+<% end %>
+<% end %>

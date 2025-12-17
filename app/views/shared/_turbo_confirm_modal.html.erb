@@ -1,0 +1,30 @@
+<!-- Turbo Confirm Modal using DaisyUI -->
+<dialog id="confirm" class="modal" inert>
+  <div class="modal-box">
+    <h3 id="confirm-title" class="text-lg font-bold">
+      <!-- This will be replaced by data-turbo-confirm attribute -->
+    </h3>
+    
+    <div id="confirm-body" class="py-4">
+      <!-- This will be replaced by data-confirm-details attribute -->
+    </div>
+    
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- Cancel/Deny button -->
+        <button type="button" class="btn confirm-cancel">
+          <%= t(:label_no) %>
+        </button>
+        <!-- Accept/Confirm button -->
+        <button id="confirm-accept" type="button" class="btn btn-primary">
+          <%= t(:label_yes) %>
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Backdrop to close modal when clicking outside -->
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

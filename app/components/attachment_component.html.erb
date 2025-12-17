@@ -1,0 +1,7 @@
+<div class="flex items-center gap-1 mb-2 last:mb-0 text-sm">
+  <span class="icon-[lucide--file]"></span>
+  <%= link_to filename, url, class: "link link-hover" %>
+  <span class="text-xs opacity-50">
+    (<%= number_to_human_size(byte_size) %>)
+  </span>
+</div>

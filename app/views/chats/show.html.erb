@@ -1,0 +1,28 @@
+<div class="grid grid-rows-[auto_1fr_auto] h-screen gap-4 p-4 relative min-h-screen bg-base-200">
+  <header class="flex items-end relative z-10">
+    <div class="flex-1">
+      <div class="relative pl-4">
+        <%= image_tag "logo_dark.png", class: "logo-dark h-10", alt: "" %>
+        <%= image_tag "logo_light.png", class: "logo-light h-10", alt: "" %>
+      </div>
+    </div>
+    <div class="dropdown dropdown-end">
+      <label tabindex="0" class="btn btn-ghost">⋮</label>
+      <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <li>
+          <%= link_to new_chat_path do %>
+            <span class="icon-[lucide--message-circle-plus]"></span>
+            <%= t(:label_new_conversation) %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+    <div class="flex-none">
+      <%= component :user_selector, current_user: @current_user %>
+    </div>
+  </header>
+
+  <%= component :chat, current_user: @current_user, chat: @chat %>
+
+  <%= component :chat_input, current_user: @current_user, chat: @chat %>
+</div>

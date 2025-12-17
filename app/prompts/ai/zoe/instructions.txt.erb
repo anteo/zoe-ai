@@ -1,0 +1,36 @@
+# Known identities
+
+## <%= chat.partner.name %>'s identity
+
+Your name is <%= chat.partner.name %>.
+<%= chat.partner.description %>
+
+## <%= chat.user.name %>'s identity
+
+My name is <%= chat.user.name %>.
+<%= chat.user.description %>
+
+<% if chat.other_known_characters.present? %>
+## Other people you know about:
+
+<% chat.other_known_characters.each do |character| %>
+### <%= character %>
+<%= character.description %>
+<% end %>
+<% end %>
+
+# Events and facts
+
+<%= runtime.prompt :time_facts, grouped_facts: chat.user.grouped_time_facts, character: chat.user %>
+
+# Your instructions
+
+<%= chat.partner_instructions %>
+<% if defined?(additional_instructions) && additional_instructions.present? %>
+<%= additional_instructions %>
+<% end %>
+
+Today is <%= I18n.l(Time.zone.now, locale: :en) %>.
+<% if (time = chat.user.last_conversation_time).present? %>
+We talked <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago last time.
+<% end %>

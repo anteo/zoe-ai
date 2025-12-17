@@ -1,0 +1,28 @@
+<div id="chat-input"
+     data-controller="dialog-input"
+     data-dialog-input-chat-id-value="<%= chat.id %>">
+  <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "flex gap-2", multipart: true do |f| %>
+    <div class="flex-1 flex items-stretch relative">
+      <%= f.text_field :content, placeholder: t(:placeholder_dialog_input), class: "input input-bordered w-full pr-20 shadow-sm border-none focus", data: { dialog_input_target: "textInput" } %>
+      <div class="absolute right-0 top-0 bottom-0 flex items-center gap-1 pr-2">
+        <%= f.label :attachments, class: "btn btn-ghost btn-sm cursor-pointer p-1 h-auto min-h-0", title: t(:label_attach) do %>
+          <%= content_tag :span, '', class: "icon-[lucide--paperclip] w-4 h-4" %>
+          <%= f.file_field :attachments, multiple: true, class: "hidden", data: { action: "change->dialog-input#displayAttachments" } %>
+        <% end %>
+        <%= f.button class: "btn btn-ghost btn-sm p-1 h-auto min-h-0", title: t(:label_send) do %>
+          <%= content_tag :span, '', class: "icon-[lucide--send] w-4 h-4" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <template data-dialog-input-target="attachmentTemplate">
+    <div class="flex items-center gap-1 text-sm">
+      <span class="icon-[lucide--file]"></span>
+      <span data-file-name></span>
+      <span class="text-xs opacity-50" data-file-size></span>
+    </div>
+  </template>
+
+  <div id="attachments-preview" class="mt-2 hidden flex gap-2" data-dialog-input-target="attachmentsPreview"></div>
+</div>

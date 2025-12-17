@@ -1,0 +1,16 @@
+ru:
+  date:
+    formats:
+      default: '%d %B %Yг'
+  time:
+    formats:
+      default: '%d %B %Yг, %H:%M'
+  direct_speech: "%{character} сказал(а): «%{text}»"
+  label_send: Отправить
+  label_attach: Прикрепить файл(ы)
+  placeholder_dialog_input: Введите сообщение...
+  label_confirmation: Подтверждение
+  label_no: Нет
+  label_yes: Да
+  label_new_conversation: Новый разговор
+  text_greeting_html: Привет, я Зоя 🙂<br> Давай поболтаем!

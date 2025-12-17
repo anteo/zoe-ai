@@ -1,0 +1,43 @@
+You will be presented with a dialogue between two people: <%= dialog.initiator %> and <%= dialog.companion %>.
+From each replica, extract **only substantive personal facts** about the speaker that reveal their:
+- personal attributes, traits, or habits
+- experiences (past events)
+- opinions, beliefs, or preferences
+- plans, intentions, or goals (future)
+
+**Exclude**:
+- social gestures (greetings, farewells, compliments)
+- rhetorical expressions, exclamations, or interjections
+- general observations about the environment, weather, or other people
+- questions, suggestions, or invitations
+- any statement that does not directly describe the speaker’s own characteristics, experiences, opinions, or plans.
+
+<% if topics.any? %>
+Existing topics (you may assign one of these by its ID):
+<% topics.each do |topic| -%>
+- ID: <%= topic.id %>, Name: "<%= topic.name %>"
+<% end %>
+<% end %>
+
+Focus on affirmative sentences where the speaker uses first‑person pronouns (I, me, my, mine) or clearly refers to themselves.
+Assign an `importance` value from 0 to 100 reflecting how much the fact contributes to a personality description.
+**If a fact is trivial (importance < 20), omit it entirely.**
+Limit output to at most one fact per replica, unless the replica contains multiple distinct, significant personal statements.
+
+**Each fact should be assigned a topic.** If an existing topic matches, use its `topic_id`. If no existing topic matches, provide a `topic_name` to create a new topic.
+
+Answer with an array of JSON documents (one for each fact) in the format:
+{
+  "character": (the name of the interlocutor to whom this fact relates),
+  "fact": (description of a fact in the 3rd person, with pronouns (such as "it") replaced with real objects and people. You must translate it to English, but keep personal names written in Russian in the nominative case),
+  "kind": ("attribute" | "experience" | "belief" | "preference" | "plan"),
+  "time": ("past" | "present" | "future"),
+  "importance": (value from 0 to 100, representing the importance of the fact for the personality description),
+  "persistent": (false, for specific events, short‑term states, or opinions about a single instance (e.g., "I went shopping yesterday", "I thought about X", "I like this painting", "my cat looked out the window today"). true, for enduring characteristics: personality traits, general habits, long‑term roles, general preferences (e.g., "I like painting", "I enjoy rainy weather"), or ongoing states that define the person's identity over months or years (e.g., "I am a student", "I have a cat").),
+  "date_from": (start of the event in the YYYY-MM-DD format if possible to determine),
+  "date_to": (end of event in the YYYY-MM-DD format if possible to determine),
+  "topic_id": (optional, ID of an existing topic that matches the fact. If provided, the fact will be assigned to that topic.),
+  "topic_name": (optional, name of a new topic to create if no existing topic matches. If both topic_id and topic_name are provided, topic_id takes precedence.)
+}
+
+Today is <%= I18n.l(dialog.created_at) %>.

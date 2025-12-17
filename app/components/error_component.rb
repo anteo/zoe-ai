@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+class ErrorComponent < ApplicationComponent
+  attr_reader :chat, :current_user, :error
+
+  def initialize(chat:, current_user:, error:)
+    @chat = chat
+    @current_user = current_user
+    @error = error
+  end
+
+  private
+
+  def bubble_class
+    "chat chat-start"
+  end
+
+  def bubble_color
+    "chat-bubble-error"
+  end
+
+  def sender
+    chat.partner
+  end
+end
