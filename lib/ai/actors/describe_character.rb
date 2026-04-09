@@ -1,14 +1,16 @@
 module AI::Actors
   class DescribeCharacter < Actor
-    using Rainbow
-
     input :character, type: Character
+    input :logger, default: -> { Rails.logger }
+
+    fail_on RubyLLM::Error
 
     def call
+      logger.debug ">>> #{chat.instructions}"
       groups = character.grouped_persistent_facts
       summaries = summarize_groups(groups)
       description = format_description(summaries)
-      puts description.faint.green
+      logger.debug "<<< #{description}"
       character.update(description:, description_up_to_date: true)
     end
 
@@ -23,13 +25,12 @@ module AI::Actors
     end
 
     def chat
-      @dialog ||= begin
-        AI.chat.with_prompt(:describe_character, character:).with_temperature(0.1)
-      end
+      @chat ||= AI::DescribeCharacterAgent.chat(character:)
     end
 
     def summarize_with_assistant(facts)
-      content = facts.map { "- #{it}" }.join("\n")
+      content = facts.map { "- #{it.to_description}" }.join("\n")
+      logger.debug ">>> #{content}"
       chat.add_message(role: :user, content: content)
       response = chat.complete
       response.content.strip
@@ -41,11 +42,11 @@ module AI::Actors
         end_time = period.end
 
         header = if start_time && end_time
-          "From #{start_time.strftime("%B %Y")} to #{end_time.strftime("%B %Y")}"
+          "### From #{start_time.strftime("%B %Y")} to #{end_time.strftime("%B %Y")}"
         elsif start_time.nil? && end_time
-          "Before #{end_time.strftime("%B %Y")}"
+          "### Before #{end_time.strftime("%B %Y")}"
         elsif start_time && end_time.nil?
-          "From #{start_time.strftime("%B %Y")} onward"
+          "### From #{start_time.strftime("%B %Y")} onward"
         end
 
         "#{header}:\n\n#{summary}"
