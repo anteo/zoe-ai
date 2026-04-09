@@ -73,6 +73,11 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - Flat table, name only, created dynamically during extraction
 - One topic per fact (optional)
 
+## Third-Party Characters & Multi-Subject Facts
+- Third-party characters (people, pets, etc.) are created automatically during extraction when first mentioned
+- When a statement involves multiple subjects (e.g. "my cat Сима likes playing balls"), extract **separate facts per character** — one for the user ("has a cat named Сима") and one for Сима ("likes playing small soft balls")
+- Do NOT use HABTM to link one fact to multiple characters — facts should describe only their actual subject; sharing a fact across characters produces semantically wrong descriptions (e.g. "Anton likes playing small soft balls")
+
 ## Running commands
 
 Always use `bash -lc "rvm 3.4.4@ai do <command>"` — e.g. `bash -lc "rvm 3.4.4@ai do bin/rails db:migrate"`.
