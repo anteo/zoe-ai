@@ -5,7 +5,6 @@ class Fact < ApplicationRecord
   belongs_to :chat
   belongs_to :topic
 
-  before_validation :set_author_default
   after_save :update_character_description, if: :persistent?
 
   scope :persistent, ->(persistent = true) { where(persistent:) }
@@ -18,6 +17,11 @@ class Fact < ApplicationRecord
 
   def to_s
     "#{"#{topic}: " if topic}#{content}"
+  end
+
+  def to_description
+    base = to_s
+    author_id != character_id ? "According to #{author.name}: #{base}" : base
   end
 
   def time_present?
@@ -50,7 +54,8 @@ class Fact < ApplicationRecord
 
   def to_h
     {
-      character: character.name,
+      character_id: character_id.to_s,
+      character_name: character.name,
       fact: content,
       kind:,
       time:,
@@ -64,10 +69,6 @@ class Fact < ApplicationRecord
   end
 
   private
-
-  def set_author_default
-    self.author ||= character
-  end
 
   def update_character_description
     character.update_column :description_up_to_date, false

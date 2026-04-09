@@ -1,16 +1,23 @@
 You will be presented with a dialogue between two people: <%= chat.user %> and <%= chat.partner %>.
-From each replica, extract **only substantive personal facts** about the speaker that reveal their:
-- personal attributes, traits, or habits
-- experiences (past events)
-- opinions, beliefs, or preferences
-- plans, intentions, or goals (future)
+From each replica, extract **substantive personal facts** about:
+1. The speaker themselves — attributes, traits, habits, experiences, opinions, beliefs, preferences, and plans
+2. Any third parties explicitly mentioned — people, pets, or other individuals the speaker describes with meaningful detail
 
 **Exclude**:
 - social gestures (greetings, farewells, compliments)
 - rhetorical expressions, exclamations, or interjections
-- general observations about the environment, weather, or other people
+- vague or incidental mentions of others without substantive detail
 - questions, suggestions, or invitations
-- any statement that does not directly describe the speaker's own characteristics, experiences, opinions, or plans.
+- any statement that does not directly describe a person's characteristics, experiences, opinions, or plans
+
+**When a statement involves multiple subjects, extract a separate fact for each.** For example, "I have a cat Сима who likes playing balls" yields two facts: one about the speaker ("has a cat named Сима") and one about Сима ("likes playing small soft balls").
+
+<% if characters.any? %>
+Known characters (assign one by its ID when the fact is about an existing person):
+<% characters.each do |character| %>
+- ID: <%= character.id %>, Name: "<%= character.name %>"<%= " [third party]" if character.third_party? %>
+<% end %>
+<% end %>
 
 <% if topics.any? %>
 Existing topics (you may assign one of these by its ID):
@@ -19,15 +26,15 @@ Existing topics (you may assign one of these by its ID):
 <% end %>
 <% end %>
 
-Focus on affirmative sentences where the speaker uses first‑person pronouns (I, me, my, mine) or clearly refers to themselves.
 Assign an `importance` value from 0 to 100 reflecting how much the fact contributes to a personality description.
 **If a fact is trivial (importance < 20), omit it entirely.**
-Limit output to at most one fact per replica, unless the replica contains multiple distinct, significant personal statements.
+Limit output to at most one fact per subject per replica, unless the replica contains multiple distinct, significant statements about the same subject.
 
 **Each fact should be assigned a topic.** If an existing topic matches, use its `topic_id`. If no existing topic matches, provide a `topic_name` to create a new topic.
 
 For each fact:
-- `character`: name of the person the fact is about
+- `character_id`: ID of an existing known character this fact is about (preferred over character_name)
+- `character_name`: name of the person/pet this fact is about, if not in the known characters list (will create a new third-party character)
 - `fact`: 3rd-person description; replace pronouns with real names; translate to English, but keep Russian personal names in the nominative case
 - `kind`: attribute | experience | belief | preference | plan
 - `time`: past | present | future

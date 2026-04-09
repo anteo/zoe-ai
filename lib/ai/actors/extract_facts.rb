@@ -1,13 +1,12 @@
 module AI::Actors
   class ExtractFacts < Actor
     input :chat, type: Chat
-    input :debug, type: [ TrueClass, FalseClass ], default: false
     input :logger, default: -> { Rails.logger }
 
     fail_on RubyLLM::Error
 
     def call
-      logger.info ">>> #{llm_chat.instructions}" if debug
+      logger.debug ">>> #{llm_chat.instructions}"
       messages = chat.messages
                      .visible
                      .preload(:character, facts: [ :character, :topic ])
@@ -29,6 +28,7 @@ module AI::Actors
     def extract_facts(message)
       content = message.to_direct_speech
       llm_chat.add_message(role: :user, content: content)
+      logger.debug ">>> #{content}"
       response = llm_chat.complete
       facts = if response.content.is_a?(Array)
         response.content
@@ -37,10 +37,7 @@ module AI::Actors
       else
         fail! message: "Malformed response", response: response.content
       end
-      if debug
-        logger.info ">>> #{content}"
-        logger.info "<<< #{facts.inspect}"
-      end
+      logger.debug "<<< #{facts.inspect}"
       facts.each do |fact_data|
         build_fact(fact_data, message).save
       end
@@ -51,7 +48,8 @@ module AI::Actors
 
     def build_fact(data, message)
       Fact.new(
-        character: Character.find_by(name: data["character"]),
+        character: resolve_character(data),
+        author: message.character,
         content: data["fact"],
         kind: data["kind"],
         persistent: data["persistent"],
@@ -64,6 +62,17 @@ module AI::Actors
         message:,
         topic: resolve_topic(data)
       )
+    end
+
+    def resolve_character(data)
+      if data["character_id"].present?
+        Character.find_by(id: data["character_id"])
+      elsif data["character_name"].present?
+        Character.find_or_create_by(name: data["character_name"]) do |c|
+          c.third_party = true
+          c.description = ""
+        end
+      end
     end
 
     def resolve_topic(data)
