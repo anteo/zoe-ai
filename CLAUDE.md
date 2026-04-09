@@ -72,3 +72,7 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 ## Topics
 - Flat table, name only, created dynamically during extraction
 - One topic per fact (optional)
+
+## Running commands
+
+Always use `bash -lc "rvm 3.4.4@ai do <command>"` — e.g. `bash -lc "rvm 3.4.4@ai do bin/rails db:migrate"`.
