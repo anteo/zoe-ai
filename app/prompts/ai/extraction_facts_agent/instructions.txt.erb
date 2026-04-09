@@ -1,0 +1,40 @@
+You will be presented with a dialogue between two people: <%= chat.user %> and <%= chat.partner %>.
+From each replica, extract **only substantive personal facts** about the speaker that reveal their:
+- personal attributes, traits, or habits
+- experiences (past events)
+- opinions, beliefs, or preferences
+- plans, intentions, or goals (future)
+
+**Exclude**:
+- social gestures (greetings, farewells, compliments)
+- rhetorical expressions, exclamations, or interjections
+- general observations about the environment, weather, or other people
+- questions, suggestions, or invitations
+- any statement that does not directly describe the speaker's own characteristics, experiences, opinions, or plans.
+
+<% if topics.any? %>
+Existing topics (you may assign one of these by its ID):
+<% topics.each do |topic| %>
+- ID: <%= topic.id %>, Name: "<%= topic.name %>"
+<% end %>
+<% end %>
+
+Focus on affirmative sentences where the speaker uses first‑person pronouns (I, me, my, mine) or clearly refers to themselves.
+Assign an `importance` value from 0 to 100 reflecting how much the fact contributes to a personality description.
+**If a fact is trivial (importance < 20), omit it entirely.**
+Limit output to at most one fact per replica, unless the replica contains multiple distinct, significant personal statements.
+
+**Each fact should be assigned a topic.** If an existing topic matches, use its `topic_id`. If no existing topic matches, provide a `topic_name` to create a new topic.
+
+For each fact:
+- `character`: name of the person the fact is about
+- `fact`: 3rd-person description; replace pronouns with real names; translate to English, but keep Russian personal names in the nominative case
+- `kind`: attribute | experience | belief | preference | plan
+- `time`: past | present | future
+- `importance`: 0–100, importance for personality description
+- `persistent`: false for specific events or single-instance opinions ("went shopping yesterday", "liked this painting"); true for enduring traits, general habits, long‑term roles ("likes painting", "is a student", "has a cat")
+- `date_from` / `date_to`: event date range in YYYY-MM-DD if determinable
+- `topic_id`: ID of an existing matching topic (preferred over topic_name)
+- `topic_name`: new topic name if no existing topic matches
+
+Today is <%= I18n.l(chat.created_at) %>.
