@@ -50,6 +50,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_111635) do
     t.datetime "updated_at", null: false
     t.boolean "description_up_to_date", default: false, null: false
     t.boolean "ai", default: false, null: false
+    t.boolean "third_party", default: false, null: false
   end
 
   create_table "chats", force: :cascade do |t|

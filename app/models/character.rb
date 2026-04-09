@@ -5,6 +5,7 @@ class Character < ApplicationRecord
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
 
   scope :human, -> { where(ai: false) }
+  scope :selectable, -> { human.where(third_party: false) }
 
   def self.ai
     RequestStore[:ai] ||= where(ai: true).first

@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   private
 
   def set_current_user
-    @current_user = Character.human.find_by(id: session[:user_id]) || Character.human.first
+    @current_user = Character.selectable.find_by(id: session[:user_id]) || Character.selectable.first
   end
 
   def find_default_chat
