@@ -11,6 +11,7 @@ class TypeSentenceJob < ApplicationJob
     sentence = sentences.shift
 
     sleep 1 + sentence.length / 50
+    return if execution&.cancelled?
 
     display_message = message.dup
     display_message.created_at = message.created_at

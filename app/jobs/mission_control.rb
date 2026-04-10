@@ -39,6 +39,10 @@ module MissionControl
       find_execution(model, SolidQueue::ReadyExecution)
     end
 
+    def get_blocked_execution(model)
+      find_execution(model, SolidQueue::BlockedExecution)
+    end
+
     def get_execution(model)
       get_ready_execution(model) || get_scheduled_execution(model) || get_running_execution(model)
     end
@@ -46,7 +50,10 @@ module MissionControl
     def cancel(model)
       if (ex = get_running_execution(model))
         ex.update cancelled: true
-      elsif (ex = get_scheduled_execution(model))
+      end
+      [ get_scheduled_execution(model),
+        get_ready_execution(model),
+        get_blocked_execution(model) ].compact.each do |ex|
         ex.job.discard
       end
     end

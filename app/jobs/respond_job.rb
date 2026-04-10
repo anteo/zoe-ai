@@ -10,7 +10,7 @@ class RespondJob < ApplicationJob
       schedule_message(ai_chat, message) if message.assistant?
     end.complete
   rescue => e
-    broadcast_error(ai_chat, e.message)
+    broadcast_error(chat, e.message)
     raise
   end
 
