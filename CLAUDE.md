@@ -253,3 +253,38 @@ end
 - Modify the returned schema hash in-place to add `enum` (for strict validation) and update `description` (for LLM context)
 - This is evaluated each time the tool schema is serialized, so it always reflects current DB state
 - Use `enum` + `description` together: enum enforces constraints, description gives the LLM human-readable context about available options
+
+## RubyLLM 1.14.1 Image Generation Limitations
+
+**Critical limitation**: `AI.paint(prompt, ...)` only supports **text-to-image generation** across all providers (OpenAI, Gemini, OpenRouter). **No image-to-image, inpainting, or image-as-input support**.
+
+### What `AI.paint` supports
+- **Input**: Text prompt only
+- **Output**: Single image (PNG/JPEG, URL or base64)
+- **Size**: `1024x1024` (configurable, but only OpenAI respects it)
+- **Providers**: OpenAI, Gemini, OpenRouter only (13 other providers have no image generation)
+
+### What it does NOT support
+- ✗ Image input (no `image:` parameter)
+- ✗ Inpainting / masking
+- ✗ Image-to-image transformation
+- ✗ Image variations
+- ✗ Vision models as image generators (e.g., `google/gemini-2.5-flash` is a **chat/vision model** that accepts images as input, not an image generation model)
+
+### Why certain models don't work
+- Models like `google/gemini-2.5-flash-image` don't exist as a separate image-generation model; `gemini-2.5-flash` is a **vision/chat model** (receives images in chat messages, outputs text)
+- Gemini **does** have inline image generation capability via `gemini-2.0-flash-exp` with `responseModalities: ["TEXT", "IMAGE"]` in the chat API, but RubyLLM doesn't expose this
+
+### Workarounds if you need image-to-image
+
+1. **Gemini multimodal image generation** — Call Gemini API directly with `POST /v1beta/models/gemini-2.0-flash-exp:generateContent` (send image + prompt, request `responseModalities: ["TEXT", "IMAGE"]` in request body). Get back base64-encoded image in response.
+
+2. **OpenAI image editing** — Call OpenAI API directly with `POST /v1/images/edits` (upload image + optional mask + prompt). RubyLLM doesn't expose this endpoint.
+
+3. **Contribute to RubyLLM** — The gem's structure allows adding an `image:` kwarg to `paint` and extending `render_image_payload` for provider-specific endpoints. OpenAI edits would be straightforward; Gemini multimodal image output would require more integration work.
+
+### Implementation detail
+All three image-capable providers implement only `render_image_payload(prompt, model:, size:)` — no image input parameter anywhere in the chain. To extend it, you'd need to:
+1. Add `image:` kwarg to `Image.paint`
+2. Update each provider's `render_image_payload` to accept and serialize the image input
+3. Route to the appropriate provider endpoint (OpenAI `/images/edits`, Gemini `responseModalities`, etc.)

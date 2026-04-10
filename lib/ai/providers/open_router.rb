@@ -1,14 +1,14 @@
 module AI
   module Providers
     class OpenRouter < RubyLLM::Providers::OpenRouter
-      # Map size string to aspect ratio string supported by OpenRouter
+      # Map size string to aspect ratio string supported by OpenRouter.
       # size format: "1024x1024", "512x512", etc.
       # Returns aspect ratio string like "1:1", "16:9", etc.
       def size_to_aspect_ratio(size)
         ratios = {
           "1:1" => 1.0,
           "2:3" => 2.0 / 3.0,
-          "3:2" => 3.2 / 2.0,
+          "3:2" => 3.0 / 2.0,
           "3:4" => 3.0 / 4.0,
           "4:3" => 4.0 / 3.0,
           "4:5" => 4.0 / 5.0,
@@ -41,23 +41,35 @@ module AI
         options[closest_k]
       end
 
-    end
-
-    def render_image_payload(prompt, model:, size:)
-      {
-        model: model,
-        messages: [
-          {
-            role: "user",
-            content: prompt
+      def render_image_payload(prompt, model:, size:)
+        {
+          model: model,
+          messages: [
+            {
+              role: "user",
+              content: prompt
+            }
+          ],
+          modalities: %w[image text],
+          image_config: {
+            aspect_ratio: size_to_aspect_ratio(size),
+            image_size: size_to_image_size(size)
           }
-        ],
-        modalities: %w[image text],
-        image_config: {
-          aspect_ratio: size_to_aspect_ratio(size),
-          image_size: size_to_image_size(size),
         }
-      }
+      end
+
+      # Extended paint that accepts optional source +images+ for image-to-image generation.
+      def paint(prompt, model:, size:, images: [])
+        prompt = if images.any?
+          content = RubyLLM::Content.new(prompt, images)
+          format_content(content)
+        else
+          prompt
+        end
+        payload = render_image_payload(prompt, model:, size:)
+        response = @connection.post(images_url, payload)
+        parse_image_response(response, model:)
+      end
     end
   end
 end

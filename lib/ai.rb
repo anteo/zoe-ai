@@ -30,7 +30,25 @@ module AI
     RubyLLM::Embedding.embed(...)
   end
 
-  def paint(...)
-    RubyLLM::Image.paint(...)
+  def paint(prompt, with: nil, model: nil,
+            provider: nil,
+            assume_model_exists: false,
+            size: "1024x1024",
+            context: nil)
+    if with
+      config = context&.config || RubyLLM.config
+      model ||= config.default_image_model
+      model, provider_instance = RubyLLM::Models.resolve(model, provider: provider, assume_exists: assume_model_exists,
+                                                config: config)
+      model_id = model.id
+
+      if provider_instance.is_a?(RubyLLM::Providers::OpenRouter)
+        provider_instance.paint(prompt, model: model_id, size:, images: with)
+      else
+        raise RubyLLM::Error, "Only OpenRouter provider is currently supported for image edits"
+      end
+    else
+      RubyLLM::Image.paint(prompt, model:, provider:, assume_model_exists:, size:, context:)
+    end
   end
 end
