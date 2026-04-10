@@ -6,10 +6,21 @@ module AI
       description "Draw a picture by using a prompt."
 
       params do
-        string :prompt, description: "Detailed prompt describing the picture. Use only English language and avoid using proper names.", required: true
-        string :aspect_ratio, description: "Aspect ratio of the image", enum: %w[1:1 2:3 3:2 3:4 4:3 4:5 5:4 9:16 16:9], required: false
-        string :image_size, description: "Image size", enum: %w[0.5K 1K 2K 4K], required: false
-        string :model, description: "Image generation model to use (do not specify unless explicitly requested)", enum: Draw.models, required: false
+        string :prompt,
+               description: "Detailed prompt describing the picture. Use only English language and avoid using proper names.",
+               required: true
+        string :aspect_ratio,
+               description: "Aspect ratio of the image",
+               enum: %w[1:1 2:3 3:2 3:4 4:3 4:5 5:4 9:16 16:9],
+               required: false
+        string :image_size,
+               description: "Image size",
+               enum: %w[0.5K 1K 2K 4K],
+               required: false
+        string :model,
+               description: "Image generation model to use (do not specify unless explicitly requested)",
+               enum: Draw.models,
+               required: false
       end
 
       def self.models
@@ -19,7 +30,7 @@ module AI
       def make_image_size(ratio, size)
         size = size.delete_suffix("K").to_f
         w_ratio, h_ratio = ratio.split(":").map(&:to_i)
-        min_ratio = [w_ratio, h_ratio].min
+        min_ratio = [ w_ratio, h_ratio ].min
         base = size * 1024
         width = (base * w_ratio / min_ratio).to_i
         height = (base * h_ratio / min_ratio).to_i

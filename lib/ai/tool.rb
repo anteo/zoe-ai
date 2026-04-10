@@ -17,5 +17,12 @@ module AI
     def fail!(error)
       raise Failure, error
     end
+
+    def params_schema
+      # Reset @json_schema, so that it's recalculated each time
+      definition = self.class.params_schema_definition
+      definition&.instance_variable_set(:@json_schema, nil)
+      super
+    end
   end
 end

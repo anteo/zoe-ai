@@ -4,16 +4,15 @@ module AI
       description "Set an avatar photo for a character using an attachment from the current chat."
 
       params do
-        integer :attachment_id, description: "Blob ID of the attachment to use as the avatar (from the IDs listed in the message)", required: true
-        integer :character_id, description: "ID of the character to set the avatar for", required: true
-      end
-
-      def params_schema
-        schema = super.deep_dup
         characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
-        schema["properties"]["character_id"]["enum"] = ::Character.pluck(:id)
-        schema["properties"]["character_id"]["description"] = "ID of the character to set the avatar for. Available: #{characters}"
-        schema
+
+        integer :attachment_id,
+                description: "Blob ID of the attachment to use as the avatar (from the IDs listed in the message)",
+                required: true
+        string :character_id,
+                description: "ID of the character to set the avatar for. Available: #{characters}",
+                enum: ::Character.pluck(:id).map(&:to_s),
+                required: true
       end
 
       def execute(attachment_id:, character_id:)
