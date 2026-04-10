@@ -13,4 +13,10 @@ ru:
   label_no: Нет
   label_yes: Да
   label_new_conversation: Новый разговор
+  label_edit: Редактировать
+  label_resend: Отправить повторно
+  label_delete: Удалить
+  label_save: Сохранить
+  label_cancel: Отмена
+  confirm_delete_message: Удалить это сообщение и все последующие?
   text_greeting_html: Привет, я Зоя 🙂<br> Давай поболтаем!

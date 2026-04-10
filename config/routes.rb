@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   root "chats#show"
 
   resources :chats, only: [:show, :new, :destroy]
-  resources :messages, only: [:create]
+  resources :messages, only: [:create, :update, :destroy] do
+    member do
+      post :resend
+    end
+  end
 
   post "select_user", to: "users#select", as: :select_user
 end

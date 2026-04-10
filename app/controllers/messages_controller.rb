@@ -36,10 +36,55 @@ class MessagesController < ApplicationController
     RespondJob.perform_later(chat)
   end
 
+  def update
+    message = find_message
+    return head(:not_found) unless message
+    return head(:forbidden) unless message.user?
+
+    message.chat.messages.where("id > ?", message.id).destroy_all
+    message.update!(content: params.require(:message).permit(:content)[:content])
+    RespondJob.perform_later(message.chat)
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
+      format.html { redirect_to chat_path(message.chat) }
+    end
+  end
+
+  def destroy
+    message = find_message
+    return head(:not_found) unless message
+
+    message.chat.messages.where("id >= ?", message.id).destroy_all
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
+      format.html { redirect_to chat_path(message.chat) }
+    end
+  end
+
+  def resend
+    message = find_message
+    return head(:not_found) unless message
+    return head(:forbidden) unless message.user?
+
+    message.chat.messages.where("id > ?", message.id).destroy_all
+    RespondJob.perform_later(message.chat)
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
+      format.html { redirect_to chat_path(message.chat) }
+    end
+  end
+
   private
 
   def find_chat
     @chat = Chat.find_by(id: params[:chat_id], user: @current_user)
+  end
+
+  def find_message
+    Message.joins(:chat).where(id: params[:id], chats: { user: @current_user }).first
   end
 
   def message_params

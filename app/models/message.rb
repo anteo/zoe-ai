@@ -38,11 +38,24 @@ class Message < ApplicationRecord
 
   def extract_content
     if user?
-      super
+      content = super
+      return content unless content.is_a?(RubyLLM::Content)
+
+      with_attachment_ids(content)
     elsif content_raw.present?
       RubyLLM::Content::Raw.new(content_raw)
     else
-      RubyLLM::Content.new(content)
+      with_attachment_ids(RubyLLM::Content.new(self.content))
     end
+  end
+
+  def with_attachment_ids(content)
+    return content unless attachments.attached?
+
+    ids = attachments.map { { id: it.blob.id, filename: it.blob.filename } }
+    text = "#{content.text}\n\n(files attached: #{ids.to_json})"
+    content.instance_variable_set(:@text, text)
+
+    content
   end
 end

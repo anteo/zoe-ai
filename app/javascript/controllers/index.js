@@ -6,9 +6,11 @@ import {application} from "./application"
 import HelloController from "./hello_controller"
 import DialogController from "./dialog_controller"
 import DialogInputController from "./dialog_input_controller"
+import MessageController from "./message_controller"
 import ThemeController from "./theme_controller"
 
 application.register("hello", HelloController)
 application.register("dialog", DialogController)
 application.register("dialog-input", DialogInputController)
+application.register("message", MessageController)
 application.register("theme", ThemeController)

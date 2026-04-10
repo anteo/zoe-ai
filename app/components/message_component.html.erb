@@ -1,33 +1,19 @@
-<div id="message-<%= message.id || SecureRandom.uuid %>" class="<%= bubble_class %>">
-  <div class="chat-header px-3">
-    <span class="font-medium"><%= sender.name %></span>
-    <time class="text-xs opacity-50 ml-2"><%= message.created_at.strftime("%H:%M") %></time>
+<div id="message-<%= message.id || SecureRandom.uuid %>" class="group" data-controller="message">
+  <div class="<%= bubble_class %>">
+    <%= render "message_component/header", message:, is_current_user: is_current_user?, sender: %>
+
+    <% if message.content.present? %>
+      <div class="chat-bubble <%= bubble_color %>" data-message-target="view">
+        <%= message.content %>
+      </div>
+
+      <% if is_current_user? && message.persisted? %>
+        <%= render "message_component/edit_form", message:, bubble_color: %>
+      <% end %>
+    <% end %>
   </div>
 
-  <% if message.content.present? %>
-    <div class="chat-bubble <%= bubble_color %>">
-      <%= message.content %>
-    </div>
+  <% if message.attachments.attached? %>
+    <%= render "message_component/attachments", message:, bubble_class:, image_attachments:, file_attachments: %>
   <% end %>
 </div>
-
-<% if message.attachments.attached? %>
-  <div class="<%= bubble_class %>">
-    <div class="chat-bubble bg-base-100 attachments-container ps-0 pe-0">
-      <% if image_attachments.any? %>
-        <div class="image-attachments">
-          <% image_attachments.each do |attachment| %>
-            <%= component :image_attachment, attachment: attachment %>
-          <% end %>
-        </div>
-      <% end %>
-      <% if file_attachments.any? %>
-        <div class="file-attachments">
-          <% file_attachments.each do |attachment| %>
-            <%= component :attachment, attachment: attachment %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
