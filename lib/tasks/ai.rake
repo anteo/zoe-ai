@@ -8,9 +8,28 @@ namespace :ai do
 
   desc "Collect facts"
   task extract_facts: :environment do
-    Dialog.where(facts_extracted: false).find_each do |chat|
-      AI::Actors::ExtractFacts.call(dialog:)
+    chats = Chat.where(facts_extracted: false).order(created_at: :asc)
+    puts "Extracting facts for #{chats.count} chats..."
+    chats.find_each do |chat|
+      puts "  Chat ##{chat.id}"
+      res = AI::Actors::ExtractFacts.call(chat:, logger: Logger.new(STDOUT))
+      unless res.success?
+        puts "  Error: #{res.error}"
+      end
     end
+    puts "Done."
+  end
+
+  desc "Re-extract all facts from scratch (deletes existing facts, resets flags, re-runs extraction)"
+  task reextract_facts: :environment do
+    puts "Deleting all facts..."
+    Fact.delete_all
+    puts "Resetting extraction flags..."
+    Message.update_all(facts_extracted: false)
+    Chat.update_all(facts_extracted: false)
+
+    puts "Re-extracting facts..."
+    Rake::Task["ai:extract_facts"].invoke
   end
 
   # desc "Summarize chats"
