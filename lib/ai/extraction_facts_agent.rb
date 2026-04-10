@@ -2,12 +2,13 @@ module AI
   class ExtractionFactsAgent < BaseAgent
     inputs :chat
     temperature 0.1
-    instructions topics: -> { Topic.all }, characters: -> { Character.where(ai: false) }
+    instructions topics: -> { Topic.order(:created_at) },
+                 characters: -> { Character.order(:created_at) }
 
     schema do
       array :facts do
         object do
-          string :character_id, required: false
+          integer :character_id, required: false
           string :character_name, required: false
           string :fact
           string :kind, enum: %w[attribute experience belief preference plan]
@@ -16,7 +17,7 @@ module AI
           boolean :persistent
           string :date_from, required: false
           string :date_to, required: false
-          string :topic_id, required: false
+          integer :topic_id, required: false
           string :topic_name, required: false
         end
       end

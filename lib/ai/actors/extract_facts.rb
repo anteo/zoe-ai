@@ -3,7 +3,8 @@ module AI::Actors
     input :chat, type: Chat
     input :logger, default: -> { Rails.logger }
 
-    fail_on RubyLLM::Error
+    fail_on RubyLLM::Error,
+            ActiveRecord::RecordInvalid
 
     def call
       logger.debug ">>> #{llm_chat.instructions}"
@@ -39,7 +40,7 @@ module AI::Actors
       end
       logger.debug "<<< #{facts.inspect}"
       facts.each do |fact_data|
-        build_fact(fact_data, message).save
+        build_fact(fact_data, message).save!
       end
       message.update_column :facts_extracted, true
     rescue JSON::ParserError
@@ -65,13 +66,21 @@ module AI::Actors
     end
 
     def resolve_character(data)
-      if data["character_id"].present?
-        Character.find_by(id: data["character_id"])
-      elsif data["character_name"].present?
-        Character.find_or_create_by(name: data["character_name"]) do |c|
-          c.third_party = true
-          c.description = ""
-        end
+      name = data["character_name"].presence
+      character_id = data["character_id"].presence
+
+      if character_id
+        character = Character.find_by(id: character_id)
+        # Only use the found character if name matches or is absent — the LLM sometimes
+        # hallucinates a character_id from the known list while meaning a different person.
+        return character if character && (name.nil? || character.name == name)
+      end
+
+      return unless name
+
+      Character.find_or_create_by(name:) do |c|
+        c.third_party = true
+        c.description = ""
       end
     end
 
