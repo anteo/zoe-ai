@@ -1,6 +1,18 @@
 module AI
   class BaseAgent < RubyLLM::Agent
     class << self
+      # Override to enable ERB trim mode for cleaner template output
+      def render_prompt(name, chat:, inputs:, locals:)
+        path = prompt_path_for(name)
+        unless File.exist?(path)
+          raise RubyLLM::PromptNotFoundError,
+                "Prompt file not found for #{self}: #{path}. Create the file or use inline instructions."
+        end
+
+        resolved_locals = resolve_prompt_locals(locals, runtime: runtime_context(chat:, inputs:), chat:, inputs:)
+        ERB.new(File.read(path), trim_mode: "-").result_with_hash(resolved_locals)
+      end
+
       private
 
       def apply_tools(llm_chat, runtime)
