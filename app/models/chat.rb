@@ -4,6 +4,8 @@ class Chat < ApplicationRecord
   belongs_to :user, class_name: "Character"
   belongs_to :partner, class_name: "Character"
 
+  has_many :facts, dependent: :delete_all
+
   scope :by_character, ->(character) {
     where(user: character).or(where(partner: character))
   }
