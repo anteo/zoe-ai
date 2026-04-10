@@ -3,7 +3,7 @@ module AI
     chat_model ::Chat
     model ENV["ZOE_MODEL"]
     inputs :additional_instructions
-    tools [ Tools::Draw ]
+    tools [ Tools::Draw, Tools::SetAvatar ]
     instructions
   end
 end

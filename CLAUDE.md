@@ -218,3 +218,38 @@ end
 This allows `StopTypingJob` to cancel both currently-running and queued `TypeSentenceJob` instances, preventing messages from continuing to type after the user clicks stop.
 
 **Example**: `TypeSentenceJob` checks `execution.cancelled?` and returns early if true, which stops broadcasting sentences. Scheduled follow-on `TypeSentenceJob` instances are discarded by `TypeSentenceJob.cancel(chat)`.
+
+## Dynamic Tool Parameters in RubyLLM
+
+When tool parameters need to be enumerated from database state at runtime (e.g., listing available characters), override `params_schema` at the instance level:
+
+```ruby
+class SetAvatar < Tool
+  description "Set an avatar for a character."
+  
+  params do
+    integer :attachment_id, description: "Blob ID", required: true
+    integer :character_id, description: "Character ID", required: true
+  end
+
+  def params_schema
+    schema = super.deep_dup  # Copy parent schema to avoid mutation
+    characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
+    # Inject both enum constraint and descriptive list
+    schema["properties"]["character_id"]["enum"] = ::Character.pluck(:id)
+    schema["properties"]["character_id"]["description"] = 
+      "ID of the character. Available: #{characters}"
+    schema
+  end
+
+  def execute(attachment_id:, character_id:)
+    # ... implementation
+  end
+end
+```
+
+**Key points:**
+- `params_schema` is an instance method; the parent class caches it in `@params_schema`, so override returns a fresh copy via `super.deep_dup`
+- Modify the returned schema hash in-place to add `enum` (for strict validation) and update `description` (for LLM context)
+- This is evaluated each time the tool schema is serialized, so it always reflects current DB state
+- Use `enum` + `description` together: enum enforces constraints, description gives the LLM human-readable context about available options
