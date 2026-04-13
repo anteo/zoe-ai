@@ -16,11 +16,11 @@
       </li>
     </ul>
     <div class="flex-none">
-      <%= component :user_selector, current_user: @current_user %>
+      <%= component :character_selector, current_character: @current_character %>
     </div>
   </header>
 
-  <%= component :chat, current_user: @current_user, chat: @chat %>
+  <%= component :chat, current_character: @current_character, chat: @chat %>
 
-  <%= component :chat_input, current_user: @current_user, chat: @chat %>
+  <%= component :chat_input, current_character: @current_character, chat: @chat %>
 </div>

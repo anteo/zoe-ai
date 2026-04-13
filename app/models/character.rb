@@ -1,13 +1,15 @@
 class Character < ApplicationRecord
+  has_one_attached :avatar
   has_many_attached :images
+
+  belongs_to :user, optional: true
 
   has_many :facts, dependent: :delete_all
   has_many :instructions, dependent: :delete_all
-  has_many :user_chats, class_name: "Chat", foreign_key: :user_id, dependent: :destroy
+  has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
 
   scope :human, -> { where(ai: false) }
-  scope :selectable, -> { human.where(third_party: false) }
 
   def self.ai
     RequestStore[:ai] ||= where(ai: true).first
@@ -80,7 +82,7 @@ class Character < ApplicationRecord
   end
 
   def last_conversation_time
-    last = user_chats.order(:created_at).last
+    last = chats.order(:created_at).last
     return unless last
     last.messages.maximum(:created_at)
   end

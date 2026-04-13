@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class ChatInputComponent < ApplicationComponent
-  attr_reader :chat, :current_user
+  attr_reader :chat, :current_character
 
-  def initialize(chat:, current_user:)
+  def initialize(chat:, current_character:)
     @chat = chat
-    @current_user = current_user
+    @current_character = current_character
   end
 end

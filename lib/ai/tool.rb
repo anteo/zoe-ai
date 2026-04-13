@@ -8,6 +8,14 @@ module AI
       @chat = chat
     end
 
+    def current_character
+      chat.character
+    end
+
+    def current_user
+      char.user
+    end
+
     def execute(...)
       super
     rescue Failure => e

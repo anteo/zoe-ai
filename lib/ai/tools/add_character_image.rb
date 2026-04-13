@@ -7,7 +7,7 @@ module AI
         characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
 
         integer :attachment_id,
-                description: "Blob ID of the attachment to use as the avatar (from the IDs listed in the message)",
+                description: "Blob ID of the attachment to use (from the IDs listed in the message)",
                 required: true
 
         string :description,
@@ -15,16 +15,16 @@ module AI
                required: false
 
         string :character_id,
-                description: "ID of the character to set the avatar for. Available: #{characters}",
+                description: "ID of the character to add image to. Available: #{characters}",
                 enum: ::Character.pluck(:id).map(&:to_s),
                 required: true
       end
 
       def execute(attachment_id:, character_id:, description: nil)
-        character = ::Character.find_by(id: character_id)
+        character = current_user.characters.find_by(id: character_id)
         fail! "Character with ID #{character_id} not found" unless character
 
-        blob = ActiveStorage::Blob.find_by(id: attachment_id)
+        blob = chat.attachments_blobs.find_by(id: attachment_id)
         fail! "Attachment with ID #{attachment_id} not found" unless blob
 
         blob.metadata[:description] = description

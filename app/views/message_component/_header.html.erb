@@ -1,5 +1,5 @@
 <div class="chat-header px-3 flex items-center gap-1 mb-1">
-  <% if message.persisted? && is_current_user %>
+  <% if message.persisted? && is_current_character %>
     <span class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 mr-1">
       <button class="btn btn-ghost btn-xs p-0.5 min-h-0 h-auto"
               title="<%= t(:label_edit) %>"
@@ -22,7 +22,7 @@
   <% end %>
   <span class="font-medium"><%= sender.name %></span>
   <time class="text-xs opacity-50 ml-2"><%= message.created_at.strftime("%H:%M") %></time>
-  <% if message.persisted? && !is_current_user %>
+  <% if message.persisted? && !is_current_character %>
     <span class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 ml-1">
       <%= button_to message_path(message), method: :delete,
             class: "btn btn-ghost btn-xs p-0.5 min-h-0 h-auto text-error",
