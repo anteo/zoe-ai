@@ -4,7 +4,7 @@ class UserSelectorComponent < ApplicationComponent
   attr_reader :current_user
 
   def user_options
-    @user_options ||= Character.selectable.order(:name).pluck(:name, :id)
+    @user_options ||= Character.selectable.order(:name)
   end
 
   def initialize(current_user:)

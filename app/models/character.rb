@@ -75,6 +75,17 @@ class Character < ApplicationRecord
     },
   ]
 
+  def gravatar_url(size: 32)
+    return nil unless email.present?
+
+    hash = Digest::SHA256.hexdigest(email.strip.downcase)
+    "https://0.gravatar.com/avatar/#{hash}?s=#{size}&d=initials&name=#{CGI.escape(name)}"
+  end
+
+  def initials
+    name.split.first(2).map { _1[0] }.join.upcase
+  end
+
   def to_s
     name
   end
