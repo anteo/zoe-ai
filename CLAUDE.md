@@ -80,15 +80,17 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - For user messages, `super` downloads ActiveStorage attachments to tempfiles and returns a `RubyLLM::Content` object
 - `RubyLLM::Content.new(text, attachments_array)` accepts an array of existing `RubyLLM::Attachment` objects as its second argument (no re-download needed)
 
-## Attachments in LLM Messages
+## LLM Context Pollution & Content Sanitization Pattern
 
-`Message#extract_content` appends `(files attached with ID(s): <blob_id> (<filename>), ...)` to the text content whenever a message has attachments, giving the LLM stable IDs to reference in tool calls.
+**Anti-pattern**: System-injected annotations should never appear in message text that the LLM sees as its own prior output, because the LLM learns to reproduce the format.
 
-- **User messages**: files ARE sent to LLM; IDs appended to text.
-- **Assistant messages (no `content_raw`)**: IDs appended to text only — files are NOT sent to LLM.
-- **Assistant messages (`content_raw` present)**: `RubyLLM::Content::Raw` returned unchanged — no modification.
-- `with_attachment_ids` owns the `attachments.attached?` guard and returns text unchanged when no attachments, so callers need no extra check.
-- IDs are `ActiveStorage::Blob#id` (integer) paired with filename.
+**Solution**: Use a two-stage approach:
+1. **At LLM read time** (`extract_content`): Inject system annotations so the LLM has the context it needs
+2. **At DB write time** (`prepare_content_for_storage`): Strip system annotations before persistence
+
+This ensures annotations are always available to the LLM but never accumulate in the database.
+
+**Applied here**: `Message#extract_content` appends `(files attached: [...])` suffix with blob IDs so the LLM can reference attachments in tool calls. `Chat#prepare_content_for_storage` strips this suffix before saving so the LLM never sees it as part of its own prior output.
 
 ## Chat Model ActiveStorage Integration (`app/models/chat.rb`)
 - `messages_association` preloads `:attachments_blobs` so RubyLLM can access blobs without N+1 queries
@@ -103,95 +105,31 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 ## Third-Party Characters & Multi-Subject Facts
 - Third-party characters (people, pets, etc.) are created automatically during extraction when first mentioned
 - When a statement involves multiple subjects (e.g. "my cat Сима likes playing balls"), extract **separate facts per character** — one for the user ("has a cat named Сима") and one for Сима ("likes playing small soft balls")
-- Do NOT use HABTM to link one fact to multiple characters — facts should describe only their actual subject; sharing a fact across characters produces semantically wrong descriptions (e.g. "Anton likes playing small soft balls")
+- Do NOT use HABTM to link one fact to multiple characters — facts should describe only their actual subject; sharing a fact across characters produces semantically wrong descriptions
 
 ## Message Actions (Edit, Delete, Resend)
 
-### Routes & Controller Pattern
 - Routes: `resources :messages, only: [:create, :update, :destroy]` with member `post :resend`
 - `update`: Replace message content → destroy all later messages → re-render chat from DB
 - `destroy`: Remove message → Turbo remove from DOM
 - `resend`: Destroy all later messages → re-render chat from DB (re-runs AI response)
 - Authorization: Check `message.user?` for edit/resend; delete available for all
 - Finding message: `Message.joins(:chat).where(id:, chats: { user: @current_user }).first` ensures permission
-
-### View & Interaction Pattern
-- **Component structure**: Outer `<div id="message-<id>" class="group" data-controller="message">` wraps both content bubble and attachments so `group-hover` works uniformly
-- **Action icons**: Rendered in message header on hover (`opacity-0 group-hover:opacity-100`)
-  - **User messages**: Edit + resend buttons appear **before** the sender name (left side of header)
-  - **Assistant messages**: Only delete button appears **after** the timestamp (right side of header)
-  - Delete available for all message types
-- **Header styling**: `chat-header` has `mb-1` for vertical spacing between header and content bubble
-- **Inline edit form**: Hidden by default, toggled via Stimulus; replaces bubble with textarea + Cancel/Save buttons
-- **Stimulus controller**: `startEdit`/`cancelEdit` toggle targets; focus cursor at end of textarea; Turbo replaces whole message post-save so form disappears naturally
-
-### Turbo Streams for Message Edit/Resend
-When a message is edited or resent, destroy all later messages in the DB, then re-render the **entire chat container** from the database state. This is simpler and more maintainable than trying to track and remove individual message stream elements:
-```ruby
-message.chat.messages.where("id > ?", message.id).destroy_all
-render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:))
-```
-Then `RespondJob` broadcasts the new AI response into the live container via Action Cable as usual. **Do NOT use a helper that returns a stream array** — always re-render the whole container to ensure the DOM matches the DB state.
-
-### DaisyUI CSS Grid Constraint
-**Critical**: `chat-bubble` elements **must be direct children of `.chat`** for DaisyUI's CSS Grid positioning to work. Extra wrapper divs (e.g., `data-message-target="view"` wrappers) will break the grid layout. Put `data-*` attributes **directly on the `chat-bubble` element**, not on parents wrapping it.
+- When editing/resending: re-render the **entire chat container** from DB state (not individual stream elements), then `RespondJob` broadcasts the new AI response via Action Cable
 
 ## Internationalization (i18n)
 
-Rails i18n is configured with multiple locale files in `config/locales/`:
-- **`en.yml`** — English (default locale)
-- **`ru.yml`** — Russian
+Rails i18n with `config/locales/en.yml` and `ru.yml`. Always add keys to **both** files.
 
-All user-facing strings (UI labels, buttons, confirmation messages) must use `t(...)` helper in views/components. Translation keys follow naming conventions:
-- **`label_*`** — UI button/form labels (e.g., `label_edit`, `label_send`, `label_delete`)
-- **`placeholder_*`** — Input placeholder text (e.g., `placeholder_dialog_input`)
-- **`confirm_*`** — Confirmation/dialog messages (e.g., `confirm_delete_message`)
-- **`text_*`** — Static text blocks, often HTML (e.g., `text_greeting_html`)
-
-In components/views, use `<%= t(:key_name) %>` or `<%= t("key_name") %>`. In JavaScript/Stimulus, call the server or use inline data attributes with i18n values.
-
-Each locale file must have the same keys to ensure consistency across languages. Always add keys to **both** `en.yml` and `ru.yml` when introducing new UI text.
+Translation key conventions:
+- **`label_*`** — UI button/form labels
+- **`placeholder_*`** — Input placeholder text
+- **`confirm_*`** — Confirmation/dialog messages
+- **`text_*`** — Static text blocks, often HTML
 
 ## Running commands
 
 Always use `bash -lc "rvm 3.4.4@ai do <command>"` — e.g. `bash -lc "rvm 3.4.4@ai do bin/rails db:migrate"`.
-
-## Rails form_with Conventions for Inline Edits
-
-When implementing inline edit forms (especially in Stimulus-controlled views):
-- **Always use `form_with model: record`** rather than `form_with url:, method:` for persisted records
-- This approach automatically:
-  1. Scopes form fields correctly (e.g., `message[content]` instead of bare `content`)
-  2. Uses the correct HTTP method (PATCH for updates on persisted records)
-  3. Routes to the proper REST endpoint
-  4. **Pre-populates textarea/input values from the model** — critical for inline editing so users see current content
-- Without `model:`, you must manually pass `value:` to each field and handle method routing yourself, and the form can't auto-populate values from the model
-- Example: `<%= form_with model: message do |f| %>` → fields auto-named `message[content]`, method defaults to PATCH if `message.persisted?`
-
-## ViewComponent Partials and Method Access
-
-When breaking a ViewComponent template into partials, **partials do not have access to component methods** (only to locals passed explicitly).
-
-**Pattern**: Compute values in the component class or main template, then pass as local variables (prefer boolean flags over method calls):
-- ✓ **Good**: `render "message_component/header", message:, is_current_user: is_current_user?, sender:`
-  - Compute `is_current_user?` once in the main template (component method available)
-  - Pass as a plain boolean local `is_current_user:` (not a method reference)
-  - Partial uses `<% if is_current_user %>` without calling a method
-- ✗ **Bad**: `render "message_component/header", message:` then in partial calling `<% if is_current_user? %>` (method doesn't exist in partial context)
-
-This pattern applies when refactoring fat components: compute expensive/permission checks in the main template, then use simple locals in partials to keep them pure and readable. Reduces coupling and makes partial reuse easier.
-
-## ActiveRecord dup and Primary Keys
-
-**Gotcha**: When using `record.dup` on a persisted record, ActiveRecord **intentionally omits the primary key**, so the duplicated object has `id = nil`. This breaks view logic that relies on stable IDs for DOM selectors.
-
-**Example**: If you do `display_message = message.dup` and then render the template with `id="message-#{display_message.id}"`, the view will have no ID attribute (not `id="message-nil"`). When you later need a Turbo Stream `remove` operation targeting that element, `turbo_stream.remove("message-#{message.id}")` will target a different ID than the DOM element has.
-
-**Solution**: When duplicating a record for display, explicitly copy the ID if you need stable selectors:
-```ruby
-display_message = message.dup
-display_message.id = message.id  # Restore the DB record's ID so view selectors match
-```
 
 ## Job Cancellation with SolidQueue
 
@@ -207,7 +145,7 @@ The `MissionControl` concern provides a pattern for canceling jobs across all ex
 1. For **running** jobs: set `execution.cancelled = true` (stops mid-execution via early return check)
 2. For **scheduled/ready/blocked** jobs: call `execution.job.discard` (removes from queue entirely)
 
-**In job perform method**: Always check `execution&.cancelled?` early to allow cancelling running jobs:
+**In job perform method**: Always check `execution&.cancelled?` early:
 ```ruby
 def perform(...)
   return if execution&.cancelled?
@@ -215,76 +153,28 @@ def perform(...)
 end
 ```
 
-This allows `StopTypingJob` to cancel both currently-running and queued `TypeSentenceJob` instances, preventing messages from continuing to type after the user clicks stop.
-
-**Example**: `TypeSentenceJob` checks `execution.cancelled?` and returns early if true, which stops broadcasting sentences. Scheduled follow-on `TypeSentenceJob` instances are discarded by `TypeSentenceJob.cancel(chat)`.
-
 ## Dynamic Tool Parameters in RubyLLM
 
-When tool parameters need to be enumerated from database state at runtime (e.g., listing available characters), override `params_schema` at the instance level:
+The `params do ... end` block is evaluated as a proc each time the schema is serialized, so DB queries inside it always reflect current state — no `params_schema` override needed:
 
 ```ruby
-class SetAvatar < Tool
-  description "Set an avatar for a character."
-  
-  params do
-    integer :attachment_id, description: "Blob ID", required: true
-    integer :character_id, description: "Character ID", required: true
-  end
+params do
+  characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
 
-  def params_schema
-    schema = super.deep_dup  # Copy parent schema to avoid mutation
-    characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
-    # Inject both enum constraint and descriptive list
-    schema["properties"]["character_id"]["enum"] = ::Character.pluck(:id)
-    schema["properties"]["character_id"]["description"] = 
-      "ID of the character. Available: #{characters}"
-    schema
-  end
-
-  def execute(attachment_id:, character_id:)
-    # ... implementation
-  end
+  string :character_id,
+         description: "ID of the character. Available: #{characters}",
+         enum: ::Character.pluck(:id).map(&:to_s),
+         required: true
 end
 ```
 
-**Key points:**
-- `params_schema` is an instance method; the parent class caches it in `@params_schema`, so override returns a fresh copy via `super.deep_dup`
-- Modify the returned schema hash in-place to add `enum` (for strict validation) and update `description` (for LLM context)
-- This is evaluated each time the tool schema is serialized, so it always reflects current DB state
-- Use `enum` + `description` together: enum enforces constraints, description gives the LLM human-readable context about available options
+Use `enum` + `description` together: enum enforces constraints, description gives the LLM human-readable context.
 
-## RubyLLM 1.14.1 Image Generation Limitations
+## Image Generation (`AI.paint`)
 
-**Critical limitation**: `AI.paint(prompt, ...)` only supports **text-to-image generation** across all providers (OpenAI, Gemini, OpenRouter). **No image-to-image, inpainting, or image-as-input support**.
+`AI.paint` wraps RubyLLM's image generation with an added `with:` parameter for image-to-image:
 
-### What `AI.paint` supports
-- **Input**: Text prompt only
-- **Output**: Single image (PNG/JPEG, URL or base64)
-- **Size**: `1024x1024` (configurable, but only OpenAI respects it)
-- **Providers**: OpenAI, Gemini, OpenRouter only (13 other providers have no image generation)
+- **Text-to-image** (`with:` omitted): delegates directly to `RubyLLM::Image.paint`
+- **Image-to-image** (`with: [blob, ...]`): only supported via the custom `AI::Providers::OpenRouter` subclass (`lib/ai/providers/open_router.rb`), which overrides `paint` to pass source images as content in the request payload
 
-### What it does NOT support
-- ✗ Image input (no `image:` parameter)
-- ✗ Inpainting / masking
-- ✗ Image-to-image transformation
-- ✗ Image variations
-- ✗ Vision models as image generators (e.g., `google/gemini-2.5-flash` is a **chat/vision model** that accepts images as input, not an image generation model)
-
-### Why certain models don't work
-- Models like `google/gemini-2.5-flash-image` don't exist as a separate image-generation model; `gemini-2.5-flash` is a **vision/chat model** (receives images in chat messages, outputs text)
-- Gemini **does** have inline image generation capability via `gemini-2.0-flash-exp` with `responseModalities: ["TEXT", "IMAGE"]` in the chat API, but RubyLLM doesn't expose this
-
-### Workarounds if you need image-to-image
-
-1. **Gemini multimodal image generation** — Call Gemini API directly with `POST /v1beta/models/gemini-2.0-flash-exp:generateContent` (send image + prompt, request `responseModalities: ["TEXT", "IMAGE"]` in request body). Get back base64-encoded image in response.
-
-2. **OpenAI image editing** — Call OpenAI API directly with `POST /v1/images/edits` (upload image + optional mask + prompt). RubyLLM doesn't expose this endpoint.
-
-3. **Contribute to RubyLLM** — The gem's structure allows adding an `image:` kwarg to `paint` and extending `render_image_payload` for provider-specific endpoints. OpenAI edits would be straightforward; Gemini multimodal image output would require more integration work.
-
-### Implementation detail
-All three image-capable providers implement only `render_image_payload(prompt, model:, size:)` — no image input parameter anywhere in the chain. To extend it, you'd need to:
-1. Add `image:` kwarg to `Image.paint`
-2. Update each provider's `render_image_payload` to accept and serialize the image input
-3. Route to the appropriate provider endpoint (OpenAI `/images/edits`, Gemini `responseModalities`, etc.)
+When `with:` is present and the resolved provider is not `AI::Providers::OpenRouter`, it raises an error. Other providers can be patched by subclassing their RubyLLM provider and overriding `paint` similarly.
