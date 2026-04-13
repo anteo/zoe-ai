@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def avatar_for(character, size: 32)
+  def avatar_for(character, size: 128)
     css = "w-8 h-8 rounded-full shrink-0"
 
     if character&.gravatar_url

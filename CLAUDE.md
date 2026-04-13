@@ -192,3 +192,26 @@ Chats created on previous days are considered "closed" and should redirect users
 - This catches cases where a user has an old chat tab open at midnight
 
 **Helper**: `Chat#from_previous_day?` returns `created_at.to_date < Date.current` — use this in both controller and JS.
+
+## Gravatar Integration Pattern
+
+Characters use Gravatar for profile pictures with a fallback to initials. The integration leverages Gravatar's built-in parameters:
+
+**Character#gravatar_url(size: 32)**:
+```ruby
+hash = Digest::SHA256.hexdigest(email.strip.downcase)
+"https://0.gravatar.com/avatar/#{hash}?s=#{size}&d=initials&name=#{CGI.escape(name)}"
+```
+
+**Key parameters**:
+- `d=initials` — Gravatar's built-in default that shows user initials if no avatar exists (no custom onerror handling needed)
+- `name=` — passed to Gravatar so it can compute proper initials even if avatar is missing; must be URL-encoded
+- `s=` — size parameter (default 128px)
+
+**ApplicationHelper#avatar_for(character, size: 32)**:
+- Renders `image_tag(gravatar_url)` if email present
+- Falls back to styled `<span>` with `character.initials` if no email
+
+**Character model requirements**:
+- `email` column (string, allows nil) — required for Gravatar to work; still show initials locally if nil
+- `initials` method — should return first letters of name parts, e.g. "JD" for "John Doe"
