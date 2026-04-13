@@ -3,7 +3,15 @@ module AI
     class Draw < Tool
       using Rainbow
 
-      description "Draw a picture by using a prompt."
+      description -> {
+        characters = ::ActiveStorage::Attachment
+          .where(record_type: "Character")
+          .preload(:record, :blob)
+          .map { { character: it.record.name, attachment_id: it.blob.id, description: it.blob.metadata[:description] } }
+
+        "Draw a picture by using a prompt. You can provide attachment IDs from chat history or character attachments to use as reference images.\n" +
+          "Characters available: #{characters.inspect}"
+      }
 
       params do
         string :prompt,
@@ -21,6 +29,10 @@ module AI
                description: "Image generation model to use (do not specify unless explicitly requested)",
                enum: Draw.models,
                required: false
+        array :attachment_ids,
+              of: :integer,
+              description: "IDs of image attachments to use as reference images. Can be from chat history or character attachments.",
+              required: false
       end
 
       def self.models
@@ -37,9 +49,17 @@ module AI
         "#{width}x#{height}"
       end
 
-      def execute(prompt:, aspect_ratio: "1:1", image_size: "2K", model: nil)
+      def execute(prompt:, aspect_ratio: "1:1", image_size: "2K", model: nil, attachment_ids: [])
         size = make_image_size(aspect_ratio, image_size)
-        image = AI.paint(prompt, size: size, model: model)
+
+        # Fetch attachments if provided
+        with = attachment_ids.map do |id|
+          blob = ActiveStorage::Blob.find_by(id: id)
+          fail! "Attachment with ID #{id} not found" unless blob
+          blob
+        end
+
+        image = AI.paint(prompt, size:, model:, with:)
         if image.data
           # Print the iTerm2 inline image escape sequence
           # ESC ] 1337 ; File = [arguments] : [base64_data] ^G
@@ -49,7 +69,7 @@ module AI
             io: StringIO.new(image.to_blob),
             filename: "generated_image_#{Time.now.to_i}.png",
             content_type: image.mime_type,
-            metadata: { prompt:, size:, aspect_ratio:, image_size:, model: }
+            metadata: { prompt:, size:, aspect_ratio:, image_size:, model:, attachment_ids: }
           }
           "Picture has been successfully generated and displayed to the user"
         else
