@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class MessagesController < ApplicationController
+  before_action :find_message, only: [ :update, :destroy, :resend ]
   before_action :find_chat
   before_action :build_default_chat
 
-  attr_reader :chat
-
+  attr_reader :chat, :message
+  
   def create
     content = RubyLLM::Content.new(message_params[:content], message_params[:attachments])
 
@@ -24,7 +25,7 @@ class MessagesController < ApplicationController
       )
       stream << turbo_stream.replace(
         "chat-input",
-        ChatInputComponent.new(chat:, current_character:)
+        ChatInputComponent.new(chat: chat, current_character:)
       )
 
       respond_to do |format|
@@ -37,55 +38,50 @@ class MessagesController < ApplicationController
   end
 
   def update
-    message = find_message
-    return head(:not_found) unless message
     return head(:forbidden) unless message.user?
 
     message.destroy_later_messages
-    message.update!(content: params.require(:message).permit(:content)[:content])
-    RespondJob.perform_later(message.chat)
+    message.update!(content: message_params[:content])
 
-    respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_character:)) }
-      format.html { redirect_to chat_path(message.chat) }
-    end
+    RespondJob.perform_later(chat)
+
+    render_chat
   end
 
   def destroy
-    message = find_message
-    return head(:not_found) unless message
-
     message.destroy
     message.destroy_later_messages
 
-    respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_character:)) }
-      format.html { redirect_to chat_path(message.chat) }
-    end
+    render_chat
   end
 
   def resend
-    message = find_message
-    return head(:not_found) unless message
     return head(:forbidden) unless message.user?
 
     message.destroy_later_messages
-    RespondJob.perform_later(message.chat)
+    RespondJob.perform_later(chat)
 
-    respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_character:)) }
-      format.html { redirect_to chat_path(message.chat) }
-    end
+    render_chat
   end
 
   private
 
   def find_chat
-    @chat = Chat.find_by(id: params[:chat_id], character: @current_character)
+    @chat ||= Chat.find_by(id: params[:chat_id])
+    head(:forbidden) if @chat && @chat.character != current_character
+  end
+
+  def render_chat
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat:, current_character:)) }
+      format.html { redirect_to chat_path(chat) }
+    end
   end
 
   def find_message
-    Message.joins(:chat).where(id: params[:id], chats: { character: @current_character }).first
+    @message = Message.joins(:chat).where(id: params[:id], chats: { character: current_character }).first
+    @chat = @message&.chat
+    head(:not_found) unless @message
   end
 
   def message_params

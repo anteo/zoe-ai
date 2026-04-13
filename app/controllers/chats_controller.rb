@@ -13,14 +13,15 @@ class ChatsController < ApplicationController
   end
 
   def destroy
-    @chat&.destroy
-    redirect_to root_path
+    chat&.destroy
+    redirect_to(root_path)
   end
 
   private
 
   def find_chat
-    @chat = Chat.find_by(id: params[:id], character: @current_character)
-    redirect_to root_path if @chat&.from_previous_day?
+    @chat = Chat.find_by(id: params[:id])
+    redirect_to(root_path) if @chat && @chat.character != current_character
+    redirect_to(root_path) if @chat&.from_previous_day?
   end
 end

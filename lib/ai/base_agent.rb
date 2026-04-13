@@ -13,6 +13,11 @@ module AI
         ERB.new(File.read(path), trim_mode: "-").result_with_hash(resolved_locals)
       end
 
+      def build_chat(**kwargs)
+        _, chat_options = partition_inputs(kwargs)
+        resolved_chat_model.new(**kwargs, **chat_kwargs, **chat_options)
+      end
+
       private
 
       def apply_tools(llm_chat, runtime)

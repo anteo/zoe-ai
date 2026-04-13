@@ -29,6 +29,6 @@ class ApplicationController < ActionController::Base
   end
 
   def build_default_chat
-    @chat ||= Chat.new(character: @current_character, partner: Character.ai)
+    @chat ||= AI::Zoe.build_chat(character: @current_character, partner: Character.ai)
   end
 end
