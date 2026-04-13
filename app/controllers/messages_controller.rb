@@ -41,7 +41,7 @@ class MessagesController < ApplicationController
     return head(:not_found) unless message
     return head(:forbidden) unless message.user?
 
-    message.chat.messages.where("id > ?", message.id).destroy_all
+    message.destroy_later_messages
     message.update!(content: params.require(:message).permit(:content)[:content])
     RespondJob.perform_later(message.chat)
 
@@ -55,7 +55,8 @@ class MessagesController < ApplicationController
     message = find_message
     return head(:not_found) unless message
 
-    message.chat.messages.where("id >= ?", message.id).destroy_all
+    message.destroy
+    message.destroy_later_messages
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
@@ -68,7 +69,7 @@ class MessagesController < ApplicationController
     return head(:not_found) unless message
     return head(:forbidden) unless message.user?
 
-    message.chat.messages.where("id > ?", message.id).destroy_all
+    message.destroy_later_messages
     RespondJob.perform_later(message.chat)
 
     respond_to do |format|

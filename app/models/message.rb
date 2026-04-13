@@ -26,6 +26,10 @@ class Message < ApplicationRecord
     I18n.t(:direct_speech, character:, text: content, **)
   end
 
+  def destroy_later_messages
+    chat.messages.where("id > ?", id).destroy_all
+  end
+
   private
 
   def set_character
