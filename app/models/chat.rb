@@ -46,6 +46,7 @@ class Chat < ApplicationRecord
 
   def prepare_content_for_storage(content)
     content_text, attachments, content_raw = super
+    content_text = content_text&.gsub(/\n*\(files attached: \[.*?\]\)/m, "")&.rstrip
     # Force attachments so persist_content is always called
     [ content_text, attachments || [], content_raw ]
   end
