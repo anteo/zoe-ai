@@ -20,7 +20,7 @@ class ChatsController < ApplicationController
   private
 
   def find_chat
-    @chat = Chat.find_by(id: params[:id], user: @current_user)
+    @chat = Chat.find_by(id: params[:id], character: @current_character)
     redirect_to root_path if @chat&.from_previous_day?
   end
 end

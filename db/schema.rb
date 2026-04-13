@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_13_090703) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_13_100115) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -51,20 +51,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_13_090703) do
     t.boolean "description_up_to_date", default: false, null: false
     t.boolean "ai", default: false, null: false
     t.boolean "third_party", default: false, null: false
-    t.string "email"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_characters_on_user_id"
   end
 
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "model_id"
-    t.bigint "user_id"
+    t.bigint "character_id"
     t.bigint "partner_id"
     t.text "summary"
     t.boolean "facts_extracted", default: false, null: false
+    t.index ["character_id"], name: "index_chats_on_character_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["partner_id"], name: "index_chats_on_partner_id"
-    t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "facts", force: :cascade do |t|
@@ -304,10 +305,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_13_090703) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "characters", "users"
+  add_foreign_key "chats", "characters"
   add_foreign_key "chats", "characters", column: "partner_id"
-  add_foreign_key "chats", "characters", column: "user_id"
   add_foreign_key "chats", "models"
   add_foreign_key "facts", "chats"
   add_foreign_key "facts", "messages"

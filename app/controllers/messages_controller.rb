@@ -20,11 +20,11 @@ class MessagesController < ApplicationController
       stream = []
       stream << turbo_stream.append(
         "chat-messages",
-        MessageComponent.new(message:, current_user:)
+        MessageComponent.new(message:, current_character:)
       )
       stream << turbo_stream.replace(
         "chat-input",
-        ChatInputComponent.new(chat:, current_user:)
+        ChatInputComponent.new(chat:, current_character:)
       )
 
       respond_to do |format|
@@ -46,7 +46,7 @@ class MessagesController < ApplicationController
     RespondJob.perform_later(message.chat)
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_character:)) }
       format.html { redirect_to chat_path(message.chat) }
     end
   end
@@ -59,7 +59,7 @@ class MessagesController < ApplicationController
     message.destroy_later_messages
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_character:)) }
       format.html { redirect_to chat_path(message.chat) }
     end
   end
@@ -73,7 +73,7 @@ class MessagesController < ApplicationController
     RespondJob.perform_later(message.chat)
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_user:)) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", ChatComponent.new(chat: message.chat, current_character:)) }
       format.html { redirect_to chat_path(message.chat) }
     end
   end
@@ -81,11 +81,11 @@ class MessagesController < ApplicationController
   private
 
   def find_chat
-    @chat = Chat.find_by(id: params[:chat_id], user: @current_user)
+    @chat = Chat.find_by(id: params[:chat_id], character: @current_character)
   end
 
   def find_message
-    Message.joins(:chat).where(id: params[:id], chats: { user: @current_user }).first
+    Message.joins(:chat).where(id: params[:id], chats: { character: @current_character }).first
   end
 
   def message_params

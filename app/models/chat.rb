@@ -1,13 +1,13 @@
 class Chat < ApplicationRecord
   acts_as_chat
 
-  belongs_to :user, class_name: "Character"
+  belongs_to :character, class_name: "Character"
   belongs_to :partner, class_name: "Character"
 
   has_many :facts, dependent: :delete_all
 
   scope :by_character, ->(character) {
-    where(user: character).or(where(partner: character))
+    where(character:).or(where(partner: character))
   }
 
   attr_reader :message
@@ -21,7 +21,7 @@ class Chat < ApplicationRecord
   end
 
   def other_known_characters
-    Character.where.not(id: [ partner, user ])
+    Character.where.not(id: [ partner, character ])
   end
 
   def partner_instructions

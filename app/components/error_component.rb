@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class ErrorComponent < ApplicationComponent
-  attr_reader :chat, :current_user, :error
+  attr_reader :chat, :current_character, :error
 
-  def initialize(chat:, current_user:, error:)
+  def initialize(chat:, current_character:, error:)
     @chat = chat
-    @current_user = current_user
+    @current_character = current_character
     @error = error
   end
 

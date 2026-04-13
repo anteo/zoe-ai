@@ -1,13 +1,13 @@
 <div id="message-<%= message.id || SecureRandom.uuid %>" class="group" data-controller="message">
   <div class="<%= bubble_class %>">
-    <%= render "message_component/header", message:, is_current_user: is_current_user?, sender: %>
+    <%= render "message_component/header", message:, is_current_character: is_current_character?, sender: %>
 
     <% if message.content.present? %>
       <div class="chat-bubble <%= bubble_color %>" data-message-target="view">
         <%= message.content %>
       </div>
 
-      <% if is_current_user? && message.persisted? %>
+      <% if is_current_character? && message.persisted? %>
         <%= render "message_component/edit_form", message:, bubble_color: %>
       <% end %>
     <% end %>

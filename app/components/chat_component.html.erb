@@ -19,11 +19,11 @@
     <%= turbo_stream_from chat %>
 
     <% messages.each do |message| %>
-      <%= helpers.component :message, message:, current_user: %>
+      <%= helpers.component :message, message:, current_character: %>
     <% end %>
 
     <% if (c = RespondJob.get_execution(chat)) && !c.cancelled? %>
-      <%= helpers.component :message_placeholder, chat:, current_user: %>
+      <%= helpers.component :message_placeholder, chat:, current_character: %>
     <% end %>
   <% end %>
 </div>
