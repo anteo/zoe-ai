@@ -5,10 +5,10 @@
 Your name is <%= chat.partner.name %>.
 <%= chat.partner.description %>
 
-## <%= chat.user.name %>'s identity
+## <%= chat.character.name %>'s identity
 
-My name is <%= chat.user.name %>.
-<%= chat.user.description %>
+My name is <%= chat.character.name %>.
+<%= chat.character.description %>
 
 <% if chat.other_known_characters.present? %>
 ## Other people you know about:
@@ -21,7 +21,7 @@ My name is <%= chat.user.name %>.
 
 # Events and facts
 
-<%= runtime.prompt :time_facts, grouped_facts: chat.user.grouped_time_facts, character: chat.user %>
+<%= runtime.prompt :time_facts, grouped_facts: chat.character.grouped_time_facts, character: chat.character %>
 
 # Your instructions
 
@@ -30,7 +30,9 @@ My name is <%= chat.user.name %>.
 <%= additional_instructions %>
 <% end %>
 
+You are talking with <%= chat.character.name %> (ID: <%= chat.character.id %>).
+
 Today is <%= I18n.l(Time.zone.now, locale: :en) %>.
-<% if (time = chat.user.last_conversation_time).present? %>
+<% if (time = chat.character.last_conversation_time).present? %>
 We talked <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago last time.
 <% end %>

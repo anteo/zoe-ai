@@ -1,4 +1,5 @@
 class Character < ApplicationRecord
+  has_one_attached :avatar
   has_many_attached :images
 
   belongs_to :user, optional: true
@@ -76,16 +77,12 @@ class Character < ApplicationRecord
     },
   ]
 
-  def initials
-    name.split.first(2).map { _1[0] }.join.upcase
-  end
-
   def to_s
     name
   end
 
   def last_conversation_time
-    last = user_chats.order(:created_at).last
+    last = chats.order(:created_at).last
     return unless last
     last.messages.maximum(:created_at)
   end

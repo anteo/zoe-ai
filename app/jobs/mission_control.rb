@@ -44,18 +44,15 @@ module MissionControl
     end
 
     def get_execution(model)
-      get_ready_execution(model) || get_scheduled_execution(model) || get_running_execution(model)
+      get_ready_execution(model) || get_scheduled_execution(model) ||
+        get_running_execution(model) || get_blocked_execution(model)
     end
 
     def cancel(model)
       if (ex = get_running_execution(model))
         ex.update cancelled: true
       end
-      [ get_scheduled_execution(model),
-        get_ready_execution(model),
-        get_blocked_execution(model) ].compact.each do |ex|
-        ex.job.discard
-      end
+      get_execution(model)&.job&.discard
     end
   end
 end

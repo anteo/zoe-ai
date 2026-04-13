@@ -34,7 +34,7 @@ class Message < ApplicationRecord
 
   def set_character
     self.character = if user?
-      chat.user
+      chat.character
     else
       chat.partner
     end

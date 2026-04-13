@@ -8,13 +8,18 @@ class ApplicationController < ActionController::Base
 
   attr_reader :current_character
 
-  before_action :set_current_user
+  before_action :set_current_character
 
   private
 
-  def set_current_user
-    @current_character = User.find_by(id: session[:user_id])&.character ||
-                    User.joins(:character).first&.character
+  def current_user
+    # Current user is hard-coded for now
+    @current_user ||= User.find_by(id: 3)
+  end
+
+  def set_current_character
+    @current_character = Character.find_by(id: session[:character_id], user: current_user) ||
+                         current_user.characters.order(:name).first
   end
 
   def find_default_chat

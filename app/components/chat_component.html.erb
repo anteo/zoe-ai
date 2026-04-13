@@ -22,7 +22,7 @@
       <%= helpers.component :message, message:, current_character: %>
     <% end %>
 
-    <% if (c = RespondJob.get_execution(chat)) && !c.cancelled? %>
+    <% if (c = RespondJob.get_running_execution(chat)) && !c.cancelled? %>
       <%= helpers.component :message_placeholder, chat:, current_character: %>
     <% end %>
   <% end %>

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class UserSelectorComponent < ApplicationComponent
+class CharacterSelectorComponent < ApplicationComponent
   attr_reader :current_character
 
-  def user_options
-    @user_options ||= User.joins(:character).includes(:character).order("characters.name")
+  def character_options
+    @character_options ||= Character.joins(:user).order(:name)
   end
 
   def initialize(current_character:)

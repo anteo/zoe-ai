@@ -5,12 +5,15 @@ class Chat < ApplicationRecord
   belongs_to :partner, class_name: "Character"
 
   has_many :facts, dependent: :delete_all
+  has_many :attachments_blobs, through: :messages
 
   scope :by_character, ->(character) {
     where(character:).or(where(partner: character))
   }
 
   attr_reader :message
+
+  delegate :user, to: :character
 
   def attachments_to_persist
     @attachments_to_persist ||= []

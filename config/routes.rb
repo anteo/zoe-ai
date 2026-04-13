@@ -10,5 +10,5 @@ Rails.application.routes.draw do
     end
   end
 
-  post "select_user", to: "users#select", as: :select_user
+  post "select_character", to: "characters#select", as: :select_character
 end

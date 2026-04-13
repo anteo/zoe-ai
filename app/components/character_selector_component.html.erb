@@ -1,0 +1,15 @@
+<button class="btn btn-ghost" popovertarget="character-selector" style="anchor-name:--anchor-character-selector">
+  <span class="font-bold"><%= current_character&.name || "Select character" %></span>
+  <%= avatar_for_character(current_character) %>
+</button>
+
+<ul class="dropdown menu p-3 shadow bg-base-100 rounded-box w-52 mt-1" popover id="character-selector" style="position-anchor:--anchor-character-selector; position-area: bottom span-left">
+  <% character_options.each do |character| %>
+    <li>
+      <%= link_to select_character_path(character_id: character.id), data: { turbo_method: :post }, class: "flex items-center gap-2" do %>
+        <%= avatar_for_character(character) %>
+        <%= character.name %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
