@@ -2,15 +2,15 @@ import {Controller} from "@hotwired/stimulus"
 import {createChatSubscription} from "../channels/chat_channel"
 
 export default class extends Controller {
-  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput"]
+  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput"]
   static values = {
     chatId: Number
   }
 
+  selectedFiles = []
+
   connect() {
     if (this.textInputTarget) {
-      // Add event listeners for typing detection
-      this.textInputTarget.addEventListener('input', this.handleTyping.bind(this))
       this.textInputTarget.focus()
 
       // Debounce timer for typing detection
@@ -41,9 +41,11 @@ export default class extends Controller {
     this.subscription = createChatSubscription(this.chatIdValue)
   }
 
-  handleTyping(event) {
+  handleTyping() {
+    if (!this.subscription) {
+      return
+    }
 
-    // Only trigger on first typing event
     if (!this.hasTyped) {
       this.hasTyped = true
       this.subscription.userTyping()
@@ -59,32 +61,98 @@ export default class extends Controller {
     }, this.typingDelay)
   }
 
-  displayAttachments(event) {
-    const files = event.target.files
-    const preview = this.attachmentsPreviewTarget
+  handleInput(event) {
+    this.handleTyping()
+    this.autoResize(event)
+  }
 
-    if (files.length === 0) {
+  handleKeydown(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      event.target.closest('form').requestSubmit()
+    }
+  }
+
+  autoResize(event) {
+    const el = event.target
+    el.style.height = 'auto'
+    el.style.height = Math.min(el.scrollHeight, 128) + 'px'
+  }
+
+  async displayAttachments(event) {
+    const newFiles = Array.from(event.target.files)
+    this.selectedFiles = [...this.selectedFiles, ...newFiles]
+    this.syncFileInput()
+    await this.renderAttachments()
+  }
+
+  async removeAttachment(event) {
+    const card = event.currentTarget.closest("[data-attachment-index]")
+    const index = parseInt(card.dataset.attachmentIndex)
+    this.selectedFiles.splice(index, 1)
+    this.syncFileInput()
+    await this.renderAttachments()
+  }
+
+  syncFileInput() {
+    const dt = new DataTransfer()
+    this.selectedFiles.forEach(f => dt.items.add(f))
+    this.fileInputTarget.files = dt.files
+  }
+
+  async renderAttachments() {
+    const preview = this.attachmentsPreviewTarget
+    preview.innerHTML = ""
+
+    if (this.selectedFiles.length === 0) {
       preview.classList.add("hidden")
-      preview.innerHTML = ""
       return
     }
 
-    preview.innerHTML = ""
     preview.classList.remove("hidden")
 
-    Array.from(files).forEach(file => {
-      const template = this.attachmentTemplateTarget
-      const clone = template.content.cloneNode(true)
-      const fileElement = clone.querySelector("div")
+    for (let i = 0; i < this.selectedFiles.length; i++) {
+      const file = this.selectedFiles[i]
+      const clone = this.attachmentTemplateTarget.content.cloneNode(true)
+      const wrapper = clone.querySelector("[data-attachment-index]")
+      wrapper.dataset.attachmentIndex = i.toString()
+      const contentEl = clone.querySelector("[data-attachment-content]")
 
-      const fileNameElement = fileElement.querySelector("[data-file-name]")
-      const fileSizeElement = fileElement.querySelector("[data-file-size]")
+      if (file.type.startsWith("image/")) {
+        const img = document.createElement("img")
+        img.src = URL.createObjectURL(file)
+        img.className = "w-20 h-20 object-cover block"
+        img.alt = file.name
+        contentEl.appendChild(img)
+      } else if (this.isTextFile(file)) {
+        const text = await file.text()
+        const excerpt = text.slice(0, 250)
+        contentEl.innerHTML = `
+          <div class="w-48 h-16 p-2 text-xs font-mono overflow-hidden leading-tight opacity-70 whitespace-pre">${this.escapeHtml(excerpt)}</div>
+          <div class="px-2 py-1 text-xs truncate border-t border-base-content/10 bg-base-300/40">${this.escapeHtml(file.name)}</div>
+        `
+      } else {
+        contentEl.className = "flex flex-col items-center justify-center w-24 h-20 p-2"
+        contentEl.innerHTML = `
+          <span class="icon-[lucide--file] w-8 h-8 opacity-60"></span>
+          <span class="text-xs text-center truncate w-full">${this.escapeHtml(file.name)}</span>
+          <span class="text-xs opacity-50">${this.formatFileSize(file.size)}</span>
+        `
+      }
 
-      fileNameElement.textContent = file.name
-      fileSizeElement.textContent = `(${this.formatFileSize(file.size)})`
+      preview.appendChild(clone)
+    }
+  }
 
-      preview.appendChild(fileElement)
-    })
+  isTextFile(file) {
+    if (file.type.startsWith("text/")) return true
+    return /\.(txt|md|js|ts|jsx|tsx|rb|py|json|yaml|yml|csv|html|css|xml|sh|bash|zsh|swift|kt|java|cpp|c|h|cs|go|rs|php)$/i.test(file.name)
+  }
+
+  escapeHtml(str) {
+    const div = document.createElement("div")
+    div.appendChild(document.createTextNode(str))
+    return div.innerHTML
   }
 
   formatFileSize(bytes) {
