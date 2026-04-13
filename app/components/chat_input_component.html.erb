@@ -9,7 +9,7 @@
             placeholder: t(:placeholder_dialog_input),
             rows: 1,
             class: "flex-1 resize-none bg-transparent border-none outline-none focus:outline-none py-0.5 max-h-32",
-            data: { dialog_input_target: "textInput", action: "input->dialog-input#autoResize keydown->dialog-input#handleKeydown" } %>
+            data: { dialog_input_target: "textInput", action: "input->dialog-input#handleInput keydown->dialog-input#handleKeydown" } %>
         <div class="flex items-center gap-1 shrink-0">
           <%= f.label :attachments, class: "btn btn-ghost btn-sm cursor-pointer p-1 h-auto min-h-0", title: t(:label_attach) do %>
             <%= content_tag :span, '', class: "icon-[lucide--paperclip] w-4 h-4" %>
