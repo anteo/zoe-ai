@@ -24,5 +24,14 @@ module AI
       definition&.instance_variable_set(:@json_schema, nil)
       super
     end
+
+    def description
+      desc = super
+      if desc.is_a?(Proc)
+        instance_exec(&desc)
+      else
+        desc
+      end
+    end
   end
 end

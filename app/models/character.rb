@@ -1,5 +1,5 @@
 class Character < ApplicationRecord
-  has_one_attached :avatar
+  has_many_attached :images
 
   has_many :facts, dependent: :delete_all
   has_many :instructions, dependent: :delete_all
