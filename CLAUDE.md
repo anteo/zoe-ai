@@ -7,8 +7,10 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 **How to apply:** Frame all architectural suggestions in terms of Rails conventions, ActiveRecord, and background jobs.
 
 ## Key directories
-- `app/models/` — Fact, Character, Topic, Message, Chat, Instruction
-  - `Chat` associations: `belongs_to :user` (Character) and `belongs_to :partner` (Character)
+- `app/models/` — Fact, Character, Topic, Message, Chat, Instruction, User
+  - `User` — profile info only (email, first_name, last_name); `has_many :characters`
+  - `Character` — the actual conversational entity; `belongs_to :user` (optional); acts as participant in chats
+  - `Chat` — two-way conversation; `belongs_to :character` and `belongs_to :partner` (both Characters)
 - `lib/ai/actors/` — ExtractFacts, DescribeCharacter, SummarizeLines, ObjectifyChat
 - `lib/ai/` — BaseAgent subclasses: `ExtractionFactsAgent` (facts extraction LLM wrapper)
 - `lib/ai/tools/` — Memory (topic_search + last_chat_search via embeddings)
@@ -51,10 +53,12 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - Saving a persistent fact sets `character.description_up_to_date = false` → triggers `DescribeCharacter`
 
 ## Character Description Generation
+- Triggered when a persistent fact is saved (sets `character.description_up_to_date = false`)
 - `AI::Actors::DescribeCharacter` (`lib/ai/actors/describe_character.rb`)
 - Groups persistent facts into 4 time buckets (>12mo, 12-6mo, 6-3mo, <3mo)
 - Summarizes each bucket with LLM (temp 0.1) using `app/prompts/describe_person.erb`
 - Joins summaries with time-period headers → stored in `character.description`
+- Description is used in system prompt for all subsequent chats with this character
 
 ## System Prompt Structure (`app/prompts/ai/zoe/instructions.txt.erb`)
 1. Partner (AI) character description
@@ -114,7 +118,7 @@ This ensures annotations are always available to the LLM but never accumulate in
 - `destroy`: Remove message → Turbo remove from DOM
 - `resend`: Destroy all later messages → re-render chat from DB (re-runs AI response)
 - Authorization: Check `message.user?` for edit/resend; delete available for all
-- Finding message: `Message.joins(:chat).where(id:, chats: { user: @current_user }).first` ensures permission
+- Finding message: `Message.joins(:chat).where(id:, chats: { character: @current_character }).first` ensures permission
 - When editing/resending: re-render the **entire chat container** from DB state (not individual stream elements), then `RespondJob` broadcasts the new AI response via Action Cable
 
 ## Internationalization (i18n)
@@ -193,25 +197,19 @@ Chats created on previous days are considered "closed" and should redirect users
 
 **Helper**: `Chat#from_previous_day?` returns `created_at.to_date < Date.current` — use this in both controller and JS.
 
-## Gravatar Integration Pattern
+## Session & Current Character Model
 
-Characters use Gravatar for profile pictures with a fallback to initials. The integration leverages Gravatar's built-in parameters:
+**Session lifecycle**:
+- Session stores `session[:character_id]` (the ID of the authenticated Character record)
+- Controllers set `@current_character` via `set_current_character` before_action:
+  ```ruby
+    @current_character = Character.find_by(id: session[:character_id], user: current_user) ||
+                         current_user.characters.order(:name).first
+  ```
+- Falls back to first available character if session character_id is nil (for testing/dev)
 
-**Character#gravatar_url(size: 32)**:
-```ruby
-hash = Digest::SHA256.hexdigest(email.strip.downcase)
-"https://0.gravatar.com/avatar/#{hash}?s=#{size}&d=initials&name=#{CGI.escape(name)}"
-```
-
-**Key parameters**:
-- `d=initials` — Gravatar's built-in default that shows user initials if no avatar exists (no custom onerror handling needed)
-- `name=` — passed to Gravatar so it can compute proper initials even if avatar is missing; must be URL-encoded
-- `s=` — size parameter (default 128px)
-
-**ApplicationHelper#avatar_for(character, size: 32)**:
-- Renders `image_tag(gravatar_url)` if email present
-- Falls back to styled `<span>` with `character.initials` if no email
-
-**Character model requirements**:
-- `email` column (string, allows nil) — required for Gravatar to work; still show initials locally if nil
-- `initials` method — should return first letters of name parts, e.g. "JD" for "John Doe"
+**Why User model exists**:
+- Decouples authentication/profile (User) from conversation identity (Character)
+- User has `email`, `first_name`, `last_name` — used for Gravatar and identification
+- Character has `name`, `ai`, `description`, `instructions` — the conversational entity
+- One User → many Characters (has_many association)
