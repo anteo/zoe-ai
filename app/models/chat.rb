@@ -16,6 +16,10 @@ class Chat < ApplicationRecord
     @attachments_to_persist ||= []
   end
 
+  def from_previous_day?
+    created_at.to_date < Date.current
+  end
+
   def other_known_characters
     Character.where.not(id: [ partner, user ])
   end

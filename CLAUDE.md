@@ -178,3 +178,17 @@ Use `enum` + `description` together: enum enforces constraints, description give
 - **Image-to-image** (`with: [blob, ...]`): only supported via the custom `AI::Providers::OpenRouter` subclass (`lib/ai/providers/open_router.rb`), which overrides `paint` to pass source images as content in the request payload
 
 When `with:` is present and the resolved provider is not `AI::Providers::OpenRouter`, it raises an error. Other providers can be patched by subclassing their RubyLLM provider and overriding `paint` similarly.
+
+## Daily Chat Closure Pattern
+
+Chats created on previous days are considered "closed" and should redirect users to prevent further messaging. This is implemented at two levels:
+
+**Level 1 (Controller)**: In `find_chat` or similar controller action, check `@chat.from_previous_day?` and redirect to `root_path` if true. This handles direct navigation to old chat URLs.
+
+**Level 2 (Browser)**: Use a Stimulus controller to monitor date changes:
+- Store the chat's creation date in a `data` attribute on the container
+- Check periodically (e.g., every minute) and on `visibilitychange` event
+- If `Date.current` differs from chat creation date, call `window.location.reload()` (controller redirect handles the rest)
+- This catches cases where a user has an old chat tab open at midnight
+
+**Helper**: `Chat#from_previous_day?` returns `created_at.to_date < Date.current` — use this in both controller and JS.
