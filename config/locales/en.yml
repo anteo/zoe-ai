@@ -31,7 +31,7 @@ en:
   direct_speech: "%{character} said: \"%{text}\""
   label_send: Send
   label_attach: Attach file(s)
-  placeholder_dialog_input: Type your message...
+  placeholder_chat_input: Type your message...
   label_confirmation: Confirmation
   label_no: "No"
   label_yes: "Yes"

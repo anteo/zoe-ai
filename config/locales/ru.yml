@@ -8,7 +8,7 @@ ru:
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_send: Отправить
   label_attach: Прикрепить файл(ы)
-  placeholder_dialog_input: Введите сообщение...
+  placeholder_chat_input: Введите сообщение...
   label_confirmation: Подтверждение
   label_no: Нет
   label_yes: Да
