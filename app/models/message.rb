@@ -33,6 +33,10 @@ class Message < ApplicationRecord
     I18n.t(:direct_speech, character:, text: content, **)
   end
 
+  def to_timestamp_message
+    "#{I18n.l(created_at)}:\n#{to_direct_speech}"
+  end
+
   def destroy_later_messages
     chat.messages.where("id > ?", id).destroy_all
   end

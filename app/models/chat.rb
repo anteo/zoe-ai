@@ -11,15 +11,12 @@ class Chat < ApplicationRecord
   scope :by_character, ->(character) {
     where(character:).or(where(partner: character))
   }
+  scope :stale, -> { where(closed: false).where("created_at < ?", Date.current) }
 
   attr_reader :message
 
   def attachments_to_persist
     @attachments_to_persist ||= []
-  end
-
-  def from_previous_day?
-    created_at.to_date < Date.current
   end
 
   def other_known_characters

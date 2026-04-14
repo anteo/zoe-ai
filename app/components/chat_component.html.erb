@@ -1,6 +1,4 @@
-<div class="overflow-y-auto p-4 rounded-field shadow-sm bg-base-100" id="chat-messages"
-     data-controller="chat"
-     <%= tag.attributes("data-chat-date-value": chat.created_at.to_date.iso8601) unless new? %>>
+<div class="overflow-y-auto p-4 rounded-field shadow-sm bg-base-100" id="chat-messages" data-controller="chat">
   <% if new? %>
     <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
       <div class="animate-[float_6s_ease-in-out_infinite]">

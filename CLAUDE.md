@@ -45,7 +45,11 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - `instructions topics: -> { Topic.all }` — renders prompt with topics
 - Schema defined inline via `ruby_llm-schema` DSL: wraps result in `{ facts: [...] }`; each fact has typed fields with enums/ranges
 - **`initialize(chat:, **kwargs)`** is required: `chat:` conflicts with `RubyLLM::Agent`'s own `chat:` kwarg (pre-built session), so must route via `super(inputs: { chat: }, **kwargs)`
-- Actor uses `AI::ExtractionFactsAgent.new(chat:).chat` — gets the configured RubyLLM chat session and drives it directly
+- **RubyLLM Chat Session Persistence Pattern**:
+  - `.new(chat:).chat` — Creates an instance, then accesses the configured RubyLLM session (binds to the ActiveRecord `Chat`, dumping messages into the `messages` table)
+  - `.chat(chat:)` — Class-level method (if defined on the agent class) builds an in-memory RubyLLM chat session **without persisting** to the messages table
+  - Use `.chat(chat:)` for one-off LLM operations that shouldn't leave a trace in the conversation history (e.g., internal reasoning, summarization, fact extraction)
+  - Use `.new(chat:).chat` when you want messages to persist in `Chat#messages` and be visible in the UI
 
 ## Persistent vs Non-Persistent Facts
 - **Persistent**: long-term identity traits → feed into character description generation
@@ -59,6 +63,15 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - Summarizes each bucket with LLM (temp 0.1) using `app/prompts/describe_person.erb`
 - Joins summaries with time-period headers → stored in `character.description`
 - Description is used in system prompt for all subsequent chats with this character
+
+## SummarizationAgent Pattern
+- `AI::SummarizationAgent` (`lib/ai/agents/summarization_agent.rb`) — `BaseAgent` subclass, temp 0.1, takes `chat` input
+- Used by `AI::Actors::SummarizeChat` to generate conversation summaries (replaces old chunking/grouping approach)
+- Prompt: `app/prompts/ai/summarization_agent/instructions.txt.erb`
+- Part of the daily chat closure workflow: when `CloseChatsJob` runs at midnight, it summarizes each unclosed chat before setting `closed: true`
+- Summary is stored in `chat.summary` and broadcast to subscribed clients via `ChatChannel`
+- **Single-pass approach**: Unlike `SummarizeLines` (which chunks lines and summarizes per chunk), `SummarizationAgent` takes the full conversation text and summarizes in one pass. This works because single chats are always bounded (~1 day), so grouping by date adds no value.
+- Messages are formatted as `to_direct_speech` (already a convention) and joined with newlines before being sent to the agent
 
 ## System Prompt Structure (`app/prompts/ai/zoe/instructions.txt.erb`)
 1. Partner (AI) character description
@@ -104,6 +117,7 @@ This ensures annotations are always available to the LLM but never accumulate in
 - `persist_content` merges `attachments_to_persist` (deferred attachments) before delegating to super
 - `prepare_content_for_storage` forces attachments to a non-nil array so `persist_content` is always called
 - `prepare_for_active_storage` splits ActiveStorage hashes (already-persisted blobs) from other attachments before super
+- `closed` (boolean, default false) — set to true when chat is closed at midnight by `CloseChatsJob`; checked by controller before rendering chat; used to prevent users from sending messages to old chats
 
 ## MessagesController (`app/controllers/messages_controller.rb`)
 - Accepts attachments via `params.require(:message).permit(:content, attachments: [])`
@@ -160,6 +174,35 @@ def perform(...)
 end
 ```
 
+## Actor Error Handling Pattern with `fail_on`
+
+RubyLLM Actors support `fail_on` to catch specific exceptions and convert them to failed results (instead of raising):
+
+```ruby
+class SummarizeChat < Actor
+  input :chat, type: Chat
+  fail_on RubyLLM::Error
+  
+  def call
+    # If RubyLLM::Error is raised, service_actor catches it and returns 
+    # a failed Result object instead
+  end
+end
+```
+
+**Job context**: When calling an actor from a job and you need graceful degradation:
+```ruby
+result = AI::Actors::SummarizeChat.call(chat:)
+unless result.success?
+  Rails.logger.error "Failed to summarize chat ##{chat.id}: #{result.error}"
+end
+# Always proceed with next step (close the chat, broadcast, etc.)
+chat.update!(closed: true)
+ChatChannel.broadcast_to(chat, type: "closed")
+```
+
+This pattern allows jobs to handle actor failures without crashing, while still logging the error for debugging.
+
 ## Dynamic Tool Parameters in RubyLLM
 
 The `params do ... end` block is evaluated as a proc each time the schema is serialized, so DB queries inside it always reflect current state — no `params_schema` override needed:
@@ -188,17 +231,21 @@ When `with:` is present and the resolved provider is not `AI::Providers::OpenRou
 
 ## Daily Chat Closure Pattern
 
-Chats created on previous days are considered "closed" and should redirect users to prevent further messaging. This is implemented at two levels:
+Chats are closed at midnight via a scheduled job, not dynamically based on date boundaries:
 
-**Level 1 (Controller)**: In `find_chat` or similar controller action, check `@chat.from_previous_day?` and redirect to `root_path` if true. This handles direct navigation to old chat URLs.
+**Closure mechanism** (`CloseChatsJob`, triggered at midnight via `config/recurring.yml`):
+1. Finds all unclosed chats from previous days: `Chat.where(closed: false).where("created_at < ?", Date.current.beginning_of_day)`
+2. For each chat:
+   - Sets `closed: true` on the chat
+   - Broadcasts `type: "closed"` via `ChatChannel` immediately (subscribers receive the message and redirect to `/`)
+   - **If chat has no summary**: enqueues `SummarizeChatJob.perform_later(chat)` for async background processing
+3. On app startup, `config/initializers/close_stale_chats.rb` checks for any stale unclosed chats and enqueues the job if needed (handles app restarts at non-midnight times)
 
-**Level 2 (Browser)**: Use a Stimulus controller to monitor date changes:
-- Store the chat's creation date in a `data` attribute on the container
-- Check periodically (e.g., every minute) and on `visibilitychange` event
-- If `Date.current` differs from chat creation date, call `window.location.reload()` (controller redirect handles the rest)
-- This catches cases where a user has an old chat tab open at midnight
+**Pattern rationale**: Closure and broadcast happen synchronously to unblock the user immediately. Summarization runs async in the background to avoid blocking the closure job. This prevents summarization latency from delaying the UI redirect.
 
-**Helper**: `Chat#from_previous_day?` returns `created_at.to_date < Date.current` — use this in both controller and JS.
+**Controller check**: `@chat.closed?` replaces the old `@chat.from_previous_day?`. Redirect if closed in controller before showing chat.
+
+**Why this approach**: Server-side closure with broadcast ensures all connected clients receive the redirect signal immediately, even if they have the chat open in a browser tab. Avoids race conditions and client-side clock skew. Decoupling summarization from closure keeps the critical path short.
 
 ## Session & Current Character Model
 
@@ -225,3 +272,46 @@ Chats created on previous days are considered "closed" and should redirect users
 - Migration also added `main_character_id` to Users table: the user's currently active/preferred character
 - `User.belongs_to :main_character, class_name: "Character", optional: true` — tracks which character the user prefers
 - When a user switches characters, update `session[:character_id]`; `main_character_id` is optional (for dev/testing where a user might have no characters)
+
+## Recent Chat Summaries in System Prompt
+
+**Design decision**: Inject recent chat summaries directly into the system prompt (not via tool) to ensure **automatic** conversational continuity without requiring explicit LLM decision-making.
+
+**Rationale**:
+- Tools are opt-in; the LLM won't call `recall_previous_chat` unless conversation context triggers it, making continuity unreliable
+- System prompt injection ensures Zoe always has narrative context from recent conversations available
+- Summaries bridge the gap between atomic facts (decontextualized) and conversational continuity (narrative)
+- Prompt size impact is manageable: 3 chats × 200-500 tokens per summary = ~1500 tokens max
+
+**What to inject**:
+- Yesterday's closed + summarized chats (always include)
+- Today's earlier chats are already surfaced via `time_facts` (extracted facts), so skip unsummarized same-day chats to avoid duplication
+- Cap at last 3 days or last 5 summaries for a hard bound
+
+**Implementation pattern**:
+```ruby
+# character.rb
+def recent_chat_summaries(partner:, limit: 5)
+  Chat.where(character: self, partner: partner, closed: true)
+      .where.not(summary: [nil, ""])
+      .where("created_at > ?", 3.days.ago)
+      .order(created_at: :desc)
+      .limit(limit)
+      .reverse  # chronological order
+end
+```
+
+Insert into `app/prompts/ai/zoe/instructions.txt.erb` between "Events and facts" and "Your instructions":
+```erb
+<% if (summaries = chat.character.recent_chat_summaries(partner: chat.partner)).present? %>
+# Recent conversations
+
+<% summaries.each do |past_chat| %>
+## <%= I18n.l(past_chat.created_at.to_date, locale: :en) %>
+<%= past_chat.summary %>
+
+<% end %>
+<% end %>
+```
+
+**Use existing Memory tool for**: Explicit recall of older conversations beyond the 3-day window ("what did we talk about last week?")

@@ -12,7 +12,7 @@ namespace :ai do
     puts "Extracting facts for #{chats.count} chats..."
     chats.find_each do |chat|
       puts "  Chat ##{chat.id}"
-      res = AI::Actors::ExtractFacts.call(chat:, logger: Logger.new(STDOUT))
+      res = AI::Actors::ExtractFacts.result(chat:, logger: Logger.new(STDOUT))
       unless res.success?
         puts "  Error: #{res.error}"
       end
@@ -44,7 +44,10 @@ namespace :ai do
     characters = Character.all
     characters = characters.where(description_up_to_date: false) unless ENV["FORCE"]
     characters.find_each do |character|
-      AI::Actors::DescribeCharacter.call(character:)
+      res = AI::Actors::DescribeCharacter.result(character:)
+      unless res.success?
+        puts "  Error: #{res.error}"
+      end
     end
   end
 

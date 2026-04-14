@@ -14,7 +14,9 @@ function createChatSubscription(chatId) {
     },
 
     received(data) {
-      // Called when there's incoming data on the websocket for this channel
+      if (data.type === "closed") {
+        window.location.href = "/"
+      }
     },
 
     userTyping: function () {
