@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :characters, dependent: :destroy
+  has_many :chats, dependent: :destroy
 
   def gravatar_url(size: 128)
     return nil unless email.present?

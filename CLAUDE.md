@@ -83,6 +83,9 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - `extract_content` is overridden to route by role **before** checking `content_raw`; RubyLLM's `acts_as_message` super checks `content_raw` first regardless of role, which is wrong for user messages
 - For user messages, `super` downloads ActiveStorage attachments to tempfiles and returns a `RubyLLM::Content` object
 - `RubyLLM::Content.new(text, attachments_array)` accepts an array of existing `RubyLLM::Attachment` objects as its second argument (no re-download needed)
+- **Visibility rule**: `visible` scope must include messages with empty `content` if they have ActiveStorage attachments. Uses subquery: `"content != '' OR id IN (SELECT DISTINCT record_id FROM active_storage_attachments WHERE record_type = 'Message')"`
+  - This allows users to send files alone without text, and prevents invisible attachment-only messages in chat history
+  - The `visible?` instance method has a corresponding check: `(user? || assistant?) && (content.present? || attachments.attached?)`
 
 ## LLM Context Pollution & Content Sanitization Pattern
 

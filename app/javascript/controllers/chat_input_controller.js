@@ -2,7 +2,7 @@ import {Controller} from "@hotwired/stimulus"
 import {createChatSubscription} from "../channels/chat_channel"
 
 export default class extends Controller {
-  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput"]
+  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton"]
   static values = {
     chatId: Number
   }
@@ -18,6 +18,8 @@ export default class extends Controller {
       this.typingDelay = 1000 // ms
       this.hasTyped = false
     }
+
+    this.updateSendButton()
 
     // Subscribe to Action Cable channel for this chat
     this.subscribeToChatChannel()
@@ -64,13 +66,34 @@ export default class extends Controller {
   handleInput(event) {
     this.handleTyping()
     this.autoResize(event)
+    this.updateSendButton()
   }
 
   handleKeydown(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
-      event.target.closest('form').requestSubmit()
+      if (this.hasContent()) {
+        event.target.closest('form').requestSubmit()
+      }
     }
+  }
+
+  handleSubmit(event) {
+    if (!this.hasContent()) {
+      event.preventDefault()
+    }
+  }
+
+  hasContent() {
+    const text = this.textInputTarget.value.trim()
+    return text.length > 0 || this.selectedFiles.length > 0
+  }
+
+  updateSendButton() {
+    if (!this.hasSendButtonTarget) return
+    const active = this.hasContent()
+    this.sendButtonTarget.classList.toggle("btn-ghost", !active)
+    this.sendButtonTarget.classList.toggle("btn-success", active)
   }
 
   autoResize(event) {
@@ -84,6 +107,7 @@ export default class extends Controller {
     this.selectedFiles = [...this.selectedFiles, ...newFiles]
     this.syncFileInput()
     await this.renderAttachments()
+    this.updateSendButton()
   }
 
   async removeAttachment(event) {
@@ -92,6 +116,7 @@ export default class extends Controller {
     this.selectedFiles.splice(index, 1)
     this.syncFileInput()
     await this.renderAttachments()
+    this.updateSendButton()
   }
 
   syncFileInput() {

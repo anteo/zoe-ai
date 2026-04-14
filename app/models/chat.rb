@@ -1,6 +1,7 @@
 class Chat < ApplicationRecord
   acts_as_chat
 
+  belongs_to :user
   belongs_to :character, class_name: "Character"
   belongs_to :partner, class_name: "Character"
 
@@ -12,8 +13,6 @@ class Chat < ApplicationRecord
   }
 
   attr_reader :message
-
-  delegate :user, to: :character
 
   def attachments_to_persist
     @attachments_to_persist ||= []

@@ -1,7 +1,8 @@
 <div id="chat-input"
      data-controller="chat-input"
      data-chat-input-chat-id-value="<%= chat.id %>">
-  <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "w-full", multipart: true do |f| %>
+  <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "w-full", multipart: true,
+               data: { action: "submit->chat-input#handleSubmit" } do |f| %>
     <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 overflow-hidden bg-base-100 border-base-200 shadow-sm">
       <div id="attachments-preview" class="hidden flex flex-wrap gap-2 p-2 border-b border-base-200" data-chat-input-target="attachmentsPreview"></div>
       <div class="flex items-end gap-1 px-3 py-2">
@@ -16,7 +17,8 @@
             <%= f.file_field :attachments, multiple: true, class: "hidden",
                 data: { action: "change->chat-input#displayAttachments", chat_input_target: "fileInput" } %>
           <% end %>
-          <%= f.button class: "btn btn-ghost btn-sm p-1 h-auto min-h-0", title: t(:label_send) do %>
+          <%= f.button class: "btn btn-ghost btn-sm p-1 h-auto min-h-0", title: t(:label_send),
+                data: { chat_input_target: "sendButton" } do %>
             <%= content_tag :span, '', class: "icon-[lucide--send] w-4 h-4" %>
           <% end %>
         </div>

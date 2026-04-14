@@ -8,7 +8,14 @@ class Message < ApplicationRecord
 
   before_save :set_character
 
-  scope :visible, -> { where(role: %w[user assistant]).where.not(content: "") }
+  scope :visible, -> {
+    attachments = ActiveStorage::Attachment.arel_table
+    has_attachment = attachments.project(attachments[:record_id])
+                                .where(attachments[:record_type].eq("Message"))
+                                .distinct
+    where(role: %w[user assistant])
+      .where(arel_table[:content].not_eq("").or(arel_table[:id].in(has_attachment)))
+  }
 
   def user?
     role == "user"
@@ -19,7 +26,7 @@ class Message < ApplicationRecord
   end
 
   def visible?
-    (user? || assistant?) && content.present?
+    (user? || assistant?) && (content.present? || attachments.attached?)
   end
 
   def to_direct_speech(**)

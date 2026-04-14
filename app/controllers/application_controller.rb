@@ -18,17 +18,18 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_character
-    @current_character = Character.find_by(id: session[:character_id], user: current_user) ||
-                         current_user.characters.order(:name).first
+    characters = current_user.characters
+    @current_character = characters.find_by(id: session[:character_id]) ||
+                         characters.order(:name).first
   end
 
   def find_default_chat
-    @chat ||= Chat.where(character: @current_character, partner: Character.ai, created_at: Date.current.all_day)
-                  .order(created_at: :desc)
-                  .first
+    @chat ||= current_user.chats.where(character: @current_character, partner: Character.ai, created_at: Date.current.all_day)
+                          .order(created_at: :desc)
+                          .first
   end
 
   def build_default_chat
-    @chat ||= AI::Zoe.build_chat(character: @current_character, partner: Character.ai)
+    @chat ||= AI::Zoe.build_chat(character: @current_character, partner: Character.ai, user: current_user)
   end
 end

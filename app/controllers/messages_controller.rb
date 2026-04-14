@@ -67,7 +67,7 @@ class MessagesController < ApplicationController
   private
 
   def find_chat
-    @chat ||= Chat.find_by(id: params[:chat_id])
+    @chat ||= current_user.chats.find_by(id: params[:chat_id])
     head(:forbidden) if @chat && @chat.character != current_character
   end
 
@@ -79,7 +79,7 @@ class MessagesController < ApplicationController
   end
 
   def find_message
-    @message = Message.joins(:chat).where(id: params[:id], chats: { character: current_character }).first
+    @message = Message.joins(:chat).where(id: params[:id], chats: { character: current_character, user: current_user }).first
     @chat = @message&.chat
     head(:not_found) unless @message
   end
