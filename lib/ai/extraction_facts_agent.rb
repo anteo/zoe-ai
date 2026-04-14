@@ -2,8 +2,8 @@ module AI
   class ExtractionFactsAgent < BaseAgent
     inputs :chat
     temperature 0.1
-    instructions topics: -> { Topic.order(:created_at) },
-                 characters: -> { Character.order(:created_at) }
+    instructions topics: -> { Topic.order(:name) },
+                 characters: -> { chat.user.characters.order(:name) }
 
     schema do
       array :facts do

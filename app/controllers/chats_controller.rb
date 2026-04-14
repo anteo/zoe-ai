@@ -5,6 +5,9 @@ class ChatsController < ApplicationController
   before_action :find_default_chat, only: [:show]
   before_action :build_default_chat, only: [:new, :show]
 
+  attr_reader :chat
+  helper_method :chat
+
   def new
     render 'show'
   end

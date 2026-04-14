@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_13_225812) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_14_085004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -51,8 +51,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_13_225812) do
     t.boolean "description_up_to_date", default: false, null: false
     t.boolean "ai", default: false, null: false
     t.boolean "third_party", default: false, null: false
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_characters_on_user_id"
+  end
+
+  create_table "characters_users", id: false, force: :cascade do |t|
+    t.bigint "character_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["character_id", "user_id"], name: "index_characters_users_on_character_id_and_user_id", unique: true
+    t.index ["user_id"], name: "index_characters_users_on_user_id"
   end
 
   create_table "chats", force: :cascade do |t|
@@ -313,11 +318,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_13_225812) do
     t.string "last_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "main_character_id"
+    t.index ["main_character_id"], name: "index_users_on_main_character_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "characters", "users"
   add_foreign_key "chats", "characters"
   add_foreign_key "chats", "characters", column: "partner_id"
   add_foreign_key "chats", "models"
@@ -338,4 +344,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_13_225812) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "tool_calls", "messages"
+  add_foreign_key "users", "characters", column: "main_character_id"
 end

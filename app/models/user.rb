@@ -1,5 +1,6 @@
 class User < ApplicationRecord
-  has_many :characters, dependent: :destroy
+  has_and_belongs_to_many :characters
+  belongs_to :main_character, class_name: "Character", optional: true
   has_many :chats, dependent: :destroy
 
   def gravatar_url(size: 128)

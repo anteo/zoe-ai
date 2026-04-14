@@ -13,13 +13,13 @@ From each replica, extract **substantive personal facts** about:
 **When a statement involves multiple subjects, extract a separate fact for each.** For example, "I have a cat Сима who likes playing balls" yields two facts: one about the speaker ("has a cat named Сима") and one about Сима ("likes playing small soft balls").
 
 <% if characters.any? %>
-Known characters (assign one by its ID when the fact is about an existing person):
+### Known characters (assign one by its ID when the fact is about an existing person):
 <% characters.each do |character| -%>
 - ID: <%= character.id %>, Name: "<%= character.name %>"<%= " [third party]" if character.third_party? %>
 <% end -%>
 <% end -%>
 <% if topics.any? %>
-Existing topics (you may assign one of these by its ID):
+### Existing topics (you may assign one of these by its ID):
 <% topics.each do |topic| -%>
 - ID: <%= topic.id %>, Name: "<%= topic.name %>"
 <% end -%>

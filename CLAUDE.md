@@ -206,13 +206,22 @@ Chats created on previous days are considered "closed" and should redirect users
 - Session stores `session[:character_id]` (the ID of the authenticated Character record)
 - Controllers set `@current_character` via `set_current_character` before_action:
   ```ruby
-    @current_character = Character.find_by(id: session[:character_id], user: current_user) ||
-                         current_user.characters.order(:name).first
+    @current_character = characters.find_by(id: session[:character_id]) ||
+                         current_user.main_character ||
+                         characters.order(:name).first
   ```
-- Falls back to first available character if session character_id is nil (for testing/dev)
+- Falls back to `current_user.main_character` (explicitly set preferred character), then to first available character if session character_id is nil (for testing/dev)
 
 **Why User model exists**:
 - Decouples authentication/profile (User) from conversation identity (Character)
 - User has `email`, `first_name`, `last_name` — used for Gravatar and identification
 - Character has `name`, `ai`, `description`, `instructions` — the conversational entity
-- One User → many Characters (has_many association)
+- One User → many Characters via HABTM (`has_and_belongs_to_many :characters`)
+
+**User-Character Relationship (HABTM)**:
+- Changed from one-to-many (`Character.belongs_to :user`) to many-to-many (`User.has_and_belongs_to_many :characters`)
+- Enables future scenarios where Characters can be shared/accessed by multiple Users
+- Join table: `characters_users` (created by migration)
+- Migration also added `main_character_id` to Users table: the user's currently active/preferred character
+- `User.belongs_to :main_character, class_name: "Character", optional: true` — tracks which character the user prefers
+- When a user switches characters, update `session[:character_id]`; `main_character_id` is optional (for dev/testing where a user might have no characters)

@@ -6,7 +6,8 @@ class MessagesController < ApplicationController
   before_action :build_default_chat
 
   attr_reader :chat, :message
-  
+  helper_method :chat, :message
+
   def create
     content = RubyLLM::Content.new(message_params[:content], message_params[:attachments])
 

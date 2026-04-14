@@ -6,6 +6,10 @@ module AI::Actors
     fail_on RubyLLM::Error,
             ActiveRecord::RecordInvalid
 
+    def current_user
+      chat.user
+    end
+
     def call
       logger.debug ">>> #{llm_chat.instructions}"
       messages = chat.messages
@@ -70,7 +74,7 @@ module AI::Actors
       character_id = data["character_id"].presence
 
       if character_id
-        character = Character.find_by(id: character_id)
+        character = current_user.characters.find_by(id: character_id)
         # Only use the found character if name matches or is absent — the LLM sometimes
         # hallucinates a character_id from the known list while meaning a different person.
         return character if character && (name.nil? || character.name == name)
@@ -78,7 +82,7 @@ module AI::Actors
 
       return unless name
 
-      Character.find_or_create_by(name:) do |c|
+      current_user.characters.find_or_create_by(name:) do |c|
         c.third_party = true
         c.description = ""
       end

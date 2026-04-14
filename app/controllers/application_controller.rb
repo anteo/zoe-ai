@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_character
 
+  helper_method :current_character,
+                :current_user
+
   private
 
   def current_user
@@ -20,6 +23,7 @@ class ApplicationController < ActionController::Base
   def set_current_character
     characters = current_user.characters
     @current_character = characters.find_by(id: session[:character_id]) ||
+                         current_user.main_character ||
                          characters.order(:name).first
   end
 
