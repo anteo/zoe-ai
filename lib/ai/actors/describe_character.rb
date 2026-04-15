@@ -38,18 +38,10 @@ module AI::Actors
 
     def format_description(summaries)
       summaries.map do |period, summary|
-        start_time = period.begin
-        end_time = period.end
+        from_attr = period.begin ? %( from="#{period.begin.strftime("%B %Y")}") : ""
+        to_attr = period.end ? %( to="#{period.end.strftime("%B %Y")}") : ""
 
-        header = if start_time && end_time
-          "### From #{start_time.strftime("%B %Y")} to #{end_time.strftime("%B %Y")}"
-        elsif start_time.nil? && end_time
-          "### Before #{end_time.strftime("%B %Y")}"
-        elsif start_time && end_time.nil?
-          "### From #{start_time.strftime("%B %Y")} onward"
-        end
-
-        "#{header}:\n\n#{summary}"
+        "<period#{from_attr}#{to_attr}>\n#{summary}\n</period>"
       end.join("\n\n")
     end
   end

@@ -60,9 +60,14 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - Triggered when a persistent fact is saved (sets `character.description_up_to_date = false`)
 - `AI::Actors::DescribeCharacter` (`lib/ai/actors/describe_character.rb`)
 - Groups persistent facts into 4 time buckets (>12mo, 12-6mo, 6-3mo, <3mo)
-- Summarizes each bucket with LLM (temp 0.1) using `app/prompts/describe_person.erb`
-- Joins summaries with time-period headers → stored in `character.description`
-- Description is used in system prompt for all subsequent chats with this character
+- Summarizes each bucket with LLM (temp 0.1) using `app/prompts/ai/describe_character_agent/instructions.txt.erb`
+- **Wraps each summary in XML tags**: `<period from="..." to="...">summary</period>`
+  - `from` and `to` attributes use date format `"%B %Y"` (e.g. `"January 2026"`)
+  - Attributes are omitted when the bound is nil: earliest bucket has only `to=`, latest bucket has only `from=`
+  - Example: `<period to="April 2025">...</period>` for earliest, `<period from="January 2026">...</period>` for latest
+- **Why XML wrapper instead of markdown headers**: Creates hard semantic boundaries between temporal periods in the system prompt. The LLM receives structured, machine-parseable sections that prevent temporal confusion.
+- Description is stored as concatenated XML blocks (joined with `\n\n`) and injected into system prompt for all subsequent chats
+- The instruction prompt tells the LLM its output will be wrapped in tags, so it shouldn't redundantly mention the time period itself
 
 ## SummarizationAgent Pattern
 - `AI::SummarizationAgent` (`lib/ai/agents/summarization_agent.rb`) — `BaseAgent` subclass, temp 0.1, takes `chat` input
