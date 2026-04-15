@@ -33,7 +33,7 @@ You are <%= chat.partner.name %>.
 <% yesterday = chat.yesterday_summary -%>
 <% if yesterday.present? -%>
 
-<yesterday_conversation>
+<yesterday_conversation date="<%= Date.yesterday %>">
 <%= yesterday %>
 </yesterday_conversation>
 <% end -%>
