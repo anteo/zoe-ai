@@ -90,12 +90,12 @@ class Character < ApplicationRecord
   end
 
   def grouped_persistent_facts
-    scope = facts_to_consider.persistent.preload(:topic).order(:mentioned_at)
+    scope = facts_to_consider.persistent.preload(:topic).order(:topic_id, :mentioned_at)
     PERSISTENT_FACT_PERIODS.filter_map do |period|
       facts = scope.where(mentioned_at: period)
       next unless facts.any?
-
-      [ period, facts.to_a ]
+      topic_groups = facts.to_a.group_by { it.topic.name }
+      [ period, topic_groups ]
     end
   end
 

@@ -1,38 +1,46 @@
-# Known identities
-
-## <%= chat.partner.name %>'s identity
-
-Your name is <%= chat.partner.name %>.
-<%= chat.partner.description %>
-
-## <%= chat.character.name %>'s identity
-
-My name is <%= chat.character.name %>.
-<%= chat.character.description %>
-
-<% if chat.other_known_characters.present? %>
-## Other people you know about:
-
-<% chat.other_known_characters.each do |character| %>
-### <%= character %>
-<%= character.description %>
-<% end %>
-<% end %>
-
-# Events and facts
-
-<%= runtime.prompt :time_facts, grouped_facts: chat.character.grouped_time_facts, character: chat.character %>
-
-# Your instructions
-
-<%= chat.partner_instructions %>
-<% if defined?(additional_instructions) && additional_instructions.present? %>
-<%= additional_instructions %>
-<% end %>
-
-You are talking with <%= chat.character.name %> (ID: <%= chat.character.id %>).
-
+<context>
 Today is <%= I18n.l(Time.zone.now, locale: :en) %>.
-<% if (time = chat.character.last_conversation_time).present? %>
-We talked <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago last time.
-<% end %>
+You are talking with <%= chat.character.name %> (ID: <%= chat.character.id %>).
+<% if (time = chat.character.last_conversation_time).present? -%>
+Your last conversation was <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago.
+<% end -%>
+</context>
+
+<identity name="<%= chat.partner.name %>" role="you">
+You are <%= chat.partner.name %>.
+<%= chat.partner.description %>
+</identity>
+
+<identity name="<%= chat.character.name %>" role="interlocutor">
+<%= chat.character.name %> is the person you are talking to.
+<%= chat.character.description %>
+</identity>
+<% known_characters = chat.other_known_characters.select { |c| c.description.present? } -%>
+<% if known_characters.any? -%>
+
+<known_characters>
+<% known_characters.each do |character| -%>
+<character name="<%= character %>">
+<%= character.description %>
+</character>
+<% end -%>
+</known_characters>
+<% end -%>
+
+<events subject="<%= chat.character %>">
+<%= runtime.prompt :time_facts, grouped_facts: chat.character.grouped_time_facts, character: chat.character %>
+</events>
+<% yesterday = chat.yesterday_summary -%>
+<% if yesterday.present? -%>
+
+<yesterday_conversation>
+<%= yesterday %>
+</yesterday_conversation>
+<% end -%>
+
+<instructions>
+<%= chat.partner_instructions %>
+<% if defined?(additional_instructions) && additional_instructions.present? -%>
+<%= additional_instructions.map { "* #{it}" }.join("\n") %>
+<% end -%>
+</instructions>

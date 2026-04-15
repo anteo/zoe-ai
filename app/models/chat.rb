@@ -24,11 +24,23 @@ class Chat < ApplicationRecord
   end
 
   def partner_instructions
-    partner.instructions.join("\n\n")
+    partner.instructions.map { "* #{it}" }.join("\n")
   end
 
   def messages_association
     messages.preload(:attachments_blobs, :tool_calls, :model)
+  end
+
+  def yesterday_summary
+    @yesterday_summary ||= begin
+      character.chats
+               .where(partner:, closed: true)
+               .where(created_at: Date.yesterday.all_day)
+               .where.not(summary: [ nil, "" ])
+               .order(:created_at)
+               .pluck(:summary)
+               .join("\n\n")
+    end
   end
 
   private
