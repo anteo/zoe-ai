@@ -74,12 +74,64 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - Messages are formatted as `to_direct_speech` (already a convention) and joined with newlines before being sent to the agent
 
 ## System Prompt Structure (`app/prompts/ai/zoe/instructions.txt.erb`)
+
+**Current structure** (markdown-based):
 1. Partner (AI) character description
 2. User character description
 3. Other known characters
 4. Non-persistent facts grouped by temporal period (`time_facts.txt.erb`)
 5. AI-specific instructions from `instructions` table
 6. Current date/time + last conversation timestamp
+
+**Identified issue**: With markdown headers alone, semantic boundaries between distinct identity sections are "soft" — the LLM can confuse whose facts/descriptions belong to whom, especially as other_known_characters grows. The confusing pronoun framing ("Your name is Zoe" / "My name is Anton") compounds this.
+
+**Recommended improvement**: Use XML tag boundaries to create hard semantic separation:
+```erb
+<context>
+  Today is <%= I18n.l(Time.zone.now, locale: :en) %>.
+  You are talking with <%= chat.character.name %> (ID: <%= chat.character.id %>).
+  <% if (time = chat.character.last_conversation_time).present? %>
+  Your last conversation was <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago.
+  <% end %>
+</context>
+
+<identity name="<%= chat.partner.name %>" role="assistant">
+  You are <%= chat.partner.name %>.
+  <%= chat.partner.description %>
+</identity>
+
+<identity name="<%= chat.character.name %>" role="user">
+  <%= chat.character.name %> is the person you are talking to.
+  <%= chat.character.description %>
+</identity>
+
+<% if chat.other_known_characters.present? %>
+<known_people>
+<% chat.other_known_characters.each do |character| %>
+<person name="<%= character %>">
+  <%= character.description %>
+</person>
+<% end %>
+</known_people>
+<% end %>
+
+<events character="<%= chat.character %>">
+  <%= runtime.prompt :time_facts, ... %>
+</events>
+
+<% if yesterday.present? %>
+<previous_conversation date="<%= Date.yesterday %>">
+  <%= yesterday %>
+</previous_conversation>
+<% end %>
+
+<instructions>
+  <%= chat.partner_instructions %>
+  <%= additional_instructions if defined?(additional_instructions) && additional_instructions.present? %>
+</instructions>
+```
+
+**Benefits**: XML tags with `role` and `name` attributes prevent identity bleed. Context lives at the top, grounding all subsequent sections. Clearer pronoun framing ("You are Zoe" vs "{Name} is the person you're talking to"). This is a well-validated practice for Claude — Anthropic documentation recommends XML for separating distinct sections in system prompts.
 
 ## Memory Tool (`lib/ai/tools/memory.rb`)
 - `topic_search(query, name, detailed)` — semantic search via embeddings
@@ -275,43 +327,48 @@ Chats are closed at midnight via a scheduled job, not dynamically based on date 
 
 ## Recent Chat Summaries in System Prompt
 
-**Design decision**: Inject recent chat summaries directly into the system prompt (not via tool) to ensure **automatic** conversational continuity without requiring explicit LLM decision-making.
+**Design decision**: Inject yesterday's chat summaries directly into the system prompt (not via tool) to ensure **automatic** conversational continuity without requiring explicit LLM decision-making.
 
 **Rationale**:
 - Tools are opt-in; the LLM won't call `recall_previous_chat` unless conversation context triggers it, making continuity unreliable
 - System prompt injection ensures Zoe always has narrative context from recent conversations available
 - Summaries bridge the gap between atomic facts (decontextualized) and conversational continuity (narrative)
-- Prompt size impact is manageable: 3 chats × 200-500 tokens per summary = ~1500 tokens max
+- Prompt size impact is manageable: yesterday's summaries are typically 200-500 tokens per chat
 
 **What to inject**:
-- Yesterday's closed + summarized chats (always include)
-- Today's earlier chats are already surfaced via `time_facts` (extracted facts), so skip unsummarized same-day chats to avoid duplication
-- Cap at last 3 days or last 5 summaries for a hard bound
+- Yesterday's closed + summarized chats (always include, scoped to same partner)
+- Today's earlier chats are already surfaced via `time_facts` (extracted facts), so skip them to avoid duplication
+- Multiple yesterday chats are joined with `\n\n` into a single string
 
-**Implementation pattern**:
+**Implementation pattern** (`character.rb`):
 ```ruby
-# character.rb
-def recent_chat_summaries(partner:, limit: 5)
-  Chat.where(character: self, partner: partner, closed: true)
-      .where.not(summary: [nil, ""])
-      .where("created_at > ?", 3.days.ago)
-      .order(created_at: :desc)
-      .limit(limit)
-      .reverse  # chronological order
+def yesterday_summary(partner:)
+  summaries = chats.where(partner: partner, closed: true)
+                   .where(created_at: Date.yesterday.all_day)
+                   .where.not(summary: [nil, ""])
+                   .order(:created_at)
+                   .pluck(:summary)
+  summaries.join("\n\n").presence  # Returns single string or nil
 end
 ```
 
-Insert into `app/prompts/ai/zoe/instructions.txt.erb` between "Events and facts" and "Your instructions":
+Insert into `app/prompts/ai/zoe/instructions.txt.erb` using XML tag with explicit date grounding:
 ```erb
-<% if (summaries = chat.character.recent_chat_summaries(partner: chat.partner)).present? %>
-# Recent conversations
+<% yesterday = chat.yesterday_summary -%>
+<% if yesterday.present? -%>
 
-<% summaries.each do |past_chat| %>
-## <%= I18n.l(past_chat.created_at.to_date, locale: :en) %>
-<%= past_chat.summary %>
-
-<% end %>
-<% end %>
+<yesterday_conversation date="<%= Date.yesterday %>">
+<%= yesterday %>
+</yesterday_conversation>
+<% end -%>
 ```
 
-**Use existing Memory tool for**: Explicit recall of older conversations beyond the 3-day window ("what did we talk about last week?")
+The `date` attribute provides explicit temporal grounding for the LLM.
+
+**Summarization Prompt Pattern** (`app/prompts/ai/summarization_agent/instructions.txt.erb`):
+- Output format: **one or two flowing narrative paragraphs**, no headers, no bullet points, no "Key Points" sections, no metadata headers (date, participants, etc.)
+- This prevents redundant boilerplate when multiple summaries from the same day are concatenated
+- Focus on: what was discussed, decisions made, plans agreed upon, emotional tone, specific details worth remembering
+- The compact format ensures prompt size stays manageable when yesterday's summaries are embedded
+
+**Use existing Memory tool for**: Explicit recall of older conversations beyond yesterday ("what did we talk about last week?")
