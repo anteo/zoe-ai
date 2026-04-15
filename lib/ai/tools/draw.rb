@@ -10,6 +10,7 @@ module AI
           .map { { character: it.record.name, attachment_id: it.blob.id, description: it.blob.metadata[:description] } }
 
         "Draw a picture by using a prompt. You can provide attachment IDs from chat history or character attachments to use as reference images.\n" +
+          "IMPORTANT: For each character, pick AT MOST ONE image — the one whose description best matches the drawing prompt. Do NOT attach multiple images of the same character.\n" +
           "Characters available: #{characters.inspect}"
       }
 
@@ -31,7 +32,7 @@ module AI
                required: false
         array :attachment_ids,
               of: :integer,
-              description: "IDs of image attachments to use as reference images. Can be from chat history or character attachments.",
+              description: "IDs of image attachments to use as reference images. Use at most one image per character — choose the one whose description best fits the drawing prompt.",
               required: false
       end
 
