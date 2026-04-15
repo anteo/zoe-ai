@@ -17,9 +17,8 @@ module AI::Actors
     private
 
     def summarize_groups(groups)
-      groups.map do |period, facts|
-        summary = summarize_with_assistant(facts)
-
+      groups.map do |period, topic_groups|
+        summary = summarize_with_assistant(topic_groups)
         [ period, summary ]
       end
     end
@@ -28,8 +27,12 @@ module AI::Actors
       @chat ||= AI::DescribeCharacterAgent.chat(character:)
     end
 
-    def summarize_with_assistant(facts)
-      content = facts.map { "- #{it.to_description}" }.join("\n")
+    def summarize_with_assistant(topic_groups)
+      content = topic_groups.map do |topic_name, facts|
+        lines = facts.map { "- #{it.to_description}" }.join("\n")
+        "## #{topic_name}\n#{lines}"
+      end.join("\n\n")
+
       logger.debug ">>> #{content}"
       chat.add_message(role: :user, content: content)
       response = chat.complete

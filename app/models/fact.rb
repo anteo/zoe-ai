@@ -20,8 +20,7 @@ class Fact < ApplicationRecord
   end
 
   def to_description
-    base = to_s
-    author_id != character_id ? "According to #{author.name}: #{base}" : base
+    author_id != character_id ? "According to #{author.name}: #{content}" : content
   end
 
   def time_present?

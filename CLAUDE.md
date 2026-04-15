@@ -59,15 +59,41 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 ## Character Description Generation
 - Triggered when a persistent fact is saved (sets `character.description_up_to_date = false`)
 - `AI::Actors::DescribeCharacter` (`lib/ai/actors/describe_character.rb`)
-- Groups persistent facts into 4 time buckets (>12mo, 12-6mo, 6-3mo, <3mo)
-- Summarizes each bucket with LLM (temp 0.1) using `app/prompts/ai/describe_character_agent/instructions.txt.erb`
-- **Wraps each summary in XML tags**: `<period from="..." to="...">summary</period>`
-  - `from` and `to` attributes use date format `"%B %Y"` (e.g. `"January 2026"`)
-  - Attributes are omitted when the bound is nil: earliest bucket has only `to=`, latest bucket has only `from=`
-  - Example: `<period to="April 2025">...</period>` for earliest, `<period from="January 2026">...</period>` for latest
-- **Why XML wrapper instead of markdown headers**: Creates hard semantic boundaries between temporal periods in the system prompt. The LLM receives structured, machine-parseable sections that prevent temporal confusion.
-- Description is stored as concatenated XML blocks (joined with `\n\n`) and injected into system prompt for all subsequent chats
-- The instruction prompt tells the LLM its output will be wrapped in tags, so it shouldn't redundantly mention the time period itself
+- Groups persistent facts into 4 time buckets (>12mo, 12-6mo, 6-3mo, <3mo), then **sub-groups each bucket by topic**
+- **LLM call strategy**: One call per time period (not per topic). All facts for a period are listed under topic headers in the prompt; the LLM produces a single flowing description that includes per-topic `<topic>` sections
+- Uses `app/prompts/ai/describe_character_agent/instructions.txt.erb` (temp 0.1)
+
+### Hierarchical Data Pattern: Time Buckets → Topics → Facts
+
+**Problem**: Data has two levels of hierarchy (time periods + topics within each period). Naive approaches:
+- One LLM call per topic×period: 4 periods × N topics = many API calls, slow, for marginal benefit
+- One call per period, facts as unstructured list: loses semantic topic boundaries
+
+**Solution**: Format facts by topic within a single message per period, let LLM produce structured XML per topic:
+
+1. **Data flow** (`lib/ai/actors/describe_character.rb`):
+   - `grouped_persistent_facts` returns: `[[period, { topic_name => [facts], ... }], ...]`
+   - `summarize_groups` iterates periods; for each period, calls `summarize_with_assistant(topic_groups)` once
+   - `summarize_with_assistant` formats all topics as markdown headers with fact lists, sends to LLM in a single message
+   - LLM returns text with `<topic name="...">` sections (one per topic, each with flowing prose)
+
+2. **Prompt design** (`app/prompts/ai/describe_character_agent/instructions.txt.erb`):
+   - "Facts are grouped below by topic under `##` headers. For each topic, produce a `<topic name=\"...\">` section."
+   - Includes example output showing expected XML structure
+   - Tells LLM: "Output only `<topic>` sections, nothing else. No preamble, no closing remarks."
+   - With `temperature 0.1`, XML output is reliable enough to trust without schema
+
+3. **Output wrapping** (`format_description`):
+   - Takes LLM response (already contains `<topic>` tags) and wraps in `<period>` tags
+   - Final output: `<period from="..." to="..."><topic name="Habits">...</topic><topic name="Work">...</topic></period>`
+   - `from` and `to` attributes use date format `"%B %Y"` (e.g. `"January 2026"`)
+   - Attributes are omitted when the bound is nil: earliest bucket has only `to=`, latest bucket has only `from=`
+   - Periods joined with `\n\n`
+
+**Key insight**: Let the LLM handle topic-level structure (via prompt + low temp) rather than trying to orchestrate it at the system level. This reduces API calls from O(periods × topics) to O(periods) while maintaining semantic structure.
+
+- **Why XML nesting**: Creates hard semantic boundaries both temporally (periods) and thematically (topics). Prevents topic bleed. System prompt receives machine-parseable sections.
+- Description is stored as concatenated nested XML blocks and injected into system prompt for all subsequent chats
 
 ## SummarizationAgent Pattern
 - `AI::SummarizationAgent` (`lib/ai/agents/summarization_agent.rb`) — `BaseAgent` subclass, temp 0.1, takes `chat` input
