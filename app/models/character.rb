@@ -79,8 +79,9 @@ class Character < ApplicationRecord
     name
   end
 
-  def last_conversation_time
-    last = chats.order(:created_at).last
+  def last_conversation_time(except: nil)
+    scope = except ? chats.where.not(id: except) : chats
+    last = scope.order(:created_at).last
     return unless last
     last.messages.maximum(:created_at)
   end
