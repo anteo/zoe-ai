@@ -8,17 +8,17 @@ module AI
     schema do
       array :facts do
         object do
-          integer :character_id, required: false, description: "ID of an existing known character this fact is about (preferred over character_name)"
-          string :character_name, description: "Name of the person/pet this fact is about, if not in the known characters list (will create a new third-party character)"
-          string :fact, description: "3rd-person description; replace pronouns with real names; translate to English, but keep Russian personal names in the nominative case, do not translate Russian personal names"
+          integer :character_id, required: false
+          string :character_name
+          string :fact
           string :kind, enum: %w[attribute experience belief preference plan]
           string :time, enum: %w[past present future]
-          integer :importance, minimum: 0, maximum: 100, description: "Importance for personality description"
-          boolean :persistent, description: "false for specific events or single-instance opinions (\"went shopping yesterday\", \"liked this painting\"); true for enduring traits, general habits, long‑term roles (\"likes painting\", \"is a student\", \"has a cat\")"
-          string :date_from, required: false, description: "event date range start in YYYY-MM-DD if determinable"
-          string :date_to, required: false, description: "event date range end in YYYY-MM-DD if determinable"
-          integer :topic_id, required: false, description: "ID of an existing matching topic (preferred over topic_name)"
-          string :topic_name, description: "New topic name if no existing topic matches"
+          integer :importance, minimum: 0, maximum: 100
+          boolean :persistent
+          string :date_from, required: false
+          string :date_to, required: false
+          integer :topic_id, required: false
+          string :topic_name
         end
       end
     end

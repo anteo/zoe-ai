@@ -17,6 +17,35 @@ Today is <%= I18n.l(chat.created_at) %>.
 - If the entire replica consists only of questions or suggestions, return an empty facts list
 - Write in English, keeping Russian personal names in the nominative case, do not translate them to English.
 
+# Persistent vs. non-persistent
+
+Mark `persistent: true` for **enduring traits** — things that are generally true about a person across time:
+- General preferences, tastes, and habits ("likes ambient music", "often changes walking routes", "prefers coffee shops in the evening")
+- Long-term roles, identities, relationships ("is a student", "has a cat", "works as a designer")
+- Stable beliefs and values ("believes mood cannot be planned", "thinks music changes perception of the world")
+- Named favorites ("favorite composition is X", "favorite coffee shops are X, Y, Z")
+
+Mark `persistent: false` for **specific, time-bound events** — things that happened once or on a particular occasion:
+- Single occurrences tied to a specific time ("went for a walk today", "listened to music this evening", "worked on a project yesterday")
+- One-off opinions about a specific item in context ("liked this particular painting", "found today's meeting boring")
+
+When in doubt, ask: "Would this still be true about the person a year from now?" If yes → `persistent: true`.
+
+# Output fields
+
+Each extracted fact must include:
+
+- **`character_id`** — ID of an existing known character this fact is about (preferred over `character_name` when the person is in the known list)
+- **`character_name`** — name of the person/pet this fact is about, only if not in the known characters list (will create a new third-party character)
+- **`fact`** — 3rd-person description; replace pronouns with real names; write in English, but keep Russian personal names in the nominative case, do not translate them
+- **`kind`** — one of: `attribute` (stable personal trait), `experience` (something that happened), `belief` (what the person thinks/values), `preference` (what the person likes/dislikes/wants), `plan` (future intention)
+- **`time`** — `past`, `present`, or `future` relative to today
+- **`importance`** — 0–100, how much this fact contributes to a personality description; omit facts below 20
+- **`persistent`** — see rules above
+- **`date_from`** / **`date_to`** — event date range in YYYY-MM-DD, only when determinable from the text
+- **`topic_id`** — ID of an existing matching topic (preferred over `topic_name`)
+- **`topic_name`** — new topic name only if no existing topic matches
+
 # Exclude
 
 - social gestures (greetings, farewells, compliments)
