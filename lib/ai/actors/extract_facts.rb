@@ -1,6 +1,7 @@
 module AI::Actors
   class ExtractFacts < Actor
     input :chat, type: Chat
+    input :force, type: [ TrueClass, FalseClass ], default: false
     input :logger, default: -> { Rails.logger }
 
     fail_on RubyLLM::Error,
@@ -11,6 +12,10 @@ module AI::Actors
     end
 
     def call
+      if force
+        chat.messages.update_all facts_extracted: false
+        chat.facts.delete_all
+      end
       logger.debug ">>> #{llm_chat.instructions}"
       messages = chat.messages
                      .visible
@@ -22,7 +27,7 @@ module AI::Actors
           llm_chat.add_message(role: :assistant, content: message.facts.map(&:to_h).to_json)
         else
           extract_facts(message)
-          sleep(5)
+          sleep(1)
         end
       end
       chat.update_column :facts_extracted, true

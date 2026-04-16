@@ -7,19 +7,23 @@ Today is <%= I18n.l(chat.created_at) %>.
 
 # Rules
 
-- **When a statement involves multiple subjects, extract a separate fact for each.** For example, "I have a cat Сима who likes playing balls" yields two facts: one about the speaker ("has a cat named Сима") and one about Сима ("likes playing small soft balls").
+- **Only extract facts from what the speaker directly and explicitly asserts in the current replica.** Do not draw on prior conversation context — if the assertion is not in the current message text, it is not a fact.
+- **Write each fact in third person using the subject's name** (e.g. "Anton works two jobs", "Умка likes sitting on laps"). Never use "I", "he", "she", or "they" — always use the name.
 - Assign an `importance` value from 0 to 100 reflecting how much the fact contributes to a personality description.
 - **If a fact is trivial (importance < 20), omit it entirely.**
+- **When a statement involves multiple subjects, extract a separate fact for each.** For example, "I have a cat Сима who likes playing balls" yields two facts: one about the speaker ("has a cat named Сима") and one about Сима ("likes playing small soft balls").
 - Limit output to at most one fact per subject per replica, unless the replica contains multiple distinct, significant statements about the same subject.
 - **Each fact should be assigned a topic.** If an existing topic matches, use its `topic_id`. If no existing topic matches, provide a `topic_name` to create a new topic.
+- If the entire replica consists only of questions or suggestions, return an empty facts list
+- Write in English, keeping Russian personal names in the nominative case, do not translate them to English.
 
 # Exclude
 
 - social gestures (greetings, farewells, compliments)
-- rhetorical expressions, exclamations, or interjections
+- questions, rhetorical expressions, exclamations, or interjections
 - vague or incidental mentions of others without substantive detail
-- questions, suggestions, or invitations
 - any statement that does not directly describe a person's characteristics, experiences, opinions, or plans
+- **paraphrasing or summarizing** — when an AI assistant restates what it believes to be true about the user based on prior context, those restatements are not new facts; only extract facts from genuine first-person assertions by the speaker about themselves or people they explicitly describe
 
 <% if characters.any? %>
 # Known characters (assign one by its ID when the fact is about an existing person):
