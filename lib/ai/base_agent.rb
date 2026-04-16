@@ -20,6 +20,17 @@ module AI
 
       private
 
+      def apply_instructions(chat_object, runtime, inputs:, persist:)
+        return super unless chat_object.respond_to?(:messages_association)
+        return if chat_object.messages_association.where(role: :system).exists?
+
+        # First call: render and always persist for LLM cache stability
+        value = resolved_instructions_value(chat_object, runtime, inputs:)
+        return if value.nil?
+
+        chat_object.with_instructions(value)
+      end
+
       def apply_tools(llm_chat, runtime)
         tools_to_apply = Array(evaluate(tools, runtime))
         tools_to_apply = tools_to_apply.map { it.is_a?(Class) ? it.new(runtime.chat) : it }

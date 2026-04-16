@@ -40,7 +40,4 @@ You are <%= chat.partner.name %>.
 
 <instructions>
 <%= chat.partner_instructions %>
-<% if defined?(additional_instructions) && additional_instructions.present? -%>
-<%= additional_instructions.map { "* #{it}" }.join("\n") %>
-<% end -%>
 </instructions>

@@ -64,6 +64,8 @@ Uses XML tags for hard semantic boundaries between sections:
 - `<yesterday_conversation>` — yesterday's chat summaries (injected directly, not via tool)
 - `<instructions>` — AI-specific instructions
 
+**System prompt caching:** `BaseAgent#apply_instructions` snapshots the rendered prompt into the `messages` table as a system message on the **first agent invocation** for a chat (via `RespondJob` → `find` with `persist: false`), using RubyLLM's `with_instructions` + `persist_system_instruction`. On subsequent requests, `apply_instructions` returns early if a persistent system message exists (checks `chat.messages_association.where(role: :system).exists?`), avoiding re-render. This means `to_llm` loads the frozen system message from DB, LLM sees identical bytes every turn → consistent cache hits. No explicit `sync_instructions!` call needed; the snapshot happens transparently. Semantic model: mid-conversation extractions (ExtractFactsJob, DescribeCharacterJob) affect the *next* chat's prompt only.
+
 ## Key Design Decisions
 
 **Yesterday's summaries in system prompt** (not via tool): Tools are opt-in; LLM won't reliably call recall. Direct injection ensures automatic conversational continuity. Older conversations use the Memory tool.
