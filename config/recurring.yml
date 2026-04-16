@@ -10,7 +10,7 @@
 #     schedule: at 5am every day
 
 close_chats:
-  class: CloseChatsJob
+  class: CloseStaleChatsJob
   schedule: at midnight every day
 
 production:

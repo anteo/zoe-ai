@@ -13,7 +13,7 @@ module AI
     end
 
     def current_user
-      char.user
+      chat.user
     end
 
     def execute(...)

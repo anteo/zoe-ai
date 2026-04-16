@@ -12,7 +12,9 @@ class MessagesController < ApplicationController
     content = RubyLLM::Content.new(message_params[:content], message_params[:attachments])
 
     if chat.new_record?
-      chat.save
+      CloseChatJob.perform_later(default_chat) if default_chat
+
+      chat.save!
       chat.add_message(role: :user, content:)
 
       redirect_to chat_path(chat)
@@ -70,6 +72,7 @@ class MessagesController < ApplicationController
   def find_chat
     @chat ||= current_user.chats.find_by(id: params[:chat_id])
     head(:forbidden) if @chat && @chat.character != current_character
+    head(:not_found) if @chat&.closed?
   end
 
   def render_chat

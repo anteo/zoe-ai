@@ -15,6 +15,14 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def default_chat
+    @default_chat ||= current_user.chats
+                                  .where(character: @current_character, partner: Character.ai,
+                                         created_at: Date.current.all_day, closed: false)
+                                  .order(created_at: :desc)
+                                  .first
+  end
+
   def current_user
     # Current user is hard-coded for now
     @current_user ||= User.find_by(id: 3)
@@ -28,9 +36,7 @@ class ApplicationController < ActionController::Base
   end
 
   def find_default_chat
-    @chat ||= current_user.chats.where(character: @current_character, partner: Character.ai, created_at: Date.current.all_day)
-                          .order(created_at: :desc)
-                          .first
+    @chat ||= default_chat
   end
 
   def build_default_chat
