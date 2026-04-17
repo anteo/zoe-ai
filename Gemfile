@@ -45,3 +45,4 @@ gem "http_accept_language"
 gem "request_store"
 gem 'json-schema'
 gem 'image_processing'
+gem "redcarpet"

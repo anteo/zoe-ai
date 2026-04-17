@@ -68,6 +68,8 @@ Uses XML tags for hard semantic boundaries between sections:
 
 ## Key Design Decisions
 
+**Markdown rendering in messages** — Server-side via `redcarpet` gem in `ApplicationHelper#markdown`. Instantiates new renderer on each call (thread-safe). Supports fenced code, tables, strikethrough, autolink, hard line breaks. Links open in new tab (`rel=noopener`). Applied in `message_component.html.erb` for all message content.
+
 **Yesterday's summaries in system prompt** (not via tool): Tools are opt-in; LLM won't reliably call recall. Direct injection ensures automatic conversational continuity. Older conversations use the Memory tool.
 
 **LLM context pollution prevention**: System-injected annotations (e.g. attachment blob IDs) are added at LLM read time (`extract_content`) but stripped before DB persistence (`prepare_content_for_storage`). Prevents LLM from learning to reproduce system annotations.
@@ -75,6 +77,8 @@ Uses XML tags for hard semantic boundaries between sections:
 **Daily chat closure**: `CloseChatsJob` runs at midnight, sets `closed: true`, broadcasts redirect immediately. Summarization runs async via `SummarizeChatJob` to keep the critical path short. Startup initializer catches stale chats from restarts.
 
 **Image generation**: `AI.paint` wraps RubyLLM with `with:` parameter for image-to-image (OpenRouter provider only). Characters have `has_many_attached :images` with `metadata[:description]` for selection.
+
+**Message bubble styling**: `.chat-bubble` uses `--tw-prose-*` CSS custom properties set to `currentColor`, making all prose typography (text, headings, links, code) inherit the bubble's text color directly. This eliminates the need for separate `prose-invert` classes and ensures text color matches backgrounds automatically. Markdown is rendered server-side and styled with `prose prose-sm max-w-none` classes. The Tailwind typography plugin is loaded via `@plugin "@tailwindcss/typography"` in PostCSS.
 
 **Actor error handling**: Use `fail_on RubyLLM::Error` in actors for graceful degradation in jobs — returns failed Result instead of raising.
 

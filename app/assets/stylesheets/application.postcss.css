@@ -3,6 +3,7 @@
 @import "vistaview/dist/style.css";
 
 @plugin "daisyui";
+@plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 /*@plugin '@egoist/tailwindcss-icons';*/
 /*@plugin '@iconify-json/lucide';*/
@@ -121,6 +122,21 @@
         --radius-field: var(--radius-3xl);
         --radius-box: var(--radius-xl);
     }
+}
+
+.chat-bubble {
+    --tw-prose-body: currentColor;
+    --tw-prose-headings: currentColor;
+    --tw-prose-lead: currentColor;
+    --tw-prose-bold: currentColor;
+    --tw-prose-counters: currentColor;
+    --tw-prose-bullets: currentColor;
+    --tw-prose-hr: currentColor;
+    --tw-prose-quotes: currentColor;
+    --tw-prose-quote-borders: currentColor;
+    --tw-prose-captions: currentColor;
+    --tw-prose-code: currentColor;
+    --tw-prose-links: currentColor;
 }
 
 .dialog-start + .dialog-start .dialog-header {

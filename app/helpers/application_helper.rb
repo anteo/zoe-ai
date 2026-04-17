@@ -1,4 +1,11 @@
 module ApplicationHelper
+  def markdown(text)
+    return "" if text.blank?
+    renderer = Redcarpet::Render::HTML.new(hard_wrap: true, link_attributes: { target: "_blank", rel: "noopener" })
+    Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, tables: true, strikethrough: true, autolink: true, no_intra_emphasis: true)
+      .render(text).html_safe
+  end
+
   def avatar_for(url: nil, size: 128, initials: nil)
     css = "w-8 h-8 rounded-full shrink-0"
 

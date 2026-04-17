@@ -16,6 +16,7 @@ require "action_cable/engine"
 
 require_relative "../lib/pragmatic_segmenter/languages/russian_with_emoji"
 require "rainbow/refinement"
+require "redcarpet"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
