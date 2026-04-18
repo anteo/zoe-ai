@@ -24,8 +24,8 @@ class RespondJob < ApplicationJob
 
     return unless message.visible?
 
-    sentences = AI::SentenceSplitter.new(message.content).sentences
-    TypeSentenceJob.perform_later(chat, message, sentences, true)
+    chunks = AI::SentenceSplitter.new(message.content).chunks
+    TypeSentenceJob.perform_later(chat, message, chunks, true)
     ExtractFactsJob.perform_later(chat)
   end
 end
