@@ -44,4 +44,11 @@ en:
   confirm_delete_message: Delete this message and all subsequent ones?
   label_memory_mode_on: Memory on
   label_memory_mode_off: Memory off
+  label_chat_history: History
+  label_back: Back
+  label_close: Close
+  label_previous_chat: Previous chat
+  label_next_chat: Next chat
+  text_select_chat_history: Select a chat from the list.
+  text_no_chat_history: No previous chats yet.
   text_greeting_html: Hi, I'm Zoe 🙂<br> Let's chat!

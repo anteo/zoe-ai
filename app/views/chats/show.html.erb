@@ -6,6 +6,7 @@
         <%= image_tag "logo_light.png", class: "logo-light h-10", alt: "" %>
       </div>
     </div>
+    <%= component :history_drawer, history_chats: @history_chats %>
     <button class="btn btn-ghost" popovertarget="chat-menu" style="anchor-name: --anchor-chat-menu">⋮</button>
     <ul class="dropdown menu p-2 shadow bg-base-100 rounded-box w-52 mt-1" popover id="chat-menu" style="position-anchor: --anchor-chat-menu; position-area: bottom span-left">
       <li>

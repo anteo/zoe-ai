@@ -137,6 +137,7 @@
     --tw-prose-captions: currentColor;
     --tw-prose-code: currentColor;
     --tw-prose-links: currentColor;
+    max-width: 70%;
 }
 
 .dialog-start + .dialog-start .dialog-header {
@@ -145,4 +146,34 @@
 
 .dialog-end + .dialog-end .dialog-header {
     display: none;
+}
+
+.history-drawer-panel #history-chat-messages {
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.history-chat-frame {
+    opacity: 1;
+    transition: opacity 160ms ease;
+}
+
+.history-chat-frame.is-loading {
+    opacity: 0;
+}
+
+.history-chat-frame.is-ready > * {
+    animation: history-chat-fade-in 220ms ease;
+}
+
+@keyframes history-chat-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

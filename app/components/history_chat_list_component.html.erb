@@ -1,0 +1,34 @@
+<div class="h-full overflow-y-auto p-4 space-y-3">
+  <% if empty? %>
+    <div class="rounded-field border border-base-300 bg-base-200 p-4 text-sm opacity-70">
+      <%= t(:text_no_chat_history) %>
+    </div>
+  <% end %>
+
+  <% entries.each do |entry| %>
+    <%= link_to history_detail_chat_path(entry.chat),
+                data: {
+                  turbo_frame: "history-chat-detail",
+                  action: "click->history-drawer#openChat",
+                  history_drawer_title: entry.day_label,
+                  history_drawer_time_span: entry.time_span,
+                  history_drawer_index: entry.index,
+                  history_drawer_chat_link: true
+                },
+                class: "block rounded-field border border-base-300 bg-base-100 p-3 space-y-2 transition-all duration-150 hover:bg-base-200 hover:shadow-sm" do %>
+      <article>
+        <div class="flex items-start gap-3">
+          <div class="flex-1 text-left">
+            <div class="font-medium"><%= entry.day_label %></div>
+            <div class="text-xs opacity-70"><%= entry.time_span %></div>
+          </div>
+          <span class="badge badge-ghost"><%= entry.message_count %></span>
+        </div>
+
+        <% if entry.preview.present? %>
+          <p class="text-sm opacity-80 line-clamp-2"><%= entry.preview %></p>
+        <% end %>
+      </article>
+    <% end %>
+  <% end %>
+</div>

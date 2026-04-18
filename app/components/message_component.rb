@@ -3,9 +3,10 @@
 class MessageComponent < ApplicationComponent
   attr_reader :message, :current_character
 
-  def initialize(message:, current_character:)
+  def initialize(message:, current_character:, read_only: false)
     @message = message
     @current_character = current_character
+    @read_only = read_only
   end
 
   def sender
@@ -30,5 +31,9 @@ class MessageComponent < ApplicationComponent
 
   def file_attachments
     message.attachments.reject(&:image?)
+  end
+
+  def read_only?
+    @read_only
   end
 end

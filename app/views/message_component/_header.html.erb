@@ -1,5 +1,5 @@
 <div class="chat-header px-3 flex items-center gap-1 mb-1">
-  <% if message.persisted? && is_current_character %>
+  <% if message.persisted? && is_current_character && !read_only %>
     <span class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 mr-1">
       <button class="btn btn-ghost btn-xs p-0.5 min-h-0 h-auto"
               title="<%= t(:label_edit) %>"
@@ -25,7 +25,7 @@
   <% unless message.memorize %>
     <span class="icon-[lucide--bookmark-off] w-3 h-3 opacity-40 ml-1" title="<%= t(:label_memory_mode_off) %>"></span>
   <% end %>
-  <% if message.persisted? && !is_current_character %>
+  <% if message.persisted? && !is_current_character && !read_only %>
     <span class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 ml-1">
       <%= button_to message_path(message), method: :delete,
             class: "btn btn-ghost btn-xs p-0.5 min-h-0 h-auto text-error",

@@ -1,0 +1,8 @@
+<%= helpers.turbo_frame_tag "history-chat-detail" do %>
+  <%= helpers.component :chat,
+                chat: history_chat,
+                current_character:,
+                read_only: true,
+                stream: false,
+                dom_id: "history-chat-messages" %>
+<% end %>

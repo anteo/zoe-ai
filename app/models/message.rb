@@ -18,6 +18,10 @@ class Message < ApplicationRecord
       .where(arel_table[:content].not_eq("").or(arel_table[:id].in(has_attachment)))
   }
 
+  def self.humanize_content(content)
+    content.gsub(/\n*\(files attached: \[.*?\]\)/m, "").rstrip
+  end
+
   def user?
     role == "user"
   end
@@ -40,6 +44,10 @@ class Message < ApplicationRecord
 
   def destroy_later_messages
     chat.messages.where("id > ?", id).destroy_all
+  end
+
+  def human_content
+    self.class.humanize_content(content)
   end
 
   private

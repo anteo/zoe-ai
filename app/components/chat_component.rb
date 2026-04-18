@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ChatComponent < ApplicationComponent
-  attr_reader :chat, :current_character
+  attr_reader :chat, :current_character, :dom_id
 
-  def initialize(chat:, current_character:)
+  def initialize(chat:, current_character:, read_only: false, stream: true, dom_id: "chat-messages")
     @chat = chat
     @current_character = current_character
+    @read_only = read_only
+    @stream = stream
+    @dom_id = dom_id
   end
 
   def messages
@@ -16,6 +19,14 @@ class ChatComponent < ApplicationComponent
 
   def new?
     @chat.new_record?
+  end
+
+  def read_only?
+    @read_only
+  end
+
+  def stream?
+    @stream
   end
 
   private

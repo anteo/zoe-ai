@@ -21,4 +21,11 @@ ru:
   confirm_delete_message: Удалить это сообщение и все последующие?
   label_memory_mode_on: Память включена
   label_memory_mode_off: Память выключена
+  label_chat_history: История
+  label_back: Назад
+  label_close: Закрыть
+  label_previous_chat: Предыдущий чат
+  label_next_chat: Следующий чат
+  text_select_chat_history: Выберите разговор из списка.
+  text_no_chat_history: Пока нет предыдущих разговоров.
   text_greeting_html: Привет, я Зоя 🙂<br> Давай поболтаем!

@@ -3,7 +3,11 @@ Rails.application.routes.draw do
 
   root "chats#show"
 
-  resources :chats, only: [:show, :new, :destroy]
+  resources :chats, only: [:show, :new, :destroy] do
+    member do
+      get :history_detail
+    end
+  end
   resources :messages, only: [:create, :update, :destroy] do
     member do
       post :resend
