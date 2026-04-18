@@ -48,7 +48,7 @@ module AI
     end
 
     def sentences
-      segmenter.segment.map { Sentence.new(_1) }
+      segmenter.segment.reject(&:blank?).map { Sentence.new(_1) }
     end
   end
 end
