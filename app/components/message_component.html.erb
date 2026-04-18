@@ -3,7 +3,7 @@
     <%= render "message_component/header", message:, is_current_character: is_current_character?, sender: %>
 
     <% if message.content.present? %>
-      <div class="chat-bubble prose prose-sm max-w-none <%= bubble_color %>" data-message-target="view">
+      <div class="chat-bubble prose prose-sm <%= bubble_color %>" data-message-target="view">
         <%= markdown(message.content) %>
       </div>
 

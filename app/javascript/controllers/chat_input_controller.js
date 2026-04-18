@@ -4,7 +4,7 @@ import {createChatSubscription} from "../channels/chat_channel"
 let memorizeMode = true
 
 export default class extends Controller {
-  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton", "memorizeButton", "memorizeField", "memorizeIcon", "memorizeTooltip"]
+  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton", "memorizeButton", "memorizeField", "memorizeIcon", "memorizeLabel"]
   static values = {
     chatId: Number
   }
@@ -51,10 +51,10 @@ export default class extends Controller {
     this.memorizeButtonTarget.classList.toggle("opacity-40", !memorizeMode)
     this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark]", memorizeMode)
     this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark-off]", !memorizeMode)
-    if (this.hasMemorizeTooltipTarget) {
-      this.memorizeTooltipTarget.textContent = memorizeMode
-        ? this.memorizeTooltipTarget.dataset.tipOn
-        : this.memorizeTooltipTarget.dataset.tipOff
+    if (this.hasMemorizeLabelTarget) {
+      this.memorizeLabelTarget.textContent = memorizeMode
+        ? this.memorizeLabelTarget.dataset.labelOn
+        : this.memorizeLabelTarget.dataset.labelOff
     }
   }
 
@@ -113,7 +113,7 @@ export default class extends Controller {
   updateSendButton() {
     if (!this.hasSendButtonTarget) return
     const active = this.hasContent()
-    this.sendButtonTarget.classList.toggle("btn-ghost", !active)
+    this.sendButtonTarget.classList.toggle("btn-default", !active)
     this.sendButtonTarget.classList.toggle("btn-success", active)
   }
 
