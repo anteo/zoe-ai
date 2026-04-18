@@ -28,7 +28,6 @@ module AI::Actors
         elsif !message.memorize
           llm_chat.add_message(role: :user, content: message.to_direct_speech)
           llm_chat.add_message(role: :assistant, content: "[]")
-          message.update_column :facts_extracted, true
         else
           extract_facts(message)
           sleep(1)

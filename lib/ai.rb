@@ -1,25 +1,23 @@
 module AI
   module_function
 
-  def mcp_server_configs
-    [
-      MCPClient.stdio_config(
-        name: "Google Custom Search",
-        command: "uvx mcp-google-cse",
-        env: {
-          "API_KEY" => "AIzaSyDG6QE4MNZ7GpHSOhgV292Y3TQ_GJYdeoQ",
-          "ENGINE_ID" => "957e963ac8dee458d"
-        }
-      ),
-      MCPClient.stdio_config(
-        name: "Fetch",
-        command: "uvx mcp-server-fetch",
-      )
-    ]
+  def mcp_clients
+    clients = RubyLLM::MCP.clients
+    clients.respond_to?(:values) ? clients.values : Array.wrap(clients)
   end
 
-  def mcp_client
-    @mcp_client ||= MCPClient.create_client(mcp_server_configs:)
+  def mcp_tools
+    mcp_clients.flat_map(&:tools).uniq(&:name)
+  rescue StandardError => e
+    Rails.logger.error("[MCP] failed to load tools: #{e.class}: #{e.message}")
+    []
+  end
+
+  def reset_mcp_clients!
+    RubyLLM::MCP.close_connection if RubyLLM::MCP.respond_to?(:close_connection)
+    return unless RubyLLM::MCP.instance_variable_defined?(:@clients)
+
+    RubyLLM::MCP.remove_instance_variable(:@clients)
   end
 
   def chat(...)
