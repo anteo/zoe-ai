@@ -42,4 +42,6 @@ en:
   label_save: Save
   label_cancel: Cancel
   confirm_delete_message: Delete this message and all subsequent ones?
+  label_memory_mode_on: Memory on
+  label_memory_mode_off: Memory off
   text_greeting_html: Hi, I'm Zoe 🙂<br> Let's chat!

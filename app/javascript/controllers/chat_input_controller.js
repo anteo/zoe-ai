@@ -1,8 +1,10 @@
 import {Controller} from "@hotwired/stimulus"
 import {createChatSubscription} from "../channels/chat_channel"
 
+let memorizeMode = true
+
 export default class extends Controller {
-  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton"]
+  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton", "memorizeButton", "memorizeField", "memorizeIcon", "memorizeTooltip"]
   static values = {
     chatId: Number
   }
@@ -20,6 +22,7 @@ export default class extends Controller {
     }
 
     this.updateSendButton()
+    this.applyMemorizeState()
 
     // Subscribe to Action Cable channel for this chat
     this.subscribeToChatChannel()
@@ -34,6 +37,24 @@ export default class extends Controller {
     }
     if (this.subscription) {
       this.subscription.unsubscribe()
+    }
+  }
+
+  toggleMemorize() {
+    memorizeMode = !memorizeMode
+    this.applyMemorizeState()
+  }
+
+  applyMemorizeState() {
+    if (!this.hasMemorizeButtonTarget || !this.hasMemorizeFieldTarget) return
+    this.memorizeFieldTarget.value = memorizeMode ? "true" : "false"
+    this.memorizeButtonTarget.classList.toggle("opacity-40", !memorizeMode)
+    this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark]", memorizeMode)
+    this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark-off]", !memorizeMode)
+    if (this.hasMemorizeTooltipTarget) {
+      this.memorizeTooltipTarget.textContent = memorizeMode
+        ? this.memorizeTooltipTarget.dataset.tipOn
+        : this.memorizeTooltipTarget.dataset.tipOff
     }
   }
 

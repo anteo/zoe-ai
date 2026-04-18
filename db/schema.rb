@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_14_102442) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_17_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -143,6 +143,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_14_102442) do
     t.bigint "tool_call_id"
     t.bigint "character_id"
     t.boolean "facts_extracted", default: false, null: false
+    t.boolean "memorize", default: true, null: false
     t.index ["character_id"], name: "index_messages_on_character_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["model_id"], name: "index_messages_on_model_id"

@@ -19,7 +19,7 @@
       },
       "devDependencies": {
         "@egoist/tailwindcss-icons": "^1.9.0",
-        "@iconify-json/lucide": "^1.2.85",
+        "@iconify-json/lucide": "^1.2.102",
         "@iconify/tailwind4": "^1.2.1",
         "@tailwindcss/postcss": "^4.1.18",
         "daisyui": "^5.5.14",
@@ -76,7 +76,7 @@
 
     "@hotwired/turbo-rails": ["@hotwired/turbo-rails@8.0.20", "", { "dependencies": { "@hotwired/turbo": "^8.0.20", "@rails/actioncable": ">=7.0" } }, "sha512-4aYkYF9XMKL7ZZPfgElq15+60osZOwMwhztE4myKQYEzCPvaPUxwZH301tOrBNtWUwOD+TNOm1Hrpeaq22RX9A=="],
 
-    "@iconify-json/lucide": ["@iconify-json/lucide@1.2.85", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-VXUWT6KRDiVK4Ty/7Ypu+U0KnSbHzDAOOiSgLLPhU8u3ES5IusP1X7ahZb1iwiVKGWRG6gkKywaRUIZLgYWXyA=="],
+    "@iconify-json/lucide": ["@iconify-json/lucide@1.2.102", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-Dm3EEqu5NrmzyDMB2U1+8yroEj2/dB9V4KlH0m/szwwF/ofSf0cPaGTZqkd1aExXjCor+vU53ttRMCGuXf+/cg=="],
 
     "@iconify/tailwind4": ["@iconify/tailwind4@1.2.1", "", { "dependencies": { "@iconify/tools": "^5.0.2", "@iconify/types": "^2.0.0", "@iconify/utils": "^3.1.0" }, "peerDependencies": { "tailwindcss": ">= 4.0.0" } }, "sha512-Hd7k8y7uzT3hk8ltw0jGku0r0wA8sc3d2iMvVTYv/9tMxBb+frZtWZGD9hDMU3EYuE+lMn58wi2lS8R2ZbwFcQ=="],
 

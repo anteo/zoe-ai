@@ -46,6 +46,8 @@ Two ways to use an agent with a Chat:
 3. Returns schema-enforced `{ "facts": [...] }` JSON; `build_fact()` creates records
 4. Multi-subject statements → separate facts per character (no HABTM on facts)
 
+**Memory mode toggle** (`memorize` boolean on Message): When `false`, message is added to LLM context with empty facts response (`[]`) for continuity, but extraction is skipped. AI messages auto-inherit from the last user message. User can toggle via brain icon in chat input; state is stored as a **module-scoped JS variable** in `ChatInputController` — persists across Turbo navigations (state stays off while chatting), but resets to `true` on page refresh/reopen. No cookie persistence; lives only in browser memory for the session.
+
 ## Character Description Generation
 
 - Triggered when a persistent fact is saved (`character.description_up_to_date = false`)

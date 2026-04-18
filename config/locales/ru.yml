@@ -19,4 +19,6 @@ ru:
   label_save: Сохранить
   label_cancel: Отмена
   confirm_delete_message: Удалить это сообщение и все последующие?
+  label_memory_mode_on: Память включена
+  label_memory_mode_off: Память выключена
   text_greeting_html: Привет, я Зоя 🙂<br> Давай поболтаем!

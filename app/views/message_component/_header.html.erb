@@ -22,6 +22,9 @@
   <% end %>
   <span class="font-medium"><%= sender.name %></span>
   <time class="text-xs opacity-50 ml-2"><%= message.created_at.strftime("%H:%M") %></time>
+  <% unless message.memorize %>
+    <span class="icon-[lucide--bookmark-off] w-3 h-3 opacity-40 ml-1" title="<%= t(:label_memory_mode_off) %>"></span>
+  <% end %>
   <% if message.persisted? && !is_current_character %>
     <span class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 ml-1">
       <%= button_to message_path(message), method: :delete,

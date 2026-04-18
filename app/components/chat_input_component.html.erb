@@ -3,7 +3,7 @@
      data-chat-input-chat-id-value="<%= chat.id %>">
   <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "w-full", multipart: true,
                data: { action: "submit->chat-input#handleSubmit" } do |f| %>
-    <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 overflow-hidden bg-base-100 border-base-200 shadow-sm">
+    <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 bg-base-100 border-base-200 shadow-sm">
       <div id="attachments-preview" class="hidden flex flex-wrap gap-2 p-2 border-b border-base-200" data-chat-input-target="attachmentsPreview"></div>
       <div class="flex items-end gap-1 px-3 py-2">
         <%= f.text_area :content,
@@ -12,15 +12,34 @@
             class: "flex-1 resize-none bg-transparent border-none outline-none focus:outline-none py-0.5 max-h-32",
             data: { chat_input_target: "textInput", action: "input->chat-input#handleInput keydown->chat-input#handleKeydown" } %>
         <div class="flex items-center gap-1 shrink-0">
-          <%= f.label :attachments, class: "btn btn-ghost btn-sm cursor-pointer p-1 h-auto min-h-0", title: t(:label_attach) do %>
-            <%= content_tag :span, '', class: "icon-[lucide--paperclip] w-4 h-4" %>
-            <%= f.file_field :attachments, multiple: true, class: "hidden",
-                data: { action: "change->chat-input#displayAttachments", chat_input_target: "fileInput" } %>
-          <% end %>
-          <%= f.button class: "btn btn-ghost btn-sm p-1 h-auto min-h-0", title: t(:label_send),
-                data: { chat_input_target: "sendButton" } do %>
-            <%= content_tag :span, '', class: "icon-[lucide--send] w-4 h-4" %>
-          <% end %>
+          <div class="tooltip tooltip-top">
+            <%= f.label :attachments, class: "btn btn-ghost btn-sm cursor-pointer p-1 h-auto min-h-0" do %>
+              <%= content_tag :span, '', class: "icon-[lucide--paperclip] w-4 h-4" %>
+              <%= f.file_field :attachments, multiple: true, class: "hidden",
+                  data: { action: "change->chat-input#displayAttachments", chat_input_target: "fileInput" } %>
+            <% end %>
+            <div class="tooltip-content"><%= t(:label_attach) %></div>
+          </div>
+          <div class="tooltip tooltip-top">
+            <button type="button"
+                    class="btn btn-ghost btn-sm p-1 h-auto min-h-0"
+                    data-chat-input-target="memorizeButton"
+                    data-action="click->chat-input#toggleMemorize">
+              <%= content_tag :span, '', class: "icon-[lucide--bookmark] w-4 h-4", data: { chat_input_target: "memorizeIcon" } %>
+            </button>
+            <div class="tooltip-content"
+                 data-chat-input-target="memorizeTooltip"
+                 data-tip-on="<%= t(:label_memory_mode_on) %>"
+                 data-tip-off="<%= t(:label_memory_mode_off) %>"><%= t(:label_memory_mode_on) %></div>
+          </div>
+          <%= f.hidden_field :memorize, value: "true", data: { chat_input_target: "memorizeField" } %>
+          <div class="tooltip tooltip-top">
+            <%= f.button class: "btn btn-ghost btn-sm p-1 h-auto min-h-0",
+                  data: { chat_input_target: "sendButton" } do %>
+              <%= content_tag :span, '', class: "icon-[lucide--send] w-4 h-4" %>
+            <% end %>
+            <div class="tooltip-content"><%= t(:label_send) %></div>
+          </div>
         </div>
       </div>
     </div>

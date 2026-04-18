@@ -10,16 +10,19 @@ class MessagesController < ApplicationController
 
   def create
     content = RubyLLM::Content.new(message_params[:content], message_params[:attachments])
+    memorize = message_params[:memorize] != "false"
 
     if chat.new_record?
       CloseChatJob.perform_later(default_chat) if default_chat
 
       chat.save!
-      chat.add_message(role: :user, content:)
+      message = chat.add_message(role: :user, content:)
+      message.update_column(:memorize, memorize)
 
       redirect_to chat_path(chat)
     else
       message = chat.add_message(role: :user, content:)
+      message.update_column(:memorize, memorize)
 
       stream = []
       stream << turbo_stream.append(
@@ -44,7 +47,8 @@ class MessagesController < ApplicationController
     return head(:forbidden) unless message.user?
 
     message.destroy_later_messages
-    message.update!(content: message_params[:content])
+    message.update!(content: message_params[:content],
+                    facts_extracted: false)
 
     RespondJob.perform_later(chat)
 
@@ -89,6 +93,6 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:content, attachments: [])
+    params.require(:message).permit(:content, :memorize, attachments: [])
   end
 end

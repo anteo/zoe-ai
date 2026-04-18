@@ -7,6 +7,7 @@ class Message < ApplicationRecord
   belongs_to :character, optional: true
 
   before_save :set_character
+  before_create :inherit_memorize
 
   scope :visible, -> {
     attachments = ActiveStorage::Attachment.arel_table
@@ -42,6 +43,12 @@ class Message < ApplicationRecord
   end
 
   private
+
+  def inherit_memorize
+    return if user?
+    last_user_message = chat.messages.where(role: "user").last
+    self.memorize = last_user_message.nil? || last_user_message.memorize
+  end
 
   def set_character
     self.character = if user?

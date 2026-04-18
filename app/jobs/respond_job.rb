@@ -26,5 +26,6 @@ class RespondJob < ApplicationJob
 
     sentences = AI::SentenceSplitter.new(message.content).sentences
     TypeSentenceJob.perform_later(chat, message, sentences, true)
+    ExtractFactsJob.perform_later(chat)
   end
 end
