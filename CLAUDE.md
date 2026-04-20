@@ -6,6 +6,23 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 
 **How to apply:** Frame all architectural suggestions in terms of Rails conventions, ActiveRecord, and background jobs.
 
+## Persistent memory
+
+Use Mem0 for durable project memory in this repository.
+
+Rules:
+1. Always set `app_id="ai"` in Mem0 operations for this project.
+2. At task start, call `search_memories` to load relevant context.
+3. After meaningful progress, review session's conversation, if discovered anything worth preserving for future sessions, call `add_memory` for durable engineering context.
+   - High-level architectural decisions and WHY they were made
+   - Domain model relationships and key concepts
+   - Data flow between major components (one-liner per pipeline)
+   - Project-specific conventions not derivable from code
+   - How to run commands or environment setup
+4. Avoid commit-style change summaries in memory (they are already available in git history and usually have low future retrieval value).
+5. Keep memories specific and searchable (include feature names, file paths, and concrete outcomes).
+6. Before ending a long task/session, store a short session-state summary with next steps.
+
 ## Key Directories
 - `app/models/` — Fact, Character, Topic, Message, Chat, Instruction, User
 - `lib/ai/actors/` — ExtractFacts, DescribeCharacter, SummarizeLines, ObjectifyChat
@@ -79,8 +96,6 @@ Uses XML tags for hard semantic boundaries between sections:
 **Daily chat closure**: `CloseChatsJob` runs at midnight, sets `closed: true`, broadcasts redirect immediately. Summarization runs async via `SummarizeChatJob` to keep the critical path short. Startup initializer catches stale chats from restarts.
 
 **Image generation**: `AI.paint` wraps RubyLLM with `with:` parameter for image-to-image (OpenRouter provider only). Characters have `has_many_attached :images` with `metadata[:description]` for selection.
-
-**Message bubble styling**: `.chat-bubble` uses `--tw-prose-*` CSS custom properties set to `currentColor`, making all prose typography (text, headings, links, code) inherit the bubble's text color directly. This eliminates the need for separate `prose-invert` classes and ensures text color matches backgrounds automatically. Markdown is rendered server-side and styled with `prose prose-sm max-w-none` classes. The Tailwind typography plugin is loaded via `@plugin "@tailwindcss/typography"` in PostCSS.
 
 **Actor error handling**: Use `fail_on RubyLLM::Error` in actors for graceful degradation in jobs — returns failed Result instead of raising.
 
