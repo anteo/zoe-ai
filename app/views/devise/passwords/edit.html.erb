@@ -1,0 +1,21 @@
+<%= render "devise/shared/auth_shell" do %>
+  <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "space-y-2" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+    <%= f.hidden_field :reset_password_token %>
+
+    <%= f.input :password,
+                label: t(:label_new_password),
+                hint: (@minimum_password_length ? t(:text_password_minimum, count: @minimum_password_length) : nil),
+                input_html: {autofocus: true, autocomplete: "new-password"} %>
+    <%= f.input :password_confirmation,
+                label: t(:label_confirm_new_password),
+                input_html: {autocomplete: "new-password"} %>
+
+    <%= f.button :submit, t(:label_change_password), class: "btn btn-primary mt-4 w-full" %>
+  <% end %>
+
+  <div class="divider my-1"></div>
+  <div class="space-y-2">
+    <%= render "devise/shared/links" %>
+  </div>
+<% end %>

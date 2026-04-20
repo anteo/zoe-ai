@@ -1,4 +1,4 @@
-<div id="message-<%= message.id || SecureRandom.uuid %>" class="group" data-controller="message">
+<div id="message-<%= message.id || SecureRandom.uuid %>" class="group chat-message-enter" data-controller="message">
   <div class="<%= bubble_class %>">
     <%= render "message_component/header", message:, is_current_character: is_current_character?, sender:, read_only: read_only? %>
 

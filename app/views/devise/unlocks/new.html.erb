@@ -1,0 +1,16 @@
+<%= render "devise/shared/auth_shell" do %>
+  <%= simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post, class: "space-y-2" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <%= f.input :email,
+                label: t(:label_email),
+                input_html: {autofocus: true, autocomplete: "email"} %>
+
+    <%= f.button :submit, t(:label_unlock_instructions), class: "btn btn-primary mt-4 w-full" %>
+  <% end %>
+
+  <div class="divider my-1"></div>
+  <div class="space-y-2">
+    <%= render "devise/shared/links" %>
+  </div>
+<% end %>

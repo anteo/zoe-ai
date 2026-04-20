@@ -1,33 +1,10 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
   direct_speech: "%{character} said: \"%{text}\""
   label_send: Send
   label_attach: Attach file(s)
@@ -49,6 +26,48 @@ en:
   label_close: Close
   label_previous_chat: Previous chat
   label_next_chat: Next chat
+  label_login: Login
+  label_logout: Logout
+  label_register: Register
+  label_profile: Profile
+  label_edit_profile: Edit profile
+  label_email: Email
+  label_password: Password
+  label_password_confirmation: Confirm password
+  label_first_name: First name
+  label_last_name: Last name
+  label_new_password_optional: New password (optional)
+  label_new_password: New password
+  label_confirm_new_password: Confirm new password
+  label_remember_me: Remember me
+  label_forgot_password: Forgot your password?
+  label_send_reset_instructions: Send reset instructions
+  label_change_password: Change password
+  label_confirmation_instructions: Resend confirmation instructions
+  label_unlock_instructions: Resend unlock instructions
+  label_sign_in_with: Sign in with %{provider}
+  label_sign_in_with_google: Sign in with Google
+  label_account_settings: Account settings
+  label_current_password_required: Current password
+  label_cancel_account: Cancel account
   text_select_chat_history: Select a chat from the list.
   text_no_chat_history: No previous chats yet.
   text_greeting_html: Hi, I'm Zoe 🙂<br> Let's chat!
+  text_profile_updated: Profile updated.
+  text_password_minimum: "%{count} characters minimum"
+  text_pending_confirmation: "Waiting confirmation for: %{email}"
+  text_current_password_help: Required to save account changes.
+  text_google_sign_in_failed: Google sign-in failed. Please try again.
+  confirm_logout: Logout from your account?
+  activerecord:
+    models:
+      user:
+        one: User
+        other: Users
+    attributes:
+      user:
+        email: Email
+        password: Password
+        password_confirmation: Password confirmation
+        first_name: First name
+        last_name: Last name

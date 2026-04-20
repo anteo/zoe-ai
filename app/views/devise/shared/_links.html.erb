@@ -1,0 +1,38 @@
+<div class="flex flex-wrap items-center gap-2">
+  <%- if controller_name != 'sessions' %>
+    <%= link_to new_session_path(resource_name), class: "btn btn-ghost btn-sm" do %>
+      <span class="icon-[lucide--arrow-left]"></span>
+      <span><%= t(:label_login) %></span>
+    <% end %>
+  <% end %>
+
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <%= link_to t(:label_register), new_registration_path(resource_name), class: "btn btn-ghost btn-sm" %>
+  <% end %>
+
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+    <%= link_to t(:label_forgot_password), new_password_path(resource_name), class: "btn btn-ghost btn-sm" %>
+  <% end %>
+
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <%= link_to t(:label_confirmation_instructions), new_confirmation_path(resource_name), class: "btn btn-ghost btn-sm" %>
+  <% end %>
+
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <%= link_to t(:label_unlock_instructions), new_unlock_path(resource_name), class: "btn btn-ghost btn-sm" %>
+  <% end %>
+
+  <%- if devise_mapping.omniauthable? %>
+    <%- resource_class.omniauth_providers.each do |provider| %>
+      <%- next if provider == :google_oauth2 %>
+      <%- next unless Devise.omniauth_configs.key?(provider) %>
+      <%- route_helper = "#{devise_mapping.name}_#{provider}_omniauth_authorize_path" %>
+      <%- next unless respond_to?(route_helper) %>
+      <%= button_to t(:label_sign_in_with, provider: OmniAuth::Utils.camelize(provider)),
+                    public_send(route_helper),
+                    data: { turbo: false },
+                    class: "btn btn-outline btn-sm",
+                    form_class: "inline" %>
+    <% end %>
+  <% end %>
+</div>

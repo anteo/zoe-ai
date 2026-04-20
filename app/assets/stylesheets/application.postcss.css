@@ -163,7 +163,7 @@
     opacity: 0;
 }
 
-.history-chat-frame.is-ready > * {
+.chat {
     animation: history-chat-fade-in 220ms ease;
 }
 
@@ -176,4 +176,34 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes flash-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flash-alert {
+    animation: flash-slide-down 220ms ease-out;
+}
+
+@keyframes flash-slide-up {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.flash-alert.is-closing {
+    animation: flash-slide-up 180ms ease-in forwards;
 }

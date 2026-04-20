@@ -7,7 +7,7 @@ require "active_job/railtie"
 require "active_record/railtie"
 require "active_storage/engine"
 require "action_controller/railtie"
-# require "action_mailer/railtie"
+require "action_mailer/railtie"
 # require "action_mailbox/engine"
 # require "action_text/engine"
 require "action_view/railtie"
@@ -52,6 +52,10 @@ module Ai
     config.active_job.queue_adapter = :solid_queue
 
     config.solid_queue.logger = ActiveSupport::Logger.new(STDOUT)
+
+    if ENV["EXTRA_HOSTS"].present?
+      config.hosts.push(*ENV["EXTRA_HOSTS"].split(","))
+    end
 
     languages = PragmaticSegmenter::Languages
     languages::LANGUAGE_CODES["ru_emoji"] = languages::RussianWithEmoji

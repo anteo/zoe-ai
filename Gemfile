@@ -8,7 +8,7 @@ gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -46,3 +46,8 @@ gem "request_store"
 gem "json-schema", "~> 5.1"
 gem 'image_processing'
 gem "redcarpet"
+gem "devise"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
+
+gem "simple_form", "~> 5.4"

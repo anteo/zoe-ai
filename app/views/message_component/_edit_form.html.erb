@@ -1,13 +1,18 @@
 <div class="chat-bubble <%= bubble_color %> flex flex-col gap-2 p-2 hidden" data-message-target="edit">
-  <%= form_with model: message, class: "contents" do |f| %>
-    <%= f.text_area :content,
-          class: "textarea w-full min-w-100 text-sm bg-base-100 text-base-content outline-none resize-none",
-          rows: 3,
-          data: { message_target: "textarea" } %>
+  <%= simple_form_for message, html: { class: "contents" } do |f| %>
+    <%= f.input :content,
+          as: :text,
+          label: false,
+          wrapper: false,
+          input_html: {
+            class: "textarea w-full min-w-100 text-sm bg-base-100 text-base-content outline-none resize-none",
+            rows: 3,
+            data: { message_target: "textarea" }
+          } %>
     <div class="flex gap-2 justify-end">
       <button type="button" class="btn btn-sm btn-outline outline-none"
               data-action="click->message#cancelEdit"><%= t(:label_cancel) %></button>
-      <%= f.submit t(:label_save), class: "btn btn-sm btn-success" %>
+      <%= f.button :submit, t(:label_save), class: "btn btn-sm btn-success" %>
     </div>
   <% end %>
 </div>

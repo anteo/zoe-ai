@@ -11,6 +11,14 @@
       <span class="icon-[lucide--message-circle-plus]"></span>
       <%= t(:label_new_conversation) %>
     <% end %>
+    <%= link_to profile_path, class: "btn btn-ghost" do %>
+      <span class="icon-[lucide--user-round]"></span>
+      <%= t(:label_profile) %>
+    <% end %>
+    <%= button_to destroy_user_session_path, method: :delete, class: "btn btn-ghost", form: { data: { turbo_confirm: t(:confirm_logout) } } do %>
+      <span class="icon-[lucide--log-out]"></span>
+      <%= t(:label_logout) %>
+    <% end %>
     <div class="flex-none">
       <%= component :character_selector, current_character:, current_user: %>
     </div>

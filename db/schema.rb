@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_17_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_20_173000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -41,6 +41,107 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_17_120000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "agent_messages", force: :cascade do |t|
+    t.string "role", null: false
+    t.text "content"
+    t.json "content_raw"
+    t.text "thinking_text"
+    t.text "thinking_signature"
+    t.integer "thinking_tokens"
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.integer "cached_tokens"
+    t.integer "cache_creation_tokens"
+    t.bigint "agent_thread_id", null: false
+    t.bigint "model_id"
+    t.bigint "agent_tool_call_id"
+    t.bigint "agent_run_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_run_id"], name: "index_agent_messages_on_agent_run_id"
+    t.index ["agent_thread_id"], name: "index_agent_messages_on_agent_thread_id"
+    t.index ["agent_tool_call_id"], name: "index_agent_messages_on_agent_tool_call_id"
+    t.index ["model_id"], name: "index_agent_messages_on_model_id"
+    t.index ["role"], name: "index_agent_messages_on_role"
+  end
+
+  create_table "agent_runs", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.bigint "message_id"
+    t.bigint "agent_id", null: false
+    t.bigint "agent_thread_id"
+    t.string "status", default: "queued", null: false
+    t.text "goal", null: false
+    t.jsonb "constraints", default: {}, null: false
+    t.jsonb "input_payload", default: {}, null: false
+    t.jsonb "output_payload", default: {}, null: false
+    t.text "result_summary"
+    t.text "error"
+    t.string "idempotency_key"
+    t.bigint "provider_job_id"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id", "created_at"], name: "index_agent_runs_on_agent_id_and_created_at"
+    t.index ["agent_id"], name: "index_agent_runs_on_agent_id"
+    t.index ["agent_thread_id"], name: "index_agent_runs_on_agent_thread_id"
+    t.index ["chat_id"], name: "index_agent_runs_on_chat_id"
+    t.index ["idempotency_key"], name: "index_agent_runs_on_idempotency_key", unique: true
+    t.index ["message_id"], name: "index_agent_runs_on_message_id"
+    t.index ["provider_job_id"], name: "index_agent_runs_on_provider_job_id"
+    t.index ["status"], name: "index_agent_runs_on_status"
+  end
+
+  create_table "agent_threads", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.bigint "agent_id", null: false
+    t.bigint "parent_message_id"
+    t.bigint "model_id"
+    t.string "external_session_id"
+    t.string "status", default: "idle", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "last_seen_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_agent_threads_on_agent_id"
+    t.index ["chat_id", "agent_id"], name: "index_agent_threads_on_chat_id_and_agent_id"
+    t.index ["chat_id"], name: "index_agent_threads_on_chat_id"
+    t.index ["external_session_id"], name: "index_agent_threads_on_external_session_id"
+    t.index ["model_id"], name: "index_agent_threads_on_model_id"
+    t.index ["parent_message_id"], name: "index_agent_threads_on_parent_message_id"
+    t.index ["status"], name: "index_agent_threads_on_status"
+  end
+
+  create_table "agent_tool_calls", force: :cascade do |t|
+    t.string "tool_call_id", null: false
+    t.string "name", null: false
+    t.text "thought_signature"
+    t.jsonb "arguments", default: {}, null: false
+    t.bigint "agent_message_id", null: false
+    t.bigint "agent_run_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_message_id"], name: "index_agent_tool_calls_on_agent_message_id"
+    t.index ["agent_run_id"], name: "index_agent_tool_calls_on_agent_run_id"
+    t.index ["name"], name: "index_agent_tool_calls_on_name"
+    t.index ["tool_call_id"], name: "index_agent_tool_calls_on_tool_call_id", unique: true
+  end
+
+  create_table "agents", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "name", null: false
+    t.string "transport", default: "mcp", null: false
+    t.jsonb "capabilities", default: [], null: false
+    t.jsonb "config", default: {}, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_agents_on_active"
+    t.index ["key"], name: "index_agents_on_key", unique: true
   end
 
   create_table "characters", force: :cascade do |t|
@@ -321,11 +422,39 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_17_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "main_character_id"
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.string "provider"
+    t.string "uid"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["main_character_id"], name: "index_users_on_main_character_id"
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true, where: "((provider IS NOT NULL) AND (uid IS NOT NULL))"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "agent_messages", "agent_runs"
+  add_foreign_key "agent_messages", "agent_threads"
+  add_foreign_key "agent_messages", "agent_tool_calls"
+  add_foreign_key "agent_messages", "models"
+  add_foreign_key "agent_runs", "agent_threads"
+  add_foreign_key "agent_runs", "agents"
+  add_foreign_key "agent_runs", "chats"
+  add_foreign_key "agent_runs", "messages"
+  add_foreign_key "agent_threads", "agents"
+  add_foreign_key "agent_threads", "chats"
+  add_foreign_key "agent_threads", "messages", column: "parent_message_id"
+  add_foreign_key "agent_threads", "models"
+  add_foreign_key "agent_tool_calls", "agent_messages"
+  add_foreign_key "agent_tool_calls", "agent_runs"
   add_foreign_key "chats", "characters"
   add_foreign_key "chats", "characters", column: "partner_id"
   add_foreign_key "chats", "models"

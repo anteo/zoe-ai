@@ -1,0 +1,22 @@
+<div class="alert <%= alert_class %> flash-alert shadow-lg pointer-events-auto relative pr-12"
+     data-controller="flash-alert"
+     data-turbo-temporary
+     data-flash-alert-timeout-ms-value="<%= timeout_ms %>"
+     data-flash-alert-close-duration-ms-value="180">
+  <div class="flex-1">
+    <p class="font-medium"><%= message %></p>
+    <% if show_details? %>
+      <ul class="list-disc list-inside text-sm mt-2">
+        <% details.each do |detail| %>
+          <li><%= detail %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  <button type="button"
+          class="btn btn-ghost btn-xs btn-circle absolute top-2 right-2"
+          aria-label="<%= t(:label_close) %>"
+          data-action="click->flash-alert#dismiss">
+    ✕
+  </button>
+</div>

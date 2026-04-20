@@ -1,10 +1,10 @@
 ru:
   date:
     formats:
-      default: '%d %B %Yг'
+      default: '%d %B %Y'
   time:
     formats:
-      default: '%d %B %Yг, %H:%M'
+      default: '%d %B %Y, %H:%M'
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_send: Отправить
   label_attach: Прикрепить файл(ы)
@@ -26,6 +26,48 @@ ru:
   label_close: Закрыть
   label_previous_chat: Предыдущий чат
   label_next_chat: Следующий чат
+  label_login: Вход
+  label_logout: Выйти
+  label_register: Регистрация
+  label_profile: Профиль
+  label_edit_profile: Редактировать профиль
+  label_email: Email
+  label_password: Пароль
+  label_password_confirmation: Подтвердите пароль
+  label_first_name: Имя
+  label_last_name: Фамилия
+  label_new_password_optional: Новый пароль (необязательно)
+  label_new_password: Новый пароль
+  label_confirm_new_password: Подтвердите новый пароль
+  label_remember_me: Запомнить меня
+  label_forgot_password: Забыли пароль?
+  label_send_reset_instructions: Отправить инструкцию по сбросу
+  label_change_password: Изменить пароль
+  label_confirmation_instructions: Повторно отправить подтверждение
+  label_unlock_instructions: Повторно отправить разблокировку
+  label_sign_in_with: Войти через %{provider}
+  label_sign_in_with_google: Войти через Google
+  label_account_settings: Настройки аккаунта
+  label_current_password_required: Текущий пароль
+  label_cancel_account: Удалить аккаунт
   text_select_chat_history: Выберите разговор из списка.
   text_no_chat_history: Пока нет предыдущих разговоров.
   text_greeting_html: Привет, я Зоя 🙂<br> Давай поболтаем!
+  text_profile_updated: Профиль успешно обновлен.
+  text_password_minimum: "Минимум %{count} символов"
+  text_pending_confirmation: "Ожидает подтверждения: %{email}"
+  text_current_password_help: Нужен для сохранения изменений аккаунта.
+  text_google_sign_in_failed: Не удалось войти через Google. Попробуйте снова.
+  confirm_logout: Выйти из аккаунта?
+  activerecord:
+    models:
+      user:
+        one: Пользователь
+        other: Пользователи
+    attributes:
+      user:
+        email: Email
+        password: Пароль
+        password_confirmation: Подтверждение пароля
+        first_name: Имя
+        last_name: Фамилия

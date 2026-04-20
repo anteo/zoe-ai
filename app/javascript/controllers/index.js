@@ -10,6 +10,8 @@ import MessageController from "./message_controller"
 import ThemeController from "./theme_controller"
 import HistoryDrawerController from "./history_drawer_controller"
 import HistoryChatController from "./history_chat_controller"
+import FlashAlertController from "./flash_alert_controller"
+import FormErrorsController from "./form_errors_controller"
 
 application.register("hello", HelloController)
 application.register("chat", ChatController)
@@ -18,3 +20,5 @@ application.register("message", MessageController)
 application.register("theme", ThemeController)
 application.register("history-drawer", HistoryDrawerController)
 application.register("history-chat", HistoryChatController)
+application.register("flash-alert", FlashAlertController)
+application.register("form-errors", FormErrorsController)

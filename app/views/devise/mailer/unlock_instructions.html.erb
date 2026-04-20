@@ -1,0 +1,7 @@
+<p><%= t(".greeting", email: @resource.email) %></p>
+
+<p><%= t(".instruction") %></p>
+
+<p><%= t(".help") %></p>
+
+<p><%= link_to t(".action"), unlock_url(@resource, unlock_token: @token) %></p>

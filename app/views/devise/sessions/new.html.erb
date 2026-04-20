@@ -1,0 +1,45 @@
+<%= render "devise/shared/auth_shell" do %>
+  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-2" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <%= f.input :email,
+                label: t(:label_email),
+                input_html: {autofocus: true, autocomplete: "email"} %>
+    <%= f.input :password,
+                label: t(:label_password),
+                input_html: {autocomplete: "current-password"} %>
+
+    <% if devise_mapping.rememberable? %>
+      <%= f.input :remember_me,
+                  as: :boolean,
+                  label: t(:label_remember_me) %>
+    <% end %>
+
+    <%= f.button :submit, t(:label_login), class: "btn btn-primary mt-4 w-full" %>
+  <% end %>
+
+  <% if devise_mapping.omniauthable? && Devise.omniauth_configs.key?(:google_oauth2) %>
+    <% google_helper = "#{devise_mapping.name}_google_oauth2_omniauth_authorize_path" %>
+    <% if respond_to?(google_helper) %>
+      <%= button_to public_send(google_helper),
+                    data: { turbo: false },
+                    class: "btn mt-2 w-full border border-base-300 bg-white text-base-content hover:bg-base-100",
+                    form_class: "w-full" do %>
+        <span class="inline-flex items-center gap-2">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.72 1.22 9.22 3.63l6.87-6.87C35.91 2.5 30.42 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8 6.2C12.48 13.34 17.78 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.14 24.55c0-1.64-.15-3.22-.41-4.73H24v8.95h12.44c-.54 2.9-2.18 5.36-4.64 7l7.2 5.58c4.2-3.87 6.62-9.57 6.62-16.8z"/>
+            <path fill="#FBBC05" d="M10.56 28.58A14.5 14.5 0 0 1 9.5 23.99c0-1.6.28-3.16.78-4.57l-8-6.2A23.98 23.98 0 0 0 0 24c0 3.87.93 7.54 2.58 10.78l7.98-6.2z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.92-2.13 15.89-5.8l-7.2-5.58c-2 1.34-4.56 2.13-8.69 2.13-6.22 0-11.52-3.84-13.44-9.92l-7.98 6.2C6.5 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span><%= t(:label_sign_in_with_google) %></span>
+        </span>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="divider my-1"></div>
+  <div class="space-y-2">
+    <%= render "devise/shared/links" %>
+  </div>
+<% end %>

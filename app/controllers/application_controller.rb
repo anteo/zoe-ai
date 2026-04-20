@@ -8,10 +8,11 @@ class ApplicationController < ActionController::Base
 
   attr_reader :current_character
 
-  before_action :set_current_character
+  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :set_current_character, unless: :devise_controller?
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
-  helper_method :current_character,
-                :current_user
+  helper_method :current_character
 
   private
 
@@ -23,12 +24,9 @@ class ApplicationController < ActionController::Base
                                   .first
   end
 
-  def current_user
-    # Current user is hard-coded for now
-    @current_user ||= User.find_by(id: 3)
-  end
-
   def set_current_character
+    return unless user_signed_in?
+
     characters = current_user.characters
     @current_character = characters.find_by(id: session[:character_id]) ||
                          current_user.main_character ||
@@ -41,5 +39,11 @@ class ApplicationController < ActionController::Base
 
   def build_default_chat
     @chat ||= AI::Zoe.build_chat(character: @current_character, partner: Character.ai, user: current_user)
+  end
+
+  def configure_permitted_parameters
+    keys = %i[first_name last_name]
+    devise_parameter_sanitizer.permit(:sign_up, keys:)
+    devise_parameter_sanitizer.permit(:account_update, keys:)
   end
 end

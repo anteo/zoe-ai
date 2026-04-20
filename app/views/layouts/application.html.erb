@@ -21,8 +21,18 @@
   <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 </head>
 
-<body>
+<body data-controller="form-errors">
 <%= yield %>
+
+<% if flash.any? || content_for?(:top_alerts) %>
+  <div class="flash-stack fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4 space-y-2 pointer-events-none">
+    <% flash.each do |type, message| %>
+      <% next if message.blank? %>
+      <%= component :flash_alert, type:, message: %>
+    <% end %>
+    <%= yield :top_alerts %>
+  </div>
+<% end %>
 
 <%= render 'shared/turbo_confirm_modal' %>
 </body>
