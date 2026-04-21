@@ -10,7 +10,9 @@ module AI
           .map { { character: it.record.name, attachment_id: it.blob.id, description: it.blob.metadata[:description] } }
 
         "Draw a picture by using a prompt. You can provide attachment IDs from chat history or character attachments to use as reference images.\n" +
-          "IMPORTANT: For each character, pick AT MOST ONE image — the one whose description best matches the drawing prompt. Do NOT attach multiple images of the same character.\n" +
+          "IMPORTANT: For each character, pick AT MOST ONE image — the one whose description best matches the drawing prompt.\n" +
+          "Do NOT attach multiple images of the same character. When describing people from reference images, specify which photo they are from to maintain consistency. For example: \"The man from the first reference image (name)\" or \"The woman from the second reference image (name)\".\n" +
+          "Crucially, ensure the characters' facial features from the reference images are preserved as accurately as possible. Do not add any new physical traits, facial hair, or characteristics not present in the original images. The goal is to maximize facial resemblance to the reference photos.\n" +
           "Characters available: #{characters.inspect}"
       }
 
