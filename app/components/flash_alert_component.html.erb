@@ -1,8 +1,7 @@
 <div class="alert <%= alert_class %> flash-alert shadow-lg pointer-events-auto relative pr-12"
      data-controller="flash-alert"
      data-turbo-temporary
-     data-flash-alert-timeout-ms-value="<%= timeout_ms %>"
-     data-flash-alert-close-duration-ms-value="180">
+     data-flash-alert-timeout-ms-value="<%= timeout_ms %>">
   <div class="flex-1">
     <p class="font-medium"><%= message %></p>
     <% if show_details? %>

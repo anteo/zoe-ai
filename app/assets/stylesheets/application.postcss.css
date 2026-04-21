@@ -207,3 +207,7 @@
 .flash-alert.is-closing {
     animation: flash-slide-up 180ms ease-in forwards;
 }
+
+turbo-frame {
+    display: contents;
+}

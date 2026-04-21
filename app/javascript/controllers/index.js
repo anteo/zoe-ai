@@ -12,6 +12,7 @@ import HistoryDrawerController from "./history_drawer_controller"
 import HistoryChatController from "./history_chat_controller"
 import FlashAlertController from "./flash_alert_controller"
 import FormErrorsController from "./form_errors_controller"
+import CharacterFormController from "./character_form_controller"
 
 application.register("hello", HelloController)
 application.register("chat", ChatController)
@@ -22,3 +23,4 @@ application.register("history-drawer", HistoryDrawerController)
 application.register("history-chat", HistoryChatController)
 application.register("flash-alert", FlashAlertController)
 application.register("form-errors", FormErrorsController)
+application.register("character-form", CharacterFormController)

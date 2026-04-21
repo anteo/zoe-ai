@@ -31,7 +31,7 @@ export default class extends Controller {
     const removeAlert = () => this.element.remove()
     this.element.addEventListener("animationend", removeAlert, { once: true })
 
-    const fallbackDuration = this.hasCloseDurationMsValue ? this.closeDurationMsValue : 220
-    window.setTimeout(removeAlert, fallbackDuration + 40)
+    // Ensure animation is complete before removing
+    window.setTimeout(removeAlert, 300)
   }
 }

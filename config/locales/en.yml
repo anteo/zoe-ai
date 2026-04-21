@@ -32,7 +32,11 @@ en:
   label_register: Register
   label_profile: Profile
   label_chat_partner: Chat partner
-  label_create_character: New
+  label_new: New
+  label_create_character: New character
+  label_remove_instruction: Remove instruction
+  placeholder_enter_character_name: Enter character name
+  placeholder_add_instruction: "add instruction..."
   label_edit_profile: Edit profile
   label_email: Email
   label_password: Password
@@ -61,6 +65,9 @@ en:
   text_pending_confirmation: "Waiting confirmation for: %{email}"
   text_current_password_help: Required to save account changes.
   text_google_sign_in_failed: Google sign-in failed. Please try again.
+  text_fix_form_errors: Please fix the errors below.
+  text_character_name_required: Character name can't be blank.
+  text_character_create_failed: Failed to create character.
   text_token_usage_hint: "%{used} / %{context} tokens used"
   confirm_logout: Logout from your account?
   activerecord:
@@ -69,6 +76,8 @@ en:
         one: User
         other: Users
     attributes:
+      character:
+        name: Name
       user:
         email: Email
         password: Password

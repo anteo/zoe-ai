@@ -1,0 +1,63 @@
+<div data-controller="character-form"
+     data-character-form-existing-instructions-value="<%= character.instructions.map(&:content).to_json %>">
+  <%= helpers.simple_form_for character,
+                      html: { multipart: true },
+                      data: { action: "submit->character-form#handleSubmit" } do |f| %>
+    <div class="flex items-start gap-4">
+      <label class="relative cursor-pointer shrink-0 self-start">
+        <span class="w-16 h-16 rounded-full border border-base-300 bg-base-200 flex items-center justify-center bg-cover bg-center"
+              data-character-form-target="avatarPreview">
+          <span class="icon-[lucide--user-round] w-6 h-6 opacity-60"></span>
+        </span>
+        <span class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-base-100 border border-base-300 flex items-center justify-center">
+          <span class="icon-[lucide--plus] w-4 h-4"></span>
+        </span>
+        <%= f.file_field :avatar,
+                         class: "hidden",
+                         accept: "image/*",
+                         data: { action: "change->character-form#handleAvatarChange" } %>
+      </label>
+
+      <div class="flex-1 min-w-0">
+        <%= f.input :name,
+                    label: false,
+                    required: true,
+                    input_html: {
+                      placeholder: t(:placeholder_enter_character_name),
+                      class: "w-full text-lg font-semibold bg-transparent input input-ghost outline-none p-0 rounded-none",
+                      data: { character_form_target: "nameInput" }
+                    },
+                    wrapper_html: { class: "mb-0" } %>
+
+        <div class="mt-3 space-y-2">
+          <ul data-character-form-target="instructions"></ul>
+          <template data-character-form-target="instructionTemplate">
+            <li class="flex items-center gap-2">
+              <button type="button"
+                      class="group/icon relative flex h-6 w-6 shrink-0 items-center justify-center rounded transition-colors hover:bg-base-200 focus-visible:bg-base-200"
+                      aria-label="<%= t(:label_remove_instruction) %>"
+                      data-action="click->character-form#removeInstruction">
+                <span class="icon-[lucide--check] w-4 h-4 visible group-hover/icon:invisible group-focus-within/icon:invisible"></span>
+                <span class="icon-[lucide--trash-2] absolute w-4 h-4 invisible group-hover/icon:visible group-focus-within/icon:visible group-hover/icon:text-error"></span>
+              </button>
+              <input type="text"
+                     class="flex-1 bg-transparent input input-sm input-ghost outline-none text-sm p-0 rounded-none"
+                     name="character[instructions_attributes][__INDEX__][content]">
+            </li>
+          </template>
+          <div class="flex items-center gap-2">
+            <input type="text"
+                   class="flex-1 bg-transparent input input-ghost outline-none text-sm p-0 rounded-none"
+                   placeholder="<%= t(:placeholder_add_instruction) %>"
+                   data-character-form-target="instructionInput"
+                   data-action="keydown->character-form#handleInstructionKeydown">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-action">
+      <%= f.submit t(:label_save), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,7 @@
+<%= modal header_divider: false do |m| %>
+  <% m.title do %>
+    <span><%= t(:label_create_character) %></span>
+  <% end %>
+
+  <%= component :character_form_modal, character: @character %>
+<% end %>

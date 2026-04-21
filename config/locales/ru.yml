@@ -32,7 +32,11 @@ ru:
   label_register: Регистрация
   label_profile: Профиль
   label_chat_partner: Собеседник
-  label_create_character: Новый
+  label_new: Новый
+  label_create_character: Новый персонаж
+  label_remove_instruction: Удалить инструкцию
+  placeholder_enter_character_name: Введите имя персонажа
+  placeholder_add_instruction: "добавьте инструкцию..."
   label_edit_profile: Редактировать профиль
   label_email: Email
   label_password: Пароль
@@ -61,6 +65,9 @@ ru:
   text_pending_confirmation: "Ожидает подтверждения: %{email}"
   text_current_password_help: Нужен для сохранения изменений аккаунта.
   text_google_sign_in_failed: Не удалось войти через Google. Попробуйте снова.
+  text_fix_form_errors: Пожалуйста, исправьте ошибки ниже.
+  text_character_name_required: Имя персонажа не может быть пустым.
+  text_character_create_failed: Не удалось создать персонажа.
   text_token_usage_hint: "%{used} / %{context} токенов использовано"
   confirm_logout: Выйти из аккаунта?
   activerecord:
@@ -69,6 +76,8 @@ ru:
         one: Пользователь
         other: Пользователи
     attributes:
+      character:
+        name: Имя персонажа
       user:
         email: Email
         password: Пароль

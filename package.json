@@ -12,6 +12,7 @@
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1",
     "postcss-nesting": "^13.0.2",
+    "ultimate_turbo_modal": "3.0.4",
     "vistaview": "^1.0.5"
   },
   "scripts": {
