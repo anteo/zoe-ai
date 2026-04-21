@@ -24,6 +24,12 @@ class RespondJob < ApplicationJob
 
     return unless message.visible?
 
+    Turbo::StreamsChannel.broadcast_replace_to(
+      chat,
+      target: "token-usage-gauge-#{chat.id}",
+      content: TokenUsageGaugeComponent.new(chat:),
+    )
+
     chunks = AI::SentenceSplitter.new(message.content).chunks
     TypeSentenceJob.perform_later(chat, message, chunks, true)
     ExtractFactsJob.perform_later(chat)

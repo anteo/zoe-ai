@@ -1,0 +1,9 @@
+<div class="tooltip tooltip-top"
+     data-tip="<%= t(:text_token_usage_hint, used: formatted_total_tokens, context: formatted_context_window) %>">
+  <div class="radial-progress <%= gauge_class %> bg-base-200/70 text-[0.6rem] font-semibold"
+       style="--value:<%= percentage %>; --size:2rem; --thickness:3px;"
+       role="progressbar"
+       aria-label="<%= t(:label_token_usage) %>">
+    <%= "#{percentage}%" %>
+  </div>
+</div>

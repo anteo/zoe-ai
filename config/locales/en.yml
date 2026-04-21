@@ -7,6 +7,7 @@ en:
       default: "%a, %d %b %Y %H:%M:%S %z"
   direct_speech: "%{character} said: \"%{text}\""
   label_send: Send
+  label_token_usage: Tokens
   label_attach: Attach file(s)
   placeholder_chat_input: Type your message...
   label_confirmation: Confirmation
@@ -60,6 +61,7 @@ en:
   text_pending_confirmation: "Waiting confirmation for: %{email}"
   text_current_password_help: Required to save account changes.
   text_google_sign_in_failed: Google sign-in failed. Please try again.
+  text_token_usage_hint: "%{used} / %{context} tokens used"
   confirm_logout: Logout from your account?
   activerecord:
     models:

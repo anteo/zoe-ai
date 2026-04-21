@@ -7,6 +7,7 @@ ru:
       default: '%d %B %Y, %H:%M'
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_send: Отправить
+  label_token_usage: Токены
   label_attach: Прикрепить файл(ы)
   placeholder_chat_input: Введите сообщение...
   label_confirmation: Подтверждение
@@ -60,6 +61,7 @@ ru:
   text_pending_confirmation: "Ожидает подтверждения: %{email}"
   text_current_password_help: Нужен для сохранения изменений аккаунта.
   text_google_sign_in_failed: Не удалось войти через Google. Попробуйте снова.
+  text_token_usage_hint: "%{used} / %{context} токенов использовано"
   confirm_logout: Выйти из аккаунта?
   activerecord:
     models:

@@ -43,7 +43,30 @@ class Chat < ApplicationRecord
     end
   end
 
+  def token_usage_total
+    token_usage_message&.input_tokens.to_i + token_usage_message&.output_tokens.to_i
+  end
+
+  def token_usage_context_window
+    resolved_model&.context_window.to_i
+  end
+
+  def token_usage_percentage
+    return 0 if token_usage_context_window <= 0
+
+    ((token_usage_total.to_f / token_usage_context_window) * 100).round.clamp(0, 100)
+  end
+
+  def resolved_model
+    resolve_model_from_strings
+    model
+  end
+
   private
+
+  def token_usage_message
+    messages.where(role: "assistant").where.not(input_tokens: nil).reorder(created_at: :desc).first
+  end
 
   def prepare_for_active_storage(attachments)
     active_storage_attachments, other = attachments.partition { |a| a.is_a?(Hash) && a[:io].present? }
