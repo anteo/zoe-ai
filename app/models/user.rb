@@ -13,7 +13,7 @@ class User < ApplicationRecord
   normalizes :first_name, :last_name, with: ->(value) { value.strip.presence }
   validates :first_name, :email, presence: true
 
-  after_create_commit :ensure_default_character!
+  after_create_commit :ensure_default_characters!
 
   def gravatar_url(size: 128)
     return nil unless email.present?
@@ -54,16 +54,13 @@ class User < ApplicationRecord
 
   private
 
-  def ensure_default_character!
-    return if characters.exists?
+  def ensure_default_characters!
+    default_ai = Character.default_ai
+    characters << default_ai if default_ai && !characters.exists?(default_ai.id)
 
-    character = Character.create!(
-      name: first_name.presence || email,
-      description: "",
-      third_party: false,
-      ai: false,
-      description_up_to_date: false
-    )
+    return if characters.human.exists?
+
+    character = Character.create!(name: first_name)
 
     characters << character
     update_column(:main_character_id, character.id)

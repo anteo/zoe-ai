@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["overlay", "panel", "title", "timeSpan", "backButton", "listView", "detailView", "detailFrame", "navButtons", "previousButton", "nextButton"]
+  static targets = ["overlay", "panel", "title", "timeSpan", "backButton", "listView", "detailView", "detailFrame", "listFrame", "navButtons", "previousButton", "nextButton"]
   static values = {
-    listTitle: String
+    listTitle: String,
+    listUrl: String
   }
 
   connect() {
@@ -12,6 +13,7 @@ export default class extends Controller {
   }
 
   open() {
+    this.loadList()
     this.overlayTarget.classList.remove("hidden")
     requestAnimationFrame(() => {
       this.overlayTarget.classList.remove("opacity-0")
@@ -116,6 +118,12 @@ export default class extends Controller {
 
   get chatLinks() {
     return Array.from(this.element.querySelectorAll("[data-history-drawer-chat-link='true']"))
+  }
+
+  loadList() {
+    if (!this.hasListFrameTarget || this.listFrameTarget.src || !this.hasListUrlValue) return
+
+    this.listFrameTarget.src = this.listUrlValue
   }
 
   handleKeydown(event) {

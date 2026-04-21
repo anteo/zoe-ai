@@ -9,6 +9,7 @@
     <%= link_to history_detail_chat_path(entry.chat),
                 data: {
                   turbo_frame: "history-chat-detail",
+                  turbo_prefetch: false,
                   action: "click->history-drawer#openChat",
                   history_drawer_title: entry.day_label,
                   history_drawer_time_span: entry.time_span,

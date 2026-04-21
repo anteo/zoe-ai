@@ -7,10 +7,12 @@ class Character < ApplicationRecord
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
 
-  scope :human, -> { where(ai: false, third_party: false) }
+  scope :third_party, ->(third_party = true) { where(third_party:) }
+  scope :human, -> { third_party(false).where(ai: false) }
+  scope :ai, -> { third_party(false).where(ai: true) }
 
-  def self.ai
-    RequestStore[:ai] ||= where(ai: true).first
+  def self.default_ai
+    RequestStore[:default_ai] ||= ai.where(is_default: true).first!
   end
 
   PERSISTENT_FACT_PERIODS = [

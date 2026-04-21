@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_20_173000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_21_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -146,12 +146,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_20_173000) do
 
   create_table "characters", force: :cascade do |t|
     t.string "name", null: false
-    t.text "description", null: false
+    t.text "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "description_up_to_date", default: false, null: false
     t.boolean "ai", default: false, null: false
     t.boolean "third_party", default: false, null: false
+    t.boolean "is_default", default: false, null: false
+    t.index ["is_default"], name: "index_characters_on_is_default"
+    t.index ["is_default"], name: "index_characters_on_single_default_ai", unique: true, where: "((ai = true) AND (is_default = true))"
   end
 
   create_table "characters_users", id: false, force: :cascade do |t|

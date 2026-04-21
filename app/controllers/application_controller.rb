@@ -6,19 +6,20 @@ class ApplicationController < ActionController::Base
 
   helper :view_components
 
-  attr_reader :current_character
+  attr_reader :current_character, :current_partner
 
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :set_current_character, unless: :devise_controller?
+  before_action :set_current_partner, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  helper_method :current_character
+  helper_method :current_character, :current_partner
 
   private
 
   def default_chat
     @default_chat ||= current_user.chats
-                                  .where(character: @current_character, partner: Character.ai,
+                                  .where(character: current_character, partner: current_partner,
                                          created_at: Date.current.all_day, closed: false)
                                   .order(created_at: :desc)
                                   .first
@@ -27,10 +28,14 @@ class ApplicationController < ActionController::Base
   def set_current_character
     return unless user_signed_in?
 
-    characters = current_user.characters
-    @current_character = characters.find_by(id: session[:character_id]) ||
-                         current_user.main_character ||
-                         characters.order(:name).first
+    @current_character = current_user.main_character || current_user.characters.human.order(:name).first
+  end
+
+  def set_current_partner
+    return unless user_signed_in?
+
+    selected_id = session[:ai_character_id] || session[:character_id]
+    @current_partner = current_user.characters.ai.find_by(id: selected_id) || Character.default_ai
   end
 
   def find_default_chat
@@ -38,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
 
   def build_default_chat
-    @chat ||= AI::Zoe.build_chat(character: @current_character, partner: Character.ai, user: current_user)
+    @chat ||= AI::Zoe.build_chat(character: current_character, partner: current_partner, user: current_user)
   end
 
   def configure_permitted_parameters

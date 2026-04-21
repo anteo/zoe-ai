@@ -30,6 +30,8 @@ en:
   label_logout: Logout
   label_register: Register
   label_profile: Profile
+  label_chat_partner: Chat partner
+  label_create_character: New
   label_edit_profile: Edit profile
   label_email: Email
   label_password: Password

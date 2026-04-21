@@ -1,6 +1,7 @@
 <div data-controller="history-drawer"
      data-action="keydown@window->history-drawer#handleKeydown"
-     data-history-drawer-list-title-value="<%= t(:label_chat_history) %>">
+     data-history-drawer-list-title-value="<%= t(:label_chat_history) %>"
+     data-history-drawer-list-url-value="<%= history_list_chats_path %>">
   <button type="button" class="btn btn-ghost" data-action="history-drawer#open">
     <span class="icon-[lucide--history] w-4 h-4"></span>
     <%= t(:label_chat_history) %>
@@ -46,7 +47,9 @@
     </header>
 
     <div class="flex-1 min-h-0" data-history-drawer-target="listView">
-      <%= helpers.component :history_chat_list, history_chats: %>
+      <turbo-frame id="history-chat-list" data-history-drawer-target="listFrame">
+        <div class="h-full p-6 text-sm opacity-60"><%= t(:text_select_chat_history) %></div>
+      </turbo-frame>
     </div>
 
     <div class="hidden flex-1 min-h-0" data-history-drawer-target="detailView">

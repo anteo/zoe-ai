@@ -1,15 +1,33 @@
-<button class="btn btn-ghost" popovertarget="character-selector" style="anchor-name:--anchor-character-selector">
-  <span class="font-bold"><%= current_character&.name || "Select character" %></span>
-  <%= avatar_for_character(current_character) %>
-</button>
+<div class="dropdown dropdown-end ml-1 group">
+  <button class="btn btn-ghost gap-2 px-2">
+    <%= avatar_for_character(current_partner) %>
+    <span class="font-bold"><%= current_partner&.name %></span>
+    <span class="icon-[lucide--chevron-down] w-4 h-4 opacity-70 transition-transform group-focus-within:rotate-180"></span>
+  </button>
 
-<ul class="dropdown menu p-3 shadow bg-base-100 rounded-box w-52 mt-1" popover id="character-selector" style="position-anchor:--anchor-character-selector; position-area: bottom span-left">
-  <% character_options.each do |character| %>
-    <li>
-      <%= link_to select_character_path(character_id: character.id), data: { turbo_method: :post }, class: "flex items-center gap-2" do %>
-        <%= avatar_for_character(character) %>
-        <%= character.name %>
+  <div class="dropdown-content p-1 shadow-lg bg-base-100 rounded-box w-72 mt-1 border border-base-300" id="character-selector">
+    <ul class="menu menu-horizontal items-center">
+      <% character_options.each do |character| %>
+        <li>
+        <%= link_to select_character_path(character_id: character.id),
+                    data: { turbo_method: :post },
+                    class: "rounded-md shrink-0 flex flex-col items-center gap-1" do %>
+          <%= avatar_for_character(character, size: 72) %>
+          <span class="text-xs font-medium leading-tight text-center whitespace-nowrap"><%= character.name %></span>
+        <% end %>
+        </li>
       <% end %>
-    </li>
-  <% end %>
-</ul>
+
+      <li>
+        <%= link_to "#",
+                    data: { turbo_method: :post },
+                    class: "rounded-md shrink-0 flex flex-col items-center gap-1" do %>
+          <span class="w-8 h-8 rounded-full bg-base-100 text-xs shadow-sm flex items-center justify-center">
+            <span class="icon-[lucide--plus]"></span>
+          </span>
+          <span class="text-xs font-medium leading-tight text-center whitespace-nowrap"><%= t(:label_create_character) %></span>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</div>

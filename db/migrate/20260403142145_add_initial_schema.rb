@@ -4,7 +4,7 @@ class AddInitialSchema < ActiveRecord::Migration[7.0]
 
     create_table "characters", force: :cascade do |t|
       t.string "name", null: false
-      t.text "description", null: false
+      t.text "description", null: false, default: ""
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
       t.boolean "description_up_to_date", default: false, null: false

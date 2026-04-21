@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class CharacterSelectorComponent < ApplicationComponent
-  attr_reader :current_character, :current_user
+  attr_reader :current_partner, :current_user
 
   def character_options
-    @character_options ||= current_user.characters.human.order(:name)
+    @character_options ||= current_user.characters.ai.order(:name)
   end
 
-  def initialize(current_character:, current_user:)
-    @current_character = current_character
+  def initialize(current_partner:, current_user:)
+    @current_partner = current_partner
     @current_user = current_user
   end
 end

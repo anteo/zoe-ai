@@ -17,6 +17,10 @@ Rails.application.routes.draw do
   resource :profile, only: [ :show, :edit, :update ]
 
   resources :chats, only: [:show, :new, :destroy] do
+    collection do
+      get :history_list
+    end
+
     member do
       get :history_detail
     end

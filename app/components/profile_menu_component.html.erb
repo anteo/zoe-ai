@@ -1,0 +1,25 @@
+<div class="dropdown dropdown-end ml-1">
+  <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm">
+    <%= avatar_for_user(current_user) %>
+  </div>
+  <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-300 z-50 mt-1">
+    <li class="menu-title">
+      <span class="block font-semibold text-sm leading-tight"><%= current_user.full_name %></span>
+      <span class="block text-xs"><%= current_user.email %></span>
+    </li>
+    <li>
+      <%= link_to profile_path do %>
+        <span class="icon-[lucide--user-round] w-4 h-4"></span>
+        <%= t(:label_profile) %>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to destroy_user_session_path,
+                  class: "text-error",
+                  data: { turbo_method: :delete, turbo_confirm: t(:confirm_logout) } do %>
+        <span class="icon-[lucide--log-out] w-4 h-4"></span>
+        <%= t(:label_logout) %>
+      <% end %>
+    </li>
+  </ul>
+</div>
