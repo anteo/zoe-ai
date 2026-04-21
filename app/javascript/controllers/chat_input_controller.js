@@ -1,12 +1,11 @@
 import {Controller} from "@hotwired/stimulus"
 import {createChatSubscription} from "../channels/chat_channel"
 
-let memorizeMode = true
-
 export default class extends Controller {
   static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton", "memorizeButton", "memorizeField", "memorizeIcon", "memorizeLabel"]
   static values = {
-    chatId: Number
+    chatId: Number,
+    memorizeMode: {type: Boolean, default: true}
   }
 
   selectedFiles = []
@@ -41,18 +40,17 @@ export default class extends Controller {
   }
 
   toggleMemorize() {
-    memorizeMode = !memorizeMode
-    this.applyMemorizeState()
+    this.setMemorizeMode(!this.memorizeModeValue, true)
   }
 
   applyMemorizeState() {
     if (!this.hasMemorizeButtonTarget || !this.hasMemorizeFieldTarget) return
-    this.memorizeFieldTarget.value = memorizeMode ? "true" : "false"
-    this.memorizeButtonTarget.classList.toggle("opacity-40", !memorizeMode)
-    this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark]", memorizeMode)
-    this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark-off]", !memorizeMode)
+    this.memorizeFieldTarget.value = this.memorizeModeValue ? "true" : "false"
+    this.memorizeButtonTarget.classList.toggle("opacity-40", !this.memorizeModeValue)
+    this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark]", this.memorizeModeValue)
+    this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark-off]", !this.memorizeModeValue)
     if (this.hasMemorizeLabelTarget) {
-      this.memorizeLabelTarget.textContent = memorizeMode
+      this.memorizeLabelTarget.textContent = this.memorizeModeValue
         ? this.memorizeLabelTarget.dataset.labelOn
         : this.memorizeLabelTarget.dataset.labelOff
     }
@@ -61,7 +59,18 @@ export default class extends Controller {
   subscribeToChatChannel() {
     if (!this.chatIdValue) return
 
-    this.subscription = createChatSubscription(this.chatIdValue)
+    this.subscription = createChatSubscription(this.chatIdValue, {
+      onMemorizeUpdated: (memorize) => this.setMemorizeMode(memorize, false)
+    })
+  }
+
+  setMemorizeMode(value, broadcast = false) {
+    const boolValue = Boolean(value)
+    this.memorizeModeValue = boolValue
+    this.applyMemorizeState()
+    if (broadcast && this.subscription) {
+      this.subscription.updateMemorize(boolValue)
+    }
   }
 
   handleTyping() {

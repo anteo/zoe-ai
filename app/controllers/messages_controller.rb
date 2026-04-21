@@ -15,14 +15,16 @@ class MessagesController < ApplicationController
     if chat.new_record?
       CloseChatJob.perform_later(default_chat) if default_chat
 
+      chat.memorize = memorize
       chat.save!
       message = chat.add_message(role: :user, content:)
-      message.update_column(:memorize, memorize)
+      message.update_column(:memorize, chat.memorize)
 
       redirect_to chat_path(chat)
     else
+      chat.update_column(:memorize, memorize) if chat.memorize != memorize
       message = chat.add_message(role: :user, content:)
-      message.update_column(:memorize, memorize)
+      message.update_column(:memorize, chat.memorize)
 
       stream = []
       stream << turbo_stream.append(

@@ -1,6 +1,6 @@
 import consumer from "./consumer"
 
-function createChatSubscription(chatId) {
+function createChatSubscription(chatId, callbacks = {}) {
   return consumer.subscriptions.create({
     channel: "ChatChannel",
     chat_id: chatId
@@ -16,11 +16,17 @@ function createChatSubscription(chatId) {
     received(data) {
       if (data.type === "closed") {
         window.location.href = "/"
+      } else if (data.type === "memorize_updated" && callbacks.onMemorizeUpdated) {
+        callbacks.onMemorizeUpdated(Boolean(data.memorize))
       }
     },
 
     userTyping: function () {
       this.perform('user_typing')
+    },
+
+    updateMemorize: function (memorize) {
+      this.perform('update_memorize', {memorize})
     }
   });
 }

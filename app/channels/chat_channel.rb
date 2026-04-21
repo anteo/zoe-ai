@@ -1,6 +1,5 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
-    chat = Chat.find(params[:chat_id])
     stream_for chat
   end
 
@@ -9,7 +8,17 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def user_typing
-    chat = Chat.find(params[:chat_id])
     StopTypingJob.perform_later(chat)
+  end
+
+  def update_memorize(data)
+    chat.update!(memorize: ActiveModel::Type::Boolean.new.cast(data["memorize"]))
+    ChatChannel.broadcast_to(chat, type: "memorize_updated", memorize: chat.memorize)
+  end
+
+  private
+
+  def chat
+    @chat ||= Chat.find(params[:chat_id])
   end
 end
