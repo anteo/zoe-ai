@@ -12,4 +12,8 @@ class CharacterFormComponent < ApplicationComponent
 
     "background-image: url('#{helpers.url_for(character.avatar.variant(resize_to_limit: [ 64, 64 ]))}')"
   end
+
+  def editable_name?
+    character.new_record?
+  end
 end

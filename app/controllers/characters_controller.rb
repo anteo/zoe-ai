@@ -9,7 +9,7 @@ class CharactersController < ApplicationController
   end
 
   def create
-    @character = Character.new(character_params)
+    @character = Character.new(character_create_params)
     @character.ai = true
 
     if @character.save
@@ -26,7 +26,7 @@ class CharactersController < ApplicationController
   end
 
   def update
-    if @character.update(character_params)
+    if @character.update(character_update_params)
       redirect_back fallback_location: root_path, status: :see_other
     else
       render :edit, status: :unprocessable_entity, layout: !turbo_frame_request?
@@ -47,7 +47,11 @@ class CharactersController < ApplicationController
     head(:not_found) unless @character
   end
 
-  def character_params
+  def character_create_params
     params.require(:character).permit(:name, :avatar, instructions_attributes: [ :id, :content, :_destroy ])
+  end
+
+  def character_update_params
+    params.require(:character).permit(:avatar, instructions_attributes: [ :id, :content, :_destroy ])
   end
 end

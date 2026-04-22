@@ -12,7 +12,7 @@ class Character < ApplicationRecord
     reject_if: ->(item) { item[:content].blank? }
 
   normalizes :name, with: ->(value) { value.to_s.strip.presence }
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 50 }
 
   scope :third_party, ->(third_party = true) { where(third_party:) }
   scope :human, -> { third_party(false).where(ai: false) }

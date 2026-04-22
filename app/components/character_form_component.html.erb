@@ -22,15 +22,20 @@
       </label>
 
       <div class="flex-1 min-w-0">
-        <%= f.input :name,
-                    label: false,
-                    required: true,
-                    input_html: {
-                      placeholder: t(:placeholder_enter_character_name),
-                      class: "w-full text-lg font-semibold bg-transparent input input-ghost outline-none p-0 rounded-md",
-                      data: { character_form_target: "nameInput" }
-                    },
-                    wrapper_html: { class: "mb-0" } %>
+        <% if editable_name? %>
+          <%= f.input :name,
+                      label: false,
+                      required: true,
+                      input_html: {
+                        placeholder: t(:placeholder_enter_character_name),
+                        maxlength: 50,
+                        class: "w-full text-lg font-semibold bg-transparent input input-ghost outline-none p-0 rounded-md",
+                        data: { character_form_target: "nameInput" }
+                      },
+                      wrapper_html: { class: "mb-0" } %>
+        <% else %>
+          <p class="w-full text-lg font-semibold leading-tight px-1 py-2"><%= character.name %></p>
+        <% end %>
 
         <div class="mt-3 space-y-2">
           <ul data-character-form-target="instructions"></ul>

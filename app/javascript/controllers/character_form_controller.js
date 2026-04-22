@@ -7,7 +7,7 @@ export default class extends Controller {
   connect() {
     this.renderExistingInstructions()
 
-    if (this.nameInputTarget.value.trim() === "") {
+    if (this.hasNameInputTarget && this.nameInputTarget.value.trim() === "") {
       this.nameInputTarget.focus()
     }
   }
