@@ -30,7 +30,7 @@ Rails.application.routes.draw do
       post :resend
     end
   end
-  resources :characters, only: [:new, :create]
-
-  post "select_character", to: "characters#select", as: :select_character
+  resources :characters, only: [:new, :create, :edit, :update] do
+    post :select, on: :member
+  end
 end

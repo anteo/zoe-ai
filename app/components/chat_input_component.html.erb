@@ -4,7 +4,7 @@
      data-chat-input-memorize-mode-value="<%= chat.memorize %>">
   <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "w-full", multipart: true,
                data: { action: "submit->chat-input#handleSubmit" } do |f| %>
-    <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 bg-base-100 border-base-200 shadow-sm outline">
+    <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 bg-base-100 border-base-200 shadow-sm">
       <div id="attachments-preview" class="hidden flex flex-wrap gap-2 p-2 border-b border-base-200" data-chat-input-target="attachmentsPreview"></div>
       <div class="flex items-end px-3 pt-3">
         <%= f.text_area :content,

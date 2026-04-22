@@ -5,6 +5,7 @@ ru:
   time:
     formats:
       default: '%d %B %Y, %H:%M'
+  label_app_title: "Зоя :: твой персональный ассистент"
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_send: Отправить
   label_token_usage: Токены
@@ -34,6 +35,7 @@ ru:
   label_chat_partner: Собеседник
   label_new: Новый
   label_create_character: Новый персонаж
+  label_edit_character: Редактировать персонажа
   label_remove_instruction: Удалить инструкцию
   placeholder_enter_character_name: Введите имя персонажа
   placeholder_add_instruction: "добавьте инструкцию..."
@@ -59,7 +61,7 @@ ru:
   label_cancel_account: Удалить аккаунт
   text_select_chat_history: Выберите разговор из списка.
   text_no_chat_history: Пока нет предыдущих разговоров.
-  text_greeting_html: Привет, я Зоя 🙂<br> Давай поболтаем!
+  text_greeting_html: Привет, я %{name} 🙂<br> Давай поболтаем!
   text_profile_updated: Профиль успешно обновлен.
   text_password_minimum: "Минимум %{count} символов"
   text_pending_confirmation: "Ожидает подтверждения: %{email}"

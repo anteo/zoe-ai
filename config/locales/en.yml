@@ -5,6 +5,7 @@ en:
   time:
     formats:
       default: "%a, %d %b %Y %H:%M:%S %z"
+  label_app_title: "Zoe :: your personal assistant"
   direct_speech: "%{character} said: \"%{text}\""
   label_send: Send
   label_token_usage: Tokens
@@ -34,6 +35,7 @@ en:
   label_chat_partner: Chat partner
   label_new: New
   label_create_character: New character
+  label_edit_character: Edit character
   label_remove_instruction: Remove instruction
   placeholder_enter_character_name: Enter character name
   placeholder_add_instruction: "add instruction..."
@@ -59,7 +61,7 @@ en:
   label_cancel_account: Cancel account
   text_select_chat_history: Select a chat from the list.
   text_no_chat_history: No previous chats yet.
-  text_greeting_html: Hi, I'm Zoe 🙂<br> Let's chat!
+  text_greeting_html: Hi, I'm %{name} 🙂<br> Let's chat!
   text_profile_updated: Profile updated.
   text_password_minimum: "%{count} characters minimum"
   text_pending_confirmation: "Waiting confirmation for: %{email}"

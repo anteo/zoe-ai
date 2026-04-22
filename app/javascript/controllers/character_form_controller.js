@@ -6,7 +6,10 @@ export default class extends Controller {
 
   connect() {
     this.renderExistingInstructions()
-    this.nameInputTarget.focus()
+
+    if (this.nameInputTarget.value.trim() === "") {
+      this.nameInputTarget.focus()
+    }
   }
 
   existingInstructionsValueChanged() {

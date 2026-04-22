@@ -4,6 +4,17 @@ import "./controllers"
 import TC from "@rolemodel/turbo-confirm"
 import "./channels"
 
+Turbo.StreamActions.redirect = function () {
+  const url = this.getAttribute("url") || window.location.href
+  const visit = () => Turbo.visit(url, { action: "replace" })
+
+  if (window.modal?.hideModalWithPromise) {
+    window.modal.hideModalWithPromise({ skipHistoryBack: true }).then(visit)
+  } else {
+    visit()
+  }
+}
+
 // Configure turbo-confirm to work with DaisyUI modal
 TC.start({
   // Default configuration already works with dialog elements

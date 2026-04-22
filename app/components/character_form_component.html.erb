@@ -6,8 +6,11 @@
     <div class="flex items-start gap-4">
       <label class="relative cursor-pointer shrink-0 self-start">
         <span class="w-16 h-16 rounded-full border border-base-300 bg-base-200 flex items-center justify-center bg-cover bg-center"
-              data-character-form-target="avatarPreview">
-          <span class="icon-[lucide--user-round] w-6 h-6 opacity-60"></span>
+              data-character-form-target="avatarPreview"
+              style="<%= avatar_preview_style %>">
+          <% unless character.avatar.attached? %>
+            <span class="icon-[lucide--user-round] w-6 h-6 opacity-60"></span>
+          <% end %>
         </span>
         <span class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-base-100 border border-base-300 flex items-center justify-center">
           <span class="icon-[lucide--plus] w-4 h-4"></span>
@@ -24,7 +27,7 @@
                     required: true,
                     input_html: {
                       placeholder: t(:placeholder_enter_character_name),
-                      class: "w-full text-lg font-semibold bg-transparent input input-ghost outline-none p-0 rounded-none",
+                      class: "w-full text-lg font-semibold bg-transparent input input-ghost outline-none p-0 rounded-md",
                       data: { character_form_target: "nameInput" }
                     },
                     wrapper_html: { class: "mb-0" } %>
@@ -41,13 +44,13 @@
                 <span class="icon-[lucide--trash-2] absolute w-4 h-4 invisible group-hover/icon:visible group-focus-within/icon:visible group-hover/icon:text-error"></span>
               </button>
               <input type="text"
-                     class="flex-1 bg-transparent input input-sm input-ghost outline-none text-sm p-0 rounded-none"
+                     class="flex-1 bg-transparent input input-sm input-ghost outline-none text-sm p-0 rounded-md"
                      name="character[instructions_attributes][__INDEX__][content]">
             </li>
           </template>
           <div class="flex items-center gap-2">
             <input type="text"
-                   class="flex-1 bg-transparent input input-ghost outline-none text-sm p-0 rounded-none"
+                   class="flex-1 bg-transparent input input-ghost outline-none text-sm p-0 rounded-md"
                    placeholder="<%= t(:placeholder_add_instruction) %>"
                    data-character-form-target="instructionInput"
                    data-action="keydown->character-form#handleInstructionKeydown">

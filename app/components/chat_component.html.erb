@@ -2,15 +2,10 @@
   <% if new? %>
     <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
       <div class="animate-[float_6s_ease-in-out_infinite]">
-        <div class="dialog-empty-image-dark">
-          <%= image_tag "empty_dark.png", alt: "", class: "max-w-full max-h-80" %>
-        </div>
-        <div class="dialog-empty-image-light">
-          <%= image_tag "empty_light.png", alt: "", class: "max-w-full max-h-80" %>
-        </div>
+        <%= avatar_for_character(current_partner, size: 160) %>
       </div>
       <p class="mt-6 text-lg text-center text-base-content">
-        <%= t(:text_greeting_html).html_safe %>
+        <%= t(:text_greeting_html, name: current_partner.name).html_safe %>
       </p>
     </div>
   <% else %>
