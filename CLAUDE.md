@@ -101,7 +101,13 @@ Uses XML tags for hard semantic boundaries between sections:
 
 ## Running Commands
 
-Always use `bash -lc "rvm 3.4.4@ai do <command>"` — e.g. `bash -lc "rvm 3.4.4@ai do bin/rails db:migrate"`.
+Always use `bash -lc "rvm 3.4.4@ai do <command>"` — e.g. `bash -lc "rvm 3.4.4@ai do bin/rails db:migrate"` to run Rake/Rails/Ruby commands.
+
+Do not run asset build commands in development (e.g. `npm run build`, `bun bun.config.js`, or equivalent JS/CSS build tasks). Assume a dev watcher/process handles assets.
+
+## Checks & Validation
+
+After implementation is done, skip running checks/validations (tests, linters, formatters, static checks). The user runs all validation steps manually.
 
 ## Internationalization (i18n)
 
