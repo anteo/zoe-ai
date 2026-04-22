@@ -1,45 +1,32 @@
 # frozen_string_literal: true
 
-# Tailwind CSS v4
 module UltimateTurboModal::Flavors
-  class Tailwind < UltimateTurboModal::Base
+  class DaisyUI < UltimateTurboModal::Base
     STYLES = "html:has(dialog#modal-container[open]) { overflow: hidden; }"
 
     # Modal constants
 
     MODAL_DIALOG_CLASSES = [
-      "group",
-      # Dialog reset
-      "fixed inset-0 p-0 m-0 border-none bg-transparent",
-      "max-w-[100vw] max-h-dvh w-full h-full overflow-y-auto",
-      # Backdrop (only when overlay enabled)
-      "data-[overlay=true]:backdrop:bg-gray-900/70 dark:data-[overlay=true]:backdrop:bg-gray-900/80",
-      "backdrop:opacity-0 backdrop:transition-opacity backdrop:duration-300 backdrop:ease-out",
-      "data-[entered]:data-[overlay=true]:backdrop:opacity-100",
-      "data-[overlay=false]:backdrop:bg-transparent",
-      "data-[closing]:backdrop:duration-200 data-[closing]:backdrop:ease-in"
+      "group modal",
+      # Fade backdrop out while UTM keeps dialog open during close animation.
+      "data-[closing]:bg-transparent"
     ].join(" ")
 
     MODAL_INNER_CLASSES = [
-      "flex min-h-full items-start justify-center pt-[10vh] sm:p-4",
-      # Transition
-      "transition duration-300 ease-out",
-      "group-data-[closing]:duration-200 group-data-[closing]:ease-in",
-      # Default state (closed): faded + shifted
-      "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
-      # Entered state
-      "group-data-[entered]:opacity-100 group-data-[entered]:translate-y-0 group-data-[entered]:scale-100"
+      "modal-box p-0 max-w-5xl",
+      # Keep DaisyUI's native modal animation and only provide close-state hooks for UTM.
+      "group-data-[closing]:opacity-0 group-data-[closing]:scale-95"
     ].join(" ")
 
-    MODAL_CONTENT_CLASSES = "relative transform max-h-screen overflow-hidden rounded-lg bg-white text-left shadow-lg transition-all sm:my-8 sm:max-w-3xl dark:bg-gray-800 dark:text-white"
+    MODAL_CONTENT_CLASSES = "relative max-h-screen overflow-hidden w-full"
     MODAL_MAIN_CLASSES = "group-data-[padding=true]:p-4 group-data-[padding=true]:pt-2 overflow-y-auto max-h-[75vh]"
-    MODAL_HEADER_CLASSES = "flex justify-between items-center w-full py-4 rounded-t dark:border-gray-600 group-data-[header-divider=true]:border-b group-data-[header=false]:absolute"
-    MODAL_TITLE_CLASSES = "pl-4"
-    MODAL_TITLE_H_CLASSES = "group-data-[title=false]:hidden text-lg font-semibold text-gray-900 dark:text-white"
-    MODAL_FOOTER_CLASSES = "flex p-4 rounded-b dark:border-gray-600 group-data-[footer-divider=true]:border-t"
-    MODAL_CLOSE_CLASSES = "mr-4 group-data-[close-button=false]:hidden"
+    MODAL_HEADER_CLASSES = "flex justify-between items-center w-full px-4 py-4 rounded-t-box group-data-[header-divider=true]:border-b group-data-[header-divider=true]:border-base-300 group-data-[header=false]:absolute"
+    MODAL_TITLE_CLASSES = "font-bold"
+    MODAL_TITLE_H_CLASSES = "group-data-[title=false]:hidden text-lg font-bold"
+    MODAL_FOOTER_CLASSES = "modal-action m-0 p-4 rounded-b-box group-data-[footer-divider=true]:border-t group-data-[footer-divider=true]:border-base-300"
+    MODAL_CLOSE_CLASSES = "group-data-[close-button=false]:hidden"
     MODAL_CLOSE_SR_CLASSES = "sr-only"
-    MODAL_CLOSE_BUTTON_CLASSES = "text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+    MODAL_CLOSE_BUTTON_CLASSES = "btn btn-ghost btn-sm btn-circle ml-auto"
     MODAL_CLOSE_ICON_CLASSES = "w-5 h-5"
 
     # Drawer constants

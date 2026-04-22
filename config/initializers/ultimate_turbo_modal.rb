@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 UltimateTurboModal.configure do |config|
-  config.flavor = :tailwind
+  config.flavor = :daisy_ui
   # config.allowed_click_outside_selector = []
 
-  # config.modal do |m|
-  #   m.advance = false
-  #   m.close_button = true
-  #   m.header = true
-  #   m.header_divider = true
-  #   m.footer_divider = true
-  #   m.padding = true
-  #   m.overlay = true
-  # end
+  config.modal do |m|
+    m.advance = false
+    m.close_button = true
+    m.header = true
+    m.header_divider = false
+    m.footer_divider = false
+    m.padding = true
+    m.overlay = true
+  end
 
   # config.drawer do |d|
   #   d.position = :right

@@ -20,4 +20,5 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym "LLM"
   inflect.acronym "MCP"
   inflect.acronym "ERB"
+  inflect.acronym "UI"
 end
