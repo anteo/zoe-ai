@@ -7,7 +7,9 @@ class Character < ApplicationRecord
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
 
-  accepts_nested_attributes_for :instructions
+  accepts_nested_attributes_for :instructions,
+    allow_destroy: true,
+    reject_if: ->(item) { item[:content].blank? }
 
   normalizes :name, with: ->(value) { value.to_s.strip.presence }
   validates :name, presence: true

@@ -32,6 +32,7 @@ ru:
   label_logout: Выйти
   label_register: Регистрация
   label_profile: Профиль
+  label_my_character: Мой персонаж
   label_chat_partner: Собеседник
   label_new: Новый
   label_create_character: Новый персонаж

@@ -1,6 +1,6 @@
 <div class="dropdown dropdown-end ml-1">
   <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm">
-    <%= avatar_for_user(current_user) %>
+    <%= avatar_for_user(current_user, id: "profile-menu-avatar") %>
   </div>
   <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-300 z-50 mt-1">
     <li class="menu-title">
@@ -13,6 +13,15 @@
         <%= t(:label_profile) %>
       <% end %>
     </li>
+    <% if my_character %>
+      <li>
+        <%= link_to edit_character_path(my_character),
+                    data: { turbo_frame: "modal" } do %>
+          <span class="icon-[lucide--square-user-round] w-4 h-4"></span>
+          <%= t(:label_my_character) %>
+        <% end %>
+      </li>
+    <% end %>
     <li>
       <%= link_to destroy_user_session_path,
                   class: "text-error",

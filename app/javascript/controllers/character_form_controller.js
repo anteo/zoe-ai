@@ -39,7 +39,19 @@ export default class extends Controller {
     event.preventDefault()
     event.stopPropagation()
     const instructionItem = event.currentTarget.closest("li")
-    instructionItem?.remove()
+    if (!instructionItem) return
+
+    const idInput = instructionItem.querySelector("input[name*='[id]']")
+    const destroyInput = instructionItem.querySelector("input[name*='[_destroy]']")
+    const hasPersistedInstruction = idInput && idInput.value.trim() !== ""
+
+    if (hasPersistedInstruction && destroyInput) {
+      destroyInput.value = "1"
+      instructionItem.classList.add("hidden")
+      return
+    }
+
+    instructionItem.remove()
   }
 
   addInstruction() {
@@ -48,17 +60,27 @@ export default class extends Controller {
     const index = this.nextInstructionIndex
     this.nextInstructionIndex += 1
 
-    this.appendInstruction(content, index)
+    this.appendInstruction({ content }, index)
     this.instructionInputTarget.value = ""
   }
 
-  appendInstruction(content, index) {
+  appendInstruction(instruction, index) {
     const fragment = this.instructionTemplateTarget.content.cloneNode(true)
-    const input = fragment.querySelector("input")
-    if (!input) return
+    const contentInput = fragment.querySelector("input[name*='[content]']")
+    if (!contentInput) return
+    const idInput = fragment.querySelector("input[name*='[id]']")
+    const destroyInput = fragment.querySelector("input[name*='[_destroy]']")
 
-    input.name = input.name.replace("__INDEX__", index)
-    input.value = content
+    contentInput.name = contentInput.name.replace("__INDEX__", index)
+    contentInput.value = instruction.content || ""
+    if (idInput) {
+      idInput.name = idInput.name.replace("__INDEX__", index)
+      idInput.value = instruction.id || ""
+    }
+    if (destroyInput) {
+      destroyInput.name = destroyInput.name.replace("__INDEX__", index)
+      destroyInput.value = "0"
+    }
     this.instructionsTarget.appendChild(fragment)
   }
 
@@ -67,8 +89,8 @@ export default class extends Controller {
 
     const instructions = this.hasExistingInstructionsValue ? this.existingInstructionsValue : []
     this.instructionsTarget.innerHTML = ""
-    instructions.forEach((content, index) => {
-      this.appendInstruction(content, index)
+    instructions.forEach((instruction, index) => {
+      this.appendInstruction(instruction, index)
     })
     this.nextInstructionIndex = instructions.length
   }

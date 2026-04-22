@@ -1,5 +1,5 @@
 <div data-controller="character-form"
-     data-character-form-existing-instructions-value="<%= character.instructions.map(&:content).to_json %>">
+     data-character-form-existing-instructions-value="<%= character.instructions.map { { id: it.id, content: it.content } }.to_json %>">
   <%= helpers.simple_form_for character,
                       html: { multipart: true },
                       data: { action: "submit->character-form#handleSubmit" } do |f| %>
@@ -46,6 +46,11 @@
               <input type="text"
                      class="flex-1 bg-transparent input input-sm input-ghost outline-none text-sm p-0 rounded-md"
                      name="character[instructions_attributes][__INDEX__][content]">
+              <input type="hidden"
+                     name="character[instructions_attributes][__INDEX__][id]">
+              <input type="hidden"
+                     value="0"
+                     name="character[instructions_attributes][__INDEX__][_destroy]">
             </li>
           </template>
           <div class="flex items-center gap-2">
