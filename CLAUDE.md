@@ -6,23 +6,6 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 
 **How to apply:** Frame all architectural suggestions in terms of Rails conventions, ActiveRecord, and background jobs.
 
-## Persistent memory
-
-Use Mem0 for durable project memory in this repository.
-
-Rules:
-1. Always set `app_id="ai"` in Mem0 operations for this project.
-2. At task start, call `search_memories` to load relevant context.
-3. After meaningful progress, review session's conversation, if discovered anything worth preserving for future sessions, call `add_memory` for durable engineering context.
-   - High-level architectural decisions and WHY they were made
-   - Domain model relationships and key concepts
-   - Data flow between major components (one-liner per pipeline)
-   - Project-specific conventions not derivable from code
-   - How to run commands or environment setup
-4. Avoid commit-style change summaries in memory (they are already available in git history and usually have low future retrieval value).
-5. Keep memories specific and searchable (include feature names, file paths, and concrete outcomes).
-6. Before ending a long task/session, store a short session-state summary with next steps.
-
 ## Key Directories
 - `app/models/` — Fact, Character, Topic, Message, Chat, Instruction, User
 - `lib/ai/actors/` — ExtractFacts, DescribeCharacter, SummarizeLines, ObjectifyChat
