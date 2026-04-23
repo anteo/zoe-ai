@@ -3,6 +3,11 @@
 class CharactersController < ApplicationController
   before_action :find_character, only: [ :edit, :update ]
 
+  def index
+    load_characters
+    render layout: false if turbo_frame_request?
+  end
+
   def new
     @character = Character.new
     render layout: false if turbo_frame_request?
@@ -15,7 +20,7 @@ class CharactersController < ApplicationController
     if @character.save
       current_user.characters << @character
       session[:ai_character_id] = @character.id
-      redirect_back fallback_location: root_path, status: :see_other
+      redirect_after_character_save
     else
       render :new, status: :unprocessable_entity, layout: !turbo_frame_request?
     end
@@ -27,7 +32,7 @@ class CharactersController < ApplicationController
 
   def update
     if @character.update(character_update_params)
-      redirect_back fallback_location: root_path, status: :see_other
+      redirect_after_character_save
     else
       render :edit, status: :unprocessable_entity, layout: !turbo_frame_request?
     end
@@ -42,6 +47,22 @@ class CharactersController < ApplicationController
 
   private
 
+  def load_characters
+    characters = current_user.characters.order(:name)
+    @human_characters = characters.human
+    @ai_characters = characters.ai
+    @other_characters = characters.third_party
+  end
+
+  def redirect_after_character_save
+    refresh_path = params[:refresh].presence
+    if refresh_path
+      redirect_to refresh_path, status: :see_other
+    else
+      redirect_back fallback_location: root_path, status: :see_other
+    end
+  end
+
   def find_character
     @character = current_user.characters.find_by(id: params[:id])
     head(:not_found) unless @character
@@ -52,6 +73,6 @@ class CharactersController < ApplicationController
   end
 
   def character_update_params
-    params.require(:character).permit(:avatar, instructions_attributes: [ :id, :content, :_destroy ])
+    params.fetch(:character, {}).permit(:avatar, instructions_attributes: [ :id, :content, :_destroy ])
   end
 end

@@ -3,6 +3,7 @@
   <%= helpers.simple_form_for character,
                       html: { multipart: true },
                       data: { action: "submit->character-form#handleSubmit" } do |f| %>
+    <%= hidden_field_tag :refresh, params[:refresh] if params[:refresh].present? %>
     <div class="flex items-start gap-4">
       <label class="relative cursor-pointer shrink-0 self-start">
         <span class="w-16 h-16 rounded-full border border-base-300 bg-base-200 flex items-center justify-center bg-cover bg-center"

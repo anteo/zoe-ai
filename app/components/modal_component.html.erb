@@ -1,0 +1,41 @@
+<% modal_markup = capture do %>
+  <dialog id="modal-container"
+          class="modal modal-open"
+          aria-labelledby="modal-title-h"
+          data-controller="app-modal"
+          data-app-modal="true"
+          data-action="cancel->app-modal#cancel keydown.esc@window->app-modal#close click->app-modal#backdropClick app-modal:close->app-modal#requestClose turbo:submit-end->app-modal#submitEnd">
+    <div class="<%= box_classes %>">
+      <div class="relative max-h-screen overflow-hidden w-full">
+        <% if header %>
+          <div class="<%= header_classes %>">
+            <h3 id="modal-title-h" class="<%= title_classes %>"><%= title %></h3>
+            <% if close_button %>
+              <button type="button"
+                      class="btn btn-ghost btn-sm btn-circle ml-auto"
+                      data-action="click->app-modal#close"
+                      aria-label="<%= t(:label_close) %>">
+                <span class="icon-[lucide--x] w-5 h-5"></span>
+                <span class="sr-only"><%= t(:label_close) %></span>
+              </button>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="<%= main_classes %>"><%= content %></div>
+
+        <% if footer? %>
+          <div class="<%= footer_classes %>"><%= footer %></div>
+        <% end %>
+      </div>
+    </div>
+  </dialog>
+<% end %>
+
+<% if modal_frame_request? %>
+  <%= helpers.turbo_frame_tag "modal" do %>
+    <%= modal_markup %>
+  <% end %>
+<% else %>
+  <%= modal_markup %>
+<% end %>

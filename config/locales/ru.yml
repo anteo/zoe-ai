@@ -32,8 +32,12 @@ ru:
   label_logout: Выйти
   label_register: Регистрация
   label_profile: Профиль
+  label_characters: Персонажи
   label_my_character: Мой персонаж
   label_chat_partner: Собеседник
+  label_human_characters: Люди
+  label_ai_characters: ИИ-персонажи
+  label_other_characters: Другие персонажи
   label_new: Новый
   label_create_character: Новый персонаж
   label_edit_character: Редактировать персонажа

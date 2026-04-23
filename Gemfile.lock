@@ -418,14 +418,6 @@ GEM
       railties (>= 7.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    ultimate_turbo_modal (3.0.4)
-      actionpack (>= 8.0)
-      activesupport (>= 8.0)
-      phlex-rails (>= 2.0)
-      railties (>= 8.0)
-      stimulus-rails
-      tsort
-      turbo-rails
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
@@ -491,7 +483,6 @@ DEPENDENCIES
   solid_queue
   stimulus-rails
   turbo-rails
-  ultimate_turbo_modal (~> 3.0)
   view_component
 
 BUNDLED WITH

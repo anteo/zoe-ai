@@ -32,8 +32,12 @@ en:
   label_logout: Logout
   label_register: Register
   label_profile: Profile
+  label_characters: Characters
   label_my_character: My character
   label_chat_partner: Chat partner
+  label_human_characters: Human characters
+  label_ai_characters: AI characters
+  label_other_characters: Other characters
   label_new: New
   label_create_character: New character
   label_edit_character: Edit character

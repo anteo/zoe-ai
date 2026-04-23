@@ -23,7 +23,7 @@
     <% if respond_to?(google_helper) %>
       <%= button_to public_send(google_helper),
                     data: { turbo: false },
-                    class: "btn mt-2 w-full border border-base-300 bg-white text-base-content hover:bg-base-100",
+                    class: "btn mt-2 w-full btn-outline",
                     form_class: "w-full" do %>
         <span class="inline-flex items-center gap-2">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 48 48">
