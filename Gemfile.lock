@@ -250,13 +250,6 @@ GEM
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
     pgvector (0.3.2)
-    phlex (2.4.1)
-      refract (~> 1.0)
-      zeitwerk (~> 2.7)
-    phlex-rails (2.4.0)
-      phlex (~> 2.4.0)
-      railties (>= 7.1, < 9)
-      zeitwerk (~> 2.7)
     polyglot (0.3.5)
     pp (0.6.3)
       prettyprint
@@ -327,9 +320,6 @@ GEM
       psych (>= 4.0.0)
       tsort
     redcarpet (3.6.1)
-    refract (1.1.0)
-      prism
-      zeitwerk
     regexp_parser (2.11.3)
     reline (0.6.3)
       io-console (~> 0.5)
@@ -338,6 +328,7 @@ GEM
     responders (3.2.0)
       actionpack (>= 7.0)
       railties (>= 7.0)
+    rexml (3.4.4)
     rubocop (1.85.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -475,6 +466,7 @@ DEPENDENCIES
   redcarpet
   reline
   request_store
+  rexml
   rubocop-rails-omakase
   ruby_llm
   ruby_llm-mcp (~> 1.0)

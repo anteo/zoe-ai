@@ -1,0 +1,7 @@
+<section>
+  <% if character.description.present? %>
+    <pre class="overflow-x-auto whitespace-pre-wrap text-sm leading-6"><%= character.description %></pre>
+  <% else %>
+    <p class="text-sm opacity-60"><%= t(:text_no_character_description) %></p>
+  <% end %>
+</section>

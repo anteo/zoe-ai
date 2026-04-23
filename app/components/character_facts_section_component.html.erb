@@ -1,0 +1,23 @@
+<section>
+  <% if facts.any? %>
+    <div class="space-y-3">
+      <% facts.each do |fact| %>
+        <article class="rounded-2xl bg-base-200/60 p-4">
+          <div class="mb-2 flex flex-wrap gap-1.5">
+            <% fact_tags(fact).each do |tag| %>
+              <span class="badge badge-neutral"><%= tag %></span>
+            <% end %>
+          </div>
+
+          <p class="text-sm leading-6"><%= fact.content %></p>
+
+          <% if fact_date(fact).present? %>
+            <div class="mt-3 text-xs opacity-50"><%= fact_date(fact) %></div>
+          <% end %>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-sm opacity-60"><%= t(:text_no_character_facts) %></p>
+  <% end %>
+</section>

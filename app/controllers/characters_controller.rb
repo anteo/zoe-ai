@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CharactersController < ApplicationController
-  before_action :find_character, only: [ :edit, :update ]
+  before_action :find_character, only: [ :edit, :update, :destroy, :section ]
 
   def index
     load_characters
@@ -20,7 +20,7 @@ class CharactersController < ApplicationController
     if @character.save
       current_user.characters << @character
       session[:ai_character_id] = @character.id
-      redirect_after_character_save
+      redirect_after_character_create
     else
       render :new, status: :unprocessable_entity, layout: !turbo_frame_request?
     end
@@ -30,12 +30,33 @@ class CharactersController < ApplicationController
     render layout: false if turbo_frame_request?
   end
 
+  def section
+    @section = permitted_section
+    render layout: false
+  end
+
   def update
-    if @character.update(character_update_params)
+    if update_character!
       redirect_after_character_save
     else
       render :edit, status: :unprocessable_entity, layout: !turbo_frame_request?
     end
+  end
+
+  def destroy
+    return redirect_after_character_save unless deletable_character?
+
+    Character.transaction do
+      session[:ai_character_id] = nil if session[:ai_character_id].to_s == @character.id.to_s
+
+      if @character.users.where.not(id: current_user.id).exists?
+        current_user.characters.destroy(@character)
+      else
+        @character.destroy!
+      end
+    end
+
+    redirect_after_character_save
   end
 
   def select
@@ -63,6 +84,14 @@ class CharactersController < ApplicationController
     end
   end
 
+  def redirect_after_character_create
+    if turbo_frame_request?
+      redirect_to edit_character_path(@character, refresh: params[:refresh]), status: :see_other
+    else
+      redirect_after_character_save
+    end
+  end
+
   def find_character
     @character = current_user.characters.find_by(id: params[:id])
     head(:not_found) unless @character
@@ -73,6 +102,64 @@ class CharactersController < ApplicationController
   end
 
   def character_update_params
-    params.fetch(:character, {}).permit(:avatar, instructions_attributes: [ :id, :content, :_destroy ])
+    params.fetch(:character, {}).permit(
+      :avatar,
+      images: [],
+      new_images_descriptions: {},
+      instructions_attributes: [ :id, :content, :_destroy ],
+      images_attachments_attributes: [ :id, :description, :_destroy ]
+    )
+  end
+
+  def update_character!
+    update_params = character_update_params
+    new_images = Array(update_params.delete(:images)).reject(&:blank?)
+    new_images_descriptions = normalize_new_image_descriptions(update_params.delete(:new_images_descriptions))
+
+    return false unless @character.update(update_params)
+
+    existing_attachment_ids = @character.images.attachments.pluck(:id)
+    @character.images.attach(new_images) if new_images.any?
+    apply_new_image_descriptions(existing_attachment_ids:, descriptions: new_images_descriptions)
+    true
+  end
+
+  def apply_new_image_descriptions(existing_attachment_ids:, descriptions:)
+    return if descriptions.empty?
+
+    new_attachments = @character.images.attachments
+                              .where.not(id: existing_attachment_ids)
+                              .order(:created_at, :id)
+
+    new_attachments.each_with_index do |attachment, index|
+      attachment.description = descriptions[index]
+      attachment.blob.save! if attachment.blob.changed?
+    end
+  end
+
+  def normalize_new_image_descriptions(raw_descriptions)
+    return [] if raw_descriptions.blank?
+
+    case raw_descriptions
+    when ActionController::Parameters
+      raw_descriptions.to_h.sort_by { |index, _| index.to_i }.map(&:last)
+    when Hash
+      raw_descriptions.sort_by { |index, _| index.to_i }.map(&:last)
+    when Array
+      raw_descriptions
+    else
+      Array(raw_descriptions)
+    end
+  end
+
+  def deletable_character?
+    !@character.is_default? && current_user.main_character_id != @character.id
+  end
+
+  def permitted_section
+    allowed = %w[description facts images]
+    allowed << "instructions" if @character.ai?
+
+    params[:section].to_s.in?(allowed) ? params[:section].to_s : allowed.first
   end
 end

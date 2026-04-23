@@ -41,9 +41,22 @@ ru:
   label_new: Новый
   label_create_character: Новый персонаж
   label_edit_character: Редактировать персонажа
+  label_description: Описание
+  label_instructions: Инструкции
+  label_facts: Факты
+  label_images: Изображения
+  label_share_character: Поделиться персонажем
+  label_upload_images: Загрузить изображения
+  label_image_description: Описание изображения
+  label_human: Человек
+  label_ai: ИИ
+  label_other: Другое
+  label_persistent: Постоянное
+  label_event: Событие
   label_remove_instruction: Удалить инструкцию
   placeholder_enter_character_name: Введите имя персонажа
   placeholder_add_instruction: "добавьте инструкцию..."
+  placeholder_image_description: Добавьте описание изображения
   label_edit_profile: Редактировать профиль
   label_email: Email
   label_password: Пароль
@@ -75,10 +88,20 @@ ru:
   text_fix_form_errors: Пожалуйста, исправьте ошибки ниже.
   text_character_name_required: Имя персонажа не может быть пустым.
   text_character_create_failed: Не удалось создать персонажа.
+  text_no_character_description: Пока нет описания.
+  text_no_character_facts: Пока нет фактов.
+  text_no_character_images: Пока нет изображений.
+  text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
+  text_share_character_coming_soon: Возможность поделиться персонажем пока не реализована.
+  text_loading: Загрузка...
   text_token_usage_hint: "%{used} / %{context} токенов использовано"
+  confirm_delete_character: Удалить этого персонажа?
   confirm_logout: Выйти из аккаунта?
   activerecord:
     models:
+      character:
+        one: Персонаж
+        other: Персонажи
       user:
         one: Пользователь
         other: Пользователи

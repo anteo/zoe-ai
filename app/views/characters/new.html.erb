@@ -1,7 +1,22 @@
-<%= component :modal do |m| %>
+<%= component :modal, width: "w-xl" do |m| %>
   <% m.with_title do %>
     <span><%= t(:label_create_character) %></span>
   <% end %>
 
-  <%= component :character_form, character: @character %>
+  <%= simple_form_for @character do |f| %>
+    <%= hidden_field_tag :refresh, params[:refresh] if params[:refresh].present? %>
+    <%= f.input :name,
+                label: false,
+                required: true,
+                input_html: {
+                  autofocus: true,
+                  class: "input-ghost outline-none",
+                  placeholder: t(:placeholder_enter_character_name),
+                  maxlength: 50
+                } %>
+
+    <div class="modal-action">
+      <%= f.submit t(:label_save), class: "btn btn-primary" %>
+    </div>
+  <% end %>
 <% end %>

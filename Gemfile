@@ -49,5 +49,5 @@ gem "redcarpet"
 gem "devise"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
-
 gem "simple_form", "~> 5.4"
+gem "rexml"

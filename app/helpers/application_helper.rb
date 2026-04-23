@@ -10,13 +10,14 @@ module ApplicationHelper
                        .render(text).html_safe
   end
 
-  def avatar_for(url: nil, size: 8, content: nil, id: nil)
-    css = "rounded-full shrink-0 object-cover shadow-md w-#{size} h-#{size}"
+  def avatar_for(url: nil, css_class: "w-8 h-8", content: nil, id: nil)
+    css = "rounded-full shrink-0 object-cover shadow-md #{css_class}"
+    size_px = avatar_size_px_from_class(css_class)
 
     if url
       image_tag(url, class: css, id:)
     else
-      font_size = [ (size * 1.5).round, 12 ].max
+      font_size = [ (size_px * 0.375).round, 12 ].max
       tag.span(
         content,
         class: "#{css} bg-base-100 flex items-center justify-center font-bold",
@@ -25,32 +26,43 @@ module ApplicationHelper
     end
   end
 
-  def avatar_for_user(user, size: 8, id: nil)
-    avatar_for(url: user&.gravatar_url(size: size * 4), content: user&.initials, size:, id:)
+  def avatar_for_user(user, css_class: "w-8 h-8", id: nil)
+    size_px = avatar_size_px_from_class(css_class)
+    avatar_for(url: user&.gravatar_url(size: size_px), content: user&.initials, css_class:, id:)
   end
 
-  def avatar_for_character(character, size: 8, id: nil)
+  def avatar_for_character(character, css_class: "w-8 h-8", id: nil)
+    size_px = avatar_size_px_from_class(css_class)
+
     if character.new_record?
-      avatar_for(content: tag.span(class: "icon-[lucide--plus]"), size:, id:)
+      avatar_for(content: tag.span(class: "icon-[lucide--plus]"), css_class:, id:)
     else
-      url = url_for(character.avatar.variant(resize_to_limit: [ size * 8 ] * 2)) if character.avatar.attached?
-      avatar_for(url:, content: character.name[0].upcase, size:, id:)
+      url = url_for(character.avatar.variant(resize_to_limit: [ size_px * 2 ] * 2)) if character.avatar.attached?
+      avatar_for(url:, content: character.name[0].upcase, css_class:, id:)
     end
   end
 
-  def link_to_character(character, link, size: 8, link_class: "", name_class: "", data: nil, name: character.name)
-    link_class = "rounded-md shrink-0 flex flex-col items-center gap-1 px-1 py-1.5 w-#{size + 4} #{link_class}"
+  def link_to_character(character, link, avatar_class: "w-8 h-8", link_class: "", name_class: "", data: nil, name: character.name)
+    link_width_px = avatar_size_px_from_class(avatar_class) + 16
+    link_class = "rounded-md shrink-0 flex flex-col items-center gap-1 px-1 py-1.5 #{link_class}"
     name_class = "block w-full text-xs font-medium leading-tight text-center whitespace-nowrap overflow-hidden text-ellipsis #{name_class}"
 
-    link_to(link, data:, class: link_class, aria: { label: name }) do
+    link_to(link, data:, class: link_class, style: "width: #{link_width_px}px;", aria: { label: name }) do
       safe_join([
-                  avatar_for_character(character, size:),
+                  avatar_for_character(character, css_class: avatar_class),
                   content_tag(:span, name, class: name_class)
                 ])
     end
   end
 
-  def link_to_new_character(link, size: 8, link_class: "", name_class: "", data: nil)
-    link_to_character(Character.new, link, size:, link_class:, name_class:, data:, name: t(:label_new))
+  def link_to_new_character(link, avatar_class: "w-8 h-8", link_class: "", name_class: "", data: nil)
+    link_to_character(Character.new, link, avatar_class:, link_class:, name_class:, data:, name: t(:label_new))
+  end
+
+  def avatar_size_px_from_class(css_class)
+    units = css_class.to_s.scan(/\b[wh]-(\d+(?:\.\d+)?)\b/).flatten.map(&:to_f)
+    return 32 if units.empty?
+
+    (units.max * 4).round
   end
 end

@@ -1,4 +1,6 @@
 class Character < ApplicationRecord
+  has_and_belongs_to_many :users
+
   has_one_attached :avatar
   has_many_attached :images
 
@@ -10,6 +12,8 @@ class Character < ApplicationRecord
   accepts_nested_attributes_for :instructions,
     allow_destroy: true,
     reject_if: ->(item) { item[:content].blank? }
+  accepts_nested_attributes_for :images_attachments,
+    allow_destroy: true
 
   normalizes :name, with: ->(value) { value.to_s.strip.presence }
   validates :name, presence: true, length: { maximum: 50 }

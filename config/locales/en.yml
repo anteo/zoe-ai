@@ -41,9 +41,22 @@ en:
   label_new: New
   label_create_character: New character
   label_edit_character: Edit character
+  label_description: Description
+  label_instructions: Instructions
+  label_facts: Facts
+  label_images: Images
+  label_share_character: Share character
+  label_upload_images: Upload images
+  label_image_description: Image description
+  label_human: Human
+  label_ai: AI
+  label_other: Other
+  label_persistent: Persistent
+  label_event: Event
   label_remove_instruction: Remove instruction
   placeholder_enter_character_name: Enter character name
   placeholder_add_instruction: "add instruction..."
+  placeholder_image_description: Add image description
   label_edit_profile: Edit profile
   label_email: Email
   label_password: Password
@@ -75,10 +88,20 @@ en:
   text_fix_form_errors: Please fix the errors below.
   text_character_name_required: Character name can't be blank.
   text_character_create_failed: Failed to create character.
+  text_no_character_description: No description yet.
+  text_no_character_facts: No facts yet.
+  text_no_character_images: No images yet.
+  text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.
+  text_share_character_coming_soon: Sharing is not implemented yet.
+  text_loading: Loading...
   text_token_usage_hint: "%{used} / %{context} tokens used"
+  confirm_delete_character: Delete this character?
   confirm_logout: Logout from your account?
   activerecord:
     models:
+      character:
+        one: Character
+        other: Characters
       user:
         one: User
         other: Users

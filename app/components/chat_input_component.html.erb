@@ -11,7 +11,12 @@
             placeholder: t(:placeholder_chat_input),
             rows: 1,
             class: "flex-1 resize-none bg-transparent border-none outline-none focus:outline-none py-0.5 max-h-32",
-            data: { chat_input_target: "textInput", action: "input->chat-input#handleInput keydown->chat-input#handleKeydown" } %>
+            data: {
+              controller: "textarea-autosize",
+              textarea_autosize_max_height_value: 128,
+              chat_input_target: "textInput",
+              action: "input->chat-input#handleInput keydown->chat-input#handleKeydown"
+            } %>
       </div>
       <div class="mt-2 flex items-center justify-between gap-2 px-3 pb-2">
         <div class="flex items-center gap-2">

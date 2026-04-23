@@ -1,5 +1,27 @@
 const modalFrame = () => document.querySelector("turbo-frame#modal")
 const modalSnapshotStack = []
+
+const requestHeaderValue = (headers, key) => {
+  if (!headers) return null
+  if (typeof headers.get === "function") return headers.get(key)
+  return headers[key] || headers[key.toLowerCase()] || null
+}
+
+const isPrefetchRequest = (headers) => {
+  const purpose = requestHeaderValue(headers, "Purpose") || requestHeaderValue(headers, "X-Sec-Purpose")
+  return String(purpose || "").toLowerCase() === "prefetch"
+}
+
+const targetsModalFrameRequest = (event) => {
+  const target = event?.target
+  if (target instanceof Element) {
+    if (target.tagName.toLowerCase() === "turbo-frame" && target.id === "modal") return true
+  }
+
+  const headers = event?.detail?.fetchOptions?.headers
+  return requestHeaderValue(headers, "Turbo-Frame") === "modal"
+}
+
 const isModalFrameTarget = (event) => {
   const target = event?.target
   return target instanceof Element && target.tagName.toLowerCase() === "turbo-frame" && target.id === "modal"
@@ -32,7 +54,10 @@ export const closeAppModal = () => {
 }
 
 export const popAppModalSnapshot = (frame) => {
-  const snapshot = modalSnapshotStack.pop()
+  let snapshot = modalSnapshotStack.pop()
+  while (snapshot && snapshot === frame.innerHTML) {
+    snapshot = modalSnapshotStack.pop()
+  }
   if (!snapshot) return false
 
   frame.dataset.appModalReplacing = "true"
@@ -73,19 +98,41 @@ export const installAppModal = () => {
   })
 
   document.addEventListener("turbo:before-fetch-request", (event) => {
-    if (!isModalFrameTarget(event)) return
+    if (!targetsModalFrameRequest(event)) return
 
-    const frame = event.target
+    const frame = modalFrame()
     if (!(frame instanceof Element)) return
 
+    const headers = event.detail?.fetchOptions?.headers
+    if (isPrefetchRequest(headers)) return
+
     const method = String(event.detail?.fetchOptions?.method || "GET").toUpperCase()
-    if (method !== "GET") return
+    if (method !== "GET") {
+      // Mutating requests inside modal flow (e.g. DELETE via data-turbo-method)
+      // can redirect to a fresh modal state; stale GET snapshots must not be restored.
+      clearAppModalSnapshots()
+      return
+    }
 
     const dialog = frame.querySelector("dialog[data-app-modal='true']")
     if (!dialog) return
 
     frame.dataset.appModalReplacing = "true"
-    modalSnapshotStack.push(frame.innerHTML)
+    const snapshot = frame.innerHTML
+    const lastSnapshot = modalSnapshotStack[modalSnapshotStack.length - 1]
+    if (snapshot !== lastSnapshot) {
+      modalSnapshotStack.push(snapshot)
+    }
+  })
+
+  document.addEventListener("turbo:before-fetch-response", (event) => {
+    if (!targetsModalFrameRequest(event)) return
+
+    const response = event.detail?.fetchResponse?.response
+    if (!response) return
+    if (!response.redirected) return
+
+    clearAppModalSnapshots()
   })
 
   document.addEventListener("turbo:frame-missing", async (event) => {

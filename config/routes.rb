@@ -30,7 +30,8 @@ Rails.application.routes.draw do
       post :resend
     end
   end
-  resources :characters, only: [:index, :new, :create, :edit, :update] do
+  resources :characters, only: [:index, :new, :create, :edit, :update, :destroy] do
     post :select, on: :member
+    get :section, on: :member
   end
 end

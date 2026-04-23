@@ -95,7 +95,6 @@ export default class extends Controller {
 
   handleInput(event) {
     this.handleTyping()
-    this.autoResize(event)
     this.updateSendButton()
   }
 
@@ -124,12 +123,6 @@ export default class extends Controller {
     const active = this.hasContent()
     this.sendButtonTarget.classList.toggle("btn-default", !active)
     this.sendButtonTarget.classList.toggle("btn-success", active)
-  }
-
-  autoResize(event) {
-    const el = event.target
-    el.style.height = 'auto'
-    el.style.height = Math.min(el.scrollHeight, 128) + 'px'
   }
 
   async displayAttachments(event) {

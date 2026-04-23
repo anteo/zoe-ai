@@ -14,6 +14,7 @@ import FlashAlertController from "./flash_alert_controller"
 import FormErrorsController from "./form_errors_controller"
 import CharacterFormController from "./character_form_controller"
 import AppModalController from "./app_modal_controller"
+import TextareaAutosizeController from "./textarea_autosize_controller"
 
 application.register("hello", HelloController)
 application.register("chat", ChatController)
@@ -26,3 +27,4 @@ application.register("flash-alert", FlashAlertController)
 application.register("form-errors", FormErrorsController)
 application.register("character-form", CharacterFormController)
 application.register("app-modal", AppModalController)
+application.register("textarea-autosize", TextareaAutosizeController)
