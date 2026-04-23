@@ -52,10 +52,29 @@ en:
   label_ai: AI
   label_other: Other
   label_persistent: Persistent
+  label_time: Time
+  label_time_past: Past
+  label_time_present: Present
+  label_time_future: Future
+  label_kind: Kind
+  label_fact_kind_attribute: Attribute
+  label_fact_kind_experience: Experience
+  label_fact_kind_belief: Belief
+  label_fact_kind_preference: Preference
+  label_fact_kind_plan: Plan
+  label_author: Author
+  label_importance: Importance
+  label_topic: Topic
+  label_content: Content
+  label_filter_persistent_all: All persistence
+  label_filter_topic_all: All topics
+  label_sort_mentioned_at_desc: Mentioned date (newest)
+  label_sort_mentioned_at_asc: Mentioned date (oldest)
   label_event: Event
   label_remove_instruction: Remove instruction
   placeholder_enter_character_name: Enter character name
   placeholder_add_instruction: "add instruction..."
+  placeholder_filter_facts_text: Filter facts
   placeholder_image_description: Add image description
   label_edit_profile: Edit profile
   label_email: Email

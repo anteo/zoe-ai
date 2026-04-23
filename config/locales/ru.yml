@@ -51,11 +51,30 @@ ru:
   label_human: Человек
   label_ai: ИИ
   label_other: Другое
-  label_persistent: Постоянное
+  label_persistent: Постоянный
+  label_time: Время
+  label_time_past: Прошлое
+  label_time_present: Настоящее
+  label_time_future: Будущее
+  label_kind: Вид
+  label_fact_kind_attribute: Атрибут
+  label_fact_kind_experience: Опыт
+  label_fact_kind_belief: Убеждение
+  label_fact_kind_preference: Предпочтение
+  label_fact_kind_plan: План
+  label_author: Автор
+  label_importance: Важность
+  label_topic: Тема
+  label_content: Содержание
+  label_filter_persistent_all: Все
+  label_filter_topic_all: Все темы
+  label_sort_mentioned_at_desc: Упомянуто (сначала новые)
+  label_sort_mentioned_at_asc: Упомянуто (сначала старые)
   label_event: Событие
   label_remove_instruction: Удалить инструкцию
   placeholder_enter_character_name: Введите имя персонажа
   placeholder_add_instruction: "добавьте инструкцию..."
+  placeholder_filter_facts_text: Фильтр фактов
   placeholder_image_description: Добавьте описание изображения
   label_edit_profile: Редактировать профиль
   label_email: Email

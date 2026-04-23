@@ -106,6 +106,7 @@ class CharactersController < ApplicationController
       :avatar,
       images: [],
       new_images_descriptions: {},
+      facts_attributes: [ :id, :content, :_destroy ],
       instructions_attributes: [ :id, :content, :_destroy ],
       images_attachments_attributes: [ :id, :description, :_destroy ]
     )

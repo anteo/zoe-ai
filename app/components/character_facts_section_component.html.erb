@@ -1,21 +1,117 @@
-<section>
+<section data-controller="character-facts">
   <% if facts.any? %>
-    <div class="space-y-3">
-      <% facts.each do |fact| %>
-        <article class="rounded-2xl bg-base-200/60 p-4">
-          <div class="mb-2 flex flex-wrap gap-1.5">
-            <% fact_tags(fact).each do |tag| %>
-              <span class="badge badge-neutral"><%= tag %></span>
-            <% end %>
-          </div>
+    <div class="grid gap-2 md:grid-cols-4 m-2">
+      <label class="input input-ghost outline-none w-full">
+        <span class="icon-[lucide--search] h-4 w-4 opacity-60"></span>
+        <input type="text"
+               class="grow"
+               placeholder="<%= t(:placeholder_filter_facts_text) %>"
+               data-character-facts-target="textFilter"
+               data-action="input->character-facts#queueApplyFilters">
+      </label>
 
-          <p class="text-sm leading-6"><%= fact.content %></p>
+      <select class="select select-ghost w-full"
+              data-character-facts-target="persistentFilter"
+              data-action="change->character-facts#applyFilters">
+        <option value="all"><%= t(:label_filter_persistent_all) %></option>
+        <option value="true"><%= t(:label_persistent) %></option>
+        <option value="false"><%= t(:label_event) %></option>
+      </select>
 
-          <% if fact_date(fact).present? %>
-            <div class="mt-3 text-xs opacity-50"><%= fact_date(fact) %></div>
-          <% end %>
-        </article>
-      <% end %>
+      <select class="select select-ghost w-full"
+              data-character-facts-target="topicFilter"
+              data-action="change->character-facts#applyFilters">
+        <option value=""><%= t(:label_filter_topic_all) %></option>
+        <% topic_options.each do |topic_name| %>
+          <option value="<%= topic_name %>"><%= topic_name %></option>
+        <% end %>
+      </select>
+
+      <select class="select select-ghost w-full"
+              data-character-facts-target="sortFilter"
+              data-action="change->character-facts#handleSortChange">
+        <option value="desc"><%= t(:label_sort_mentioned_at_desc) %></option>
+        <option value="asc"><%= t(:label_sort_mentioned_at_asc) %></option>
+      </select>
+    </div>
+
+    <div class="max-h-[52vh] overflow-auto rounded-box border border-base-300">
+      <table class="table table-zebra table-pin-rows table-sm w-full">
+        <thead class="sticky top-0 z-10 bg-base-100">
+        <tr class="text-center">
+          <th class="min-w-[18rem] text-left p-3"><%= t(:label_content) %></th>
+          <th><%= t(:label_time) %></th>
+          <th><%= t(:label_kind) %></th>
+          <th><%= t(:label_author) %></th>
+          <th><%= t(:label_importance) %></th>
+          <th><%= t(:label_persistent) %></th>
+          <th><%= t(:label_topic) %></th>
+          <th class="w-10"></th>
+        </tr>
+        </thead>
+        <tbody data-character-facts-target="rows">
+        <% facts.each do |fact| %>
+          <tr class="text-center"
+              data-character-facts-target="row"
+              data-mentioned-at="<%= fact.mentioned_at&.to_i || 0 %>"
+              data-persistent="<%= fact.persistent? %>"
+              data-author="<%= fact.author&.name.to_s %>"
+              data-topic="<%= fact.topic&.name.to_s %>"
+              data-search-text="<%= [ fact.content, fact.author&.name, fact.topic&.name ].compact.join(" ").downcase %>">
+            <td class="text-left">
+              <input type="hidden"
+                     name="character[facts_attributes][<%= fact.id %>][id]"
+                     value="<%= fact.id %>"
+                     data-role="id">
+              <input type="hidden"
+                     name="character[facts_attributes][<%= fact.id %>][_destroy]"
+                     value="0"
+                     data-role="destroy">
+              <textarea name="character[facts_attributes][<%= fact.id %>][content]"
+                        rows="3"
+                        class="textarea textarea-sm p-0 rounded-sm textarea-ghost outline-none w-full bg-transparent min-h-[4.5rem] max-h-40 resize-none overflow-y-auto leading-6"
+                        data-original-content="<%= fact.content %>"
+                        data-role="content"
+                        data-action="input->character-facts#syncSearchText"><%= fact.content %></textarea>
+            </td>
+            <td>
+              <span class="inline-flex items-center gap-2" title="<%= fact_time_label(fact) %>">
+                <span class="<%= fact_time_icon(fact) %> h-4 w-4 opacity-80"></span>
+                <span class="inline-flex flex-col leading-tight text-left">
+                  <% if fact_date(fact).present? %>
+                    <span class="text-xs opacity-70"><%= fact_date(fact) %></span>
+                  <% end %>
+                  <% if fact_time(fact).present? %>
+                    <span class="text-xs opacity-60"><%= fact_time(fact) %></span>
+                  <% end %>
+                </span>
+              </span>
+            </td>
+            <td>
+              <span class="inline-flex items-center" title="<%= fact_kind_label(fact) %>">
+                <span class="<%= fact_kind_icon(fact) %> h-4 w-4 opacity-80"></span>
+              </span>
+            </td>
+            <td><%= fact.author&.name %></td>
+            <td><%= fact.importance %>%</td>
+            <td><%= fact.topic&.name %></td>
+            <td>
+              <span class="inline-flex items-center" title="<%= fact.persistent? ? t(:label_persistent) : t(:label_event) %>">
+                <span class="<%= fact_persistence_icon(fact) %> h-4 w-4 <%= "text-success" if fact.persistent? %>"></span>
+              </span>
+            </td>
+            <td>
+              <button type="button"
+                      class="btn btn-ghost btn-xs btn-square text-error"
+                      title="<%= t(:label_delete) %>"
+                      data-action="click->character-facts#toggleDelete">
+                <span class="icon-[lucide--trash-2] h-4 w-4"></span>
+              </button>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
     </div>
   <% else %>
     <p class="text-sm opacity-60"><%= t(:text_no_character_facts) %></p>

@@ -1,15 +1,16 @@
 <div class="flex h-full min-h-0 w-full flex-col"
-     data-controller="character-form"
-     data-character-form-current-section-value="<%= default_section %>">
+     data-controller="character-details character-instructions characters-images"
+     data-action="character-facts:count-changed->character-details#updateFactsCountBadge"
+     data-character-details-current-section-value="<%= default_section %>">
   <%= helpers.simple_form_for character,
                               html: { multipart: true, class: "flex h-full min-h-0 flex-col" },
-                              data: { action: "submit->character-form#handleSubmit" } do |f| %>
+                              data: { action: "submit->character-instructions#handleSubmit" } do |f| %>
     <%= hidden_field_tag :refresh, refresh if refresh.present? %>
 
     <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 px-5 py-7">
       <div class="flex min-w-0 items-center gap-4 md:grow-0 grow">
         <label class="group relative cursor-pointer shrink-0">
-          <span data-character-form-target="avatarPreview">
+          <span data-character-details-target="avatarPreview">
             <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview") %>
           </span>
           <span class="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-transform group-hover:scale-105">
@@ -18,7 +19,7 @@
           <%= f.file_field :avatar,
                            class: "hidden",
                            accept: "image/*",
-                           data: { action: "change->character-form#handleAvatarChange" } %>
+                           data: { action: "change->character-details#handleAvatarChange" } %>
         </label>
 
         <div class="min-w-0 space-y-2 grow">
@@ -57,14 +58,17 @@
                   role="tab"
                   aria-controls="<%= "#{section_frame_id(section[:key])}-panel" %>"
                   class="tab gap-2"
-                  data-character-form-target="tab"
+                  data-character-details-target="tab"
                   data-section="<%= section[:key] %>"
-                  data-action="click->character-form#showSection"
+                  data-action="click->character-details#showSection"
                   title="<%= section[:label] %>">
             <span class="<%= section[:icon_class] %> h-4 w-4"></span>
             <span><%= section[:label] %></span>
             <% if section[:count].present? %>
-              <% badge_data = section[:badge_target].present? ? { character_form_target: section[:badge_target] } : {} %>
+              <% badge_data = {} %>
+              <% badge_data[:character_instructions_target] = "countBadge" if section[:key] == "instructions" %>
+              <% badge_data[:characters_images_target] = "countBadge" if section[:key] == "images" %>
+              <% badge_data[:character_details_target] = "factsCountBadge" if section[:key] == "facts" %>
               <%= tag.span section[:count], class: "badge badge-sm badge-neutral", data: badge_data %>
             <% end %>
           </button>
@@ -78,7 +82,7 @@
           <div id="<%= "#{section_frame_id(section[:key])}-panel" %>"
                role="tabpanel"
                class="<%= active ? "block" : "hidden" %> overflow-y-auto"
-               data-character-form-target="panel"
+               data-character-details-target="panel"
                data-section="<%= section[:key] %>">
             <%= helpers.turbo_frame_tag section_frame_id(section[:key]),
                                         src: section_path(section[:key]),

@@ -12,7 +12,10 @@ import HistoryDrawerController from "./history_drawer_controller"
 import HistoryChatController from "./history_chat_controller"
 import FlashAlertController from "./flash_alert_controller"
 import FormErrorsController from "./form_errors_controller"
-import CharacterFormController from "./character_form_controller"
+import CharacterDetailsController from "./character_details_controller"
+import CharacterFactsController from "./character_facts_controller"
+import CharacterInstructionsController from "./character_instructions_controller"
+import CharactersImagesController from "./characters_images_controller"
 import AppModalController from "./app_modal_controller"
 import TextareaAutosizeController from "./textarea_autosize_controller"
 
@@ -25,6 +28,9 @@ application.register("history-drawer", HistoryDrawerController)
 application.register("history-chat", HistoryChatController)
 application.register("flash-alert", FlashAlertController)
 application.register("form-errors", FormErrorsController)
-application.register("character-form", CharacterFormController)
+application.register("character-details", CharacterDetailsController)
+application.register("character-facts", CharacterFactsController)
+application.register("character-instructions", CharacterInstructionsController)
+application.register("characters-images", CharactersImagesController)
 application.register("app-modal", AppModalController)
 application.register("textarea-autosize", TextareaAutosizeController)

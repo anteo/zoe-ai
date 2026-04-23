@@ -123,7 +123,7 @@
         --radius-box: var(--radius-xl);
     }
 
-    .input-ghost:hover {
+    .input-ghost:hover, .textarea-ghost:hover {
         outline: color-mix(in oklab, var(--color-base-content) 40%, transparent) 1px dashed;
     }
 }

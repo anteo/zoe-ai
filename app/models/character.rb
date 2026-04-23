@@ -12,6 +12,8 @@ class Character < ApplicationRecord
   accepts_nested_attributes_for :instructions,
     allow_destroy: true,
     reject_if: ->(item) { item[:content].blank? }
+  accepts_nested_attributes_for :facts,
+    allow_destroy: true
   accepts_nested_attributes_for :images_attachments,
     allow_destroy: true
 

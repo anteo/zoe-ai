@@ -34,10 +34,10 @@ class CharacterDetailsComponent < ApplicationComponent
 
   def sections
     [
-      ({ key: "description", label: t(:label_description), icon_class: "icon-[lucide--file-text]", count: nil, badge_target: nil } if character.description.present?),
-      ({ key: "instructions", label: t(:label_instructions), icon_class: "icon-[lucide--sparkles]", count: instructions_count, badge_target: "instructionsCountBadge" } if character.ai?),
-      ({ key: "facts", label: t(:label_facts), icon_class: "icon-[lucide--brain]", count: facts_count, badge_target: nil } if character.facts.any?),
-      { key: "images", label: t(:label_images), icon_class: "icon-[lucide--images]", count: images_count, badge_target: "imagesCountBadge" }
+      ({ key: "description", label: t(:label_description), icon_class: "icon-[lucide--file-text]", count: nil } if character.description.present?),
+      ({ key: "instructions", label: t(:label_instructions), icon_class: "icon-[lucide--sparkles]", count: instructions_count } if character.ai?),
+      ({ key: "facts", label: t(:label_facts), icon_class: "icon-[lucide--brain]", count: facts_count } if character.facts.any?),
+      { key: "images", label: t(:label_images), icon_class: "icon-[lucide--images]", count: images_count }
     ].compact
   end
 

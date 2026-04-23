@@ -1,13 +1,13 @@
 <section data-existing-instructions-json="<%= existing_instructions_json %>">
   <div class="space-y-3">
-    <ul class="space-y-3" data-character-form-target="instructions"></ul>
+    <ul class="space-y-3" data-character-instructions-target="instructions"></ul>
 
-    <template data-character-form-target="instructionTemplate">
+    <template data-character-instructions-target="instructionTemplate">
       <li class="flex items-start gap-2">
         <button type="button"
                 class="group/icon relative mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition-colors hover:bg-base-200 focus-visible:bg-base-200"
                 aria-label="<%= t(:label_remove_instruction) %>"
-                data-action="click->character-form#removeInstruction">
+                data-action="click->character-instructions#removeInstruction">
           <span class="icon-[lucide--check] h-4 w-4 visible group-hover/icon:invisible group-focus-within/icon:invisible"></span>
           <span class="icon-[lucide--trash-2] absolute h-4 w-4 invisible group-hover/icon:visible group-focus-within/icon:visible group-hover/icon:text-error"></span>
         </button>
@@ -31,8 +31,8 @@
                 class="min-h-[2rem] w-full resize-none overflow-hidden bg-transparent py-1 text-sm leading-6 outline-none"
                 placeholder="<%= t(:placeholder_add_instruction) %>"
                 data-controller="textarea-autosize"
-                data-character-form-target="instructionInput"
-                data-action="keydown->character-form#handleInstructionKeydown"></textarea>
+                data-character-instructions-target="instructionInput"
+                data-action="keydown->character-instructions#handleInstructionKeydown"></textarea>
     </div>
   </div>
 </section>

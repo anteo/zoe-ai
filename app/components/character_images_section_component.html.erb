@@ -1,6 +1,6 @@
 <section data-existing-images-json="<%= existing_images.to_json %>">
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 mb-4">
-    <div class="contents" data-character-form-target="images"></div>
+    <div class="contents" data-characters-images-target="images"></div>
 
     <label class="relative block cursor-pointer overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition hover:border-base-content/30">
       <div class="aspect-[4/3] w-full">
@@ -14,15 +14,14 @@
                          accept: "image/*",
                          multiple: true,
                          data: {
-                           character_form_target: "imagePicker",
-                           action: "change->character-form#handleImagesChange"
+                           action: "change->characters-images#handleImagesChange"
                          } %>
     </label>
   </div>
 
-  <div class="hidden" data-character-form-target="newImageInputs"></div>
+  <div class="hidden" data-characters-images-target="newImageInputs"></div>
 
-  <template data-character-form-target="imageCardTemplate">
+  <template data-characters-images-target="imageCardTemplate">
     <article class="overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition"
              data-character-image-card>
       <div class="relative">
@@ -30,7 +29,7 @@
 
         <button type="button"
                 class="btn btn-circle btn-sm absolute right-3 top-3 border-none bg-base-100/90"
-                data-action="click->character-form#toggleImageRemoval"
+                data-action="click->characters-images#toggleImageRemoval"
                 title="<%= t(:label_delete) %>">
           <span class="icon-[lucide--trash-2] h-4 w-4"></span>
         </button>
