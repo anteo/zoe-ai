@@ -15,7 +15,7 @@ module AI::Actors
       text = messages.map { it.to_timestamp_message }.join("\n")
       logger.debug ">>> Summarizing chat ##{chat.id} (#{messages.size} messages)"
 
-      llm_chat = AI::SummarizationAgent.chat(chat:)
+      llm_chat = AI::Agents::SummarizeChat.chat(chat:)
       response = llm_chat.ask(text)
 
       logger.debug "<<< Summary: #{response.content.truncate(200)}"

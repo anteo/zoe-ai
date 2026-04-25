@@ -9,7 +9,7 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 ## Key Directories
 - `app/models/` — Fact, Character, Topic, Message, Chat, Instruction, User
 - `lib/ai/actors/` — ExtractFacts, DescribeCharacter, SummarizeLines, ObjectifyChat
-- `lib/ai/` — BaseAgent subclasses (e.g. `ExtractionFactsAgent`)
+- `lib/ai/` — BaseAgent subclasses (e.g. `AI::Agents::ExtractFacts`)
 - `lib/ai/tools/` — Memory (topic_search + last_chat_search via embeddings)
 - `app/prompts/` — ERB templates for all LLM system prompts
 - `app/jobs/` — ExtractFactsJob, CloseChatsJob, SummarizeChatJob, etc.
@@ -42,7 +42,7 @@ Two ways to use an agent with a Chat:
 ## Extraction Pipeline
 
 1. `ExtractFactsJob` triggers after each message (background, concurrency-limited per chat)
-2. `AI::Actors::ExtractFacts` orchestrates: instantiates `ExtractionFactsAgent`, processes messages sequentially
+2. `AI::Actors::ExtractFacts` orchestrates: instantiates `AI::Agents::ExtractFacts`, processes messages sequentially
 3. Returns schema-enforced `{ "facts": [...] }` JSON; `build_fact()` creates records
 4. Multi-subject statements → separate facts per character (no HABTM on facts)
 

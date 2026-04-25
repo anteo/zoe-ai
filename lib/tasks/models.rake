@@ -8,7 +8,7 @@ require 'fileutils'
 
 namespace :models do
   desc 'Update available models from providers (API keys needed)'
-  task :update do
+  task update: :environment do
     puts 'Configuring RubyLLM...'
     configure_from_env
     refresh_models

@@ -105,7 +105,7 @@ module AI::Actors
     end
 
     def llm_chat
-      @llm_chat ||= AI::ExtractionFactsAgent.chat(chat:)
+      @llm_chat ||= AI::Agents::ExtractFacts.chat(chat:)
     end
   end
 end

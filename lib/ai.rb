@@ -14,9 +14,9 @@ module AI
   end
 
   def reset_mcp_clients!
-    RubyLLM::MCP.close_connection if RubyLLM::MCP.respond_to?(:close_connection)
     return unless RubyLLM::MCP.instance_variable_defined?(:@clients)
 
+    RubyLLM::MCP.close_connection
     RubyLLM::MCP.remove_instance_variable(:@clients)
   end
 

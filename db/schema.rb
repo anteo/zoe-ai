@@ -10,30 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_24_213000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
+    t.string "content_type"
     t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -44,21 +44,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "agent_messages", force: :cascade do |t|
-    t.string "role", null: false
+    t.bigint "agent_run_id"
+    t.bigint "agent_thread_id", null: false
+    t.bigint "agent_tool_call_id"
+    t.integer "cache_creation_tokens"
+    t.integer "cached_tokens"
     t.text "content"
     t.json "content_raw"
-    t.text "thinking_text"
-    t.text "thinking_signature"
-    t.integer "thinking_tokens"
-    t.integer "input_tokens"
-    t.integer "output_tokens"
-    t.integer "cached_tokens"
-    t.integer "cache_creation_tokens"
-    t.bigint "agent_thread_id", null: false
-    t.bigint "model_id"
-    t.bigint "agent_tool_call_id"
-    t.bigint "agent_run_id"
     t.datetime "created_at", null: false
+    t.integer "input_tokens"
+    t.bigint "model_id"
+    t.integer "output_tokens"
+    t.string "role", null: false
+    t.text "thinking_signature"
+    t.text "thinking_text"
+    t.integer "thinking_tokens"
     t.datetime "updated_at", null: false
     t.index ["agent_run_id"], name: "index_agent_messages_on_agent_run_id"
     t.index ["agent_thread_id"], name: "index_agent_messages_on_agent_thread_id"
@@ -68,23 +68,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "agent_runs", force: :cascade do |t|
-    t.bigint "chat_id", null: false
-    t.bigint "message_id"
     t.bigint "agent_id", null: false
     t.bigint "agent_thread_id"
-    t.string "status", default: "queued", null: false
-    t.text "goal", null: false
+    t.bigint "chat_id", null: false
     t.jsonb "constraints", default: {}, null: false
-    t.jsonb "input_payload", default: {}, null: false
-    t.jsonb "output_payload", default: {}, null: false
-    t.text "result_summary"
-    t.text "error"
-    t.string "idempotency_key"
-    t.bigint "provider_job_id"
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", null: false
+    t.text "error"
+    t.datetime "finished_at"
+    t.text "goal", null: false
+    t.string "idempotency_key"
+    t.jsonb "input_payload", default: {}, null: false
+    t.bigint "message_id"
+    t.jsonb "metadata", default: {}, null: false
+    t.jsonb "output_payload", default: {}, null: false
+    t.bigint "provider_job_id"
+    t.text "result_summary"
+    t.datetime "started_at"
+    t.string "status", default: "queued", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id", "created_at"], name: "index_agent_runs_on_agent_id_and_created_at"
     t.index ["agent_id"], name: "index_agent_runs_on_agent_id"
@@ -97,15 +97,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "agent_threads", force: :cascade do |t|
-    t.bigint "chat_id", null: false
     t.bigint "agent_id", null: false
-    t.bigint "parent_message_id"
-    t.bigint "model_id"
-    t.string "external_session_id"
-    t.string "status", default: "idle", null: false
-    t.jsonb "metadata", default: {}, null: false
-    t.datetime "last_seen_at"
+    t.bigint "chat_id", null: false
     t.datetime "created_at", null: false
+    t.string "external_session_id"
+    t.datetime "last_seen_at"
+    t.jsonb "metadata", default: {}, null: false
+    t.bigint "model_id"
+    t.bigint "parent_message_id"
+    t.string "status", default: "idle", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_agent_threads_on_agent_id"
     t.index ["chat_id", "agent_id"], name: "index_agent_threads_on_chat_id_and_agent_id"
@@ -117,13 +117,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "agent_tool_calls", force: :cascade do |t|
-    t.string "tool_call_id", null: false
-    t.string "name", null: false
-    t.text "thought_signature"
-    t.jsonb "arguments", default: {}, null: false
     t.bigint "agent_message_id", null: false
     t.bigint "agent_run_id"
+    t.jsonb "arguments", default: {}, null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.text "thought_signature"
+    t.string "tool_call_id", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_message_id"], name: "index_agent_tool_calls_on_agent_message_id"
     t.index ["agent_run_id"], name: "index_agent_tool_calls_on_agent_run_id"
@@ -132,27 +132,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "agents", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.jsonb "capabilities", default: [], null: false
+    t.jsonb "config", default: {}, null: false
+    t.datetime "created_at", null: false
     t.string "key", null: false
     t.string "name", null: false
     t.string "transport", default: "mcp", null: false
-    t.jsonb "capabilities", default: [], null: false
-    t.jsonb "config", default: {}, null: false
-    t.boolean "active", default: true, null: false
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_agents_on_active"
     t.index ["key"], name: "index_agents_on_key", unique: true
   end
 
   create_table "characters", force: :cascade do |t|
-    t.string "name", limit: 50, null: false
-    t.text "description", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "description_up_to_date", default: false, null: false
     t.boolean "ai", default: false, null: false
-    t.boolean "third_party", default: false, null: false
+    t.datetime "created_at", null: false
+    t.text "description", default: "", null: false
+    t.boolean "description_up_to_date", default: false, null: false
     t.boolean "is_default", default: false, null: false
+    t.string "name", limit: 50, null: false
+    t.boolean "third_party", default: false, null: false
+    t.datetime "updated_at", null: false
     t.index ["is_default"], name: "index_characters_on_is_default"
     t.index ["is_default"], name: "index_characters_on_single_default_ai", unique: true, where: "((ai = true) AND (is_default = true))"
   end
@@ -165,39 +165,65 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "chats", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "model_id"
     t.bigint "character_id"
+    t.boolean "closed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.boolean "facts_extracted", default: false, null: false
+    t.boolean "memorize", default: true, null: false
+    t.bigint "model_id"
     t.bigint "partner_id"
     t.text "summary"
-    t.boolean "facts_extracted", default: false, null: false
+    t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.boolean "closed", default: false, null: false
-    t.boolean "memorize", default: true, null: false
     t.index ["character_id"], name: "index_chats_on_character_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["partner_id"], name: "index_chats_on_partner_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
+  create_table "fact_aggregates", force: :cascade do |t|
+    t.date "anchor_month"
+    t.text "body", default: "", null: false
+    t.bigint "character_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "facts_count", default: 0, null: false
+    t.string "kind", null: false
+    t.bigint "parent_id"
+    t.string "slot_key", null: false
+    t.datetime "source_updated_at"
+    t.boolean "stale", default: false, null: false
+    t.text "summary"
+    t.datetime "summary_source_updated_at"
+    t.string "summary_status", default: "pending", null: false
+    t.bigint "topic_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["character_id", "kind", "anchor_month"], name: "idx_fact_aggregates_band_lookup"
+    t.index ["character_id"], name: "index_fact_aggregates_on_character_id"
+    t.index ["parent_id"], name: "index_fact_aggregates_on_parent_id"
+    t.index ["slot_key"], name: "idx_fact_aggregates_unique_slot", unique: true
+    t.index ["summary_status"], name: "index_fact_aggregates_on_summary_status"
+    t.index ["topic_id"], name: "index_fact_aggregates_on_topic_id"
+  end
+
   create_table "facts", force: :cascade do |t|
+    t.bigint "author_id"
     t.bigint "character_id"
+    t.bigint "chat_id"
     t.text "content"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "persistent", default: true, null: false
-    t.bigint "author_id"
-    t.string "time", default: "present", null: false
     t.date "date_from"
     t.date "date_to"
     t.integer "importance", default: 50
-    t.datetime "mentioned_at", precision: nil
-    t.bigint "topic_id"
     t.string "kind"
-    t.bigint "chat_id"
+    t.datetime "mentioned_at", precision: nil
     t.bigint "message_id"
+    t.date "month"
+    t.boolean "persistent", default: true, null: false
+    t.string "time", default: "present", null: false
+    t.bigint "topic_id"
+    t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_facts_on_author_id"
+    t.index ["character_id", "persistent", "topic_id", "month"], name: "idx_facts_month_lookup"
     t.index ["character_id"], name: "index_facts_on_character_id"
     t.index ["chat_id"], name: "index_facts_on_chat_id"
     t.index ["message_id"], name: "index_facts_on_message_id"
@@ -205,20 +231,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "facts_bak", id: :bigint, default: -> { "nextval('facts_id_seq'::regclass)" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.bigint "character_id"
-    t.boolean "persistent", default: true, null: false
-    t.string "kind"
-    t.bigint "message_id"
     t.bigint "author_id"
+    t.bigint "character_id"
+    t.bigint "chat_id"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.date "date_from"
+    t.date "date_to"
+    t.integer "importance", default: 50
+    t.string "kind"
+    t.datetime "mentioned_at", precision: nil
+    t.bigint "message_id"
+    t.boolean "persistent", default: true, null: false
     t.string "time", default: "present", null: false
     t.bigint "topic_id"
-    t.bigint "chat_id"
-    t.date "date_to"
-    t.text "content"
-    t.date "date_from"
-    t.datetime "mentioned_at", precision: nil
-    t.integer "importance", default: 50
     t.datetime "updated_at", null: false
   end
 
@@ -231,24 +257,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.string "role", null: false
+    t.integer "cache_creation_tokens"
+    t.integer "cached_tokens"
+    t.bigint "character_id"
+    t.bigint "chat_id", null: false
     t.text "content"
     t.json "content_raw"
-    t.text "thinking_text"
-    t.text "thinking_signature"
-    t.integer "thinking_tokens"
-    t.integer "input_tokens"
-    t.integer "output_tokens"
-    t.integer "cached_tokens"
-    t.integer "cache_creation_tokens"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "chat_id", null: false
-    t.bigint "model_id"
-    t.bigint "tool_call_id"
-    t.bigint "character_id"
     t.boolean "facts_extracted", default: false, null: false
+    t.integer "input_tokens"
     t.boolean "memorize", default: true, null: false
+    t.bigint "model_id"
+    t.integer "output_tokens"
+    t.string "role", null: false
+    t.text "thinking_signature"
+    t.text "thinking_text"
+    t.integer "thinking_tokens"
+    t.bigint "tool_call_id"
+    t.datetime "updated_at", null: false
     t.index ["character_id"], name: "index_messages_on_character_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["model_id"], name: "index_messages_on_model_id"
@@ -257,19 +283,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "models", force: :cascade do |t|
+    t.jsonb "capabilities", default: []
+    t.integer "context_window"
+    t.datetime "created_at", null: false
+    t.string "family"
+    t.date "knowledge_cutoff"
+    t.integer "max_output_tokens"
+    t.jsonb "metadata", default: {}
+    t.jsonb "modalities", default: {}
+    t.datetime "model_created_at"
     t.string "model_id", null: false
     t.string "name", null: false
-    t.string "provider", null: false
-    t.string "family"
-    t.datetime "model_created_at"
-    t.integer "context_window"
-    t.integer "max_output_tokens"
-    t.date "knowledge_cutoff"
-    t.jsonb "modalities", default: {}
-    t.jsonb "capabilities", default: []
     t.jsonb "pricing", default: {}
-    t.jsonb "metadata", default: {}
-    t.datetime "created_at", null: false
+    t.string "provider", null: false
     t.datetime "updated_at", null: false
     t.index ["capabilities"], name: "index_models_on_capabilities", using: :gin
     t.index ["family"], name: "index_models_on_family"
@@ -279,43 +305,43 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "queue_name", null: false
-    t.integer "priority", default: 0, null: false
     t.string "concurrency_key", null: false
-    t.datetime "expires_at", null: false
     t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.bigint "job_id", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
     t.index ["concurrency_key", "priority", "job_id"], name: "index_solid_queue_blocked_executions_for_release"
     t.index ["expires_at", "concurrency_key"], name: "index_solid_queue_blocked_executions_for_maintenance"
     t.index ["job_id"], name: "index_solid_queue_blocked_executions_on_job_id", unique: true
   end
 
   create_table "solid_queue_claimed_executions", force: :cascade do |t|
+    t.boolean "cancelled", default: false
+    t.datetime "created_at", null: false
     t.bigint "job_id", null: false
     t.bigint "process_id"
-    t.datetime "created_at", null: false
-    t.boolean "cancelled", default: false
     t.index ["job_id"], name: "index_solid_queue_claimed_executions_on_job_id", unique: true
     t.index ["process_id", "job_id"], name: "index_solid_queue_claimed_executions_on_process_id_and_job_id"
   end
 
   create_table "solid_queue_failed_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.text "error"
     t.datetime "created_at", null: false
+    t.text "error"
+    t.bigint "job_id", null: false
     t.index ["job_id"], name: "index_solid_queue_failed_executions_on_job_id", unique: true
   end
 
   create_table "solid_queue_jobs", force: :cascade do |t|
-    t.string "queue_name", null: false
-    t.string "class_name", null: false
-    t.text "arguments"
-    t.integer "priority", default: 0, null: false
     t.string "active_job_id"
-    t.datetime "scheduled_at"
-    t.datetime "finished_at"
+    t.text "arguments"
+    t.string "class_name", null: false
     t.string "concurrency_key"
     t.datetime "created_at", null: false
+    t.datetime "finished_at"
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
+    t.datetime "scheduled_at"
     t.datetime "updated_at", null: false
     t.index ["active_job_id"], name: "index_solid_queue_jobs_on_active_job_id"
     t.index ["class_name"], name: "index_solid_queue_jobs_on_class_name"
@@ -325,117 +351,117 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   end
 
   create_table "solid_queue_pauses", force: :cascade do |t|
-    t.string "queue_name", null: false
     t.datetime "created_at", null: false
+    t.string "queue_name", null: false
     t.index ["queue_name"], name: "index_solid_queue_pauses_on_queue_name", unique: true
   end
 
   create_table "solid_queue_processes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "hostname"
     t.string "kind", null: false
     t.datetime "last_heartbeat_at", null: false
-    t.bigint "supervisor_id"
-    t.integer "pid", null: false
-    t.string "hostname"
     t.text "metadata"
-    t.datetime "created_at", null: false
     t.string "name", null: false
+    t.integer "pid", null: false
+    t.bigint "supervisor_id"
     t.index ["last_heartbeat_at"], name: "index_solid_queue_processes_on_last_heartbeat_at"
     t.index ["name", "supervisor_id"], name: "index_solid_queue_processes_on_name_and_supervisor_id", unique: true
     t.index ["supervisor_id"], name: "index_solid_queue_processes_on_supervisor_id"
   end
 
   create_table "solid_queue_ready_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "queue_name", null: false
-    t.integer "priority", default: 0, null: false
     t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
     t.index ["job_id"], name: "index_solid_queue_ready_executions_on_job_id", unique: true
     t.index ["priority", "job_id"], name: "index_solid_queue_poll_all"
     t.index ["queue_name", "priority", "job_id"], name: "index_solid_queue_poll_by_queue"
   end
 
   create_table "solid_queue_recurring_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "task_key", null: false
-    t.datetime "run_at", null: false
     t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.datetime "run_at", null: false
+    t.string "task_key", null: false
     t.index ["job_id"], name: "index_solid_queue_recurring_executions_on_job_id", unique: true
     t.index ["task_key", "run_at"], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
   end
 
   create_table "solid_queue_recurring_tasks", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "schedule", null: false
-    t.string "command", limit: 2048
-    t.string "class_name"
     t.text "arguments"
-    t.string "queue_name"
-    t.integer "priority", default: 0
-    t.boolean "static", default: true, null: false
-    t.text "description"
+    t.string "class_name"
+    t.string "command", limit: 2048
     t.datetime "created_at", null: false
+    t.text "description"
+    t.string "key", null: false
+    t.integer "priority", default: 0
+    t.string "queue_name"
+    t.string "schedule", null: false
+    t.boolean "static", default: true, null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_solid_queue_recurring_tasks_on_key", unique: true
     t.index ["static"], name: "index_solid_queue_recurring_tasks_on_static"
   end
 
   create_table "solid_queue_scheduled_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "queue_name", null: false
-    t.integer "priority", default: 0, null: false
-    t.datetime "scheduled_at", null: false
     t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
+    t.datetime "scheduled_at", null: false
     t.index ["job_id"], name: "index_solid_queue_scheduled_executions_on_job_id", unique: true
     t.index ["scheduled_at", "priority", "job_id"], name: "index_solid_queue_dispatch_all"
   end
 
   create_table "solid_queue_semaphores", force: :cascade do |t|
-    t.string "key", null: false
-    t.integer "value", default: 1, null: false
-    t.datetime "expires_at", null: false
     t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "key", null: false
     t.datetime "updated_at", null: false
+    t.integer "value", default: 1, null: false
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
   create_table "tool_calls", force: :cascade do |t|
-    t.string "tool_call_id", null: false
-    t.string "name", null: false
-    t.text "thought_signature"
     t.jsonb "arguments", default: {}
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.bigint "message_id", null: false
+    t.string "name", null: false
+    t.text "thought_signature"
+    t.string "tool_call_id", null: false
+    t.datetime "updated_at", null: false
     t.index ["message_id"], name: "index_tool_calls_on_message_id"
     t.index ["name"], name: "index_tool_calls_on_name"
     t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id", unique: true
   end
 
   create_table "topics", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
+    t.string "name"
     t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email"
-    t.string "first_name"
-    t.string "last_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "main_character_id"
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "encrypted_password", default: "", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.bigint "main_character_id"
     t.string "provider"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.string "uid"
+    t.string "unconfirmed_email"
+    t.datetime "updated_at", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["main_character_id"], name: "index_users_on_main_character_id"
@@ -463,6 +489,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_22_120000) do
   add_foreign_key "chats", "characters", column: "partner_id"
   add_foreign_key "chats", "models"
   add_foreign_key "chats", "users"
+  add_foreign_key "fact_aggregates", "characters"
+  add_foreign_key "fact_aggregates", "fact_aggregates", column: "parent_id"
+  add_foreign_key "fact_aggregates", "topics"
   add_foreign_key "facts", "chats"
   add_foreign_key "facts", "messages"
   add_foreign_key "facts", "topics"

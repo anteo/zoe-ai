@@ -2,7 +2,7 @@
 
 class RespondJob < ApplicationJob
   def perform(chat)
-    ai_chat = AI::Zoe.find(chat.id)
+    ai_chat = AI::Agents::Zoe.find(chat.id)
     show_message_placeholder(ai_chat)
 
     ai_chat.on_end_message do

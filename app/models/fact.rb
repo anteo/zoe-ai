@@ -5,7 +5,9 @@ class Fact < ApplicationRecord
   belongs_to :chat
   belongs_to :topic
 
+  before_save :set_month
   after_save :update_character_description, if: :persistent?
+  after_commit :mark_month_aggregates_stale, on: [ :create, :update, :destroy ]
 
   scope :persistent, ->(persistent = true) { where(persistent:) }
   scope :present, -> { where(time: "present") }
@@ -68,6 +70,50 @@ class Fact < ApplicationRecord
   end
 
   private
+
+  def mark_month_aggregates_stale
+    FactAggregate.mark_months_stale!(affected_month_aggregate_slot_keys)
+  end
+
+  def affected_month_aggregate_slot_keys
+    [ current_persistent_month_slot_key, previous_persistent_month_slot_key ].compact.uniq
+  end
+
+  def current_persistent_month_slot_key
+    month_aggregate_slot_key_for(
+      character_id: character_id,
+      topic_id: topic_id,
+      month: month,
+      persistent: persistent?
+    )
+  end
+
+  def previous_persistent_month_slot_key
+    return if destroyed?
+
+    month_aggregate_slot_key_for(
+      character_id: attribute_before_last_save("character_id"),
+      topic_id: attribute_before_last_save("topic_id"),
+      month: attribute_before_last_save("month"),
+      persistent: attribute_before_last_save("persistent")
+    )
+  end
+
+  def month_aggregate_slot_key_for(character_id:, topic_id:, month:, persistent:)
+    return unless persistent
+    return if character_id.blank? || topic_id.blank? || month.blank?
+
+    FactAggregate.slot_key_for(
+      character_id:,
+      topic_id:,
+      kind: "month",
+      anchor_month: month
+    )
+  end
+
+  def set_month
+    self.month = mentioned_at&.to_date&.beginning_of_month
+  end
 
   def update_character_description
     character.update_column :description_up_to_date, false

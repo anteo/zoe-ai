@@ -13,6 +13,10 @@ close_chats:
   class: CloseStaleChatsJob
   schedule: at midnight every day
 
+aggregate_persistent_facts:
+  class: AggregatePersistentFactsJob
+  schedule: at 12:30am every day
+
 production:
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"

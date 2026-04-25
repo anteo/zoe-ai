@@ -25,6 +25,10 @@ module AI
 
       # Serialization support for ActiveJob
       class Serializer < ActiveJob::Serializers::ObjectSerializer
+        def klass
+          Chunk
+        end
+
         def serialize?(argument)
           argument.is_a?(Chunk)
         end

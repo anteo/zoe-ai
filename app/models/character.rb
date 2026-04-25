@@ -5,6 +5,7 @@ class Character < ApplicationRecord
   has_many_attached :images
 
   has_many :facts, dependent: :delete_all
+  has_many :fact_aggregates, dependent: :delete_all
   has_many :instructions, dependent: :delete_all
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy

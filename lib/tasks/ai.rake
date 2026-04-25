@@ -51,6 +51,16 @@ namespace :ai do
     end
   end
 
+  desc "Aggregate persistent facts"
+  task aggregate_persistent_facts: :environment do
+    if ENV["CHARACTER_ID"].present?
+      character = Character.find(ENV["CHARACTER_ID"])
+      AggregatePersistentFactsJob.perform_now(character)
+    else
+      AggregatePersistentFactsJob.perform_now
+    end
+  end
+
   # desc "Process chats"
   # task process_chats: [ :objectify_chats, :summarize_chats, :extract_facts ]
   # task process_chats: [ :extract_facts ]

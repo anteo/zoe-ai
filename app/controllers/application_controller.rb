@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
 
   def build_default_chat
-    @chat ||= AI::Zoe.build_chat(character: current_character, partner: current_partner, user: current_user)
+    @chat ||= AI::Agents::Zoe.build_chat(character: current_character, partner: current_partner, user: current_user)
   end
 
   def configure_permitted_parameters

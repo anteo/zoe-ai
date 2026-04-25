@@ -24,7 +24,7 @@ module AI::Actors
     end
 
     def chat
-      @chat ||= AI::DescribeCharacterAgent.chat(character:)
+      @chat ||= AI::Agents::DescribeCharacter.chat(character:)
     end
 
     def summarize_with_assistant(topic_groups)
