@@ -2,6 +2,7 @@ require "test_helper"
 
 class AggregatePersistentFactsTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
+  fixtures :characters, :users, :characters_users, :topics, :chats
 
   test "same-anchor refresh only updates stale related bands" do
     anchor_month = Date.new(2026, 4, 1)
@@ -476,21 +477,12 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
   private
 
   def build_character_context
-    default_ai = Character.create!(name: "Zoe", ai: true, is_default: true)
-    user = User.create!(
-      email: "anton@example.com",
-      first_name: "Anton",
-      last_name: "Petrov",
-      password: "password123",
-      password_confirmation: "password123",
-      confirmed_at: Time.current
-    )
-    character = user.main_character
-    topic_work = Topic.create!(name: "Work")
-    topic_hobby = Topic.create!(name: "Hobby")
-    chat = Chat.create!(user:, character:, partner: default_ai)
-
-    [ character, chat, topic_work, topic_hobby ]
+    [
+      characters(:anton_human),
+      chats(:anton_with_zoe),
+      topics(:work),
+      topics(:hobby)
+    ]
   end
 
   def create_fact!(character:, chat:, topic:, content:, mentioned_at:)
@@ -523,11 +515,11 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
   end
 
   def with_stubbed_agent_chat(agent_chat)
-    singleton_class = AI::Agents::AggregateFacts.singleton_class
+    singleton_class = AI::Agents::SummarizeFactAggregate.singleton_class
     original_method = singleton_class.instance_method(:chat)
     singleton_class.define_method(:chat) { |**| agent_chat }
     yield
   ensure
-    singleton_class.define_method(:chat, original_method)
+    singleton_class&.define_method(:chat, original_method) if original_method
   end
 end

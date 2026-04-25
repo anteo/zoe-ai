@@ -1,0 +1,7 @@
+anton_knows_zoe:
+  user_id: <%= ActiveRecord::FixtureSet.identify(:anton) %>
+  character_id: <%= ActiveRecord::FixtureSet.identify(:zoe_default) %>
+
+anton_knows_himself:
+  user_id: <%= ActiveRecord::FixtureSet.identify(:anton) %>
+  character_id: <%= ActiveRecord::FixtureSet.identify(:anton_human) %>

@@ -1,0 +1,9 @@
+anton:
+  email: anton@example.com
+  first_name: Anton
+  last_name: Petrov
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  confirmed_at: 2026-01-01 00:00:00
+  main_character: anton_human
+  created_at: 2026-01-01 00:00:00
+  updated_at: 2026-01-01 00:00:00
