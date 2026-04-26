@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_and_belongs_to_many :characters
   belongs_to :main_character, class_name: "Character", optional: true
   has_many :chats, dependent: :destroy
+  has_one_attached :avatar
+  accepts_nested_attributes_for :avatar_attachment, allow_destroy: true
 
   normalizes :email, with: ->(value) { value.strip.downcase }
   normalizes :first_name, :last_name, with: ->(value) { value.strip.presence }
@@ -23,7 +25,7 @@ class User < ApplicationRecord
   end
 
   def initials
-    [first_name[0], last_name[0]].compact.join.upcase
+    [first_name&.[](0), last_name&.[](0)].compact.join.upcase
   end
 
   def full_name

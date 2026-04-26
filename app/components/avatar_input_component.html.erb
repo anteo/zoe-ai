@@ -1,0 +1,67 @@
+<div data-controller="avatar-input"
+     data-avatar-input-can-remove-value="<%= can_remove? ? "true" : "false" %>">
+  <div class="group relative shrink-0">
+    <label class="cursor-pointer">
+      <span data-avatar-input-target="preview"><%= content %></span>
+      <template data-avatar-input-target="fallbackTemplate">
+        <% if fallback? %>
+          <%= fallback %>
+        <% else %>
+          <span id="avatar-preview"
+                class="rounded-full shrink-0 object-cover shadow-md bg-base-100 flex items-center justify-center">
+            <span class="icon-[lucide--user-round] h-1/2 w-1/2"></span>
+          </span>
+        <% end %>
+      </template>
+      <span class="absolute -bottom-1 -right-1 flex items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-transform group-hover:scale-105 <%= icon_wrapper_class %>">
+        <span class="icon-[lucide--camera] h-4 w-4"></span>
+      </span>
+      <%= form.file_field field,
+                          class: "hidden",
+                          accept: "image/*",
+                          data: { avatar_input_target: "input", action: "click->avatar-input#rememberFiles change->avatar-input#openCropper" } %>
+    </label>
+
+    <% if removable %>
+      <button type="button"
+              class="absolute -top-1 -right-1 z-10 items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer <%= icon_wrapper_class %> <%= can_remove? ? "flex" : "hidden" %>"
+              aria-label="<%= t(:label_remove_avatar) %>"
+              data-avatar-input-target="removeButton"
+              data-action="click->avatar-input#removeAvatar">
+        <span class="icon-[lucide--x] h-3.5 w-3.5"></span>
+      </button>
+      <%= hidden_field_tag attachment_id_field_name, attachment_record&.id, disabled: true, data: { avatar_input_target: "attachmentId" } %>
+      <%= hidden_field_tag attachment_destroy_field_name, "0", disabled: true, data: { avatar_input_target: "removeFlag" } %>
+    <% end %>
+  </div>
+
+  <template data-avatar-input-target="dialogTemplate">
+    <dialog class="modal"
+            data-controller="avatar-crop-dialog"
+            data-action="cancel->avatar-crop-dialog#handleCancel close->avatar-crop-dialog#handleClose keydown.esc->avatar-crop-dialog#handleEscape">
+      <div class="modal-box w-11/12 max-w-3xl border border-base-300 bg-base-100 p-4"
+           data-avatar-crop-dialog-target="modalBox">
+        <div class="mb-3 flex items-center gap-2">
+          <div class="text-lg font-semibold"><%= t(:label_crop_avatar) %></div>
+          <button type="button"
+                  class="btn btn-ghost btn-sm btn-circle ml-auto"
+                  aria-label="<%= t(:label_close) %>"
+                  data-action="click->avatar-crop-dialog#cancel">
+            <span class="icon-[lucide--x] h-4 w-4"></span>
+            <span class="sr-only"><%= t(:label_close) %></span>
+          </button>
+        </div>
+        <div class="avatar-cropper rounded-box border border-base-300 bg-base-200 p-3" data-avatar-crop-dialog-target="cropperHost">
+          <img data-avatar-crop-dialog-target="cropImage" alt="" />
+        </div>
+        <div class="modal-action mt-4">
+          <button type="button" class="btn btn-ghost" data-action="click->avatar-crop-dialog#cancel"><%= t(:label_cancel) %></button>
+          <button type="button" class="btn btn-primary" data-action="click->avatar-crop-dialog#apply"><%= t(:label_save) %></button>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button type="submit" aria-label="<%= t(:label_close) %>"><%= t(:label_close) %></button>
+      </form>
+    </dialog>
+  </template>
+</div>

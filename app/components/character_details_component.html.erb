@@ -9,18 +9,15 @@
 
     <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 px-5 py-7">
       <div class="flex min-w-0 items-center gap-4 md:grow-0 grow">
-        <label class="group relative cursor-pointer shrink-0">
-          <span data-character-details-target="avatarPreview">
+        <%= component :avatar_input,
+                      form: f,
+                      icon_wrapper_class: "h-9 w-9",
+                      removable: true do |component| %>
             <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview") %>
-          </span>
-          <span class="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-transform group-hover:scale-105">
-            <span class="icon-[lucide--camera] h-4 w-4"></span>
-          </span>
-          <%= f.file_field :avatar,
-                           class: "hidden",
-                           accept: "image/*",
-                           data: { action: "change->character-details#handleAvatarChange" } %>
-        </label>
+            <% component.with_fallback do %>
+              <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview", fallback: true) %>
+            <% end %>
+        <% end %>
 
         <div class="min-w-0 space-y-2 grow">
           <div class="flex flex-wrap flex-col items-left gap-1">

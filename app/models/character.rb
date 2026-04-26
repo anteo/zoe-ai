@@ -3,6 +3,7 @@ class Character < ApplicationRecord
 
   has_one_attached :avatar
   has_many_attached :images
+  accepts_nested_attributes_for :avatar_attachment, allow_destroy: true
 
   has_many :facts, dependent: :delete_all
   has_many :fact_aggregates, dependent: :delete_all

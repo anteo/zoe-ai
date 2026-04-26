@@ -32,6 +32,7 @@ en:
   label_logout: Logout
   label_register: Register
   label_profile: Profile
+  label_crop_avatar: Crop avatar
   label_characters: Characters
   label_my_character: My character
   label_chat_partner: Chat partner
@@ -82,6 +83,7 @@ en:
   label_email: Email
   label_password: Password
   label_password_confirmation: Confirm password
+  label_remove_avatar: Remove avatar
   label_first_name: First name
   label_last_name: Last name
   label_new_password_optional: New password (optional)

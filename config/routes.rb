@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   root "chats#show"
 
-  resource :profile, only: [ :show, :edit, :update ]
+  resource :profile, only: [ :show, :update ]
 
   resources :chats, only: [:show, :new, :destroy] do
     collection do

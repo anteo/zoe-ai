@@ -16,6 +16,8 @@ import CharacterDetailsController from "./character_details_controller"
 import CharacterFactsController from "./character_facts_controller"
 import CharacterInstructionsController from "./character_instructions_controller"
 import CharactersImagesController from "./characters_images_controller"
+import AvatarCropDialogController from "./avatar_crop_dialog_controller"
+import AvatarInputController from "./avatar_input_controller"
 import AppModalController from "./app_modal_controller"
 import TextareaAutosizeController from "./textarea_autosize_controller"
 
@@ -32,5 +34,7 @@ application.register("character-details", CharacterDetailsController)
 application.register("character-facts", CharacterFactsController)
 application.register("character-instructions", CharacterInstructionsController)
 application.register("characters-images", CharactersImagesController)
+application.register("avatar-crop-dialog", AvatarCropDialogController)
+application.register("avatar-input", AvatarInputController)
 application.register("app-modal", AppModalController)
 application.register("textarea-autosize", TextareaAutosizeController)

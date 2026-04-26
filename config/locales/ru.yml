@@ -32,6 +32,7 @@ ru:
   label_logout: Выйти
   label_register: Регистрация
   label_profile: Профиль
+  label_crop_avatar: Обрезать аватар
   label_characters: Персонажи
   label_my_character: Мой персонаж
   label_chat_partner: Собеседник
@@ -82,6 +83,7 @@ ru:
   label_email: Email
   label_password: Пароль
   label_password_confirmation: Подтвердите пароль
+  label_remove_avatar: Удалить аватар
   label_first_name: Имя
   label_last_name: Фамилия
   label_new_password_optional: Новый пароль (необязательно)

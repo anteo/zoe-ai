@@ -1,6 +1,7 @@
 /* Entry point for your PostCSS build */
 @import "tailwindcss";
 @import "vistaview/dist/style.css";
+@import "cropperjs/dist/cropper.css";
 
 @plugin "daisyui";
 @plugin "@tailwindcss/typography";
@@ -210,4 +211,23 @@
 
 .flash-alert.is-closing {
     animation: flash-slide-up 180ms ease-in forwards;
+}
+
+.avatar-cropper {
+    height: min(64vh, 440px);
+}
+
+.avatar-cropper > img {
+    display: block;
+    max-width: 100%;
+}
+
+.avatar-cropper .cropper-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.avatar-cropper .cropper-view-box,
+.avatar-cropper .cropper-face {
+    border-radius: 50%;
 }

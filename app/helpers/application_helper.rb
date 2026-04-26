@@ -26,18 +26,19 @@ module ApplicationHelper
     end
   end
 
-  def avatar_for_user(user, css_class: "w-8 h-8", id: nil)
+  def avatar_for_user(user, css_class: "w-8 h-8", id: nil, fallback: false)
     size_px = avatar_size_px_from_class(css_class)
-    avatar_for(url: user&.gravatar_url(size: size_px), content: user&.initials, css_class:, id:)
+    url = attached_avatar_variant_url(user&.avatar, size_px) unless fallback
+    avatar_for(url: url || user&.gravatar_url(size: size_px), content: user&.initials, css_class:, id:)
   end
 
-  def avatar_for_character(character, css_class: "w-8 h-8", id: nil)
+  def avatar_for_character(character, css_class: "w-8 h-8", id: nil, fallback: false)
     size_px = avatar_size_px_from_class(css_class)
 
     if character.new_record?
       avatar_for(content: tag.span(class: "icon-[lucide--plus]"), css_class:, id:)
     else
-      url = url_for(character.avatar.variant(resize_to_limit: [ size_px * 2 ] * 2)) if character.avatar.attached?
+      url = attached_avatar_variant_url(character.avatar, size_px) unless fallback
       avatar_for(url:, content: character.name[0].upcase, css_class:, id:)
     end
   end
@@ -64,5 +65,12 @@ module ApplicationHelper
     return 32 if units.empty?
 
     (units.max * 4).round
+  end
+
+  def attached_avatar_variant_url(attachment, size_px)
+    blob = attachment&.blob
+    return unless blob&.persisted?
+
+    url_for(blob.variant(resize_to_limit: [ size_px * 2 ] * 2))
   end
 end
