@@ -44,6 +44,7 @@ ru:
   label_description: Описание
   label_instructions: Инструкции
   label_facts: Факты
+  label_events: События
   label_images: Изображения
   label_share_character: Поделиться персонажем
   label_upload_images: Загрузить изображения
@@ -53,6 +54,7 @@ ru:
   label_other: Другое
   label_persistent: Постоянный
   label_time: Время
+  label_date_time: Дата/время
   label_time_past: Прошлое
   label_time_present: Настоящее
   label_time_future: Будущее
@@ -109,9 +111,28 @@ ru:
   text_character_create_failed: Не удалось создать персонажа.
   text_no_character_description: Пока нет описания.
   text_no_character_facts: Пока нет фактов.
+  text_no_character_events: Пока нет событий.
   text_no_character_images: Пока нет изображений.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
   text_share_character_coming_soon: Возможность поделиться персонажем пока не реализована.
+  text_fact_period_m0_3: Последние 3 месяца
+  text_fact_period_m3_6: От 3 до 6 месяцев назад
+  text_fact_period_m6_12: От 6 до 12 месяцев назад
+  text_fact_period_m12_24: От 12 до 24 месяцев назад
+  text_fact_period_year: "%{year} год"
+  text_event_period_today: Сегодня
+  text_event_period_yesterday: Вчера
+  text_event_period_earlier_this_month: Ранее в этом месяце
+  text_event_period_past_3_months: Ранее за последние 3 месяца
+  text_event_period_past_6_months: Ранее за последние 6 месяцев
+  text_event_period_earlier_this_year: Ранее в этом году
+  text_event_period_older_past: Ранее
+  text_event_period_tomorrow: Завтра
+  text_event_period_later_this_month: Позже в этом месяце
+  text_event_period_next_3_months: Позже в ближайшие 3 месяца
+  text_event_period_next_6_months: Позже в ближайшие 6 месяцев
+  text_event_period_later_this_year: Позже в этом году
+  text_event_period_future_later: Позже
   text_loading: Загрузка...
   text_token_usage_hint: "%{used} / %{context} токенов использовано"
   confirm_delete_character: Удалить этого персонажа?

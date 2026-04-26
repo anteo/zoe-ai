@@ -13,6 +13,7 @@ module AI::Actors
       source_updated_at = source_updated_at_for(fact_aggregate)
       return if fact_aggregate.done? && fact_aggregate.summary_source_updated_at == source_updated_at
 
+      fact_aggregate.update!(summary_status: "in_progress")
       summary = summarize
       fact_aggregate.reload
       return unless source_updated_at_for(fact_aggregate) == source_updated_at
@@ -24,7 +25,7 @@ module AI::Actors
       )
 
       enqueue_parent_if_ready if fact_aggregate.month?
-    rescue RubyLLM::Error
+    rescue
       fact_aggregate&.update!(summary_status: "failed")
       raise
     end
@@ -39,20 +40,16 @@ module AI::Actors
 
     def summarize
       response = AI::Agents::SummarizeFactAggregate.chat(fact_aggregate:).ask(source_text)
-      content = response.content
-
-      if content.is_a?(Hash)
-        content.fetch("summary")
-      else
-        content.to_s
-      end
+      response.content.to_s
     end
 
     def source_text
       if fact_aggregate.month?
         fact_aggregate.body
       else
-        fact_aggregate.source_records.map(&:body).join("\n\n")
+        fact_aggregate.source_records.map do |child|
+          "## #{child.anchor_month.strftime("%B %Y")}\n#{child.summary}"
+        end.join("\n\n")
       end
     end
 

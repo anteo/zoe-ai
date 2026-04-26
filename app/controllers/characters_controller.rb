@@ -158,7 +158,7 @@ class CharactersController < ApplicationController
   end
 
   def permitted_section
-    allowed = %w[description facts images]
+    allowed = %w[description events facts images]
     allowed << "instructions" if @character.ai?
 
     params[:section].to_s.in?(allowed) ? params[:section].to_s : allowed.first

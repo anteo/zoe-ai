@@ -44,6 +44,7 @@ en:
   label_description: Description
   label_instructions: Instructions
   label_facts: Facts
+  label_events: Events
   label_images: Images
   label_share_character: Share character
   label_upload_images: Upload images
@@ -53,6 +54,7 @@ en:
   label_other: Other
   label_persistent: Persistent
   label_time: Time
+  label_date_time: Date/time
   label_time_past: Past
   label_time_present: Present
   label_time_future: Future
@@ -109,9 +111,28 @@ en:
   text_character_create_failed: Failed to create character.
   text_no_character_description: No description yet.
   text_no_character_facts: No facts yet.
+  text_no_character_events: No events yet.
   text_no_character_images: No images yet.
   text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.
   text_share_character_coming_soon: Sharing is not implemented yet.
+  text_fact_period_m0_3: Last 3 months
+  text_fact_period_m3_6: 3 to 6 months ago
+  text_fact_period_m6_12: 6 to 12 months ago
+  text_fact_period_m12_24: 12 to 24 months ago
+  text_fact_period_year: Year %{year}
+  text_event_period_today: Today
+  text_event_period_yesterday: Yesterday
+  text_event_period_earlier_this_month: Earlier this month
+  text_event_period_past_3_months: Earlier within the last 3 months
+  text_event_period_past_6_months: Earlier within the last 6 months
+  text_event_period_earlier_this_year: Earlier this year
+  text_event_period_older_past: Earlier
+  text_event_period_tomorrow: Tomorrow
+  text_event_period_later_this_month: Later this month
+  text_event_period_next_3_months: Later within the next 3 months
+  text_event_period_next_6_months: Later within the next 6 months
+  text_event_period_later_this_year: Later this year
+  text_event_period_future_later: Later
   text_loading: Loading...
   text_token_usage_hint: "%{used} / %{context} tokens used"
   confirm_delete_character: Delete this character?

@@ -50,11 +50,9 @@ Two ways to use an agent with a Chat:
 
 ## Character Description Generation
 
-- Triggered when a persistent fact is saved (`character.description_up_to_date = false`)
-- Groups persistent facts into 4 time buckets (>12mo, 12-6mo, 6-3mo, <3mo), sub-grouped by topic
-- **One LLM call per time period** (not per topic) — O(periods) calls instead of O(periods × topics)
-- LLM produces `<topic name="...">` XML sections; code wraps in `<period from="..." to="...">` tags
-- Stored as nested XML, injected into system prompt for all subsequent chats
+- Persistent facts are aggregated before being used for character descriptions.
+- Aggregation is stored in the database and refreshed by background jobs.
+- Do not assume character descriptions are built directly from raw facts.
 
 ## System Prompt Structure
 

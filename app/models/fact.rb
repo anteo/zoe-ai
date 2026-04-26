@@ -6,7 +6,6 @@ class Fact < ApplicationRecord
   belongs_to :topic
 
   before_save :set_month
-  after_save :update_character_description, if: :persistent?
   after_commit :mark_month_aggregates_stale, on: [ :create, :update, :destroy ]
 
   scope :persistent, ->(persistent = true) { where(persistent:) }
@@ -23,6 +22,22 @@ class Fact < ApplicationRecord
 
   def to_description
     author_id != character_id ? "According to #{author.name}: #{content}" : content
+  end
+
+  def prompt_source
+    author_id == character_id ? "self" : author.name
+  end
+
+  def prompt_date
+    if date_from && date_to && date_from != date_to
+      "#{date_from.iso8601}/#{date_to.iso8601}"
+    elsif date_from
+      date_from.iso8601
+    elsif date_to
+      date_to.iso8601
+    else
+      mentioned_date&.iso8601
+    end
   end
 
   def time_present?
@@ -113,9 +128,5 @@ class Fact < ApplicationRecord
 
   def set_month
     self.month = mentioned_at&.to_date&.beginning_of_month
-  end
-
-  def update_character_description
-    character.update_column :description_up_to_date, false
   end
 end

@@ -92,7 +92,6 @@ module AI::Actors
 
       current_user.characters.find_or_create_by(name:) do |c|
         c.third_party = true
-        c.description = ""
       end
     end
 

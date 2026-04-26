@@ -1,0 +1,41 @@
+<section class="space-y-8">
+  <% if events? %>
+    <% groups.each do |group| %>
+      <section class="space-y-3">
+        <h3 class="text-xl font-semibold tracking-tight"><%= group[:description] %></h3>
+
+        <div class="overflow-x-auto rounded-box border border-base-300">
+          <table class="table table-zebra table-sm w-full table-fixed">
+            <thead>
+            <tr>
+              <th><%= t(:label_content) %></th>
+              <th class="w-56"><%= t(:label_topic) %></th>
+              <th class="w-36"><%= t(:label_date_time) %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% group[:facts].each do |fact| %>
+              <tr>
+                <td class="align-top leading-6"><%= fact.content %></td>
+                <td class="align-top font-medium break-words"><%= fact.topic %></td>
+                <td class="align-top">
+                  <span class="inline-flex flex-col leading-tight">
+                    <% if event_date(fact).present? %>
+                      <span><%= event_date(fact) %></span>
+                    <% end %>
+                    <% if event_time(fact).present? %>
+                      <span class="text-xs opacity-60"><%= event_time(fact) %></span>
+                    <% end %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    <% end %>
+  <% else %>
+    <p class="text-sm opacity-60"><%= t(:text_no_character_events) %></p>
+  <% end %>
+</section>

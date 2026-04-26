@@ -1,0 +1,9 @@
+<% h = ->(value) { ERB::Util.html_escape(value.to_s) } -%>
+<% range = ->(period) { "#{period.begin&.iso8601}/#{period.end&.iso8601}" } -%>
+<% groups.each do |group| -%>
+<period key="<%= h.call(group[:key]) %>" range="<%= h.call(range.call(group[:period])) %>" description="<%= h.call(group[:description]) %>">
+<% group[:facts].each do |fact| -%>
+<event date="<%= h.call(fact.prompt_date) %>" time="<%= h.call(fact.time) %>" kind="<%= h.call(fact.kind) %>" topic="<%= h.call(fact.topic) %>" importance="<%= fact.importance %>" source="<%= h.call(fact.prompt_source) %>"><%= h.call(fact.content) %></event>
+<% end -%>
+</period>
+<% end -%>

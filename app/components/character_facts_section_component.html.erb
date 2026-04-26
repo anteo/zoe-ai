@@ -1,6 +1,6 @@
-<section data-controller="character-facts">
+<section class="flex h-full min-h-0 flex-col" data-controller="character-facts">
   <% if facts.any? %>
-    <div class="grid gap-2 md:grid-cols-4 m-2">
+    <div class="m-2 grid shrink-0 gap-2 md:grid-cols-4">
       <label class="input input-ghost outline-none w-full">
         <span class="icon-[lucide--search] h-4 w-4 opacity-60"></span>
         <input type="text"
@@ -35,7 +35,7 @@
       </select>
     </div>
 
-    <div class="max-h-[52vh] overflow-auto rounded-box border border-base-300">
+    <div class="min-h-0 flex-1 overflow-auto rounded-box border border-base-300">
       <table class="table table-zebra table-pin-rows table-sm w-full">
         <thead class="sticky top-0 z-10 bg-base-100">
         <tr class="text-center">
@@ -44,8 +44,8 @@
           <th><%= t(:label_kind) %></th>
           <th><%= t(:label_author) %></th>
           <th><%= t(:label_importance) %></th>
-          <th><%= t(:label_persistent) %></th>
           <th><%= t(:label_topic) %></th>
+          <th><%= t(:label_persistent) %></th>
           <th class="w-10"></th>
         </tr>
         </thead>

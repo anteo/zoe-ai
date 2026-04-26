@@ -1,0 +1,8 @@
+<% groups.each do |group| -%>
+## <%= group[:description] %>
+<% group[:facts].each do |fact| -%>
+
+- **<%= fact.topic %>**<%= " (#{fact.prompt_date})" if fact.prompt_date.present? %>: <%= fact.to_description %>
+<% end -%>
+
+<% end -%>

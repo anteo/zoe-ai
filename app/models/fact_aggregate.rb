@@ -6,6 +6,7 @@ class FactAggregate < ApplicationRecord
 
   enum :summary_status, {
     pending: "pending",
+    in_progress: "in_progress",
     done: "done",
     failed: "failed"
   }, validate: true
@@ -17,10 +18,13 @@ class FactAggregate < ApplicationRecord
 
   before_validation :set_slot_key
 
+  scope :months, -> { where(kind: "month") }
+  scope :bands, -> { where.not(kind: "month") }
+
   def self.mark_months_stale!(slot_keys)
     return if slot_keys.empty?
 
-    where(kind: "month", slot_key: slot_keys, stale: false)
+    months.where(slot_key: slot_keys, stale: false)
       .update_all(stale: true, updated_at: Time.current)
   end
 
@@ -31,6 +35,10 @@ class FactAggregate < ApplicationRecord
       kind,
       anchor_month.to_date.beginning_of_month.iso8601
     ].join(":")
+  end
+
+  def self.latest_anchor_month
+    maximum(:anchor_month)
   end
 
   def band_kind_for(anchor_month)
@@ -58,6 +66,25 @@ class FactAggregate < ApplicationRecord
 
   def band?
     !month?
+  end
+
+  def period(anchor_month = self.anchor_month)
+    anchor_month = anchor_month.to_date.beginning_of_month
+
+    case kind
+    when "month"
+      self.anchor_month..self.anchor_month
+    when "m0_3"
+      (anchor_month << 2)..anchor_month
+    when "m3_6"
+      (anchor_month << 5)..(anchor_month << 3)
+    when "m6_12"
+      (anchor_month << 11)..(anchor_month << 6)
+    when "m12_24"
+      (anchor_month << 23)..(anchor_month << 12)
+    when /\Ayear_(\d{4})\z/
+      Date.new(Regexp.last_match(1).to_i, 1, 1)..Date.new(Regexp.last_match(1).to_i, 12, 1)
+    end
   end
 
   def dirty?

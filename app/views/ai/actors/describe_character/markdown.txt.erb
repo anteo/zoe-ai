@@ -1,0 +1,9 @@
+<% periods.each do |period| -%>
+## <%= period[:title] %>
+<% period[:topics].each do |topic| -%>
+
+### <%= topic[:name] %>
+<%= topic[:text] %>
+<% end -%>
+
+<% end -%>

@@ -42,12 +42,17 @@ namespace :ai do
   desc "Describe characters"
   task describe_characters: :environment do
     characters = Character.all
-    characters = characters.where(description_up_to_date: false) unless ENV["FORCE"]
+    characters = characters.where(id: ENV["CHARACTER_ID"]) if ENV["CHARACTER_ID"].present?
     characters.find_each do |character|
       res = AI::Actors::DescribeCharacter.result(character:)
       unless res.success?
         puts "  Error: #{res.error}"
+        next
       end
+
+      puts "## #{character.name}"
+      puts res.description
+      puts
     end
   end
 
@@ -59,6 +64,38 @@ namespace :ai do
     else
       AggregatePersistentFactsJob.perform_now
     end
+  end
+
+  desc "Rerun fact aggregate summaries (failed by default, or explicit IDs via FACT_AGGREGATE_IDS=1,2,3)"
+  task rerun_fact_aggregate_summaries: :environment do
+    logger = Logger.new(STDOUT)
+    ids = ENV.fetch("FACT_AGGREGATE_IDS", "")
+             .split(/[,\s]+/)
+             .map(&:strip)
+             .select { |it| it.match?(/\A\d+\z/) }
+             .map(&:to_i)
+             .uniq
+
+    aggregates = if ids.any?
+      FactAggregate.where(id: ids).order(:id)
+    else
+      FactAggregate.failed.order(:id)
+    end
+
+    puts "Rerunning summaries for #{aggregates.count} fact aggregate(s)..."
+    puts "IDs filter: #{ids.join(', ')}" if ids.any?
+
+    found_ids = aggregates.pluck(:id)
+    missing_ids = ids - found_ids
+    puts "Missing IDs: #{missing_ids.join(', ')}" if missing_ids.any?
+
+    aggregates.find_each do |fact_aggregate|
+      puts "  FactAggregate ##{fact_aggregate.id} (kind=#{fact_aggregate.kind}, status=#{fact_aggregate.summary_status})"
+      res = AI::Actors::SummarizeFactAggregate.result(fact_aggregate:, logger:)
+      puts "  Error: #{res.error}" unless res.success?
+    end
+
+    puts "Done."
   end
 
   # desc "Process chats"

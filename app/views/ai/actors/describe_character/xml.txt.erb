@@ -1,0 +1,10 @@
+<% periods.each do |period| -%>
+<period from="<%= period[:from].strftime("%B %Y") %>" to="<%= period[:to].strftime("%B %Y") %>">
+<% period[:topics].each do |topic| -%>
+<topic name="<%= ERB::Util.h(topic[:name]) %>">
+<%= ERB::Util.h(topic[:text]) %>
+</topic>
+<% end -%>
+</period>
+
+<% end -%>

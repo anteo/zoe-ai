@@ -76,7 +76,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
       AI::Actors::AggregatePersistentFacts.call(character:)
     end
 
-    assert_not character.fact_aggregates.where.not(kind: "month").exists?(anchor_month: april_anchor)
+    assert_not character.fact_aggregates.bands.exists?(anchor_month: april_anchor)
     work_band = character.fact_aggregates.find_by!(kind: "m0_3", topic: topic_work, anchor_month: may_anchor)
     hobby_band = character.fact_aggregates.find_by!(kind: "m6_12", topic: topic_hobby, anchor_month: may_anchor)
     work_month = character.fact_aggregates.find_by!(kind: "month", topic: topic_work, anchor_month: Date.new(2026, 4, 1))

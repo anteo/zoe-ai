@@ -8,27 +8,27 @@ Your last conversation was <%= helpers.distance_of_time_in_words_to_now(time, lo
 
 <identity name="<%= chat.partner.name %>" role="you">
 You are <%= chat.partner.name %>.
-<%= chat.partner.description %>
+<%= chat.described_character(chat.partner, mode: :xml) %>
 </identity>
 
 <identity name="<%= chat.character.name %>" role="interlocutor">
 <%= chat.character.name %> is the person you are talking to.
-<%= chat.character.description %>
+<%= chat.described_character(chat.character, mode: :xml) %>
 </identity>
-<% known_characters = chat.other_known_characters.select { |c| c.description.present? } -%>
+<% known_characters = chat.known_characters_with_description(mode: :xml) -%>
 <% if known_characters.any? -%>
 
 <known_characters>
-<% known_characters.each do |character| -%>
+<% known_characters.each do |character, description| -%>
 <character name="<%= character %>">
-<%= character.description %>
+<%= description %>
 </character>
 <% end -%>
 </known_characters>
 <% end -%>
 
 <events subject="<%= chat.character %>">
-<%= runtime.prompt :time_facts, grouped_facts: chat.character.grouped_time_facts, character: chat.character %>
+<%= AI::Actors::DescribeEvents.result(character: chat.character, mode: :xml).description %>
 </events>
 <% yesterday = chat.yesterday_summary -%>
 <% if yesterday.present? -%>

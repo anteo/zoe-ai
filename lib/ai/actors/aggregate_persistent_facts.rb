@@ -10,7 +10,7 @@ module AI::Actors
 
       FactAggregate.transaction do
         tagged_logger.info("Start aggregating facts (#{refresh_mode})...")
-        month_rows = refresh_months(character.fact_aggregates.where(kind: "month").index_by(&:slot_key))
+        month_rows = refresh_months(character.fact_aggregates.months.index_by(&:slot_key))
         month_rows_to_summarize = month_rows.values.select { it.dirty? && !it.marked_for_destruction? }
 
         band_rows = if refresh_mode == :current_rotation
@@ -191,7 +191,7 @@ module AI::Actors
     end
 
     def current_band_anchor_month
-      @current_band_anchor_month ||= character.fact_aggregates.where.not(kind: "month").maximum(:anchor_month)
+      @current_band_anchor_month ||= character.fact_aggregates.bands.latest_anchor_month
     end
 
     def refresh_mode
@@ -206,14 +206,14 @@ module AI::Actors
 
     def current_anchor_band_rows
       character.fact_aggregates
-               .where.not(kind: "month")
+               .bands
                .where(anchor_month:)
                .index_by(&:slot_key)
     end
 
     def cleanup_stale_band_anchors
       character.fact_aggregates
-               .where.not(kind: "month")
+               .bands
                .where.not(anchor_month:)
                .delete_all
     end

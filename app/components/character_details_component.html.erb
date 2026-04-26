@@ -81,11 +81,12 @@
           <% active = section[:key] == default_section %>
           <div id="<%= "#{section_frame_id(section[:key])}-panel" %>"
                role="tabpanel"
-               class="<%= active ? "block" : "hidden" %> overflow-y-auto"
+               class="<%= active ? "block" : "hidden" %> <%= section[:key] == "facts" ? "h-full overflow-hidden" : "overflow-y-auto" %>"
                data-character-details-target="panel"
                data-section="<%= section[:key] %>">
             <%= helpers.turbo_frame_tag section_frame_id(section[:key]),
                                         src: section_path(section[:key]),
+                                        class: "block h-full",
                                         loading: "lazy" do %>
               <div class="flex items-center justify-center py-12">
                 <span class="loading loading-spinner loading-xl text-neutral"></span>
