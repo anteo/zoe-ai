@@ -33,6 +33,20 @@ class Character < ApplicationRecord
     name
   end
 
+  def prompt_role(chat)
+    return "assistant" if self == chat.partner
+    return "interlocutor" if self == chat.character
+
+    "known"
+  end
+
+  def prompt_type
+    return "ai" if ai?
+    return "third_party" if third_party?
+
+    "human"
+  end
+
   def last_conversation_time(except: nil)
     scope = except ? chats.where.not(id: except) : chats
     last = scope.order(:created_at).last

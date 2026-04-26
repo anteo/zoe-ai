@@ -20,7 +20,7 @@ class Chat < ApplicationRecord
   end
 
   def other_known_characters
-    Character.where.not(id: [ partner, character ])
+    user.characters.where.not(id: [ partner_id, character_id ])
   end
 
   def described_character(character, mode: :xml, period_order: :asc)

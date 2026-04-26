@@ -6,6 +6,12 @@ Your last conversation was <%= helpers.distance_of_time_in_words_to_now(time, lo
 <% end -%>
 </context>
 
+<characters>
+<% chat.user.characters.order(:id).each do |character| -%>
+<character id="<%= character.id %>" name="<%= character.name %>" role="<%= character.prompt_role(chat) %>" type="<%= character.prompt_type %>" />
+<% end -%>
+</characters>
+
 <identity name="<%= chat.partner.name %>" role="you">
 You are <%= chat.partner.name %>.
 <%= chat.described_character(chat.partner, mode: :xml) %>

@@ -6,15 +6,12 @@ module AI
         (use only if user explicitly said to set his avatar)"
       END
       params do
-        characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
-
         integer :attachment_id,
                 description: "Blob ID of the attachment to use as the avatar (from the IDs listed in the message)",
                 required: true
 
-        string :character_id,
-               description: "ID of the character to add image to. Available: #{characters}",
-               enum: ::Character.pluck(:id).map(&:to_s),
+        integer :character_id,
+               description: "ID of the character to add image to, from the <characters> system prompt section",
                required: true
       end
 

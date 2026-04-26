@@ -4,8 +4,6 @@ module AI
       description "Add an image/photo for a character using an attachment from the current chat."
 
       params do
-        characters = ::Character.all.map { |c| "#{c.id} (#{c.name})" }.join(", ")
-
         integer :attachment_id,
                 description: "Blob ID of the attachment to use (from the IDs listed in the message)",
                 required: true
@@ -14,9 +12,8 @@ module AI
                description: "Short identity label using the person's actual name(s) and one key visible trait (e.g. 'Антон with kalimba', 'Нина in glasses'). Omit colors, clothing, background, and scene details.",
                required: false
 
-        string :character_id,
-                description: "ID of the character to add image to. Available: #{characters}",
-                enum: ::Character.pluck(:id).map(&:to_s),
+        integer :character_id,
+                description: "ID of the character to add image to, from the <characters> system prompt section",
                 required: true
       end
 
