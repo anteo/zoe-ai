@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CharacterEventsSectionComponent < ApplicationComponent
+class CharacterEventsComponent < ApplicationComponent
   attr_reader :character
 
   def initialize(character:)

@@ -1,10 +1,3 @@
 <%= turbo_frame_tag "character-section-#{@section}" do %>
-  <% component_name = {
-    "description" => :character_description_section,
-    "events" => :character_events_section,
-    "facts" => :character_facts_section,
-    "images" => :character_images_section,
-    "instructions" => :character_instructions_section
-  }.fetch(@section) %>
-  <%= component component_name, character: @character %>
+  <%= component :"character_#{@section}", character: @character %>
 <% end %>
