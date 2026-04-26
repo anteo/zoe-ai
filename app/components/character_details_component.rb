@@ -77,6 +77,6 @@ class CharacterDetailsComponent < ApplicationComponent
   end
 
   def instructions_count
-    @instructions_count ||= character.instructions.count
+    @instructions_count ||= character.instructions.active.count
   end
 end

@@ -39,7 +39,15 @@ class Chat < ApplicationRecord
   end
 
   def partner_instructions
-    partner.instructions.map { "* #{it}" }.join("\n")
+    instructions = Instruction.arel_table
+    global_instructions = instructions[:character_id].eq(nil)
+    character_instructions = instructions[:character_id].eq(partner.id)
+
+    Instruction.active
+               .where(global_instructions.or(character_instructions))
+               .ordered
+               .map { "* #{it}" }
+               .join("\n")
   end
 
   def messages_association

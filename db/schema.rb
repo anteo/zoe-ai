@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_24_213000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_26_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -249,10 +249,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_24_213000) do
   end
 
   create_table "instructions", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
     t.bigint "character_id"
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["character_id", "active"], name: "index_instructions_on_character_id_and_active"
     t.index ["character_id"], name: "index_instructions_on_character_id"
   end
 

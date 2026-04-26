@@ -26,7 +26,7 @@ You are <%= chat.partner.name %>.
 
 <known_characters>
 <% known_characters.each do |character, description| -%>
-<character name="<%= character %>">
+<character id="<%= character.id %>" name="<%= character %>">
 <%= description %>
 </character>
 <% end -%>
