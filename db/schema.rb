@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_26_121000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -43,105 +43,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_26_121000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "agent_messages", force: :cascade do |t|
-    t.bigint "agent_run_id"
-    t.bigint "agent_thread_id", null: false
-    t.bigint "agent_tool_call_id"
-    t.integer "cache_creation_tokens"
-    t.integer "cached_tokens"
-    t.text "content"
-    t.json "content_raw"
-    t.datetime "created_at", null: false
-    t.integer "input_tokens"
-    t.bigint "model_id"
-    t.integer "output_tokens"
-    t.string "role", null: false
-    t.text "thinking_signature"
-    t.text "thinking_text"
-    t.integer "thinking_tokens"
-    t.datetime "updated_at", null: false
-    t.index ["agent_run_id"], name: "index_agent_messages_on_agent_run_id"
-    t.index ["agent_thread_id"], name: "index_agent_messages_on_agent_thread_id"
-    t.index ["agent_tool_call_id"], name: "index_agent_messages_on_agent_tool_call_id"
-    t.index ["model_id"], name: "index_agent_messages_on_model_id"
-    t.index ["role"], name: "index_agent_messages_on_role"
-  end
-
-  create_table "agent_runs", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.bigint "agent_thread_id"
-    t.bigint "chat_id", null: false
-    t.jsonb "constraints", default: {}, null: false
-    t.datetime "created_at", null: false
-    t.text "error"
-    t.datetime "finished_at"
-    t.text "goal", null: false
-    t.string "idempotency_key"
-    t.jsonb "input_payload", default: {}, null: false
-    t.bigint "message_id"
-    t.jsonb "metadata", default: {}, null: false
-    t.jsonb "output_payload", default: {}, null: false
-    t.bigint "provider_job_id"
-    t.text "result_summary"
-    t.datetime "started_at"
-    t.string "status", default: "queued", null: false
-    t.datetime "updated_at", null: false
-    t.index ["agent_id", "created_at"], name: "index_agent_runs_on_agent_id_and_created_at"
-    t.index ["agent_id"], name: "index_agent_runs_on_agent_id"
-    t.index ["agent_thread_id"], name: "index_agent_runs_on_agent_thread_id"
-    t.index ["chat_id"], name: "index_agent_runs_on_chat_id"
-    t.index ["idempotency_key"], name: "index_agent_runs_on_idempotency_key", unique: true
-    t.index ["message_id"], name: "index_agent_runs_on_message_id"
-    t.index ["provider_job_id"], name: "index_agent_runs_on_provider_job_id"
-    t.index ["status"], name: "index_agent_runs_on_status"
-  end
-
-  create_table "agent_threads", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.bigint "chat_id", null: false
-    t.datetime "created_at", null: false
-    t.string "external_session_id"
-    t.datetime "last_seen_at"
-    t.jsonb "metadata", default: {}, null: false
-    t.bigint "model_id"
-    t.bigint "parent_message_id"
-    t.string "status", default: "idle", null: false
-    t.datetime "updated_at", null: false
-    t.index ["agent_id"], name: "index_agent_threads_on_agent_id"
-    t.index ["chat_id", "agent_id"], name: "index_agent_threads_on_chat_id_and_agent_id"
-    t.index ["chat_id"], name: "index_agent_threads_on_chat_id"
-    t.index ["external_session_id"], name: "index_agent_threads_on_external_session_id"
-    t.index ["model_id"], name: "index_agent_threads_on_model_id"
-    t.index ["parent_message_id"], name: "index_agent_threads_on_parent_message_id"
-    t.index ["status"], name: "index_agent_threads_on_status"
-  end
-
-  create_table "agent_tool_calls", force: :cascade do |t|
-    t.bigint "agent_message_id", null: false
-    t.bigint "agent_run_id"
-    t.jsonb "arguments", default: {}, null: false
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.text "thought_signature"
-    t.string "tool_call_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["agent_message_id"], name: "index_agent_tool_calls_on_agent_message_id"
-    t.index ["agent_run_id"], name: "index_agent_tool_calls_on_agent_run_id"
-    t.index ["name"], name: "index_agent_tool_calls_on_name"
-    t.index ["tool_call_id"], name: "index_agent_tool_calls_on_tool_call_id", unique: true
-  end
-
   create_table "agents", force: :cascade do |t|
     t.boolean "active", default: true, null: false
-    t.jsonb "capabilities", default: [], null: false
-    t.jsonb "config", default: {}, null: false
+    t.boolean "builtin", default: false, null: false
     t.datetime "created_at", null: false
+    t.text "instructions"
     t.string "key", null: false
+    t.bigint "model_id"
     t.string "name", null: false
-    t.string "transport", default: "mcp", null: false
+    t.float "temperature"
+    t.integer "thinking_budget"
+    t.string "thinking_effort"
     t.datetime "updated_at", null: false
-    t.index ["active"], name: "index_agents_on_active"
     t.index ["key"], name: "index_agents_on_key", unique: true
+    t.index ["model_id"], name: "index_agents_on_model_id"
+  end
+
+  create_table "agents_mcp_servers", id: false, force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.bigint "mcp_server_id", null: false
+    t.index ["agent_id", "mcp_server_id"], name: "index_agents_mcp_servers_on_agent_id_and_mcp_server_id", unique: true
+    t.index ["agent_id"], name: "index_agents_mcp_servers_on_agent_id"
+    t.index ["mcp_server_id"], name: "index_agents_mcp_servers_on_mcp_server_id"
   end
 
   create_table "characters", force: :cascade do |t|
@@ -256,6 +179,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_26_121000) do
     t.datetime "updated_at", null: false
     t.index ["character_id", "active"], name: "index_instructions_on_character_id_and_active"
     t.index ["character_id"], name: "index_instructions_on_character_id"
+  end
+
+  create_table "mcp_servers", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.jsonb "config", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "name", null: false
+    t.string "transport_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_mcp_servers_on_key", unique: true
   end
 
   create_table "messages", force: :cascade do |t|
@@ -473,20 +407,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_26_121000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "agent_messages", "agent_runs"
-  add_foreign_key "agent_messages", "agent_threads"
-  add_foreign_key "agent_messages", "agent_tool_calls"
-  add_foreign_key "agent_messages", "models"
-  add_foreign_key "agent_runs", "agent_threads"
-  add_foreign_key "agent_runs", "agents"
-  add_foreign_key "agent_runs", "chats"
-  add_foreign_key "agent_runs", "messages"
-  add_foreign_key "agent_threads", "agents"
-  add_foreign_key "agent_threads", "chats"
-  add_foreign_key "agent_threads", "messages", column: "parent_message_id"
-  add_foreign_key "agent_threads", "models"
-  add_foreign_key "agent_tool_calls", "agent_messages"
-  add_foreign_key "agent_tool_calls", "agent_runs"
+  add_foreign_key "agents", "models"
+  add_foreign_key "agents_mcp_servers", "agents"
+  add_foreign_key "agents_mcp_servers", "mcp_servers"
   add_foreign_key "chats", "characters"
   add_foreign_key "chats", "characters", column: "partner_id"
   add_foreign_key "chats", "models"

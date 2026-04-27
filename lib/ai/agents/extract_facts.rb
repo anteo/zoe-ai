@@ -1,6 +1,7 @@
 module AI
   module Agents
     class ExtractFacts < BaseAgent
+      agent_key :extract_facts
       inputs :chat
       temperature 0.1
       instructions topics: -> { Topic.order(:name) },

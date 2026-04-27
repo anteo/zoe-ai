@@ -137,3 +137,37 @@ ensure_instruction!(
 
 ensure_character_attachment!(character: zoe, name: :avatar, file: zoe_avatar)
 zoe_images.each { |file| ensure_character_attachment!(character: zoe, name: :images, file: file) }
+
+# Builtin agents
+[
+  { key: "zoe",                      name: "Зоя" },
+  { key: "summarize_chat",           name: "Summarize Chat" },
+  { key: "extract_facts",            name: "Extract Facts" },
+  { key: "summarize_fact_aggregate", name: "Summarize Fact Aggregate" },
+].each do |attrs|
+  Agent.find_or_create_by!(key: attrs[:key]) do |a|
+    a.name    = attrs[:name]
+    a.builtin = true
+  end
+end
+
+# MCP servers (inactive by default — set active and fill credentials manually)
+kindly_search = MCPServer.find_or_create_by!(key: "kindly-search") do |s|
+  s.name           = "Kindly Search"
+  s.transport_type = "stdio"
+  s.active         = false
+  s.config         = {
+    "command" => "uvx",
+    "args"    => %w[
+      --from git+https://github.com/Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server
+      kindly-web-search-mcp-server start-mcp-server
+    ],
+    "env"     => {
+      "SEARXNG_BASE_URL" => "http://localhost:8888",
+      "GITHUB_TOKEN"     => ""
+    }
+  }
+end
+
+zoe_agent = Agent.find_by!(key: "zoe")
+zoe_agent.mcp_servers << kindly_search unless zoe_agent.mcp_servers.include?(kindly_search)
