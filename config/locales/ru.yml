@@ -1,145 +1,14 @@
 ru:
-  date:
-    formats:
-      default: '%d %B %Y'
-  time:
-    formats:
-      default: '%d %B %Y, %H:%M'
-  label_app_title: "Зоя :: твой персональный ассистент"
-  direct_speech: "%{character} сказал(а): «%{text}»"
-  label_send: Отправить
-  label_token_usage: Токены
-  label_attach: Прикрепить файл(ы)
-  placeholder_chat_input: Введите сообщение...
-  label_confirmation: Подтверждение
-  label_no: Нет
-  label_yes: Да
-  label_new_conversation: Новый разговор
-  label_edit: Редактировать
-  label_resend: Отправить повторно
-  label_delete: Удалить
-  label_save: Сохранить
-  label_cancel: Отмена
-  confirm_delete_message: Удалить это сообщение и все последующие?
-  label_memory_mode_on: Память включена
-  label_memory_mode_off: Память выключена
-  label_chat_history: История
-  label_back: Назад
-  label_close: Закрыть
-  label_previous_chat: Предыдущий чат
-  label_next_chat: Следующий чат
-  label_login: Вход
-  label_logout: Выйти
-  label_register: Регистрация
-  label_profile: Профиль
-  label_crop_avatar: Обрезать аватар
-  label_characters: Персонажи
-  label_my_character: Мой персонаж
-  label_chat_partner: Собеседник
-  label_human_characters: Люди
-  label_ai_characters: ИИ-персонажи
-  label_other_characters: Другие персонажи
-  label_new: Новый
-  label_create_character: Новый персонаж
-  label_edit_character: Редактировать персонажа
-  label_description: Описание
-  label_instructions: Инструкции
-  label_facts: Факты
-  label_events: События
-  label_images: Изображения
-  label_share_character: Поделиться персонажем
-  label_upload_images: Загрузить изображения
-  label_image_description: Описание изображения
-  label_human: Человек
-  label_ai: ИИ
-  label_other: Другое
-  label_persistent: Постоянный
-  label_time: Время
-  label_date_time: Дата/время
-  label_time_past: Прошлое
-  label_time_present: Настоящее
-  label_time_future: Будущее
-  label_kind: Вид
-  label_fact_kind_attribute: Атрибут
-  label_fact_kind_experience: Опыт
-  label_fact_kind_belief: Убеждение
-  label_fact_kind_preference: Предпочтение
-  label_fact_kind_plan: План
-  label_author: Автор
-  label_importance: Важность
-  label_topic: Тема
-  label_content: Содержание
-  label_filter_persistent_all: Все
-  label_filter_topic_all: Все темы
-  label_sort_mentioned_at_desc: Упомянуто (сначала новые)
-  label_sort_mentioned_at_asc: Упомянуто (сначала старые)
-  label_event: Событие
-  label_remove_instruction: Удалить инструкцию
-  placeholder_enter_character_name: Введите имя персонажа
-  placeholder_add_instruction: "добавьте инструкцию..."
-  placeholder_filter_facts_text: Фильтр фактов
-  placeholder_image_description: Добавьте описание изображения
-  label_edit_profile: Редактировать профиль
-  label_email: Email
-  label_password: Пароль
-  label_password_confirmation: Подтвердите пароль
-  label_remove_avatar: Удалить аватар
-  label_first_name: Имя
-  label_last_name: Фамилия
-  label_new_password_optional: Новый пароль (необязательно)
-  label_new_password: Новый пароль
-  label_confirm_new_password: Подтвердите новый пароль
-  label_remember_me: Запомнить меня
-  label_forgot_password: Забыли пароль?
-  label_send_reset_instructions: Отправить инструкцию по сбросу
-  label_change_password: Изменить пароль
-  label_confirmation_instructions: Повторно отправить подтверждение
-  label_unlock_instructions: Повторно отправить разблокировку
-  label_sign_in_with: Войти через %{provider}
-  label_sign_in_with_google: Войти через Google
-  label_account_settings: Настройки аккаунта
-  label_current_password_required: Текущий пароль
-  label_cancel_account: Удалить аккаунт
-  text_select_chat_history: Выберите разговор из списка.
-  text_no_chat_history: Пока нет предыдущих разговоров.
-  text_greeting_html: Привет, я %{name} 🙂<br> Давай поболтаем!
-  text_profile_updated: Профиль успешно обновлен.
-  text_password_minimum: "Минимум %{count} символов"
-  text_pending_confirmation: "Ожидает подтверждения: %{email}"
-  text_current_password_help: Нужен для сохранения изменений аккаунта.
-  text_google_sign_in_failed: Не удалось войти через Google. Попробуйте снова.
-  text_fix_form_errors: Пожалуйста, исправьте ошибки ниже.
-  text_character_name_required: Имя персонажа не может быть пустым.
-  text_character_create_failed: Не удалось создать персонажа.
-  text_no_character_description: Пока нет описания.
-  text_no_character_facts: Пока нет фактов.
-  text_no_character_events: Пока нет событий.
-  text_no_character_images: Пока нет изображений.
-  text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
-  text_share_character_coming_soon: Возможность поделиться персонажем пока не реализована.
-  text_fact_period_m0_3: Последние 3 месяца
-  text_fact_period_m3_6: От 3 до 6 месяцев назад
-  text_fact_period_m6_12: От 6 до 12 месяцев назад
-  text_fact_period_m12_24: От 12 до 24 месяцев назад
-  text_fact_period_year: "%{year} год"
-  text_event_period_today: Сегодня
-  text_event_period_yesterday: Вчера
-  text_event_period_earlier_this_month: Ранее в этом месяце
-  text_event_period_past_3_months: Ранее за последние 3 месяца
-  text_event_period_past_6_months: Ранее за последние 6 месяцев
-  text_event_period_earlier_this_year: Ранее в этом году
-  text_event_period_older_past: Ранее
-  text_event_period_tomorrow: Завтра
-  text_event_period_later_this_month: Позже в этом месяце
-  text_event_period_next_3_months: Позже в ближайшие 3 месяца
-  text_event_period_next_6_months: Позже в ближайшие 6 месяцев
-  text_event_period_later_this_year: Позже в этом году
-  text_event_period_future_later: Позже
-  text_loading: Загрузка...
-  text_token_usage_hint: "%{used} / %{context} токенов использовано"
-  confirm_delete_character: Удалить этого персонажа?
-  confirm_logout: Выйти из аккаунта?
   activerecord:
+    attributes:
+      character:
+        name: Имя персонажа
+      user:
+        email: Email
+        first_name: Имя
+        last_name: Фамилия
+        password: Пароль
+        password_confirmation: Подтверждение пароля
     models:
       character:
         one: Персонаж
@@ -147,12 +16,188 @@ ru:
       user:
         one: Пользователь
         other: Пользователи
-    attributes:
-      character:
-        name: Имя персонажа
-      user:
-        email: Email
-        password: Пароль
-        password_confirmation: Подтверждение пароля
-        first_name: Имя
-        last_name: Фамилия
+  confirm_delete_character: Удалить этого персонажа?
+  confirm_delete_message: Удалить это сообщение и все последующие?
+  confirm_logout: Выйти из аккаунта?
+  date:
+    formats:
+      default: "%d %B %Y"
+  direct_speech: "%{character} сказал(а): «%{text}»"
+  label_account_settings: Настройки аккаунта
+  label_ai: ИИ
+  label_ai_characters: ИИ-персонажи
+  label_app_title: 'Зоя :: твой персональный ассистент'
+  label_apply: Применить
+  label_attach: Прикрепить файл(ы)
+  label_author: Автор
+  label_back: Назад
+  label_cancel: Отмена
+  label_cancel_account: Удалить аккаунт
+  label_change_password: Изменить пароль
+  label_characters: Персонажи
+  label_chat_history: История
+  label_chat_partner: Собеседник
+  label_close: Закрыть
+  label_confirm_new_password: Подтвердите новый пароль
+  label_console: Консоль
+  label_console_output: Вывод консоли
+  label_confirmation: Подтверждение
+  label_confirmation_instructions: Повторить подтверждение
+  label_content: Содержание
+  label_create_character: Новый персонаж
+  label_crop_avatar: Обрезать аватар
+  label_current_password_required: Текущий пароль
+  label_date_time: Дата/время
+  label_delete: Удалить
+  label_description: Описание
+  label_edit: Редактировать
+  label_edit_character: Редактировать персонажа
+  label_edit_profile: Редактировать профиль
+  label_email: Email
+  label_event: Событие
+  label_events: События
+  label_fact_kind_attribute: Атрибут
+  label_fact_kind_belief: Убеждение
+  label_fact_kind_experience: Опыт
+  label_fact_kind_plan: План
+  label_fact_kind_preference: Предпочтение
+  label_facts: Факты
+  label_filter_persistent_all: Все
+  label_filter_topic_all: Все темы
+  label_first_name: Имя
+  label_forgot_password: Забыли пароль?
+  label_human: Человек
+  label_human_characters: Люди
+  label_image_description: Описание изображения
+  label_images: Изображения
+  label_importance: Важность
+  label_instructions: Инструкции
+  label_kind: Вид
+  label_last_name: Фамилия
+  label_login: Вход
+  label_logout: Выйти
+  label_memory_mode_off: Память выключена
+  label_memory_mode_on: Память включена
+  label_my_character: Мой персонаж
+  label_new: Новый
+  label_new_conversation: Новый разговор
+  label_new_password: Новый пароль
+  label_new_password_optional: Новый пароль (необязательно)
+  label_next_chat: Следующий чат
+  label_no: Нет
+  label_other: Другое
+  label_other_characters: Другие персонажи
+  label_password: Пароль
+  label_password_confirmation: Подтвердите пароль
+  label_persistent: Постоянный
+  label_previous_chat: Предыдущий чат
+  label_profile: Профиль
+  label_register: Регистрация
+  label_remember_me: Запомнить меня
+  label_remove_avatar: Удалить аватар
+  label_remove_instruction: Удалить инструкцию
+  label_resend: Отправить повторно
+  label_save: Сохранить
+  label_send: Отправить
+  label_send_reset_instructions: Отправить инструкцию по сбросу
+  label_settings: Настройки
+  label_settings_providers: Провайдеры
+  label_share_character: Поделиться персонажем
+  label_sign_in_with: Войти через %{provider}
+  label_sign_in_with_google: Войти через Google
+  label_sort_mentioned_at_asc: Упомянуто (сначала старые)
+  label_sort_mentioned_at_desc: Упомянуто (сначала новые)
+  label_time: Время
+  label_time_future: Будущее
+  label_time_past: Прошлое
+  label_time_present: Настоящее
+  label_token_usage: Токены
+  label_topic: Тема
+  label_unlock_instructions: Повторить разблокировку
+  label_upload_images: Загрузить изображения
+  label_yes: Да
+  placeholder_add_instruction: добавьте инструкцию...
+  placeholder_chat_input: Введите сообщение...
+  placeholder_enter_character_name: Введите имя персонажа
+  placeholder_filter_facts_text: Фильтр фактов
+  placeholder_image_description: Добавьте описание изображения
+  settings:
+    ai:
+      providers:
+        anthropic:
+          api_key: API-ключ Anthropic
+        bedrock:
+          api_key: API-ключ Bedrock
+          region: Регион Bedrock
+          secret_key: Секретный ключ Bedrock
+          session_token: Сессионный токен Bedrock
+        deepseek:
+          api_key: API-ключ DeepSeek
+        gemini:
+          api_key: API-ключ Gemini
+        mistral:
+          api_key: API-ключ Mistral
+        ollama:
+          api_base: Базовый URL API Ollama
+        openai:
+          api_key: API-ключ OpenAI
+        openrouter:
+          api_key: API-ключ OpenRouter
+        perplexity:
+          api_key: API-ключ Perplexity
+        vertexai:
+          location: Локация Vertex AI
+          project_id: ID проекта Vertex AI
+        xai:
+          api_key: API-ключ xAI
+  text_access_denied: Доступ запрещён.
+  text_character_create_failed: Не удалось создать персонажа.
+  text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
+  text_character_name_required: Имя персонажа не может быть пустым.
+  text_current_password_help: Нужен для сохранения изменений аккаунта.
+  text_console_waiting_logs: Ожидание логов RubyLLM...
+  text_event_period_earlier_this_month: Ранее в этом месяце
+  text_event_period_earlier_this_year: Ранее в этом году
+  text_event_period_future_later: Позже
+  text_event_period_later_this_month: Позже в этом месяце
+  text_event_period_later_this_year: Позже в этом году
+  text_event_period_next_3_months: Позже в ближайшие 3 месяца
+  text_event_period_next_6_months: Позже в ближайшие 6 месяцев
+  text_event_period_older_past: Ранее
+  text_event_period_past_3_months: Ранее за последние 3 месяца
+  text_event_period_past_6_months: Ранее за последние 6 месяцев
+  text_event_period_today: Сегодня
+  text_event_period_tomorrow: Завтра
+  text_event_period_yesterday: Вчера
+  text_fact_period_m0_3: Последние 3 месяца
+  text_fact_period_m12_24: От 12 до 24 месяцев назад
+  text_fact_period_m3_6: От 3 до 6 месяцев назад
+  text_fact_period_m6_12: От 6 до 12 месяцев назад
+  text_fact_period_year: "%{year} год"
+  text_fix_form_errors: Пожалуйста, исправьте ошибки ниже.
+  text_google_sign_in_failed: Не удалось войти через Google. Попробуйте снова.
+  text_greeting_html: "Привет, я %{name} \U0001F642<br> Давай поболтаем!"
+  text_loading: Загрузка...
+  text_models_sync_failed: Не удалось обновить реестр моделей.
+  text_models_sync_finished: 'Реестр моделей обновлен: %{models_count} моделей (%{json_status}).'
+  text_models_sync_json_unchanged: models.json без изменений
+  text_models_sync_json_updated: models.json обновлен
+  text_models_sync_started: Обновление реестра моделей...
+  text_no_character_description: Пока нет описания.
+  text_no_character_events: Пока нет событий.
+  text_no_character_facts: Пока нет фактов.
+  text_no_character_images: Пока нет изображений.
+  text_no_chat_history: Пока нет предыдущих разговоров.
+  text_password_minimum: Минимум %{count} символов
+  text_pending_confirmation: 'Ожидает подтверждения: %{email}'
+  text_profile_updated: Профиль успешно обновлен.
+  text_select_chat_history: Выберите разговор из списка.
+  text_setting_env_override: Задано через переменную окружения (только чтение).
+  text_settings_saved: Настройки сохранены.
+  text_setup_first_user: Пользователей пока нет. Первый зарегистрированный пользователь станет администратором.
+  text_setup_title: Добро пожаловать в Zoe!
+  text_share_character_coming_soon: Возможность поделиться персонажем пока не реализована.
+  text_token_usage_hint: "%{used} / %{context} токенов использовано"
+  time:
+    formats:
+      default: "%d %B %Y, %H:%M"

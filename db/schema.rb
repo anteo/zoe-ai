@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_27_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -186,6 +186,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_000000) do
     t.jsonb "config", default: {}, null: false
     t.datetime "created_at", null: false
     t.string "key", null: false
+    t.text "last_error"
     t.string "name", null: false
     t.string "transport_type", null: false
     t.datetime "updated_at", null: false
@@ -238,6 +239,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_000000) do
     t.index ["modalities"], name: "index_models_on_modalities", using: :gin
     t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
     t.index ["provider"], name: "index_models_on_provider"
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "scope", null: false
+    t.datetime "updated_at", null: false
+    t.string "value"
+    t.index ["scope", "key"], name: "index_settings_on_scope_and_key", unique: true
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
@@ -382,6 +392,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_000000) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin", default: false, null: false
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"

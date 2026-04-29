@@ -10,6 +10,16 @@ module ApplicationHelper
                        .render(text).html_safe
   end
 
+  def turbo_stream_flash_alerts(messages = flash, target: "top-alerts")
+    rendered = Array(messages).filter_map do |type, message|
+      next if message.blank?
+
+      turbo_stream.append(target, component(:flash_alert, type:, message:))
+    end
+
+    safe_join(rendered)
+  end
+
   def avatar_for(url: nil, css_class: "w-8 h-8", content: nil, id: nil)
     css = "rounded-full shrink-0 object-cover shadow-md #{css_class}"
     size_px = avatar_size_px_from_class(css_class)

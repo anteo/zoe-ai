@@ -49,7 +49,7 @@ module AI
 
     def initialize(text, max_messages: nil)
       @text = text
-      @max_messages = max_messages || ENV.fetch("ZOE_MAX_MESSAGE_BUBBLES", DEFAULT_MAX_MESSAGES).to_i
+      @max_messages = max_messages || Setting.ai.max_message_bubbles
     end
 
     def segmenter(source_text)

@@ -1,145 +1,14 @@
 en:
-  date:
-    formats:
-      default: "%Y-%m-%d"
-  time:
-    formats:
-      default: "%a, %d %b %Y %H:%M:%S %z"
-  label_app_title: "Zoe :: your personal assistant"
-  direct_speech: "%{character} said: \"%{text}\""
-  label_send: Send
-  label_token_usage: Tokens
-  label_attach: Attach file(s)
-  placeholder_chat_input: Type your message...
-  label_confirmation: Confirmation
-  label_no: "No"
-  label_yes: "Yes"
-  label_new_conversation: New conversation
-  label_edit: Edit
-  label_resend: Resend
-  label_delete: Delete
-  label_save: Save
-  label_cancel: Cancel
-  confirm_delete_message: Delete this message and all subsequent ones?
-  label_memory_mode_on: Memory on
-  label_memory_mode_off: Memory off
-  label_chat_history: History
-  label_back: Back
-  label_close: Close
-  label_previous_chat: Previous chat
-  label_next_chat: Next chat
-  label_login: Login
-  label_logout: Logout
-  label_register: Register
-  label_profile: Profile
-  label_crop_avatar: Crop avatar
-  label_characters: Characters
-  label_my_character: My character
-  label_chat_partner: Chat partner
-  label_human_characters: Human characters
-  label_ai_characters: AI characters
-  label_other_characters: Other characters
-  label_new: New
-  label_create_character: New character
-  label_edit_character: Edit character
-  label_description: Description
-  label_instructions: Instructions
-  label_facts: Facts
-  label_events: Events
-  label_images: Images
-  label_share_character: Share character
-  label_upload_images: Upload images
-  label_image_description: Image description
-  label_human: Human
-  label_ai: AI
-  label_other: Other
-  label_persistent: Persistent
-  label_time: Time
-  label_date_time: Date/time
-  label_time_past: Past
-  label_time_present: Present
-  label_time_future: Future
-  label_kind: Kind
-  label_fact_kind_attribute: Attribute
-  label_fact_kind_experience: Experience
-  label_fact_kind_belief: Belief
-  label_fact_kind_preference: Preference
-  label_fact_kind_plan: Plan
-  label_author: Author
-  label_importance: Importance
-  label_topic: Topic
-  label_content: Content
-  label_filter_persistent_all: All persistence
-  label_filter_topic_all: All topics
-  label_sort_mentioned_at_desc: Mentioned date (newest)
-  label_sort_mentioned_at_asc: Mentioned date (oldest)
-  label_event: Event
-  label_remove_instruction: Remove instruction
-  placeholder_enter_character_name: Enter character name
-  placeholder_add_instruction: "add instruction..."
-  placeholder_filter_facts_text: Filter facts
-  placeholder_image_description: Add image description
-  label_edit_profile: Edit profile
-  label_email: Email
-  label_password: Password
-  label_password_confirmation: Confirm password
-  label_remove_avatar: Remove avatar
-  label_first_name: First name
-  label_last_name: Last name
-  label_new_password_optional: New password (optional)
-  label_new_password: New password
-  label_confirm_new_password: Confirm new password
-  label_remember_me: Remember me
-  label_forgot_password: Forgot your password?
-  label_send_reset_instructions: Send reset instructions
-  label_change_password: Change password
-  label_confirmation_instructions: Resend confirmation instructions
-  label_unlock_instructions: Resend unlock instructions
-  label_sign_in_with: Sign in with %{provider}
-  label_sign_in_with_google: Sign in with Google
-  label_account_settings: Account settings
-  label_current_password_required: Current password
-  label_cancel_account: Cancel account
-  text_select_chat_history: Select a chat from the list.
-  text_no_chat_history: No previous chats yet.
-  text_greeting_html: Hi, I'm %{name} 🙂<br> Let's chat!
-  text_profile_updated: Profile updated.
-  text_password_minimum: "%{count} characters minimum"
-  text_pending_confirmation: "Waiting confirmation for: %{email}"
-  text_current_password_help: Required to save account changes.
-  text_google_sign_in_failed: Google sign-in failed. Please try again.
-  text_fix_form_errors: Please fix the errors below.
-  text_character_name_required: Character name can't be blank.
-  text_character_create_failed: Failed to create character.
-  text_no_character_description: No description yet.
-  text_no_character_facts: No facts yet.
-  text_no_character_events: No events yet.
-  text_no_character_images: No images yet.
-  text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.
-  text_share_character_coming_soon: Sharing is not implemented yet.
-  text_fact_period_m0_3: Last 3 months
-  text_fact_period_m3_6: 3 to 6 months ago
-  text_fact_period_m6_12: 6 to 12 months ago
-  text_fact_period_m12_24: 12 to 24 months ago
-  text_fact_period_year: Year %{year}
-  text_event_period_today: Today
-  text_event_period_yesterday: Yesterday
-  text_event_period_earlier_this_month: Earlier this month
-  text_event_period_past_3_months: Earlier within the last 3 months
-  text_event_period_past_6_months: Earlier within the last 6 months
-  text_event_period_earlier_this_year: Earlier this year
-  text_event_period_older_past: Earlier
-  text_event_period_tomorrow: Tomorrow
-  text_event_period_later_this_month: Later this month
-  text_event_period_next_3_months: Later within the next 3 months
-  text_event_period_next_6_months: Later within the next 6 months
-  text_event_period_later_this_year: Later this year
-  text_event_period_future_later: Later
-  text_loading: Loading...
-  text_token_usage_hint: "%{used} / %{context} tokens used"
-  confirm_delete_character: Delete this character?
-  confirm_logout: Logout from your account?
   activerecord:
+    attributes:
+      character:
+        name: Name
+      user:
+        email: Email
+        first_name: First name
+        last_name: Last name
+        password: Password
+        password_confirmation: Password confirmation
     models:
       character:
         one: Character
@@ -147,12 +16,188 @@ en:
       user:
         one: User
         other: Users
-    attributes:
-      character:
-        name: Name
-      user:
-        email: Email
-        password: Password
-        password_confirmation: Password confirmation
-        first_name: First name
-        last_name: Last name
+  confirm_delete_character: Delete this character?
+  confirm_delete_message: Delete this message and all subsequent ones?
+  confirm_logout: Logout from your account?
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  direct_speech: '%{character} said: "%{text}"'
+  label_account_settings: Account settings
+  label_ai: AI
+  label_ai_characters: AI characters
+  label_app_title: 'Zoe :: your personal assistant'
+  label_apply: Apply
+  label_attach: Attach file(s)
+  label_author: Author
+  label_back: Back
+  label_cancel: Cancel
+  label_cancel_account: Cancel account
+  label_change_password: Change password
+  label_characters: Characters
+  label_chat_history: History
+  label_chat_partner: Chat partner
+  label_close: Close
+  label_confirm_new_password: Confirm new password
+  label_console: Console
+  label_console_output: Console output
+  label_confirmation: Confirmation
+  label_confirmation_instructions: Resend confirmation
+  label_content: Content
+  label_create_character: New character
+  label_crop_avatar: Crop avatar
+  label_current_password_required: Current password
+  label_date_time: Date/time
+  label_delete: Delete
+  label_description: Description
+  label_edit: Edit
+  label_edit_character: Edit character
+  label_edit_profile: Edit profile
+  label_email: Email
+  label_event: Event
+  label_events: Events
+  label_fact_kind_attribute: Attribute
+  label_fact_kind_belief: Belief
+  label_fact_kind_experience: Experience
+  label_fact_kind_plan: Plan
+  label_fact_kind_preference: Preference
+  label_facts: Facts
+  label_filter_persistent_all: All persistence
+  label_filter_topic_all: All topics
+  label_first_name: First name
+  label_forgot_password: Forgot your password?
+  label_human: Human
+  label_human_characters: Human characters
+  label_image_description: Image description
+  label_images: Images
+  label_importance: Importance
+  label_instructions: Instructions
+  label_kind: Kind
+  label_last_name: Last name
+  label_login: Login
+  label_logout: Logout
+  label_memory_mode_off: Memory off
+  label_memory_mode_on: Memory on
+  label_my_character: My character
+  label_new: New
+  label_new_conversation: New conversation
+  label_new_password: New password
+  label_new_password_optional: New password (optional)
+  label_next_chat: Next chat
+  label_no: 'No'
+  label_other: Other
+  label_other_characters: Other characters
+  label_password: Password
+  label_password_confirmation: Confirm password
+  label_persistent: Persistent
+  label_previous_chat: Previous chat
+  label_profile: Profile
+  label_register: Register
+  label_remember_me: Remember me
+  label_remove_avatar: Remove avatar
+  label_remove_instruction: Remove instruction
+  label_resend: Resend
+  label_save: Save
+  label_send: Send
+  label_send_reset_instructions: Send reset instructions
+  label_settings: Settings
+  label_settings_providers: Providers
+  label_share_character: Share character
+  label_sign_in_with: Sign in with %{provider}
+  label_sign_in_with_google: Sign in with Google
+  label_sort_mentioned_at_asc: Mentioned date (oldest)
+  label_sort_mentioned_at_desc: Mentioned date (newest)
+  label_time: Time
+  label_time_future: Future
+  label_time_past: Past
+  label_time_present: Present
+  label_token_usage: Tokens
+  label_topic: Topic
+  label_unlock_instructions: Resend unlock instructions
+  label_upload_images: Upload images
+  label_yes: 'Yes'
+  placeholder_add_instruction: add instruction...
+  placeholder_chat_input: Type your message...
+  placeholder_enter_character_name: Enter character name
+  placeholder_filter_facts_text: Filter facts
+  placeholder_image_description: Add image description
+  settings:
+    ai:
+      providers:
+        anthropic:
+          api_key: Anthropic API Key
+        bedrock:
+          api_key: Bedrock API Key
+          region: Bedrock Region
+          secret_key: Bedrock Secret Key
+          session_token: Bedrock Session Token
+        deepseek:
+          api_key: DeepSeek API Key
+        gemini:
+          api_key: Gemini API Key
+        mistral:
+          api_key: Mistral API Key
+        ollama:
+          api_base: Ollama API Base URL
+        openai:
+          api_key: OpenAI API Key
+        openrouter:
+          api_key: OpenRouter API Key
+        perplexity:
+          api_key: Perplexity API Key
+        vertexai:
+          location: Vertex AI Location
+          project_id: Vertex AI Project ID
+        xai:
+          api_key: xAI API Key
+  text_access_denied: Access denied.
+  text_character_create_failed: Failed to create character.
+  text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.
+  text_character_name_required: Character name can't be blank.
+  text_current_password_help: Required to save account changes.
+  text_console_waiting_logs: Waiting for RubyLLM logs...
+  text_event_period_earlier_this_month: Earlier this month
+  text_event_period_earlier_this_year: Earlier this year
+  text_event_period_future_later: Later
+  text_event_period_later_this_month: Later this month
+  text_event_period_later_this_year: Later this year
+  text_event_period_next_3_months: Later within the next 3 months
+  text_event_period_next_6_months: Later within the next 6 months
+  text_event_period_older_past: Earlier
+  text_event_period_past_3_months: Earlier within the last 3 months
+  text_event_period_past_6_months: Earlier within the last 6 months
+  text_event_period_today: Today
+  text_event_period_tomorrow: Tomorrow
+  text_event_period_yesterday: Yesterday
+  text_fact_period_m0_3: Last 3 months
+  text_fact_period_m12_24: 12 to 24 months ago
+  text_fact_period_m3_6: 3 to 6 months ago
+  text_fact_period_m6_12: 6 to 12 months ago
+  text_fact_period_year: Year %{year}
+  text_fix_form_errors: Please fix the errors below.
+  text_google_sign_in_failed: Google sign-in failed. Please try again.
+  text_greeting_html: "Hi, I'm %{name} \U0001F642<br> Let's chat!"
+  text_loading: Loading...
+  text_models_sync_failed: Failed to update model registry.
+  text_models_sync_finished: 'Model registry updated: %{models_count} models (%{json_status}).'
+  text_models_sync_json_unchanged: models.json unchanged
+  text_models_sync_json_updated: models.json refreshed
+  text_models_sync_started: Updating model registry...
+  text_no_character_description: No description yet.
+  text_no_character_events: No events yet.
+  text_no_character_facts: No facts yet.
+  text_no_character_images: No images yet.
+  text_no_chat_history: No previous chats yet.
+  text_password_minimum: "%{count} characters minimum"
+  text_pending_confirmation: 'Waiting confirmation for: %{email}'
+  text_profile_updated: Profile updated.
+  text_select_chat_history: Select a chat from the list.
+  text_setting_env_override: Set via environment variable (read-only).
+  text_settings_saved: Settings saved.
+  text_setup_first_user: No accounts exist yet. The first registered user becomes the administrator.
+  text_setup_title: Welcome to Zoe!
+  text_share_character_coming_soon: Sharing is not implemented yet.
+  text_token_usage_hint: "%{used} / %{context} tokens used"
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"

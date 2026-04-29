@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   root "chats#show"
 
   resource :profile, only: [ :show, :update ]
+  resource :settings, only: [ :show, :update ] do
+    get "section/:section" => "settings#section", as: :section
+  end
 
   resources :chats, only: [:show, :new, :destroy] do
     collection do

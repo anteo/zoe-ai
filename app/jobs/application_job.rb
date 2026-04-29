@@ -1,6 +1,9 @@
 class ApplicationJob < ActiveJob::Base
   include MissionControl
 
+  before_perform :sync_settings
+  around_perform :with_request_store
+
   # Automatically retry jobs that encountered a deadlock
   # retry_on ActiveRecord::Deadlocked
 
@@ -36,5 +39,21 @@ class ApplicationJob < ActiveJob::Base
       chat,
       target: "message-placeholder-#{chat.id}",
     )
+  end
+
+  private
+
+  def sync_settings
+    Setting.sync_hooks_if_stale!(context: { source: :job, job: self.class.name })
+  end
+
+  def with_request_store
+    return yield unless defined?(RequestStore)
+
+    RequestStore.begin!
+    yield
+  ensure
+    RequestStore.end!
+    RequestStore.clear!
   end
 end

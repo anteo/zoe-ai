@@ -2,8 +2,8 @@ module AI::Actors
   class DescribeEvents < Actor
     input :character, type: Character
     input :mode, default: :xml
-    input :maximum_count, default: -> { ENV.fetch("ZOE_EVENTS_MAXIMUM_COUNT", 20).to_i }
-    input :period_limit, default: -> { ENV.fetch("ZOE_EVENTS_PERIOD_LIMIT", 5).to_i }
+    input :maximum_count, default: -> { Setting.events.maximum_count }
+    input :period_limit,  default: -> { Setting.events.period_limit }
     input :today, default: -> { Date.current }
     output :description
     output :groups

@@ -980,12 +980,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "anthropic",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": false,
-      "last_updated": "2026-04-16",
       "cost": {
         "input": 5,
         "output": 25,
@@ -996,7 +990,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2026-01-31"
+      "source": "models.dev",
+      "knowledge": "2026-01-31",
+      "attachment": true,
+      "provider_id": "anthropic",
+      "temperature": false,
+      "last_updated": "2026-04-16",
+      "open_weights": false
     }
   },
   {
@@ -2072,12 +2072,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": false,
-      "last_updated": "2026-04-16",
       "cost": {
         "input": 5,
         "output": 25,
@@ -2088,7 +2082,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2026-01-31"
+      "source": "models.dev",
+      "knowledge": "2026-01-31",
+      "attachment": true,
+      "provider_id": "amazon-bedrock",
+      "temperature": false,
+      "last_updated": "2026-04-16",
+      "open_weights": false
     }
   },
   {
@@ -2286,12 +2286,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2026-02-05",
       "cost": {
         "input": 16.5,
         "output": 82.5,
@@ -2302,7 +2296,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2025-05"
+      "source": "models.dev",
+      "knowledge": "2025-05",
+      "attachment": true,
+      "provider_id": "amazon-bedrock",
+      "temperature": true,
+      "last_updated": "2026-02-05",
+      "open_weights": false
     }
   },
   {
@@ -2340,12 +2340,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2026-02-17",
       "cost": {
         "input": 3.3,
         "output": 16.5,
@@ -2356,7 +2350,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2025-08"
+      "source": "models.dev",
+      "knowledge": "2025-08",
+      "attachment": true,
+      "provider_id": "amazon-bedrock",
+      "temperature": true,
+      "last_updated": "2026-02-17",
+      "open_weights": false
     }
   },
   {
@@ -2698,12 +2698,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": false,
-      "last_updated": "2026-04-16",
       "cost": {
         "input": 5,
         "output": 25,
@@ -2714,7 +2708,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2026-01-31"
+      "source": "models.dev",
+      "knowledge": "2026-01-31",
+      "attachment": true,
+      "provider_id": "amazon-bedrock",
+      "temperature": false,
+      "last_updated": "2026-04-16",
+      "open_weights": false
     }
   },
   {
@@ -3074,12 +3074,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": false,
-      "last_updated": "2026-04-16",
       "cost": {
         "input": 5,
         "output": 25,
@@ -3090,7 +3084,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2026-01-31"
+      "source": "models.dev",
+      "knowledge": "2026-01-31",
+      "attachment": true,
+      "provider_id": "amazon-bedrock",
+      "temperature": false,
+      "last_updated": "2026-04-16",
+      "open_weights": false
     }
   },
   {
@@ -3987,12 +3987,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-03-18",
       "cost": {
         "input": 0.3,
         "output": 1.2
@@ -4000,7 +3994,13 @@
       "limit": {
         "context": 196608,
         "output": 98304
-      }
+      },
+      "source": "models.dev",
+      "attachment": false,
+      "provider_id": "amazon-bedrock",
+      "temperature": true,
+      "last_updated": "2026-03-18",
+      "open_weights": true
     }
   },
   {
@@ -4693,12 +4693,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-03-11",
       "cost": {
         "input": 0.15,
         "output": 0.65
@@ -4706,7 +4700,13 @@
       "limit": {
         "context": 262144,
         "output": 131072
-      }
+      },
+      "source": "models.dev",
+      "attachment": false,
+      "provider_id": "amazon-bedrock",
+      "temperature": true,
+      "last_updated": "2026-03-11",
+      "open_weights": true
     }
   },
   {
@@ -5113,12 +5113,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-02-06",
       "cost": {
         "input": 0.22,
         "output": 1.8
@@ -5126,7 +5120,13 @@
       "limit": {
         "context": 131072,
         "output": 65536
-      }
+      },
+      "source": "models.dev",
+      "attachment": false,
+      "provider_id": "amazon-bedrock",
+      "temperature": true,
+      "last_updated": "2026-02-06",
+      "open_weights": true
     }
   },
   {
@@ -5526,12 +5526,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": false,
-      "attachment": true,
-      "temperature": false,
-      "last_updated": "2026-04-16",
       "cost": {
         "input": 5,
         "output": 25,
@@ -5542,7 +5536,13 @@
         "context": 1000000,
         "output": 128000
       },
-      "knowledge": "2026-01-31"
+      "source": "models.dev",
+      "knowledge": "2026-01-31",
+      "attachment": true,
+      "provider_id": "amazon-bedrock",
+      "temperature": false,
+      "last_updated": "2026-04-16",
+      "open_weights": false
     }
   },
   {
@@ -5924,15 +5924,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "amazon-bedrock",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-03-18",
-      "interleaved": {
-        "field": "reasoning_content"
-      },
       "cost": {
         "input": 1,
         "output": 3.2
@@ -5940,7 +5931,16 @@
       "limit": {
         "context": 202752,
         "output": 101376
-      }
+      },
+      "source": "models.dev",
+      "attachment": false,
+      "interleaved": {
+        "field": "reasoning_content"
+      },
+      "provider_id": "amazon-bedrock",
+      "temperature": true,
+      "last_updated": "2026-03-18",
+      "open_weights": true
     }
   },
   {
@@ -5949,8 +5949,8 @@
     "provider": "deepseek",
     "family": "deepseek",
     "created_at": "2025-12-01 00:00:00 UTC",
-    "context_window": 131072,
-    "max_output_tokens": 8192,
+    "context_window": 1000000,
+    "max_output_tokens": 384000,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -5966,8 +5966,8 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.28,
-          "output_per_million": 0.42,
+          "input_per_million": 0.14,
+          "output_per_million": 0.28,
           "cached_input_per_million": 0.028
         }
       }
@@ -5980,13 +5980,13 @@
       "temperature": true,
       "last_updated": "2026-02-28",
       "cost": {
-        "input": 0.28,
-        "output": 0.42,
+        "input": 0.14,
+        "output": 0.28,
         "cache_read": 0.028
       },
       "limit": {
-        "context": 131072,
-        "output": 8192
+        "context": 1000000,
+        "output": 384000
       },
       "knowledge": "2025-09"
     }
@@ -5997,8 +5997,8 @@
     "provider": "deepseek",
     "family": "deepseek-thinking",
     "created_at": "2025-12-01 00:00:00 UTC",
-    "context_window": 128000,
-    "max_output_tokens": 64000,
+    "context_window": 1000000,
+    "max_output_tokens": 384000,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -6015,8 +6015,8 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.28,
-          "output_per_million": 0.42,
+          "input_per_million": 0.14,
+          "output_per_million": 0.28,
           "cached_input_per_million": 0.028
         }
       }
@@ -6032,13 +6032,13 @@
         "field": "reasoning_content"
       },
       "cost": {
-        "input": 0.28,
-        "output": 0.42,
+        "input": 0.14,
+        "output": 0.28,
         "cache_read": 0.028
       },
       "limit": {
-        "context": 128000,
-        "output": 64000
+        "context": 1000000,
+        "output": 384000
       },
       "knowledge": "2025-09"
     }
@@ -8093,12 +8093,6 @@
     ],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2025-03-13",
       "cost": {
         "input": 0,
         "output": 0
@@ -8107,7 +8101,13 @@
         "context": 32768,
         "output": 8192
       },
-      "knowledge": "2024-10"
+      "source": "models.dev",
+      "knowledge": "2024-10",
+      "attachment": true,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2025-03-13",
+      "open_weights": true
     }
   },
   {
@@ -8135,12 +8135,6 @@
     ],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2025-03-12",
       "cost": {
         "input": 0,
         "output": 0
@@ -8149,7 +8143,13 @@
         "context": 131072,
         "output": 8192
       },
-      "knowledge": "2024-10"
+      "source": "models.dev",
+      "knowledge": "2024-10",
+      "attachment": true,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2025-03-12",
+      "open_weights": true
     }
   },
   {
@@ -8175,12 +8175,6 @@
     ],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2025-03-13",
       "cost": {
         "input": 0,
         "output": 0
@@ -8189,7 +8183,13 @@
         "context": 32768,
         "output": 8192
       },
-      "knowledge": "2024-10"
+      "source": "models.dev",
+      "knowledge": "2024-10",
+      "attachment": true,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2025-03-13",
+      "open_weights": true
     }
   },
   {
@@ -8212,12 +8212,6 @@
     "capabilities": [],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2025-07-09",
       "cost": {
         "input": 0,
         "output": 0
@@ -8226,7 +8220,13 @@
         "context": 8192,
         "output": 2000
       },
-      "knowledge": "2024-10"
+      "source": "models.dev",
+      "knowledge": "2024-10",
+      "attachment": true,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2025-07-09",
+      "open_weights": true
     }
   },
   {
@@ -8249,12 +8249,6 @@
     "capabilities": [],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2025-05-20",
       "cost": {
         "input": 0,
         "output": 0
@@ -8263,7 +8257,13 @@
         "context": 8192,
         "output": 2000
       },
-      "knowledge": "2024-10"
+      "source": "models.dev",
+      "knowledge": "2024-10",
+      "attachment": true,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2025-05-20",
+      "open_weights": true
     }
   },
   {
@@ -8292,16 +8292,16 @@
     ],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-04-02",
       "limit": {
         "context": 256000,
         "output": 8192
-      }
+      },
+      "source": "models.dev",
+      "attachment": false,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2026-04-02",
+      "open_weights": true
     }
   },
   {
@@ -8330,16 +8330,16 @@
     ],
     "pricing": {},
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "google",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-04-02",
       "limit": {
         "context": 256000,
         "output": 8192
-      }
+      },
+      "source": "models.dev",
+      "attachment": false,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2026-04-02",
+      "open_weights": true
     }
   },
   {
@@ -9299,12 +9299,6 @@
       }
     },
     "metadata": {
-      "source": "models.dev",
-      "provider_id": "mistral",
-      "open_weights": true,
-      "attachment": true,
-      "temperature": true,
-      "last_updated": "2026-03-16",
       "cost": {
         "input": 0.15,
         "output": 0.6
@@ -9313,7 +9307,13 @@
         "context": 256000,
         "output": 256000
       },
-      "knowledge": "2025-06"
+      "source": "models.dev",
+      "knowledge": "2025-06",
+      "attachment": true,
+      "provider_id": "mistral",
+      "temperature": true,
+      "last_updated": "2026-03-16",
+      "open_weights": true
     }
   },
   {
@@ -9597,35 +9597,6 @@
       "temperature": true,
       "last_updated": "2024-11-04",
       "open_weights": true
-    }
-  },
-  {
-    "id": "evilfreelancer/FRIDA:latest",
-    "name": "evilfreelancer/FRIDA:latest",
-    "provider": "ollama",
-    "family": "ollama",
-    "created_at": "2025-12-12 07:16:12 UTC",
-    "context_window": null,
-    "max_output_tokens": null,
-    "knowledge_cutoff": null,
-    "modalities": {
-      "input": [
-        "text",
-        "image"
-      ],
-      "output": [
-        "text"
-      ]
-    },
-    "capabilities": [
-      "streaming",
-      "function_calling",
-      "structured_output",
-      "vision"
-    ],
-    "pricing": {},
-    "metadata": {
-      "owned_by": "evilfreelancer"
     }
   },
   {
@@ -12749,7 +12720,7 @@
     "family": "gpt",
     "created_at": "2026-04-23 00:00:00 UTC",
     "context_window": 1050000,
-    "max_output_tokens": 130000,
+    "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-12-01",
     "modalities": {
       "input": [
@@ -12797,8 +12768,8 @@
       },
       "limit": {
         "context": 1050000,
-        "input": 920000,
-        "output": 130000
+        "input": 922000,
+        "output": 128000
       },
       "knowledge": "2025-12-01"
     }
@@ -12838,35 +12809,60 @@
   },
   {
     "id": "gpt-5.5-pro",
-    "name": "gpt-5.5-pro",
+    "name": "GPT-5.5 Pro",
     "provider": "openai",
-    "family": null,
-    "created_at": "2026-04-22 21:45:49 UTC",
-    "context_window": 128000,
-    "max_output_tokens": 400000,
-    "knowledge_cutoff": null,
+    "family": "gpt-pro",
+    "created_at": "2026-04-23 00:00:00 UTC",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-12-01",
     "modalities": {
-      "input": [],
-      "output": []
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
     },
     "capabilities": [
       "function_calling",
       "structured_output",
-      "vision",
-      "reasoning"
+      "reasoning",
+      "vision"
     ],
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 1.25,
-          "output_per_million": 10.0,
-          "cached_input_per_million": 0.125
+          "input_per_million": 30,
+          "output_per_million": 180
         }
       }
     },
     "metadata": {
       "object": "model",
-      "owned_by": "system"
+      "owned_by": "system",
+      "source": "models.dev",
+      "provider_id": "openai",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": false,
+      "last_updated": "2026-04-23",
+      "cost": {
+        "input": 30,
+        "output": 180,
+        "context_over_200k": {
+          "input": 60,
+          "output": 270
+        }
+      },
+      "limit": {
+        "context": 1050000,
+        "input": 922000,
+        "output": 128000
+      },
+      "knowledge": "2025-12-01"
     }
   },
   {
@@ -16108,7 +16104,7 @@
       "top_provider": {
         "context_length": 1000000,
         "max_completion_tokens": 128000,
-        "is_moderated": true
+        "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
@@ -16270,7 +16266,7 @@
       "top_provider": {
         "context_length": 1000000,
         "max_completion_tokens": 128000,
-        "is_moderated": true
+        "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
@@ -16453,7 +16449,7 @@
       "top_provider": {
         "context_length": 1000000,
         "max_completion_tokens": 64000,
-        "is_moderated": false
+        "is_moderated": true
       },
       "per_request_limits": null,
       "supported_parameters": [
@@ -19469,6 +19465,7 @@
         "reasoning",
         "repetition_penalty",
         "response_format",
+        "seed",
         "stop",
         "structured_outputs",
         "temperature",
@@ -19621,7 +19618,7 @@
         "instruct_type": null
       },
       "top_provider": {
-        "context_length": 1000000,
+        "context_length": 1048576,
         "max_completion_tokens": 8192,
         "is_moderated": false
       },
@@ -20652,32 +20649,34 @@
   },
   {
     "id": "google/gemini-3.1-flash-image-preview",
-    "name": "Google: Nano Banana 2 (Gemini 3.1 Flash Image Preview)",
+    "name": "Gemini 3.1 Flash Image Preview (Nano Banana 2)",
     "provider": "openrouter",
-    "family": "google",
-    "created_at": "2026-02-26 15:25:58 UTC",
+    "family": "gemini-flash",
+    "created_at": "2026-02-26 00:00:00 UTC",
     "context_window": 65536,
     "max_output_tokens": 65536,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
-        "image",
-        "text"
+        "text",
+        "image"
       ],
       "output": [
-        "image",
-        "text"
+        "text",
+        "image"
       ]
     },
     "capabilities": [
-      "streaming",
-      "structured_output"
+      "structured_output",
+      "reasoning",
+      "vision",
+      "streaming"
     ],
     "pricing": {
       "text_tokens": {
         "standard": {
           "input_per_million": 0.5,
-          "output_per_million": 3.0
+          "output_per_million": 3
         }
       }
     },
@@ -20712,7 +20711,22 @@
         "structured_outputs",
         "temperature",
         "top_p"
-      ]
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-02-26",
+      "cost": {
+        "input": 0.5,
+        "output": 3
+      },
+      "limit": {
+        "context": 65536,
+        "output": 65536
+      },
+      "knowledge": "2025-01"
     }
   },
   {
@@ -22553,8 +22567,8 @@
     }
   },
   {
-    "id": "inclusionai/ling-2.6-flash:free",
-    "name": "inclusionAI: Ling-2.6-flash (free)",
+    "id": "inclusionai/ling-2.6-flash",
+    "name": "inclusionAI: Ling-2.6-flash",
     "provider": "openrouter",
     "family": "inclusionai",
     "created_at": "2026-04-21 18:24:46 UTC",
@@ -22574,7 +22588,15 @@
       "function_calling",
       "structured_output"
     ],
-    "pricing": {},
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.08,
+          "output_per_million": 0.24,
+          "cached_input_per_million": 0.016
+        }
+      }
+    },
     "metadata": {
       "description": "Ling-2.6-flash is an instant (instruct) model from inclusionAI with 104B total parameters and 7.4B active parameters, designed for real-world agents that require fast responses, strong execution, and high token efficiency....",
       "architecture": {
@@ -25926,7 +25948,7 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.01,
+          "input_per_million": 0.02,
           "output_per_million": 0.03
         }
       }
@@ -28041,6 +28063,82 @@
         "output": 256000
       },
       "knowledge": "2025-11"
+    }
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "name": "Nemotron 3 Nano Omni (free)",
+    "provider": "openrouter",
+    "family": "nemotron",
+    "created_at": "2026-04-28 00:00:00 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "vision",
+      "streaming"
+    ],
+    "pricing": {},
+    "metadata": {
+      "description": "NVIDIA Nemotron™ 3 Nano Omni is a 30B-A3B open multimodal model designed to function as a perception and context sub-agent in enterprise agent systems. It accepts text, image, video, and...",
+      "architecture": {
+        "modality": "text+image+audio+video->text",
+        "input_modalities": [
+          "text",
+          "audio",
+          "image",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 256000,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "seed",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": true,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-04-28",
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 256000,
+        "output": 65536
+      }
     }
   },
   {
@@ -31948,7 +32046,7 @@
     "family": "gpt",
     "created_at": "2026-04-23 00:00:00 UTC",
     "context_window": 1050000,
-    "max_output_tokens": 130000,
+    "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-12-01",
     "modalities": {
       "input": [
@@ -31999,6 +32097,7 @@
       "per_request_limits": null,
       "supported_parameters": [
         "include_reasoning",
+        "max_completion_tokens",
         "max_tokens",
         "reasoning",
         "response_format",
@@ -32025,41 +32124,43 @@
       },
       "limit": {
         "context": 1050000,
-        "input": 920000,
-        "output": 130000
+        "input": 922000,
+        "output": 128000
       },
       "knowledge": "2025-12-01"
     }
   },
   {
     "id": "openai/gpt-5.5-pro",
-    "name": "OpenAI: GPT-5.5 Pro",
+    "name": "GPT-5.5 Pro",
     "provider": "openrouter",
-    "family": "openai",
-    "created_at": "2026-04-24 17:31:36 UTC",
+    "family": "gpt-pro",
+    "created_at": "2026-04-23 00:00:00 UTC",
     "context_window": 1050000,
     "max_output_tokens": 128000,
-    "knowledge_cutoff": null,
+    "knowledge_cutoff": "2025-12-01",
     "modalities": {
       "input": [
-        "file",
+        "text",
         "image",
-        "text"
+        "pdf"
       ],
       "output": [
         "text"
       ]
     },
     "capabilities": [
-      "streaming",
       "function_calling",
-      "structured_output"
+      "structured_output",
+      "reasoning",
+      "vision",
+      "streaming"
     ],
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 30.0,
-          "output_per_million": 180.0
+          "input_per_million": 30,
+          "output_per_million": 180
         }
       }
     },
@@ -32093,7 +32194,27 @@
         "structured_outputs",
         "tool_choice",
         "tools"
-      ]
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": false,
+      "last_updated": "2026-04-23",
+      "cost": {
+        "input": 30,
+        "output": 180,
+        "context_over_200k": {
+          "input": 60,
+          "output": 270
+        }
+      },
+      "limit": {
+        "context": 1050000,
+        "input": 922000,
+        "output": 128000
+      },
+      "knowledge": "2025-12-01"
     }
   },
   {
@@ -33607,9 +33728,9 @@
     "name": "Pareto Code Router",
     "provider": "openrouter",
     "family": "openrouter",
-    "created_at": "2026-04-21 05:05:00 UTC",
+    "created_at": "2026-04-21 00:00:00 UTC",
     "context_window": 200000,
-    "max_output_tokens": null,
+    "max_output_tokens": 200000,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -33620,6 +33741,9 @@
       ]
     },
     "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
       "streaming"
     ],
     "pricing": {},
@@ -33642,7 +33766,17 @@
         "is_moderated": false
       },
       "per_request_limits": null,
-      "supported_parameters": []
+      "supported_parameters": [],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-04-21",
+      "limit": {
+        "context": 200000,
+        "output": 200000
+      }
     }
   },
   {
@@ -33952,6 +34086,108 @@
     }
   },
   {
+    "id": "poolside/laguna-m.1:free",
+    "name": "Poolside: Laguna M.1 (free)",
+    "provider": "openrouter",
+    "family": "poolside",
+    "created_at": "2026-04-28 15:01:44 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling"
+    ],
+    "pricing": {},
+    "metadata": {
+      "description": "Laguna M.1 is the flagship coding agent model from [Poolside](https://poolside.ai), optimized for complex software engineering tasks. Designed for agentic coding workflows, it supports tool calling and reasoning, with a 128K...",
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 131072,
+        "max_completion_tokens": 8192,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "temperature",
+        "tool_choice",
+        "tools"
+      ]
+    }
+  },
+  {
+    "id": "poolside/laguna-xs.2:free",
+    "name": "Poolside: Laguna XS.2 (free)",
+    "provider": "openrouter",
+    "family": "poolside",
+    "created_at": "2026-04-28 15:20:04 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling"
+    ],
+    "pricing": {},
+    "metadata": {
+      "description": "Laguna XS.2 is the second-generation model in the XS size class from [Poolside](https://poolside.ai), their efficient coding agent series. It combines tool calling and reasoning capabilities with a compact footprint, offering...",
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 131072,
+        "max_completion_tokens": 8192,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "temperature",
+        "tool_choice",
+        "tools"
+      ]
+    }
+  },
+  {
     "id": "prime-intellect/intellect-3",
     "name": "Intellect 3",
     "provider": "openrouter",
@@ -34059,8 +34295,8 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.12,
-          "output_per_million": 0.39
+          "input_per_million": 0.36,
+          "output_per_million": 0.39999999999999997
         }
       }
     },
@@ -37389,6 +37625,358 @@
     }
   },
   {
+    "id": "qwen/qwen3.5-plus-20260420",
+    "name": "Qwen: Qwen3.5 Plus 2026-04-20",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2026-04-27 03:42:48 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.39999999999999997,
+          "output_per_million": 2.4
+        }
+      }
+    },
+    "metadata": {
+      "description": "Qwen3.5 Plus (April 2026) is a large-scale multimodal language model from Alibaba. It accepts text, image, and video input and produces text output, with a 1M token context window. This...",
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen3",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1000000,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "qwen/qwen3.6-27b",
+    "name": "Qwen: Qwen3.6 27B",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2026-04-27 01:57:44 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "predicted_outputs"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.325,
+          "output_per_million": 3.25
+        }
+      }
+    },
+    "metadata": {
+      "description": "Qwen3.6 27B is a dense 27-billion-parameter language model from the Qwen Team at Alibaba, released in April 2026. It features hybrid multimodal capabilities — accepting text, image, and video inputs...",
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen3",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 256000,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "qwen/qwen3.6-35b-a3b",
+    "name": "Qwen: Qwen3.6 35B A3B",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2026-04-27 03:24:15 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "structured_output",
+      "predicted_outputs"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.16119999999999998,
+          "output_per_million": 0.9652499999999999,
+          "cached_input_per_million": 0.16119999999999998
+        }
+      }
+    },
+    "metadata": {
+      "description": "Qwen3.6-35B-A3B is an open-weight multimodal model from Alibaba Cloud with 35 billion total parameters and 3 billion active parameters per token. It uses a hybrid sparse mixture-of-experts architecture combining Gated...",
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 262144,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "top_k",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "qwen/qwen3.6-flash",
+    "name": "Qwen: Qwen3.6 Flash",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2026-04-27 03:42:42 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.25,
+          "output_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "description": "Qwen3.6 Flash is a fast, efficient language model from Alibaba's Qwen 3.6 series. It supports text, image, and video input with a 1M token context window. Tiered pricing kicks in...",
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen3",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1000000,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "qwen/qwen3.6-max-preview",
+    "name": "Qwen: Qwen3.6 Max Preview",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2026-04-27 03:24:02 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.04,
+          "output_per_million": 6.24
+        }
+      }
+    },
+    "metadata": {
+      "description": "Qwen3.6-Max-Preview is a proprietary frontier model from Alibaba Cloud built on a sparse mixture-of-experts architecture with approximately 1 trillion total parameters. It is optimized for agentic coding, tool use, and...",
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 262144,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p"
+      ]
+    }
+  },
+  {
     "id": "qwen/qwen3.6-plus",
     "name": "Qwen3.6 Plus",
     "provider": "openrouter",
@@ -37471,67 +38059,6 @@
         "output": 65536
       },
       "knowledge": "2025-04"
-    }
-  },
-  {
-    "id": "qwen/qwq-32b",
-    "name": "Qwen: QwQ 32B",
-    "provider": "openrouter",
-    "family": "qwen",
-    "created_at": "2025-03-05 21:06:54 UTC",
-    "context_window": 131072,
-    "max_output_tokens": 131072,
-    "knowledge_cutoff": null,
-    "modalities": {
-      "input": [
-        "text"
-      ],
-      "output": [
-        "text"
-      ]
-    },
-    "capabilities": [
-      "streaming",
-      "function_calling"
-    ],
-    "pricing": {
-      "text_tokens": {
-        "standard": {
-          "input_per_million": 0.15,
-          "output_per_million": 0.58
-        }
-      }
-    },
-    "metadata": {
-      "description": "QwQ is the reasoning model of the Qwen series. Compared with conventional instruction-tuned models, QwQ, which is capable of thinking and reasoning, can achieve significantly enhanced performance in downstream tasks,...",
-      "architecture": {
-        "modality": "text->text",
-        "input_modalities": [
-          "text"
-        ],
-        "output_modalities": [
-          "text"
-        ],
-        "tokenizer": "Qwen",
-        "instruct_type": "qwq"
-      },
-      "top_provider": {
-        "context_length": 131072,
-        "max_completion_tokens": 131072,
-        "is_moderated": false
-      },
-      "per_request_limits": null,
-      "supported_parameters": [
-        "frequency_penalty",
-        "include_reasoning",
-        "max_tokens",
-        "reasoning",
-        "temperature",
-        "tool_choice",
-        "tools",
-        "top_k",
-        "top_p"
-      ]
     }
   },
   {
@@ -40199,34 +40726,32 @@
   },
   {
     "id": "xiaomi/mimo-v2.5",
-    "name": "Xiaomi: MiMo-V2.5",
+    "name": "MiMo-V2.5",
     "provider": "openrouter",
-    "family": "xiaomi",
-    "created_at": "2026-04-22 16:11:09 UTC",
+    "family": "mimo",
+    "created_at": "2026-04-22 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 131072,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
-        "text",
-        "audio",
-        "image",
-        "video"
+        "text"
       ],
       "output": [
         "text"
       ]
     },
     "capabilities": [
-      "streaming",
       "function_calling",
+      "reasoning",
+      "streaming",
       "structured_output"
     ],
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.39999999999999997,
-          "output_per_million": 2.0,
+          "input_per_million": 0.4,
+          "output_per_million": 2,
           "cached_input_per_million": 0.08
         }
       }
@@ -40265,37 +40790,67 @@
         "tool_choice",
         "tools",
         "top_p"
-      ]
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-04-22",
+      "interleaved": {
+        "field": "reasoning_content"
+      },
+      "cost": {
+        "input": 0.4,
+        "output": 2,
+        "cache_read": 0.08,
+        "context_over_200k": {
+          "input": 0.8,
+          "output": 4,
+          "cache_read": 0.16
+        }
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 131072
+      },
+      "knowledge": "2024-12"
     }
   },
   {
     "id": "xiaomi/mimo-v2.5-pro",
-    "name": "Xiaomi: MiMo-V2.5-Pro",
+    "name": "MiMo-V2.5-Pro",
     "provider": "openrouter",
-    "family": "xiaomi",
-    "created_at": "2026-04-22 16:11:13 UTC",
+    "family": "mimo",
+    "created_at": "2026-04-22 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 131072,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
-        "text"
+        "text",
+        "image",
+        "audio",
+        "video",
+        "pdf"
       ],
       "output": [
         "text"
       ]
     },
     "capabilities": [
-      "streaming",
       "function_calling",
+      "reasoning",
+      "vision",
+      "streaming",
       "structured_output"
     ],
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 1.0,
-          "output_per_million": 3.0,
-          "cached_input_per_million": 0.19999999999999998
+          "input_per_million": 1,
+          "output_per_million": 3,
+          "cached_input_per_million": 0.2
         }
       }
     },
@@ -40330,7 +40885,31 @@
         "tool_choice",
         "tools",
         "top_p"
-      ]
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-04-22",
+      "interleaved": {
+        "field": "reasoning_content"
+      },
+      "cost": {
+        "input": 1,
+        "output": 3,
+        "cache_read": 0.2,
+        "context_over_200k": {
+          "input": 2,
+          "output": 6,
+          "cache_read": 0.4
+        }
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 131072
+      },
+      "knowledge": "2024-12"
     }
   },
   {
@@ -41447,6 +42026,73 @@
     }
   },
   {
+    "id": "~anthropic/claude-haiku-latest",
+    "name": "Anthropic Claude Haiku Latest",
+    "provider": "openrouter",
+    "family": "~anthropic",
+    "created_at": "2026-04-27 19:34:52 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "image",
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.0,
+          "output_per_million": 5.0,
+          "cached_input_per_million": 0.09999999999999999
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the Anthropic Claude Haiku family.",
+      "architecture": {
+        "modality": "text+image->text",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 200000,
+        "max_completion_tokens": 64000,
+        "is_moderated": true
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ]
+    }
+  },
+  {
     "id": "~anthropic/claude-opus-latest",
     "name": "Anthropic: Claude Opus Latest",
     "provider": "openrouter",
@@ -41495,7 +42141,7 @@
       "top_provider": {
         "context_length": 1000000,
         "max_completion_tokens": 128000,
-        "is_moderated": true
+        "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
@@ -41508,6 +42154,435 @@
         "tool_choice",
         "tools",
         "verbosity"
+      ]
+    }
+  },
+  {
+    "id": "~anthropic/claude-sonnet-latest",
+    "name": "Anthropic Claude Sonnet Latest",
+    "provider": "openrouter",
+    "family": "~anthropic",
+    "created_at": "2026-04-27 19:32:48 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3.0,
+          "output_per_million": 15.0,
+          "cached_input_per_million": 0.3
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the Anthropic Claude Sonnet family.",
+      "architecture": {
+        "modality": "text+image->text",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1000000,
+        "max_completion_tokens": 128000,
+        "is_moderated": true
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p",
+        "verbosity"
+      ]
+    }
+  },
+  {
+    "id": "~google/gemini-flash-latest",
+    "name": "Google Gemini Flash Latest",
+    "provider": "openrouter",
+    "family": "~google",
+    "created_at": "2026-04-27 19:33:18 UTC",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "file",
+        "audio",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.5,
+          "output_per_million": 3.0,
+          "cached_input_per_million": 0.049999999999999996,
+          "reasoning_output_per_million": 3.0
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the Google Gemini Flash family.",
+      "architecture": {
+        "modality": "text+image+file+audio+video->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "file",
+          "audio",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "~google/gemini-pro-latest",
+    "name": "Google Gemini Pro Latest",
+    "provider": "openrouter",
+    "family": "~google",
+    "created_at": "2026-04-27 19:34:11 UTC",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "audio",
+        "file",
+        "image",
+        "text",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2.0,
+          "output_per_million": 12.0,
+          "cached_input_per_million": 0.19999999999999998,
+          "reasoning_output_per_million": 12.0
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the Google Gemini Pro family.",
+      "architecture": {
+        "modality": "text+image+file+audio+video->text",
+        "input_modalities": [
+          "audio",
+          "file",
+          "image",
+          "text",
+          "video"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "~moonshotai/kimi-latest",
+    "name": "MoonshotAI Kimi Latest",
+    "provider": "openrouter",
+    "family": "~moonshotai",
+    "created_at": "2026-04-27 19:33:48 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "predicted_outputs"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.7448,
+          "output_per_million": 4.655,
+          "cached_input_per_million": 0.1463
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the MoonshotAI Kimi family.",
+      "architecture": {
+        "modality": "text+image->text",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 256000,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    }
+  },
+  {
+    "id": "~openai/gpt-latest",
+    "name": "OpenAI GPT Latest",
+    "provider": "openrouter",
+    "family": "~openai",
+    "created_at": "2026-04-27 19:32:14 UTC",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "file",
+        "image",
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5.0,
+          "output_per_million": 30.0,
+          "cached_input_per_million": 0.5
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the OpenAI GPT family.",
+      "architecture": {
+        "modality": "text+image+file->text",
+        "input_modalities": [
+          "file",
+          "image",
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1050000,
+        "max_completion_tokens": 128000,
+        "is_moderated": true
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ]
+    }
+  },
+  {
+    "id": "~openai/gpt-mini-latest",
+    "name": "OpenAI GPT Mini Latest",
+    "provider": "openrouter",
+    "family": "~openai",
+    "created_at": "2026-04-27 19:34:31 UTC",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "file",
+        "image",
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.75,
+          "output_per_million": 4.5,
+          "cached_input_per_million": 0.075
+        }
+      }
+    },
+    "metadata": {
+      "description": "This model always redirects to the latest model in the OpenAI GPT Mini family.",
+      "architecture": {
+        "modality": "text+image+file->text",
+        "input_modalities": [
+          "file",
+          "image",
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Router",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 400000,
+        "max_completion_tokens": 128000,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
       ]
     }
   },
@@ -42466,6 +43541,62 @@
       "provider_id": "google-vertex",
       "temperature": true,
       "last_updated": "2025-11-18",
+      "open_weights": false
+    }
+  },
+  {
+    "id": "gemini-3.1-flash-lite-preview",
+    "name": "Gemini 3.1 Flash Lite Preview",
+    "provider": "vertexai",
+    "family": "gemini-flash-lite",
+    "created_at": "2026-03-03 00:00:00 UTC",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video",
+        "audio",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "vision"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.25,
+          "output_per_million": 1.5,
+          "cached_input_per_million": 0.025
+        }
+      }
+    },
+    "metadata": {
+      "cost": {
+        "input": 0.25,
+        "output": 1.5,
+        "cache_read": 0.025,
+        "cache_write": 1
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "source": "models.dev",
+      "knowledge": "2025-01",
+      "attachment": true,
+      "provider_id": "google-vertex",
+      "temperature": true,
+      "last_updated": "2026-03-03",
       "open_weights": false
     }
   },

@@ -24,7 +24,7 @@ const targetsModalFrameRequest = (event) => {
 
 const isModalFrameTarget = (event) => {
   const target = event?.target
-  return target instanceof Element && target.tagName.toLowerCase() === "turbo-frame" && target.id === "modal"
+  return target instanceof Element && target.closest("turbo-frame#modal")
 }
 
 export const closeAppModal = () => {

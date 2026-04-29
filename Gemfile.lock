@@ -416,6 +416,9 @@ GEM
     unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
+    validate_url (1.0.15)
+      activemodel (>= 3.0.0)
+      public_suffix
     version_gem (1.1.9)
     view_component (4.5.0)
       actionview (>= 7.1.0)
@@ -477,6 +480,7 @@ DEPENDENCIES
   solid_queue
   stimulus-rails
   turbo-rails
+  validate_url
   view_component
 
 BUNDLED WITH

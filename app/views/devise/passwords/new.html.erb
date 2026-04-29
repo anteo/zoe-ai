@@ -4,13 +4,10 @@
 
     <%= f.input :email,
                 label: t(:label_email),
-                input_html: {autofocus: true, autocomplete: "email"} %>
+                input_html: { autofocus: true, autocomplete: "email" } %>
 
     <%= f.button :submit, t(:label_send_reset_instructions), class: "btn btn-primary mt-4 w-full" %>
   <% end %>
 
-  <div class="divider my-1"></div>
-  <div class="space-y-2">
-    <%= render "devise/shared/links" %>
-  </div>
+  <%= render "devise/shared/links" %>
 <% end %>

@@ -89,11 +89,11 @@ module AI
       end
 
       def default_limit
-        ENV.fetch("ZOE_EVENT_SEARCH_DEFAULT_LIMIT", 10).to_i
+        Setting.events.search_default_limit
       end
 
       def max_limit
-        ENV.fetch("ZOE_EVENT_SEARCH_MAX_LIMIT", 20).to_i
+        Setting.events.search_max_limit
       end
 
       def render_events(events)

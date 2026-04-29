@@ -1,5 +1,5 @@
-<div class="flex flex-wrap items-center gap-2">
-  <%- if controller_name != 'sessions' %>
+<% content_for :devise_links do %>
+  <%- if controller_name != 'sessions' && User.exists? %>
     <%= link_to new_session_path(resource_name), class: "btn btn-ghost btn-sm" do %>
       <span class="icon-[lucide--arrow-left]"></span>
       <span><%= t(:label_login) %></span>
@@ -14,7 +14,7 @@
     <%= link_to t(:label_forgot_password), new_password_path(resource_name), class: "btn btn-ghost btn-sm" %>
   <% end %>
 
-  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' && controller_name != 'registrations' %>
     <%= link_to t(:label_confirmation_instructions), new_confirmation_path(resource_name), class: "btn btn-ghost btn-sm" %>
   <% end %>
 
@@ -35,4 +35,14 @@
                     form_class: "inline" %>
     <% end %>
   <% end %>
-</div>
+<% end %>
+
+<% if content_for?(:devise_links).present? %>
+  <div class="divider my-1"></div>
+
+  <div class="space-y-2">
+    <div class="flex flex-wrap items-center gap-2">
+      <%= content_for(:devise_links) %>
+    </div>
+  </div>
+<% end %>

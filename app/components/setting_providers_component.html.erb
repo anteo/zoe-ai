@@ -1,0 +1,82 @@
+<%= helpers.simple_form_for Setting.ai.providers,
+                            url: settings_path(scope: "ai.providers"),
+                            method: :patch,
+                            builder: SimpleForm::SettingsFormBuilder,
+                            html: {
+                              data: {
+                                controller: "admin-console-opener",
+                                action: "submit->admin-console-opener#open",
+                                admin_console_opener_admin_console_modal_outlet: "#admin-console-modal"
+                              }
+                            } do |f| %>
+  <%= helpers.hidden_field_tag :section, params[:section] %>
+
+  <div class="p-5 space-y-8">
+    <header class="text-lg font-bold"><%= t(:"label_settings_#{params[:section]}") %></header>
+    <div class="space-y-4">
+      <%= f.simple_fields_for :openai do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :anthropic do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :gemini do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :mistral do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :perplexity do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :xai do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :openrouter do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :deepseek do |of| %>
+        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+      <% end %>
+
+      <%= f.simple_fields_for :ollama do |of| %>
+        <%= of.input :api_base %>
+      <% end %>
+    </div>
+
+    <%# Vertex AI %>
+    <fieldset class="border border-base-300 rounded-lg p-4">
+      <legend class="px-1 font-semibold text-sm">Vertex AI</legend>
+      <div class="space-y-3">
+        <%= f.simple_fields_for :vertexai do |of| %>
+          <%= of.input :project_id, input_html: { autocomplete: "off" } %>
+          <%= of.input :location, input_html: { autocomplete: "off" } %>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <%# Bedrock %>
+    <fieldset class="border border-base-300 rounded-lg p-4">
+      <legend class="px-1 font-semibold text-sm">Bedrock</legend>
+      <div class="space-y-3">
+        <%= f.simple_fields_for :bedrock do |of| %>
+          <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+          <%= of.input :secret_key, input_html: { autocomplete: "off" } %>
+          <%= of.input :region, input_html: { autocomplete: "off" } %>
+          <%= of.input :session_token, input_html: { autocomplete: "off" } %>
+        <% end %>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end">
+    <%= f.button :submit, t(:label_apply), class: "btn btn-primary" %>
+  </div>
+<% end %>

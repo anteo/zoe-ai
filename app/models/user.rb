@@ -16,6 +16,7 @@ class User < ApplicationRecord
   validates :first_name, :email, presence: true
 
   after_create_commit :ensure_default_characters!
+  after_create_commit :promote_to_admin_if_first!
 
   def gravatar_url(size: 128)
     return nil unless email.present?
@@ -55,6 +56,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def promote_to_admin_if_first!
+    update_column(:admin, true) if User.count == 1
+  end
 
   def ensure_default_characters!
     default_ai = Character.default_ai

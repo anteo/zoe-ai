@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
 
   attr_reader :current_character, :current_partner
 
+  before_action :redirect_to_setup_if_empty
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :set_current_character, unless: :devise_controller?
   before_action :set_current_partner, unless: :devise_controller?
@@ -46,9 +47,19 @@ class ApplicationController < ActionController::Base
     @chat ||= AI::Agents::Zoe.build_chat(character: current_character, partner: current_partner, user: current_user)
   end
 
+  def redirect_to_setup_if_empty
+    return if [ new_user_registration_path, user_registration_path, "/up" ].include?(request.path)
+    redirect_to new_user_registration_path unless User.exists?
+  end
+
+  def require_admin!
+    redirect_to root_path, alert: t(:text_access_denied) unless current_user&.admin?
+  end
+
   def configure_permitted_parameters
     keys = %i[first_name last_name]
     devise_parameter_sanitizer.permit(:sign_up, keys:)
     devise_parameter_sanitizer.permit(:account_update, keys:)
   end
+
 end

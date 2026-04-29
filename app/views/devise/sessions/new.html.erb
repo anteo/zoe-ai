@@ -4,10 +4,10 @@
 
     <%= f.input :email,
                 label: t(:label_email),
-                input_html: {autofocus: true, autocomplete: "email"} %>
+                input_html: { autofocus: true, autocomplete: "email" } %>
     <%= f.input :password,
                 label: t(:label_password),
-                input_html: {autocomplete: "current-password"} %>
+                input_html: { autocomplete: "current-password" } %>
 
     <% if devise_mapping.rememberable? %>
       <%= f.input :remember_me,
@@ -38,8 +38,5 @@
     <% end %>
   <% end %>
 
-  <div class="divider my-1"></div>
-  <div class="space-y-2">
-    <%= render "devise/shared/links" %>
-  </div>
+  <%= render "devise/shared/links" %>
 <% end %>

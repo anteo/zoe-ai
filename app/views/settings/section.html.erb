@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "settings-section" do %>
+  <%= turbo_stream_flash_alerts %>
+  <%= component :"setting_#{@section}" %>
+<% end %>

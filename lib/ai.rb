@@ -49,4 +49,8 @@ module AI
       RubyLLM::Image.paint(prompt, model:, provider:, assume_model_exists:, size:, context:)
     end
   end
+
+  def console
+    ConsoleLogger.instance
+  end
 end

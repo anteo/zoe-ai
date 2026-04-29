@@ -39,7 +39,7 @@ module AI
       end
 
       def self.models
-        RubyLLM.models.image_models.by_provider("openrouter").map(&:id)
+        RubyLLM.models.image_models.map(&:id)
       end
 
       def make_image_size(ratio, size)

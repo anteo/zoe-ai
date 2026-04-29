@@ -6,16 +6,15 @@
 @plugin "daisyui";
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
-/*@plugin '@egoist/tailwindcss-icons';*/
-/*@plugin '@iconify-json/lucide';*/
 
-/* Theme-based image visibility for empty dialog */
-[data-theme="dark"] .dialog-empty-image-light {
-    display: none;
-}
+@layer {
+    :root {
+        --radius-field: var(--radius-xl);
+    }
 
-[data-theme="light"] .dialog-empty-image-dark {
-    display: none;
+    .input-ghost:hover, .textarea-ghost:hover {
+        outline: color-mix(in oklab, var(--color-base-content) 40%, transparent) 1px dashed;
+    }
 }
 
 /* Theme-based logo visibility */
@@ -36,20 +35,12 @@
 
 /* Fallback for OS preference when data-theme is not set */
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) .dialog-empty-image-light {
-        display: none;
-    }
-
     :root:not([data-theme]) .logo-light {
         display: none;
     }
 }
 
 @media (prefers-color-scheme: light) {
-    :root:not([data-theme]) .dialog-empty-image-dark {
-        display: none;
-    }
-
     :root:not([data-theme]) .logo-dark {
         display: none;
     }
@@ -116,17 +107,6 @@
 
 .typing-dot:nth-child(3) {
     animation-delay: 0s;
-}
-
-@layer {
-    :root {
-        --radius-field: var(--radius-3xl);
-        --radius-box: var(--radius-xl);
-    }
-
-    .input-ghost:hover, .textarea-ghost:hover {
-        outline: color-mix(in oklab, var(--color-base-content) 40%, transparent) 1px dashed;
-    }
 }
 
 .chat-bubble {
@@ -230,4 +210,25 @@
 .avatar-cropper .cropper-view-box,
 .avatar-cropper .cropper-face {
     border-radius: 50%;
+}
+
+.console-log-row {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.console-log-info {
+    color: var(--color-white);
+}
+
+.console-log-debug {
+    color: var(--color-gray-600);
+}
+
+.console-log-warn {
+    color: var(--color-warning);
+}
+
+.console-log-error {
+    color: var(--color-error);
 }

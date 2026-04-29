@@ -1,0 +1,23 @@
+<dialog class="modal"
+        id="admin-console-modal"
+        data-controller="admin-console-modal"
+        data-action="keydown.esc@window->admin-console-modal#handleEscape:capture click->admin-console-modal#backdropClick">
+
+  <div class="modal-box max-w-5xl p-0 border border-base-300 shadow-2xl">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-base-300 bg-base-200">
+      <h3 class="text-base font-semibold"><%= t(:label_console_output) %></h3>
+      <button type="button"
+              class="btn btn-ghost btn-xs btn-circle"
+              data-action="click->admin-console-modal#close"
+              aria-label="<%= t(:label_close) %>">
+        <span class="icon-[lucide--x] w-4 h-4"></span>
+        <span class="sr-only"><%= t(:label_close) %></span>
+      </button>
+    </div>
+
+    <div class="h-[50vh] overflow-y-auto bg-neutral text-neutral-content p-4 font-mono text-xs leading-5"
+         data-admin-console-modal-target="output">
+      <p class="text-neutral-content/60" data-admin-console-modal-target="placeholder"><%= t(:text_console_waiting_logs) %></p>
+    </div>
+  </div>
+</dialog>

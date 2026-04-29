@@ -18,6 +18,8 @@ class FlashAlertComponent < ApplicationComponent
   end
 
   def timeout_ms
-    ENV.fetch("ACTION_FLASH_TIMEOUT_MS", "5000").to_i.clamp(0, 600_000)
+    return 0 if type == "alert"
+
+    Setting.ui.flash_timeout_ms.clamp(0, 600_000)
   end
 end

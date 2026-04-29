@@ -24,7 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = ENV.fetch("ACTION_MAILER_FROM", "no-reply@#{ENV.fetch("APP_HOST", "localhost")}")
+  # Set dynamically in action_mailer.rb initializer via Setting.watch
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -274,10 +274,11 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+  # omniauth registers Rack middleware at boot — must stay ENV-based, cannot use Setting here
+  if ENV["ZOE_GOOGLE_CLIENT__ID"].present? && ENV["ZOE_GOOGLE_CLIENT__SECRET"].present?
     config.omniauth :google_oauth2,
-                    ENV["GOOGLE_CLIENT_ID"],
-                    ENV["GOOGLE_CLIENT_SECRET"],
+                    ENV["ZOE_GOOGLE_CLIENT__ID"],
+                    ENV["ZOE_GOOGLE_CLIENT__SECRET"],
                     scope: "email,profile",
                     prompt: "select_account"
   end

@@ -53,8 +53,8 @@ module Ai
 
     config.solid_queue.logger = ActiveSupport::Logger.new(STDOUT)
 
-    if ENV["EXTRA_HOSTS"].present?
-      config.hosts.push(*ENV["EXTRA_HOSTS"].split(","))
+    if ENV["ZOE_APP__EXTRA_HOSTS"].present?
+      config.hosts.push(*ENV["ZOE_APP__EXTRA_HOSTS"].split(","))
     end
 
     languages = PragmaticSegmenter::Languages
