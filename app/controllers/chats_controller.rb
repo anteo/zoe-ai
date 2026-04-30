@@ -22,7 +22,7 @@ class ChatsController < ApplicationController
   end
 
   def history_detail
-    render Chat::HistoryDetailComponent.new(history_chat: @history_chat, current_character:)
+    render Chats::HistoryDetailComponent.new(history_chat: @history_chat, current_character:)
   end
 
   def history_list

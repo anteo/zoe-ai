@@ -14,7 +14,7 @@ class ApplicationJob < ActiveJob::Base
     Turbo::StreamsChannel.broadcast_append_to(
       chat,
       target: "chat-messages",
-      content: Chat::MessagePlaceholderComponent.new(chat:, current_character: chat.character),
+      content: Chats::MessagePlaceholderComponent.new(chat:, current_character: chat.character),
     )
   end
 
@@ -30,7 +30,7 @@ class ApplicationJob < ActiveJob::Base
     Turbo::StreamsChannel.broadcast_replace_to(
       message.chat,
       target: "message-placeholder-#{message.chat.id}",
-      content: Chat::MessageComponent.new(message:, current_character: message.chat.character),
+      content: Chats::MessageComponent.new(message:, current_character: message.chat.character),
     )
   end
 

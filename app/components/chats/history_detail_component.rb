@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::HistoryDetailComponent < ApplicationComponent
+class Chats::HistoryDetailComponent < ApplicationComponent
   attr_reader :history_chat, :current_character
 
   def initialize(history_chat:, current_character:)

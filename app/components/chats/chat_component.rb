@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::ChatComponent < ApplicationComponent
+class Chats::ChatComponent < ApplicationComponent
   attr_reader :chat, :dom_id
 
   def initialize(chat:, current_character:, read_only: false, stream: true, dom_id: "chat-messages")

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::HistoryListComponent < ApplicationComponent
+class Chats::HistoryListComponent < ApplicationComponent
   Entry = Data.define(:chat, :index, :day_label, :time_span, :message_count, :preview)
 
   attr_reader :history_chats

@@ -27,7 +27,7 @@ class RespondJob < ApplicationJob
     Turbo::StreamsChannel.broadcast_replace_to(
       chat,
       target: "token-usage-gauge-#{chat.id}",
-      content: Chat::TokenUsageGaugeComponent.new(chat:),
+      content: Chats::TokenUsageGaugeComponent.new(chat:),
     )
 
     chunks = AI::SentenceSplitter.new(message.content).chunks

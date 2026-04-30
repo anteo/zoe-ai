@@ -2,6 +2,7 @@ class Settings::BodyComponent < ApplicationComponent
   SECTIONS = {
     "app" => { icon: "icon-[lucide--settings]" },
     "ai" => { icon: "icon-[lucide--sparkles]" },
+    "providers" => { icon: "icon-[lucide--plug]" },
     "mailer" => { icon: "icon-[lucide--mail]" },
     "ui" => { icon: "icon-[lucide--monitor]" },
     "events" => { icon: "icon-[lucide--history]" }

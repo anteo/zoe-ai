@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::AttachmentComponent < ApplicationComponent
+class Chats::AttachmentComponent < ApplicationComponent
   attr_reader :attachment
 
   def initialize(attachment:)

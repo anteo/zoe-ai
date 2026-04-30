@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::MessagePlaceholderComponent < ApplicationComponent
+class Chats::MessagePlaceholderComponent < ApplicationComponent
   attr_reader :chat, :current_character
 
   def initialize(chat:, current_character:)

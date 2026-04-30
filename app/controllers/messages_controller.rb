@@ -29,11 +29,11 @@ class MessagesController < ApplicationController
       stream = []
       stream << turbo_stream.append(
         "chat-messages",
-        Chat::MessageComponent.new(message:, current_character:)
+        Chats::MessageComponent.new(message:, current_character:)
       )
       stream << turbo_stream.replace(
         "chat-input",
-        Chat::ChatInputComponent.new(chat: chat, current_character:)
+        Chats::ChatInputComponent.new(chat: chat, current_character:)
       )
 
       respond_to do |format|
@@ -83,7 +83,7 @@ class MessagesController < ApplicationController
 
   def render_chat
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", Chat::ChatComponent.new(chat:, current_character:)) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", Chats::ChatComponent.new(chat:, current_character:)) }
       format.html { redirect_to chat_path(chat) }
     end
   end

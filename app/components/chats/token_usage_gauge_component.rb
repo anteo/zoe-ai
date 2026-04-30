@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::TokenUsageGaugeComponent < ApplicationComponent
+class Chats::TokenUsageGaugeComponent < ApplicationComponent
   attr_reader :chat
 
   def initialize(chat:)

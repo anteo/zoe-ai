@@ -1,6 +1,6 @@
 <div id="message-<%= message.id || SecureRandom.uuid %>" class="group chat-message-enter" data-controller="message">
   <div class="<%= bubble_class %>">
-    <%= render "chat/message_component/header", message:, is_current_character: is_current_character?, sender:, read_only: read_only? %>
+    <%= render "chats/message_component/header", message:, is_current_character: is_current_character?, sender:, read_only: read_only? %>
 
     <% if message.content.present? %>
       <div class="chat-bubble prose prose-sm <%= bubble_color %>" data-message-target="view">
@@ -8,12 +8,12 @@
       </div>
 
       <% if !read_only? && is_current_character? && message.persisted? %>
-        <%= render "chat/message_component/edit_form", message:, bubble_color: %>
+        <%= render "chats/message_component/edit_form", message:, bubble_color: %>
       <% end %>
     <% end %>
   </div>
 
   <% if message.attachments.attached? %>
-    <%= render "chat/message_component/attachments", message:, bubble_class:, image_attachments:, file_attachments: %>
+    <%= render "chats/message_component/attachments", message:, bubble_class:, image_attachments:, file_attachments: %>
   <% end %>
 </div>
