@@ -101,7 +101,12 @@ ru:
   label_send: Отправить
   label_send_reset_instructions: Отправить инструкцию по сбросу
   label_settings: Настройки
+  label_settings_ai: ИИ-ассистент
+  label_settings_app: Система
+  label_settings_events: Память и события
+  label_settings_mailer: Почта
   label_settings_providers: Провайдеры
+  label_settings_ui: Интерфейс
   label_share_character: Поделиться персонажем
   label_sign_in_with: Войти через %{provider}
   label_sign_in_with_google: Войти через Google

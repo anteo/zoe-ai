@@ -1,0 +1,18 @@
+<div class="<%= bubble_class %>">
+  <div class="chat-bubble bg-base-100 attachments-container ps-0 pe-0">
+    <% if image_attachments.any? %>
+      <div class="image-attachments">
+        <% image_attachments.each do |attachment| %>
+          <%= component :"chat/image_attachment", attachment: attachment %>
+        <% end %>
+      </div>
+    <% end %>
+    <% if file_attachments.any? %>
+      <div class="file-attachments">
+        <% file_attachments.each do |attachment| %>
+          <%= component :"chat/attachment", attachment: attachment %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

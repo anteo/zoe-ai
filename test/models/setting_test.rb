@@ -26,6 +26,36 @@ class SettingTest < ActiveSupport::TestCase
     assert Setting.ui.update(flash_timeout_ms: 3_000)
   end
 
+  test "updating single mailer key does not query unrelated keys" do
+    Setting.mailer.update(from: "before-select-check@example.com")
+
+    selects = capture_settings_lookup_selects do
+      Setting.mailer.update(from: "selective@example.com")
+    end
+
+    assert_equal 1, selects.size
+    assert_includes selects.first, "FROM \"settings\" WHERE"
+    assert_includes selects.first, "\"settings\".\"scope\""
+    assert_includes selects.first, "\"settings\".\"key\""
+  end
+
+  test "updating with unchanged value skips hook firing and db writes" do
+    Setting.mailer.update(from: "same@example.com")
+    existing = Setting.find_by!(scope: "mailer", key: "from")
+    initial_updated_at = existing.updated_at
+
+    calls = []
+    Setting.on_change(:mailer) { calls << :mailer }
+
+    travel 1.second do
+      Setting.mailer.update(from: "same@example.com")
+    end
+
+    existing.reload
+    assert_equal initial_updated_at, existing.updated_at
+    assert_equal [], calls
+  end
+
   test "save returns false and does not persist when invalid" do
     result = Setting.mailer.smtp.update(port: -1)
     assert_not result
@@ -169,6 +199,15 @@ class SettingTest < ActiveSupport::TestCase
     Setting.ui.update(flash_timeout_ms: 2_000)
 
     assert_equal 0, calls.size
+  end
+
+  test "updating mailer.from does not fire smtp hook" do
+    smtp_calls = []
+    Setting.on_change(:"mailer.smtp") { smtp_calls << :fired }
+
+    Setting.mailer.update(from: "from-only@example.com")
+
+    assert_equal [], smtp_calls
   end
 
   # ── Nested scope access ──────────────────────────────────────────────────────
@@ -330,5 +369,25 @@ class SettingTest < ActiveSupport::TestCase
   ensure
     old_values.each { |key, old| old.nil? ? ENV.delete(key) : ENV[key] = old }
     Setting.invalidate_cache!
+  end
+
+  def capture_settings_lookup_selects
+    selects = []
+    callback = lambda do |_name, _start, _finish, _id, payload|
+      sql = payload[:sql]
+      next unless sql.is_a?(String)
+      next unless sql.include?("FROM \"settings\" WHERE")
+      next unless sql.include?("\"settings\".\"scope\"")
+      next unless sql.include?("\"settings\".\"key\"")
+      next unless sql.include?("LIMIT")
+
+      selects << sql
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      yield
+    end
+
+    selects
   end
 end

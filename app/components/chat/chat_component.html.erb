@@ -1,0 +1,22 @@
+<div class="overflow-y-auto p-4 rounded-field shadow-sm bg-base-100" id="<%= dom_id %>" data-controller="<%= read_only? ? "history-chat" : "chat" %>">
+  <% if new? %>
+    <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
+      <div class="animate-[float_6s_ease-in-out_infinite]">
+        <%= avatar_for_character(current_partner, css_class: "w-30 h-30") %>
+      </div>
+      <p class="mt-6 text-lg text-center text-base-content">
+        <%= t(:text_greeting_html, name: current_partner.name).html_safe %>
+      </p>
+    </div>
+  <% else %>
+    <%= turbo_stream_from chat if stream? %>
+
+    <% messages.each do |message| %>
+      <%= helpers.component :"chat/message", message:, current_character:, read_only: read_only? %>
+    <% end %>
+
+    <% if !read_only? && (c = RespondJob.get_running_execution(chat)) && !c.cancelled? %>
+      <%= helpers.component :"chat/message_placeholder", chat:, current_character: %>
+    <% end %>
+  <% end %>
+</div>

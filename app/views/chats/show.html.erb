@@ -10,7 +10,7 @@
       <%= t(:label_new_conversation) %>
     <% end %>
 
-    <%= component :history_drawer %>
+    <%= component :"chat/history_drawer" %>
 
     <%= link_to characters_path,
                 data: { turbo_frame: "modal" },
@@ -19,12 +19,12 @@
       <%= t(:label_characters) %>
     <% end %>
 
-    <%= component :character_selector, current_partner:, current_user: %>
+    <%= component :"characters/selector", current_partner:, current_user: %>
 
-    <%= component :profile_menu, current_user: %>
+    <%= component :"ui/profile_menu", current_user: %>
   </header>
 
-  <%= component :chat, current_character:, chat: %>
+  <%= component :"chat/chat", current_character:, chat: %>
 
-  <%= component :chat_input, current_character:, chat: %>
+  <%= component :"chat/chat_input", current_character:, chat: %>
 </div>

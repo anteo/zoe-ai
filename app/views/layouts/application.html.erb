@@ -25,7 +25,7 @@
 <body data-controller="form-errors">
 <%= turbo_frame_tag "modal" %>
 <%= turbo_stream_from current_user if user_signed_in? %>
-<%= component :admin_console_modal if current_user&.admin? %>
+<%= component :"ui/admin_console_modal" if current_user&.admin? %>
 
 <%= yield %>
 
@@ -33,7 +33,7 @@
   <% if flash.any? || content_for?(:top_alerts) %>
     <% flash.each do |type, message| %>
       <% next if message.blank? %>
-      <%= component :flash_alert, type:, message: %>
+      <%= component :"ui/flash_alert", type:, message: %>
     <% end %>
     <%= yield :top_alerts %>
   <% end %>

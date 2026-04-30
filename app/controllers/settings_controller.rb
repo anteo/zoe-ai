@@ -3,23 +3,20 @@ class SettingsController < ApplicationController
   before_action :find_section_proxy, only: [ :update ]
 
   def show
-    render layout: false if turbo_frame_request?
-  end
-
-  def section
     @section = params[:section]
-    render layout: false
+    if turbo_frame_request_id == "settings-body"
+      render :body
+    end
   end
 
   def update
+    @section = params[:section]
+
     if @section_proxy.update(**settings_params, context: { user: current_user })
-      @section = params[:section]
       flash.now[:notice] = t(:text_settings_saved)
-      render :section, layout: false
-    else
-      @section = params[:section]
-      render :section, layout: false, status: :unprocessable_entity
     end
+
+    render :body
   end
 
   private

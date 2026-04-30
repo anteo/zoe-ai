@@ -1,0 +1,25 @@
+<%= helpers.turbo_frame_tag "settings-body" do %>
+  <%= helpers.turbo_stream_flash_alerts %>
+
+  <div class="drawer drawer-open">
+    <input type="checkbox" class="drawer-toggle"/>
+    <div class="drawer-content h-[65vh] overflow-y-auto">
+      <%= component :"settings/#{@section}" %>
+    </div>
+    <div class="drawer-side h-full overflow-hidden">
+      <ul class="menu bg-base-200 h-full w-44 py-5 px-2 gap-0.5">
+        <% SECTIONS.each do |section, opts| %>
+          <li>
+            <%= link_to settings_path(section:),
+                        class: helpers.class_names("flex w-full items-center justify-start gap-2",
+                                                   "menu-active" => active?(section)),
+                        data: { turbo_frame: "settings-body" } do %>
+              <span class="<%= opts[:icon] %> w-4 h-4 shrink-0"></span>
+              <%= t(:"label_settings_#{section}") %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

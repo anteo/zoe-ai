@@ -46,7 +46,30 @@ module SettingConcern
     def id = nil
 
     def save(context: {})
-      return false unless valid?
+      success, changed_scopes = save_with_changes(context:)
+      return false unless success
+      return true if changed_scopes.empty?
+
+      Setting.invalidate_cache!
+      hook_context = context.merge(_setting_fired_hooks: {})
+      changed_scopes.each { |scope_path| Setting.run_change_hooks(scope_path, context: hook_context) }
+      true
+    end
+
+    def update(context: {}, **attrs)
+      assign_attributes(attrs)
+      save(context:)
+    end
+
+    private
+
+    def save_with_changes(context:)
+      return [ false, [] ] unless valid?
+
+      changed_scopes = []
+      changed = false
+      scope_path = self.class.scope_path.to_s
+      scope_data = Setting.cached_data[scope_path] || {}
 
       self.class._defs.each do |attr_name, definition|
         next if definition.readonly?
@@ -54,27 +77,46 @@ module SettingConcern
         value = send(attr_name)
         # Treat blank strings as nil so clearing a field removes the DB row.
         normalized = value.is_a?(String) ? value.presence : value
-        record = Setting.find_or_initialize_by(scope: self.class.scope_path.to_s, key: attr_name.to_s)
+        key = attr_name.to_s
+        persisted = scope_data[key]
+        has_persisted = scope_data.key?(key)
+
+        next unless attr_changed_for_persistence?(attr_name, definition, normalized, persisted, has_persisted)
+
+        record = Setting.find_or_initialize_by(scope: scope_path, key:)
         if normalized.nil?
           record.destroy if record.persisted?
         else
           record.value = normalized.to_s
           record.save!
         end
+        changed = true
       end
 
-      return false unless self.class._nested_names.all? do |name|
-        instance_variable_get(:"@#{name}")&.save(context:) != false
+      self.class._nested_names.each do |name|
+        child = instance_variable_get(:"@#{name}")
+        next unless child
+
+        child_success, child_changed_scopes = child.send(:save_with_changes, context:)
+        return [ false, [] ] unless child_success
+
+        changed_scopes.concat(child_changed_scopes)
       end
 
-      Setting.invalidate_cache!
-      Setting.run_change_hooks(self.class.scope_path, context:)
-      true
+      changed_scopes << scope_path if changed
+      [ true, changed_scopes.uniq ]
     end
 
-    def update(context: {}, **attrs)
-      assign_attributes(attrs)
-      save(context:)
+    def attr_changed_for_persistence?(attr_name, definition, normalized, persisted, has_persisted)
+      return has_persisted if normalized.nil?
+      unless has_persisted
+        default_value = definition.default
+        return normalized != default_value
+      end
+
+      type = self.class.attribute_types[attr_name.to_s]
+      persisted_cast = type ? type.cast(persisted) : persisted
+      persisted_cast != normalized
     end
   end
 end

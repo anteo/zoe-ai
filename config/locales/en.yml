@@ -101,7 +101,12 @@ en:
   label_send: Send
   label_send_reset_instructions: Send reset instructions
   label_settings: Settings
+  label_settings_ai: AI Assistant
+  label_settings_app: System
+  label_settings_events: Memory & Events
+  label_settings_mailer: Email
   label_settings_providers: Providers
+  label_settings_ui: Interface
   label_share_character: Share character
   label_sign_in_with: Sign in with %{provider}
   label_sign_in_with_google: Sign in with Google

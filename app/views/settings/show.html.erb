@@ -1,1 +1,5 @@
-<%= component :settings, section: @section %>
+<%= component :"ui/modal", width: "max-w-3xl", padding: false, main_classes: "overflow-hidden", header: false do |m| %>
+  <% m.with_title { t(:label_settings) } %>
+
+  <%= component :"settings/body", section: @section %>
+<% end %>
