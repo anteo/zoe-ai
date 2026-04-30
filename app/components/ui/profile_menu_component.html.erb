@@ -10,6 +10,16 @@
       <span class="block text-xs"><%= current_user.email %></span>
     </li>
     <li>
+      <div class="flex items-center gap-1 px-3 py-0 h-8">
+        <span class="icon-[lucide--palette] w-4 h-4"></span>
+        <select class="w-full h-full bg-transparent border-0 shadow-none p-0 pr-6 h-auto min-h-0 text-base-content focus:outline-none cursor-pointer"
+                data-theme-select
+                data-action="input->theme#selectTheme change->theme#selectTheme"
+                aria-label="Select theme"></select>
+      </div>
+    </li>
+    <li></li>
+    <li>
       <%= link_to profile_path, data: { turbo_frame: "modal" } do %>
         <span class="icon-[lucide--user-round] w-4 h-4"></span>
         <%= t(:label_profile) %>
@@ -38,6 +48,7 @@
         </button>
       </li>
     <% end %>
+    <li></li>
     <li>
       <%= link_to destroy_user_session_path,
                   class: "text-error",

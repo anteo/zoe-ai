@@ -3,45 +3,36 @@
 @import "vistaview/dist/style.css";
 @import "cropperjs/dist/cropper.css";
 
-@plugin "daisyui";
+@plugin "daisyui" {
+    themes: all;
+}
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 
 @layer {
-    :root {
-        --radius-field: var(--radius-xl);
-    }
-
     .input-ghost:hover, .textarea-ghost:hover {
         outline: color-mix(in oklab, var(--color-base-content) 40%, transparent) 1px dashed;
     }
 }
 
 /* Theme-based logo visibility */
-[data-theme="dark"] .logo-light {
+[data-theme-mode="dark"] .logo-light {
     display: none;
 }
 
-[data-theme="light"] .logo-dark {
+[data-theme-mode="light"] .logo-dark {
     display: none;
-}
-
-[data-theme="light"] {
-    --color-base-100: #ffffff;
-    --color-base-200: #f6f4f1;
-    --color-base-300: #efeae5; /* pastel step darker than base-200 */
-    --color-base-content: #4f4a45; /* soft, readable content color matching the pastel palette */
 }
 
 /* Fallback for OS preference when data-theme is not set */
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) .logo-light {
+    :root:not([data-theme-mode]) .logo-light {
         display: none;
     }
 }
 
 @media (prefers-color-scheme: light) {
-    :root:not([data-theme]) .logo-dark {
+    :root:not([data-theme-mode]) .logo-dark {
         display: none;
     }
 }

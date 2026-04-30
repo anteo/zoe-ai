@@ -19,6 +19,15 @@
       <%= t(:label_characters) %>
     <% end %>
 
+    <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
+      <input type="checkbox"
+             class="theme-mode-controller"
+             data-action="change->theme#toggle"
+             aria-label="Toggle theme"/>
+      <span class="swap-off icon-[lucide--sun] w-4 h-4"></span>
+      <span class="swap-on icon-[lucide--moon] w-4 h-4"></span>
+    </label>
+
     <%= component :"characters/selector", current_partner:, current_user: %>
 
     <%= component :"ui/profile_menu", current_user: %>
