@@ -12,7 +12,6 @@ class Setting < ApplicationRecord
     setting :default_model, :string
     setting :default_embedding_model, :string
     setting :default_image_model, :string
-    setting :max_message_bubbles, :integer, default: 3
     setting :request_timeout, :integer, default: 30
     setting :debug, :boolean, default: false
 
@@ -93,6 +92,7 @@ class Setting < ApplicationRecord
   end
 
   scope :ui do
+    setting :max_message_bubbles, :integer, default: 3
     setting :flash_timeout_ms, :integer, default: 5000
   end
 
