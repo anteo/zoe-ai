@@ -101,7 +101,7 @@ ru:
   label_send: Отправить
   label_send_reset_instructions: Отправить инструкцию по сбросу
   label_settings: Настройки
-  label_settings_ai: LLM
+  label_settings_ai: Модели
   label_settings_app: Система
   label_settings_events: Память и события
   label_settings_mailer: Почта
@@ -123,6 +123,7 @@ ru:
   label_yes: Да
   placeholder_add_instruction: добавьте инструкцию...
   placeholder_chat_input: Введите сообщение...
+  placeholder_choose_model: Выберите модель...
   placeholder_enter_character_name: Введите имя персонажа
   placeholder_filter_facts_text: Фильтр фактов
   placeholder_image_description: Добавьте описание изображения
@@ -193,6 +194,8 @@ ru:
   text_models_sync_json_unchanged: models.json без изменений
   text_models_sync_json_updated: models.json обновлен
   text_models_sync_started: Обновление реестра моделей...
+  text_model_not_configured: Модель не настроена. Укажите модель в Настройки -> Модели.
+  text_no_available_models: Нет доступных моделей
   text_no_character_description: Пока нет описания.
   text_no_character_events: Пока нет событий.
   text_no_character_facts: Пока нет фактов.

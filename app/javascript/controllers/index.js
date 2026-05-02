@@ -22,6 +22,7 @@ import AppModalController from "./app_modal_controller"
 import TextareaAutosizeController from "./textarea_autosize_controller"
 import AdminConsoleModalController from "./admin_console_modal_controller"
 import AdminConsoleOpenerController from "./admin_console_opener_controller"
+import AutocompleteController from "./autocomplete_controller"
 
 application.register("hello", HelloController)
 application.register("chat", ChatController)
@@ -42,3 +43,4 @@ application.register("app-modal", AppModalController)
 application.register("textarea-autosize", TextareaAutosizeController)
 application.register("admin-console-modal", AdminConsoleModalController)
 application.register("admin-console-opener", AdminConsoleOpenerController)
+application.register("autocomplete", AutocompleteController)

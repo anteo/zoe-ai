@@ -1,3 +1,11 @@
-class Settings::ProvidersComponent < ApplicationComponent
-  def providers = Setting.ai.providers
+module Settings
+  class ProvidersComponent < ApplicationComponent
+    def initialize(f:)
+      @f = f
+    end
+
+    private
+
+    attr_reader :f
+  end
 end

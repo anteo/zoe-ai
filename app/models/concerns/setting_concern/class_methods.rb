@@ -1,5 +1,24 @@
 module SettingConcern
   module ClassMethods
+    def _defs
+      @_defs ||= {}
+    end
+
+    def _nested_names
+      @_nested_names ||= []
+    end
+
+    def _nested_proxy_classes
+      @_nested_proxy_classes ||= {}
+    end
+
+    def permitted_attributes
+      writable = _defs.reject { |_, d| d.readonly? }.keys
+      nested = _nested_proxy_classes.transform_keys { |k| :"#{k}_attributes" }
+                                    .transform_values(&:permitted_attributes)
+      writable + (nested.empty? ? [] : [ nested ])
+    end
+
     def cached_data
       RequestStore.store[:settings_data] ||= load_data
     end
@@ -58,13 +77,20 @@ module SettingConcern
           return
         end
 
+        if last_synced_at.nil? && @_hooks_synced_keys.nil?
+          # First sync in this process: establish baseline without replaying all hooks.
+          @_hooks_synced_at = latest_update
+          @_hooks_synced_keys = current_keys
+          return
+        end
+
+        deleted_scopes = (last_keys - current_keys).map { |entry| entry.split("\0", 2).first }
+        added_scopes = (current_keys - last_keys).map { |entry| entry.split("\0", 2).first }
+
         changed_scopes = if last_synced_at.nil?
-          distinct.pluck(:scope)
+          (deleted_scopes + added_scopes).uniq
         else
           updated_scopes = where("updated_at > ?", last_synced_at).distinct.pluck(:scope)
-          deleted_scopes = (last_keys - current_keys).map { |entry| entry.split("\0", 2).first }
-          added_scopes = (current_keys - last_keys).map { |entry| entry.split("\0", 2).first }
-
           (updated_scopes + deleted_scopes + added_scopes).uniq
         end
 

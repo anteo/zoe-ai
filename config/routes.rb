@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resource :profile, only: [ :show, :update ]
   resource :settings, only: [ :show, :update ]
 
+  get "models/search", to: "models#search", as: :models_search
+
   resources :chats, only: [:show, :new, :destroy] do
     collection do
       get :history_list

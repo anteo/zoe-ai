@@ -9600,11 +9600,69 @@
     }
   },
   {
+    "id": "gemma4:e4b",
+    "name": "gemma4:e4b",
+    "provider": "ollama",
+    "family": "ollama",
+    "created_at": "2026-04-30 03:45:28 UTC",
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "vision"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "library"
+    }
+  },
+  {
     "id": "nomic-embed-text:latest",
     "name": "nomic-embed-text:latest",
     "provider": "ollama",
     "family": "ollama",
     "created_at": "2026-04-20 05:31:02 UTC",
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "vision"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "library"
+    }
+  },
+  {
+    "id": "qwen3.6:27b",
+    "name": "qwen3.6:27b",
+    "provider": "ollama",
+    "family": "ollama",
+    "created_at": "2026-04-30 03:30:44 UTC",
     "context_window": null,
     "max_output_tokens": null,
     "knowledge_cutoff": null,
@@ -26377,61 +26435,6 @@
     }
   },
   {
-    "id": "mistralai/mistral-small-creative",
-    "name": "Mistral: Mistral Small Creative",
-    "provider": "openrouter",
-    "family": "mistralai",
-    "created_at": "2025-12-16 18:10:53 UTC",
-    "context_window": 32768,
-    "max_output_tokens": null,
-    "knowledge_cutoff": null,
-    "modalities": {
-      "input": [
-        "text"
-      ],
-      "output": [
-        "text"
-      ]
-    },
-    "capabilities": [
-      "streaming",
-      "function_calling"
-    ],
-    "pricing": {
-      "text_tokens": {
-        "standard": {
-          "input_per_million": 0.09999999999999999,
-          "output_per_million": 0.3,
-          "cached_input_per_million": 0.01
-        }
-      }
-    },
-    "metadata": {
-      "description": "Mistral Small Creative is an experimental small model designed for creative writing, narrative generation, roleplay and character-driven dialogue, general-purpose instruction following, and conversational agents.",
-      "architecture": {
-        "modality": "text->text",
-        "input_modalities": [
-          "text"
-        ],
-        "output_modalities": [
-          "text"
-        ],
-        "tokenizer": "Mistral",
-        "instruct_type": null
-      },
-      "top_provider": {
-        "context_length": 32768,
-        "max_completion_tokens": null,
-        "is_moderated": false
-      },
-      "per_request_limits": null,
-      "supported_parameters": [
-        "tool_choice",
-        "tools"
-      ]
-    }
-  },
-  {
     "id": "mistralai/mixtral-8x22b-instruct",
     "name": "Mistral: Mixtral 8x22B Instruct",
     "provider": "openrouter",
@@ -27149,8 +27152,8 @@
         "instruct_type": null
       },
       "top_provider": {
-        "context_length": 256000,
-        "max_completion_tokens": 65536,
+        "context_length": 262144,
+        "max_completion_tokens": 16384,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -42380,8 +42383,8 @@
     "provider": "openrouter",
     "family": "~moonshotai",
     "created_at": "2026-04-27 19:33:48 UTC",
-    "context_window": 256000,
-    "max_output_tokens": 65536,
+    "context_window": 262144,
+    "max_output_tokens": 16384,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -42401,9 +42404,9 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.7448,
-          "output_per_million": 4.655,
-          "cached_input_per_million": 0.1463
+          "input_per_million": 0.75,
+          "output_per_million": 3.5,
+          "cached_input_per_million": 0.15
         }
       }
     },
@@ -42422,8 +42425,8 @@
         "instruct_type": null
       },
       "top_provider": {
-        "context_length": 256000,
-        "max_completion_tokens": 65536,
+        "context_length": 262144,
+        "max_completion_tokens": 16384,
         "is_moderated": false
       },
       "per_request_limits": null,

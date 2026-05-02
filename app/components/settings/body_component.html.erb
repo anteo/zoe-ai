@@ -1,13 +1,52 @@
 <%= helpers.turbo_frame_tag "settings-body" do %>
   <%= helpers.turbo_stream_flash_alerts %>
+  <% section_opts = section_options %>
 
   <div class="drawer drawer-open">
     <input type="checkbox" class="drawer-toggle"/>
-    <div class="drawer-content h-[65vh] overflow-y-auto">
-      <%= component :"settings/#{@section}" %>
+    <div class="drawer-content h-[65vh] flex flex-col overflow-hidden">
+      <div class="px-5 py-4 border-b border-base-300 shrink-0">
+        <header class="flex items-center gap-3">
+          <h3 class="text-lg font-bold"><%= t(:"label_settings_#{@section}") %></h3>
+          <button type="button"
+                  class="btn btn-ghost btn-sm btn-circle ml-auto"
+                  data-action="click->app-modal#close"
+                  aria-label="<%= t(:label_close) %>">
+            <span class="icon-[lucide--x] w-5 h-5"></span>
+            <span class="sr-only"><%= t(:label_close) %></span>
+          </button>
+        </header>
+      </div>
+
+      <% if section_opts[:form] %>
+        <% form_html = { class: "min-h-full flex flex-col" }.merge(section_opts[:html]&.call || {}) %>
+
+        <%= helpers.simple_form_for section_opts[:form].call,
+                                    url: settings_path(scope: section_opts[:scope]),
+                                    method: :patch,
+                                    builder: SettingsFormBuilder,
+                                    html: form_html do |f| %>
+          <%= helpers.hidden_field_tag :section, @section %>
+
+          <div class="<%= helpers.class_names('flex-1 overflow-y-auto p-5 space-y-8 text-sm bg-base-200', 'pb-28' => section_opts[:footer]) %>">
+            <%= component :"settings/#{@section}", f: f %>
+          </div>
+
+          <% if section_opts[:footer] %>
+            <div class="mt-auto sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end z-40 gap-3">
+              <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-outline" %>
+              <%= f.button :submit, t(:label_save), name: "save", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="flex-1 overflow-y-auto p-5 space-y-8 text-sm bg-base-200  ">
+          <%= component :"settings/#{@section}" %>
+        </div>
+      <% end %>
     </div>
     <div class="drawer-side h-full overflow-hidden">
-      <ul class="menu bg-base-200 h-full w-44 py-5 px-2 gap-0.5">
+      <ul class="menu bg-base-300 h-full w-44 py-5 px-2 gap-0.5">
         <% SECTIONS.each do |section, opts| %>
           <li>
             <%= link_to settings_path(section:),

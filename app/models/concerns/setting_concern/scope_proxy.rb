@@ -3,40 +3,61 @@ module SettingConcern
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveRecord::AttributeMethods::Query
-    extend SettingConcern::ScopeProxyBehavior
 
     class_attribute :scope_path # dotted for nested, e.g. "mailer.smtp"
 
-    def self.inherited(subclass)
-      super
-      subclass.instance_variable_set(:@_defs, {})
-      subclass.instance_variable_set(:@_nested_names, [])
-      subclass.instance_variable_set(:@_nested_proxy_classes, {})
-    end
+    class << self
+      def inherited(subclass)
+        super
 
-    def self.model_name
-      ActiveModel::Name.new(self, nil, scope_path.to_s.split(".").last)
-    end
+        subclass.instance_variable_set(:@_defs, {})
+        subclass.instance_variable_set(:@_nested_names, [])
+        subclass.instance_variable_set(:@_nested_proxy_classes, {})
+      end
 
-    def self.human_attribute_name(attribute, options = {})
-      options ||= {}
-      path = scope_path.presence
-      return super(attribute, options) unless path
+      def model_name
+        ActiveModel::Name.new(self, nil, scope_path.to_s.split(".").last)
+      end
 
-      I18n.t(
-        "settings.#{path}.#{attribute}",
-        **options,
-        default: super(attribute, options)
-      )
-    end
+      def human_attribute_name(attribute, options = {})
+        options ||= {}
+        path = scope_path.presence
+        return super(attribute, options) unless path
 
-    def self.from_data(data)
-      db_attrs = data[scope_path.to_s] || {}
-      attrs = _defs.filter_map do |attr_name, definition|
-        next unless db_attrs.key?(attr_name.to_s) || definition.overridden?
-        [ attr_name, definition.resolve(db_attrs[attr_name.to_s]) ]
-      end.to_h
-      new(attrs)
+        I18n.t(
+          "settings.#{path}.#{attribute}",
+          **options,
+          default: super(attribute, options)
+        )
+      end
+
+      def from_data(data)
+        db_attrs = data[scope_path.to_s] || {}
+        attrs = _defs.filter_map do |attr_name, definition|
+          next unless db_attrs.key?(attr_name.to_s) || definition.overridden?
+          [ attr_name, definition.resolve(db_attrs[attr_name.to_s]) ]
+        end.to_h
+        new(attrs)
+      end
+
+      def _defs
+        @_defs ||= {}
+      end
+
+      def _nested_names
+        @_nested_names ||= []
+      end
+
+      def _nested_proxy_classes
+        @_nested_proxy_classes ||= {}
+      end
+
+      def permitted_attributes
+        writable = _defs.reject { |_, d| d.readonly? }.keys
+        nested = _nested_proxy_classes.transform_keys { |k| :"#{k}_attributes" }
+                                      .transform_values(&:permitted_attributes)
+        writable + (nested.empty? ? [] : [ nested ])
+      end
     end
 
     def persisted? = true

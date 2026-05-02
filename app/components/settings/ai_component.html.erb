@@ -1,21 +1,14 @@
-<%= helpers.simple_form_for Setting.ai,
-                            url: settings_path(scope: "ai"),
-                            method: :patch,
-                            builder: SimpleForm::SettingsFormBuilder do |f| %>
-  <%= helpers.hidden_field_tag :section, params[:section] %>
-
-  <div class="p-5 space-y-8">
-    <header class="text-lg font-bold"><%= t(:label_settings_ai) %></header>
-    <div class="space-y-4">
-      <%= f.input :default_model %>
-      <%= f.input :default_embedding_model %>
-      <%= f.input :default_image_model %>
-      <%= f.input :request_timeout %>
-      <%= f.input :debug, as: :boolean %>
-    </div>
-  </div>
-
-  <div class="sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end">
-    <%= f.button :submit, t(:label_apply), class: "btn btn-primary" %>
-  </div>
-<% end %>
+<div class="space-y-4">
+  <%= f.input :default_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "chat"),
+              placeholder: t(:placeholder_choose_model) %>
+  <%= f.input :default_embedding_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "embedding"),
+              placeholder: t(:placeholder_choose_model) %>
+  <%= f.input :default_image_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "image"),
+              placeholder: t(:placeholder_choose_model) %>
+</div>

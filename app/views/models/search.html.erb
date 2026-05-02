@@ -1,0 +1,23 @@
+<% if @models.empty? %>
+  <li>
+    <a class="menu-title"><%= t(:text_no_available_models) %> </a>
+  </li>
+<% else %>
+  <% @models.group_by(&:provider).each do |provider, models| %>
+    <li>
+      <h2 class="menu-title"><%= provider.humanize %></h2>
+      <ul>
+        <% models.each do |model| %>
+          <li
+            role="option"
+            data-autocomplete-value="<%= model.model_id %>"
+            data-autocomplete-label="<%= model.model_id %>">
+            <a>
+              <%= model.model_id %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+<% end %>

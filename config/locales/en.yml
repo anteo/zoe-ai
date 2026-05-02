@@ -123,6 +123,7 @@ en:
   label_yes: 'Yes'
   placeholder_add_instruction: add instruction...
   placeholder_chat_input: Type your message...
+  placeholder_choose_model: Choose model...
   placeholder_enter_character_name: Enter character name
   placeholder_filter_facts_text: Filter facts
   placeholder_image_description: Add image description
@@ -193,6 +194,8 @@ en:
   text_models_sync_json_unchanged: models.json unchanged
   text_models_sync_json_updated: models.json refreshed
   text_models_sync_started: Updating model registry...
+  text_model_not_configured: Model is not configured. Please set a model in Settings -> LLM.
+  text_no_available_models: No available models
   text_no_character_description: No description yet.
   text_no_character_events: No events yet.
   text_no_character_facts: No facts yet.
