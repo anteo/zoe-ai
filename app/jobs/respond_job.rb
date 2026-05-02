@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class RespondJob < ApplicationJob
+  include JobChatSupport
+
   def perform(chat)
+    ensure_chat_model!(chat)
+    show_message_placeholder(chat)
     ai_chat = AI::Agents::Zoe.find(chat.id)
-    show_message_placeholder(ai_chat)
 
     ai_chat.on_end_message do
       message = ai_chat.message
-      schedule_message(ai_chat, message) if message.assistant?
+      schedule_message(chat, message) if message.assistant?
     end.complete
   rescue => e
     broadcast_error(chat, e.message)
@@ -15,6 +18,19 @@ class RespondJob < ApplicationJob
   end
 
   private
+
+  def ensure_chat_model!(chat)
+    return if chat.model_id.present?
+    resolved_chat = AI::Agents::Zoe.build_chat(character: chat.character, partner: chat.partner, user: chat.user)
+    model = resolved_chat.resolved_model
+    return if model.blank?
+
+    chat.with_lock do
+      chat.update_column(:model_id, model.id) if chat.model_id.blank?
+    end
+  rescue AI::ModelNotConfiguredError
+    nil
+  end
 
   def schedule_message(chat, message)
     if execution.cancelled?

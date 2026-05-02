@@ -1,4 +1,4 @@
-module MissionControl
+module JobMissionControl
   extend ActiveSupport::Concern
 
   def execution

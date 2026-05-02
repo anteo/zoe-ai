@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TypeSentenceJob < ApplicationJob
+  include JobChatSupport
+
   limits_concurrency key: ->(chat, *) { "type_sentence_#{chat.id}" }
 
   def perform(chat, message, chunks, first = false)

@@ -34,6 +34,7 @@ module AI
           _, chat_options = partition_inputs(kwargs)
           resolved_chat_model.new(**kwargs, **chat_kwargs, **chat_options).tap do |chat|
             chat.send(:resolve_model_from_strings)
+            raise AI::ModelNotConfiguredError if chat.respond_to?(:model) && chat.model.blank?
           end
         end
 

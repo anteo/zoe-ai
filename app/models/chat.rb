@@ -80,6 +80,13 @@ class Chat < ApplicationRecord
     ((token_usage_total.to_f / token_usage_context_window) * 100).round.clamp(0, 100)
   end
 
+  def to_llm
+    resolve_model_from_strings
+    raise AI::ModelNotConfiguredError if model.blank?
+
+    super
+  end
+
   def resolved_model
     resolve_model_from_strings
     model
