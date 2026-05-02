@@ -354,6 +354,22 @@ class SettingTest < ActiveSupport::TestCase
     assert_equal [ :ai ], ai_calls
   end
 
+  test "sync_hooks_if_stale! does not fire hooks when last_synced_at is nil and keys are unchanged" do
+    calls = []
+    Setting.on_change(:ui) { calls << :ui }
+
+    Setting.ui.update(flash_timeout_ms: 4_444)
+    calls.clear
+    current_keys = Setting.pluck(:scope, :key).map { |scope, key| "#{scope}\0#{key}" }
+
+    Setting.instance_variable_set(:@_hooks_synced_at, nil)
+    Setting.instance_variable_set(:@_hooks_synced_keys, current_keys)
+
+    Setting.sync_hooks_if_stale!
+
+    assert_equal [], calls
+  end
+
   private
 
   def with_env(pairs, &block)
