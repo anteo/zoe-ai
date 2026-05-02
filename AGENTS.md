@@ -7,12 +7,13 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 **How to apply:** Frame all architectural suggestions in terms of Rails conventions, ActiveRecord, and background jobs.
 
 ## Key Directories
-- `app/models/` — Fact, Character, Topic, Message, Chat, Instruction, User
-- `lib/ai/actors/` — ExtractFacts, DescribeCharacter, SummarizeLines, ObjectifyChat
+- `app/models/` — Core chat/memory entities (`Chat`, `Message`, `Fact`, `FactAggregate`, `Character`, `Topic`, `User`) plus runtime/config models (`Instruction`, `Model`, `Agent`, `ToolCall`, `MCPServer`, `Setting`)
+- `lib/ai/actors/` — Extraction, aggregation, and summarization orchestration (`ExtractFacts`, `AggregatePersistentFacts`, `SummarizeFactAggregate`, `DescribeCharacter`, `SummarizeChat`, etc.)
 - `lib/ai/` — BaseAgent subclasses (e.g. `AI::Agents::ExtractFacts`)
-- `lib/ai/tools/` — Memory (topic_search + last_chat_search via embeddings)
-- `app/prompts/` — ERB templates for all LLM system prompts
-- `app/jobs/` — ExtractFactsJob, CloseChatsJob, SummarizeChatJob, etc.
+- `lib/ai/tools/` — Tool integrations used by agents (character image ops, event search, etc.)
+- `app/prompts/ai/agents/` — ERB templates for AI agent prompts
+- `app/views/ai/actors/` — Actor rendering templates (e.g. character description formats)
+- `app/jobs/` — Async orchestration (`RespondJob`, `ExtractFactsJob`, `AggregatePersistentFactsJob`, `SummarizeFactAggregateJob`, `CloseChatJob`, `SummarizeChatJob`, etc.)
 
 ## Domain Model
 
@@ -31,54 +32,46 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 - `topic_id` — FK to topics (flat, name-only, created dynamically)
 - `chat_id`, `message_id` — source tracking
 
+**FactAggregate** — hierarchical summaries of persistent facts by `character` + `topic`:
+- Month rows (`kind: month`) and rolling period bands (`m0_3`, `m3_6`, `m6_12`, `m12_24`, `year_YYYY`)
+- `summary_status` lifecycle: pending | in_progress | done | failed
+- Parent/child links used to build band summaries from month summaries
+- `slot_key` as stable unique identity per character/topic/kind/anchor month
+
 **Message** — `has_many_attached :attachments` (ActiveStorage). `content_raw` stores raw provider response for assistant message replay. Visibility includes attachment-only messages (no text).
 
-## RubyLLM Chat Session Persistence Pattern
+**Model / Agent / MCPServer / ToolCall / Setting** — runtime AI infrastructure:
+- `Model`: provider model registry used for chat resolution
+- `Agent`: configurable agent profiles (model + thinking effort + MCP bindings)
+- `MCPServer`: external tool server definitions and lifecycle
+- `ToolCall`: persisted LLM tool invocation records
+- `Setting`: app/AI/provider/mail/UI configuration tree
 
-Two ways to use an agent with a Chat:
-- **`.new(chat:).chat`** — persists messages to the DB (visible in UI)
-- **`.chat(chat:)`** (class method) — in-memory session, no persistence (for extraction, summarization, internal reasoning)
+## Top-Level Flows
 
-## Extraction Pipeline
+### 1) Live chat response flow
+1. User message is persisted to `messages`.
+2. `RespondJob` resolves and pins the chat model (if missing), then runs `AI::Agents::Zoe`.
+3. Assistant message is streamed/typed (`TypeSentenceJob`) and then fact extraction is scheduled (`ExtractFactsJob`).
 
-1. `ExtractFactsJob` triggers after each message (background, concurrency-limited per chat)
-2. `AI::Actors::ExtractFacts` orchestrates: instantiates `AI::Agents::ExtractFacts`, processes messages sequentially
-3. Returns schema-enforced `{ "facts": [...] }` JSON; `build_fact()` creates records
-4. Multi-subject statements → separate facts per character (no HABTM on facts)
+### 2) Facts extraction flow
+1. `ExtractFactsJob` runs per-chat with `limits_concurrency` (single extractor per chat, conflicts discarded).
+2. `AI::Actors::ExtractFacts` replays visible messages in order into `AI::Agents::ExtractFacts`.
+3. If a message has `memorize: false`, it is still sent to extraction context but paired with empty facts (`[]`), so continuity remains while skipping storage.
+4. Extracted rows become `facts` records (subject `character`, `author`, `topic`, temporal fields, importance, source message/chat).
+5. Third-party characters can be auto-created on demand when mentioned.
 
-**Memory mode toggle** (`memorize` boolean on Message): When `false`, message is added to LLM context with empty facts response (`[]`) for continuity, but extraction is skipped. AI messages auto-inherit from the last user message. User can toggle via brain icon in chat input; state is stored as a **module-scoped JS variable** in `ChatInputController` — persists across Turbo navigations (state stays off while chatting), but resets to `true` on page refresh/reopen. No cookie persistence; lives only in browser memory for the session.
+### 3) Persistent memory aggregation flow
+1. Fact changes mark related month aggregates stale (`Fact` callback → `FactAggregate.mark_months_stale!`).
+2. `AggregatePersistentFactsJob` rebuilds monthly rows and rolling time-band rows (`m0_3`, `m3_6`, `m6_12`, `m12_24`, `year_YYYY`) per character/topic.
+3. `SummarizeFactAggregateJob` summarizes month rows first, then parent bands when all children are ready.
+4. `RetryFailedFactAggregatesJob` re-enqueues failed month/band summaries.
+5. Character descriptions are derived from `fact_aggregates` (prefer summaries, fallback to aggregate body), not raw facts.
 
-## Character Description Generation
-
-- Persistent facts are aggregated before being used for character descriptions.
-- Aggregation is stored in the database and refreshed by background jobs.
-- Do not assume character descriptions are built directly from raw facts.
-
-## System Prompt Structure
-
-Uses XML tags for hard semantic boundaries between sections:
-- `<context>` — date, conversation partner, last conversation time
-- `<identity role="assistant">` / `<identity role="user">` — character descriptions (prevents identity bleed)
-- `<known_people>` → `<person name="...">` — other known characters
-- `<events>` — non-persistent facts grouped by temporal period
-- `<yesterday_conversation>` — yesterday's chat summaries (injected directly, not via tool)
-- `<instructions>` — AI-specific instructions
-
-**System prompt caching:** `BaseAgent#apply_instructions` snapshots the rendered prompt into the `messages` table as a system message on the **first agent invocation** for a chat (via `RespondJob` → `find` with `persist: false`), using RubyLLM's `with_instructions` + `persist_system_instruction`. On subsequent requests, `apply_instructions` returns early if a persistent system message exists (checks `chat.messages_association.where(role: :system).exists?`), avoiding re-render. This means `to_llm` loads the frozen system message from DB, LLM sees identical bytes every turn → consistent cache hits. No explicit `sync_instructions!` call needed; the snapshot happens transparently. Semantic model: mid-conversation extractions (ExtractFactsJob, DescribeCharacterJob) affect the *next* chat's prompt only.
-
-## Key Design Decisions
-
-**Markdown rendering in messages** — Server-side via `redcarpet` gem in `ApplicationHelper#markdown`. Instantiates new renderer on each call (thread-safe). Supports fenced code, tables, strikethrough, autolink, hard line breaks. Links open in new tab (`rel=noopener`). Applied in `message_component.html.erb` for all message content.
-
-**Yesterday's summaries in system prompt** (not via tool): Tools are opt-in; LLM won't reliably call recall. Direct injection ensures automatic conversational continuity. Older conversations use the Memory tool.
-
-**LLM context pollution prevention**: System-injected annotations (e.g. attachment blob IDs) are added at LLM read time (`extract_content`) but stripped before DB persistence (`prepare_content_for_storage`). Prevents LLM from learning to reproduce system annotations.
-
-**Daily chat closure**: `CloseChatsJob` runs at midnight, sets `closed: true`, broadcasts redirect immediately. Summarization runs async via `SummarizeChatJob` to keep the critical path short. Startup initializer catches stale chats from restarts.
-
-**Image generation**: `AI.paint` wraps RubyLLM with `with:` parameter for image-to-image (OpenRouter provider only). Characters have `has_many_attached :images` with `metadata[:description]` for selection.
-
-**Actor error handling**: Use `fail_on RubyLLM::Error` in actors for graceful degradation in jobs — returns failed Result instead of raising.
+### 4) Chat lifecycle flow
+1. `CloseStaleChatsJob` finds stale open chats and enqueues `CloseChatJob`.
+2. `CloseChatJob` removes empty chats or marks non-empty chats as `closed` and broadcasts close event.
+3. `SummarizeChatJob` asynchronously generates chat summaries for closed chats.
 
 ## Running Commands
 
@@ -93,6 +86,7 @@ After implementation is done, skip running checks/validations (tests, linters, f
 ## Internationalization (i18n)
 
 Rails i18n with `config/locales/en.yml` and `ru.yml`. Always add keys to **both** files.
+Keep lines sorted alphabetically.
 
 Key conventions: `label_*` (buttons/forms), `placeholder_*` (inputs), `confirm_*` (dialogs), `text_*` (static text/HTML).
 
