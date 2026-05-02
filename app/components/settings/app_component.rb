@@ -1,2 +1,4 @@
-class Settings::AppComponent < ApplicationComponent
+module Settings
+  class AppComponent < ApplicationComponent
+  end
 end

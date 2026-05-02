@@ -1,2 +1,4 @@
-class Settings::MailerComponent < ApplicationComponent
+module Settings
+  class MailerComponent < ApplicationComponent
+  end
 end

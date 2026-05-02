@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
-class Chats::AttachmentComponent < ApplicationComponent
-  attr_reader :attachment
+module Chats
+  class AttachmentComponent < ApplicationComponent
+    attr_reader :attachment
 
-  def initialize(attachment:)
-    @attachment = attachment
-  end
+    def initialize(attachment:)
+      @attachment = attachment
+    end
 
-  def filename
-    attachment.filename
-  end
+    def filename
+      attachment.filename
+    end
 
-  def byte_size
-    attachment.byte_size
-  end
+    def byte_size
+      attachment.byte_size
+    end
 
-  def url
-    rails_blob_path(attachment, disposition: "attachment")
+    def url
+      rails_blob_path(attachment, disposition: "attachment")
+    end
   end
 end

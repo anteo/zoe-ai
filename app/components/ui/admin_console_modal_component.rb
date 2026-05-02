@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-class UI::AdminConsoleModalComponent < ApplicationComponent
+module UI
+  class AdminConsoleModalComponent < ApplicationComponent
+  end
 end

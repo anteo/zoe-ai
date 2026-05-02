@@ -49,16 +49,21 @@ export default class extends Controller {
     this.darkThemeStorageKey = "theme-dark-id"
     this.mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
     this.boundHandleSystemThemeChange = this.handleSystemThemeChange.bind(this)
+    this.boundSyncControls = this.syncControls.bind(this)
 
     this.applyTheme()
     this.syncControls()
     this.mediaQuery.addEventListener("change", this.boundHandleSystemThemeChange)
+    document.addEventListener("turbo:load", this.boundSyncControls)
+    document.addEventListener("turbo:render", this.boundSyncControls)
   }
 
   disconnect() {
     if (this.mediaQuery) {
       this.mediaQuery.removeEventListener("change", this.boundHandleSystemThemeChange)
     }
+    document.removeEventListener("turbo:load", this.boundSyncControls)
+    document.removeEventListener("turbo:render", this.boundSyncControls)
   }
 
   toggle(event) {

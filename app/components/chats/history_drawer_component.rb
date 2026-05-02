@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-class Chats::HistoryDrawerComponent < ApplicationComponent
+module Chats
+  class HistoryDrawerComponent < ApplicationComponent
+  end
 end

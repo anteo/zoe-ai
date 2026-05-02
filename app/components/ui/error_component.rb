@@ -1,25 +1,27 @@
 # frozen_string_literal: true
 
-class UI::ErrorComponent < ApplicationComponent
-  attr_reader :chat, :current_character, :error
+module UI
+  class ErrorComponent < ApplicationComponent
+    attr_reader :chat, :current_character, :error
 
-  def initialize(chat:, current_character:, error:)
-    @chat = chat
-    @current_character = current_character
-    @error = error
-  end
+    def initialize(chat:, current_character:, error:)
+      @chat = chat
+      @current_character = current_character
+      @error = error
+    end
 
-  private
+    private
 
-  def bubble_class
-    "chat chat-start"
-  end
+    def bubble_class
+      "chat chat-start"
+    end
 
-  def bubble_color
-    "chat-bubble-error"
-  end
+    def bubble_color
+      "chat-bubble-error"
+    end
 
-  def sender
-    chat.partner
+    def sender
+      chat.partner
+    end
   end
 end

@@ -1,2 +1,4 @@
-class Settings::EventsComponent < ApplicationComponent
+module Settings
+  class EventsComponent < ApplicationComponent
+  end
 end

@@ -1,24 +1,26 @@
 # frozen_string_literal: true
 
-class Chats::MessagePlaceholderComponent < ApplicationComponent
-  attr_reader :chat, :current_character
+module Chats
+  class MessagePlaceholderComponent < ApplicationComponent
+    attr_reader :chat, :current_character
 
-  def initialize(chat:, current_character:)
-    @chat = chat
-    @current_character = current_character
-  end
+    def initialize(chat:, current_character:)
+      @chat = chat
+      @current_character = current_character
+    end
 
-  private
+    private
 
-  def bubble_class
-    "chat chat-start"
-  end
+    def bubble_class
+      "chat chat-start"
+    end
 
-  def bubble_color
-    "bg-base-300"
-  end
+    def bubble_color
+      "bg-base-300"
+    end
 
-  def sender
-    chat.partner
+    def sender
+      chat.partner
+    end
   end
 end

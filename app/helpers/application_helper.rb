@@ -14,7 +14,7 @@ module ApplicationHelper
     rendered = Array(messages).filter_map do |type, message|
       next if message.blank?
 
-      turbo_stream.append(target, component(:flash_alert, type:, message:))
+      turbo_stream.append(target, component(:"ui/flash_alert", type:, message:))
     end
 
     safe_join(rendered)
