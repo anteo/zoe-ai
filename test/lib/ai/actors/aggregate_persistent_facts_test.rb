@@ -24,7 +24,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     work_band = character.fact_aggregates.find_by!(kind: "m0_3", topic: topic_work, anchor_month:)
@@ -37,7 +37,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
       work_fact = character.facts.find_by!(topic: topic_work)
       work_fact.update!(content: "Anton works on Zoe every single day.")
 
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_operator work_band.reload.updated_at, :>, original_work_updated_at
@@ -66,14 +66,14 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert character.fact_aggregates.exists?(kind: "m0_3", topic: topic_work, anchor_month: april_anchor)
     assert character.fact_aggregates.exists?(kind: "m6_12", topic: topic_hobby, anchor_month: april_anchor)
 
     travel_to Time.zone.local(2026, 5, 2, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_not character.fact_aggregates.bands.exists?(anchor_month: april_anchor)
@@ -101,7 +101,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     first_snapshot = character.fact_aggregates
@@ -109,7 +109,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
                               .pluck(:id, :kind, :slot_key, :body, :facts_count, :source_updated_at, :updated_at)
 
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     second_snapshot = character.fact_aggregates
@@ -132,21 +132,21 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     month = character.fact_aggregates.find_by!(kind: "month", topic: topic_work, anchor_month:)
     original_updated_at = month.updated_at
 
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_equal original_updated_at, month.reload.updated_at
 
     travel_to Time.zone.local(2026, 4, 23, 11, 0, 0) do
       month.update_columns(stale: true, updated_at: Time.current)
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_operator month.reload.updated_at, :>, original_updated_at
@@ -173,7 +173,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     current_month = character.fact_aggregates.find_by!(kind: "month", topic: topic_work, anchor_month:)
@@ -202,7 +202,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     with_test_queue_adapter do
       assert_enqueued_jobs 1, only: SummarizeFactAggregateJob do
         travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-          AI::Actors::AggregatePersistentFacts.call(character:)
+          AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
         end
       end
     end
@@ -228,7 +228,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
     clear_enqueued_jobs
 
@@ -271,7 +271,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert character.fact_aggregates.exists?(kind: "month", topic: topic_work, anchor_month: Date.new(2026, 4, 1))
@@ -279,7 +279,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
 
     fact.destroy!
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_not character.fact_aggregates.exists?(kind: "month", topic: topic_work, anchor_month: Date.new(2026, 4, 1))
@@ -306,7 +306,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     band = character.fact_aggregates.find_by!(kind: "m0_3", topic: topic_work, anchor_month:)
@@ -316,7 +316,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     fact_one.destroy!
 
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert character.fact_aggregates.exists?(kind: "m0_3", topic: topic_work, anchor_month:)
@@ -347,7 +347,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     band = character.fact_aggregates.find_by!(kind: "m6_12", topic: topic_work, anchor_month:)
@@ -357,7 +357,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     fact_october.destroy!
 
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_not character.fact_aggregates.exists?(id: october_month.id)
@@ -388,7 +388,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     month = character.fact_aggregates.find_by!(kind: "month", topic: topic_work, anchor_month: Date.new(2026, 4, 1))
@@ -398,7 +398,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
 
     fact_one.destroy!
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert_equal 1, month.reload.facts_count
@@ -429,7 +429,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     year_band = character.fact_aggregates.find_by!(kind: "year_2023", topic: topic_work, anchor_month:)
@@ -459,7 +459,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert character.fact_aggregates.exists?(kind: "m0_3", topic: topic_work, anchor_month: april_anchor)
@@ -467,7 +467,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
 
     travel_to Time.zone.local(2026, 4, 23, 10, 0, 0) do
       march_fact.update!(content: "Anton closed Q1 strongly.")
-      AI::Actors::AggregatePersistentFacts.call(character:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
     end
 
     assert character.fact_aggregates.exists?(kind: "m0_3", topic: topic_work, anchor_month: april_anchor)
@@ -490,6 +490,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
 
     Fact.create!(
       character:,
+      partner: chat.partner,
       author: character,
       message:,
       chat:,

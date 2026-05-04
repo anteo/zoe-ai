@@ -35,10 +35,14 @@ class Character < ApplicationRecord
   end
 
   def prompt_role(chat)
-    return "assistant" if self == chat.partner
+    return "you" if self == chat.partner
     return "interlocutor" if self == chat.character
 
-    familiar?(partner: chat.partner) ? "familiar" : "listed"
+    "other"
+  end
+
+  def prompt_relation(partner:)
+    familiar?(partner:) ? "familiar" : "unfamiliar"
   end
 
   def prompt_type

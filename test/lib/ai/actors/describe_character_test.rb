@@ -22,7 +22,7 @@ class DescribeCharacterTest < ActiveSupport::TestCase
       body: "## October 2025\nAnton swims on weekends."
     )
 
-    description = AI::Actors::DescribeCharacter.result(character:, mode: :markdown).description
+    description = AI::Actors::DescribeCharacter.result(character:, partner: characters(:zoe_default), mode: :markdown).description
 
     assert_includes description, "## Last 3 months"
     assert_includes description, "### Work"
@@ -45,7 +45,7 @@ class DescribeCharacterTest < ActiveSupport::TestCase
       summary: "Anton uses tools & adapters."
     )
 
-    description = AI::Actors::DescribeCharacter.result(character:, mode: :xml).description
+    description = AI::Actors::DescribeCharacter.result(character:, partner: characters(:zoe_default), mode: :xml).description
 
     assert_includes description, "<period from=\"February 2026\" to=\"April 2026\">"
     assert_includes description, "<topic name=\"R&amp;D &lt;AI&gt;\">"
@@ -71,7 +71,7 @@ class DescribeCharacterTest < ActiveSupport::TestCase
       summary: "Current summary"
     )
 
-    description = AI::Actors::DescribeCharacter.result(character:, mode: :markdown).description
+    description = AI::Actors::DescribeCharacter.result(character:, partner: characters(:zoe_default), mode: :markdown).description
 
     assert_includes description, "Current summary"
     assert_not_includes description, "Old summary"
@@ -96,7 +96,7 @@ class DescribeCharacterTest < ActiveSupport::TestCase
       summary: "Older summary"
     )
 
-    description = AI::Actors::DescribeCharacter.result(character:, mode: :markdown).description
+    description = AI::Actors::DescribeCharacter.result(character:, partner: characters(:zoe_default), mode: :markdown).description
 
     assert_operator description.index("## 6 to 12 months ago"), :<, description.index("## Last 3 months")
   end
@@ -120,7 +120,7 @@ class DescribeCharacterTest < ActiveSupport::TestCase
       summary: "Older summary"
     )
 
-    description = AI::Actors::DescribeCharacter.result(character:, mode: :markdown, period_order: :desc).description
+    description = AI::Actors::DescribeCharacter.result(character:, partner: characters(:zoe_default), mode: :markdown, period_order: :desc).description
 
     assert_operator description.index("## Last 3 months"), :<, description.index("## 6 to 12 months ago")
   end
@@ -137,15 +137,16 @@ class DescribeCharacterTest < ActiveSupport::TestCase
       summary: "Month-only summary"
     )
 
-    description = AI::Actors::DescribeCharacter.result(character:, mode: :markdown).description
+    description = AI::Actors::DescribeCharacter.result(character:, partner: characters(:zoe_default), mode: :markdown).description
     assert_equal "", description
   end
 
   private
 
-  def create_aggregate!(character:, topic:, kind:, anchor_month:, summary: nil, body: "Body")
+  def create_aggregate!(character:, topic:, kind:, anchor_month:, summary: nil, body: "Body", partner: characters(:zoe_default))
     FactAggregate.create!(
       character:,
+      partner:,
       topic:,
       kind:,
       anchor_month:,

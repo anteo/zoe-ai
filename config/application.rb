@@ -15,6 +15,7 @@ require "action_cable/engine"
 require "rails/test_unit/railtie"
 
 require_relative "../lib/pragmatic_segmenter/languages/russian_with_emoji"
+require "builder"
 require "rainbow/refinement"
 require "redcarpet"
 

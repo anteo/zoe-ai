@@ -1,49 +1,75 @@
-<context>
-Today is <%= I18n.l(Time.zone.now, locale: :en) %>.
-You are talking with <%= chat.character.name %> (ID: <%= chat.character.id %>).
-<% if (time = chat.character.last_conversation_time(partner: chat.partner, except: chat)).present? -%>
-Your last conversation was <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago.
-<% end -%>
-</context>
+<%
 
-<characters>
-<% chat.user.characters.order(:id).each do |character| -%>
-<character id="<%= character.id %>" name="<%= character.name %>" role="<%= character.prompt_role(chat) %>" type="<%= character.prompt_type %>" />
-<% end -%>
-</characters>
+buffer = +""
+xml = Builder::XmlMarkup.new(target: buffer, indent: 2)
 
-<identity name="<%= chat.partner.name %>" role="you">
-You are <%= chat.partner.name %>.
-<%= chat.described_character(chat.partner, mode: :xml) %>
-</identity>
+xml.context do
+  xml.text! "Today is #{I18n.l(Time.zone.now, locale: :en)}.\n"
+  xml.text! "You are talking with #{chat.character.name} (ID: #{chat.character.id}).\n"
+  if (time = chat.character.last_conversation_time(partner: chat.partner, except: chat)).present?
+    xml.text! "Your last conversation was #{helpers.distance_of_time_in_words_to_now(time, locale: :en)} ago.\n"
+  end
+end
 
-<identity name="<%= chat.character.name %>" role="interlocutor">
-<%= chat.character.name %> is the person you are talking to.
-<%= chat.described_character(chat.character, mode: :xml) %>
-</identity>
-<% known_characters = chat.known_characters_with_description(mode: :xml) -%>
-<% if known_characters.any? -%>
+xml.characters do
+  chat.user.characters.order(:id).each do |character|
+    attrs = {
+      id: character.id,
+      name: character.name,
+      role: character.prompt_role(chat),
+      type: character.prompt_type
+    }
+    attrs[:relation] = character.prompt_relation(partner: chat.partner) if character != chat.partner
+    xml.character(attrs)
+  end
+end
 
-<known_characters>
-<% known_characters.each do |character, description| -%>
-<character id="<%= character.id %>" name="<%= character %>">
-<%= description %>
-</character>
-<% end -%>
-</known_characters>
-<% end -%>
+xml.identity(
+  character_id: chat.partner.id,
+  name: chat.partner.name,
+  role: "you",
+  type: chat.partner.prompt_type
+) do
+  xml.text! "You are #{chat.partner.name}.\n"
+  xml << chat.described_character(chat.partner, mode: :xml).to_s
+end
 
-<events subject="<%= chat.character %>">
-<%= AI::Actors::DescribeEvents.result(character: chat.character, partner: chat.partner, mode: :xml).description %>
-</events>
-<% yesterday = chat.yesterday_summary -%>
-<% if yesterday.present? -%>
+xml.identity(
+  character_id: chat.character.id,
+  name: chat.character.name,
+  role: "interlocutor",
+  type: chat.character.prompt_type,
+  relation: chat.character.prompt_relation(partner: chat.partner)
+) do
+  xml.text! "#{chat.character.name} is the person you are talking to.\n"
+  xml << chat.described_character(chat.character, mode: :xml).to_s
+end
 
-<yesterday_conversation date="<%= Date.yesterday %>">
-<%= yesterday %>
-</yesterday_conversation>
-<% end -%>
+chat.described_identities(mode: :xml).each do |character, description|
+  xml.identity(
+    character_id: character.id,
+    name: character.name,
+    role: character.prompt_role(chat),
+    type: character.prompt_type,
+    relation: character.prompt_relation(partner: chat.partner)
+  ) do
+    xml << description.to_s
+  end
+end
 
-<instructions>
-<%= chat.partner_instructions %>
-</instructions>
+xml.events(subject: chat.character.to_s) do
+  xml << AI::Actors::DescribeEvents.result(character: chat.character, partner: chat.partner, mode: :xml).description.to_s
+end
+
+yesterday = chat.yesterday_summary
+if yesterday.present?
+  xml.yesterday_conversation(date: Date.yesterday.to_s) do
+    xml.text! yesterday.to_s
+  end
+end
+
+xml.instructions do
+  xml.text! chat.partner_instructions.to_s
+end
+%>
+<%= buffer %>

@@ -19,18 +19,16 @@ class Chat < ApplicationRecord
     @attachments_to_persist ||= []
   end
 
-  def other_known_characters
-    user.characters.where.not(id: [ partner_id, character_id ])
-  end
-
   def described_character(character, mode: :xml, period_order: :asc)
     @described_characters ||= {}
     key = [ character.id, partner_id, mode.to_s, period_order.to_s ]
     @described_characters[key] ||= AI::Actors::DescribeCharacter.result(character:, partner:, mode:, period_order:).description.to_s
   end
 
-  def known_characters_with_description(mode: :xml, period_order: :asc)
-    other_known_characters.filter_map do |item|
+  def described_identities(mode: :xml, period_order: :asc)
+    user.characters.order(:id).filter_map do |item|
+      next if item == partner || item == character
+
       description = described_character(item, mode:, period_order:)
       next if description.blank?
 

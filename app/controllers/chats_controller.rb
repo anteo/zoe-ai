@@ -34,9 +34,9 @@ class ChatsController < ApplicationController
   private
 
   def find_chat
+    return unless params[:id].present?
     @chat = current_user.chats.find_by(id: params[:id])
-    redirect_to(root_path) if @chat && @chat.partner != current_partner
-    redirect_to(root_path) if @chat&.closed?
+    redirect_to(root_path) unless @chat && @chat.partner == current_partner && !@chat.closed?
   end
 
   def find_history_chat
