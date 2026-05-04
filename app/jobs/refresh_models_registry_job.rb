@@ -16,6 +16,7 @@ class RefreshModelsRegistryJob < ApplicationJob
     AI.console.info "Models refresh complete!"
   rescue => e
     AI.console.error "RefreshModelsRegistryJob failed: #{e.message}"
+    AI.console.debug e.backtrace
     raise
   end
 end
