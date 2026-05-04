@@ -1,5 +1,5 @@
-module Settings
-  class BodyComponent < ApplicationComponent
+module UI
+  class SettingsComponent < ApplicationComponent
     SECTIONS = {
       "app" => {
         icon: "icon-[lucide--settings]"
