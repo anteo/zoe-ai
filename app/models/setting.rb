@@ -9,11 +9,14 @@ class Setting < ApplicationRecord
   end
 
   scope :ai do
-    setting :default_model, :string
-    setting :default_embedding_model, :string
-    setting :default_image_model, :string
     setting :request_timeout, :integer, default: 30
     setting :debug, :boolean, default: false
+
+    scope :models do
+      setting :default_model, :string
+      setting :default_embedding_model, :string
+      setting :default_image_model, :string
+    end
 
     scope :providers do
       scope :openai do

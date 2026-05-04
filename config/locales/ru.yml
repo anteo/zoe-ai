@@ -101,7 +101,9 @@ ru:
   label_send: Отправить
   label_send_reset_instructions: Отправить инструкцию по сбросу
   label_settings: Настройки
-  label_settings_ai: Модели
+  label_settings_ai: ИИ
+  label_settings_ai_models: Модели
+  label_settings_ai_providers: Провайдеры
   label_settings_app: Система
   label_settings_events: Память и события
   label_settings_mailer: Почта
@@ -130,9 +132,10 @@ ru:
   settings:
     ai:
       debug: Режим отладки
-      default_embedding_model: Модель эмбеддингов по умолчанию
-      default_image_model: Модель изображений по умолчанию
-      default_model: Модель по умолчанию
+      models:
+        default_embedding_model: Модель эмбеддингов по умолчанию
+        default_image_model: Модель изображений по умолчанию
+        default_model: Модель по умолчанию
       request_timeout: Таймаут запроса (секунды)
       providers:
         anthropic:

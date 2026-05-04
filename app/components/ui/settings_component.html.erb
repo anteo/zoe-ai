@@ -33,8 +33,7 @@
           </div>
 
           <div class="mt-auto sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end z-40 gap-3">
-            <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-outline" if section_opts[:show_apply] %>
-            <%= f.button :submit, t(:label_save), name: "save", class: "btn btn-primary" if section_opts[:show_save] != false %>
+            <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-primary" %>
           </div>
         <% end %>
       <% else %>
@@ -45,7 +44,7 @@
     </div>
     <div class="drawer-side h-full overflow-hidden">
       <ul class="menu bg-base-300 h-full w-44 py-5 px-2 gap-0.5">
-        <% SECTIONS.each do |section, opts| %>
+        <% top_level_sections.each do |section, opts| %>
           <li>
             <%= link_to settings_path(section:),
                         class: helpers.class_names("flex w-full items-center justify-start gap-2",
@@ -53,6 +52,23 @@
                         data: { turbo_frame: "settings-body" } do %>
               <span class="<%= opts[:icon] %> w-4 h-4 shrink-0"></span>
               <%= t(:"label_settings_#{section}") %>
+            <% end %>
+
+            <% children = child_sections(section) %>
+            <% if children.any? %>
+              <ul class="menu gap-0.5">
+                <% children.each do |child_section, child_opts| %>
+                  <li>
+                    <%= link_to settings_path(section: child_section),
+                                class: helpers.class_names("flex w-full items-center justify-start gap-2",
+                                                           "menu-active" => active?(child_section)),
+                                data: { turbo_frame: "settings-body" } do %>
+                      <span class="<%= child_opts[:icon] %> w-4 h-4 shrink-0"></span>
+                      <%= t(:"label_settings_#{child_section}") %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
             <% end %>
           </li>
         <% end %>

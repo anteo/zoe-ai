@@ -24,9 +24,9 @@ Rails.application.config.to_prepare do
       config.bedrock_region = providers.bedrock.region
       config.bedrock_session_token = providers.bedrock.session_token
 
-      config.default_model = cfg.default_model
-      config.default_embedding_model = cfg.default_embedding_model
-      config.default_image_model = cfg.default_image_model
+      config.default_model = cfg.models.default_model
+      config.default_embedding_model = cfg.models.default_embedding_model
+      config.default_image_model = cfg.models.default_image_model
       config.request_timeout = cfg.request_timeout
 
       console_logger.level = cfg.debug? ? Logger::DEBUG : Logger::INFO

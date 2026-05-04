@@ -101,7 +101,9 @@ en:
   label_send: Send
   label_send_reset_instructions: Send reset instructions
   label_settings: Settings
-  label_settings_ai: LLM
+  label_settings_ai: AI
+  label_settings_ai_models: Models
+  label_settings_ai_providers: Providers
   label_settings_app: System
   label_settings_events: Memory & Events
   label_settings_mailer: Email
@@ -130,9 +132,10 @@ en:
   settings:
     ai:
       debug: Debug mode
-      default_embedding_model: Default embedding model
-      default_image_model: Default image model
-      default_model: Default model
+      models:
+        default_embedding_model: Default embedding model
+        default_image_model: Default image model
+        default_model: Default model
       request_timeout: Request timeout (seconds)
       providers:
         anthropic:

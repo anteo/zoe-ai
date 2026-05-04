@@ -7,14 +7,19 @@ module UI
       "ai" => {
         icon: "icon-[lucide--sparkles]",
         form: -> { Setting.ai },
-        scope: "ai",
+        scope: "ai"
       },
-      "providers" => {
+      "ai_models" => {
+        icon: "icon-[lucide--bot]",
+        parent: "ai",
+        form: -> { Setting.ai.models },
+        scope: "ai.models"
+      },
+      "ai_providers" => {
         icon: "icon-[lucide--plug]",
-        form: -> { Setting.ai },
-        scope: "ai",
-        show_apply: true,
-        show_save: false,
+        parent: "ai",
+        form: -> { Setting.ai.providers },
+        scope: "ai.providers",
         html: lambda {
           {
             data: {
@@ -42,6 +47,14 @@ module UI
 
     def active?(key)
       @section == key
+    end
+
+    def top_level_sections
+      SECTIONS.select { |_key, opts| opts[:parent].blank? }
+    end
+
+    def child_sections(parent_key)
+      SECTIONS.select { |_key, opts| opts[:parent] == parent_key }
     end
 
     def section_options = SECTIONS.fetch(@section)

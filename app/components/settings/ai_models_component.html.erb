@@ -1,0 +1,14 @@
+<div class="space-y-4">
+  <%= f.input :default_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "chat"),
+              placeholder: t(:placeholder_choose_model) %>
+  <%= f.input :default_embedding_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "embedding"),
+              placeholder: t(:placeholder_choose_model) %>
+  <%= f.input :default_image_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "image"),
+              placeholder: t(:placeholder_choose_model) %>
+</div>
