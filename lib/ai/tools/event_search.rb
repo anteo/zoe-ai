@@ -45,6 +45,7 @@ module AI
 
       def scoped_event_facts
         Fact.where(character: accessible_characters)
+            .where(partner: chat.partner)
             .persistent(false)
             .includes(:character, :author, :topic)
             .references(:character, :author, :topic)

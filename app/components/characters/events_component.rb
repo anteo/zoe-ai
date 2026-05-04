@@ -2,10 +2,11 @@
 
 module Characters
   class EventsComponent < ApplicationComponent
-    attr_reader :character
+    attr_reader :character, :partner
 
-    def initialize(character:)
+    def initialize(character:, partner: nil)
       @character = character
+      @partner = partner
     end
 
     def groups
@@ -29,7 +30,7 @@ module Characters
     private
 
     def events_result
-      @events_result ||= AI::Actors::DescribeEvents.result(character:, mode: :markdown)
+      @events_result ||= AI::Actors::DescribeEvents.result(character:, partner:, mode: :markdown)
     end
 
     def fact_date(fact)

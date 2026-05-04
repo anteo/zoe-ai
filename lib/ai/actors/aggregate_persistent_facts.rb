@@ -1,6 +1,7 @@
 module AI::Actors
   class AggregatePersistentFacts < Actor
     input :character, type: Character
+    input :partner, type: Character
     input :logger, default: -> { Rails.logger }
 
     fail_on ActiveRecord::RecordInvalid
@@ -10,7 +11,7 @@ module AI::Actors
 
       FactAggregate.transaction do
         tagged_logger.info("Start aggregating facts (#{refresh_mode})...")
-        month_rows = refresh_months(character.fact_aggregates.months.index_by(&:slot_key))
+        month_rows = refresh_months(scope_fact_aggregates.months.index_by(&:slot_key))
         month_rows_to_summarize = month_rows.values.select { it.dirty? && !it.marked_for_destruction? }
 
         band_rows = if refresh_mode == :current_rotation
@@ -75,6 +76,7 @@ module AI::Actors
 
     def facts_scope
       character.facts_to_consider
+               .where(partner:)
                .persistent
                .where.not(topic_id: nil, month: nil)
     end
@@ -101,7 +103,7 @@ module AI::Actors
         attrs = build_attributes.call(group_key, rows)
         topic_id = group_key.first
 
-        aggregate = existing_rows[slot_key] || FactAggregate.new(character:, topic_id:)
+        aggregate = existing_rows[slot_key] || FactAggregate.new(character:, partner:, topic_id:)
         aggregate.assign_attributes(attrs)
         current_rows[slot_key] = aggregate
       end
@@ -191,7 +193,7 @@ module AI::Actors
     end
 
     def current_band_anchor_month
-      @current_band_anchor_month ||= character.fact_aggregates.bands.latest_anchor_month
+      @current_band_anchor_month ||= scope_fact_aggregates.bands.latest_anchor_month
     end
 
     def refresh_mode
@@ -205,14 +207,14 @@ module AI::Actors
     end
 
     def current_anchor_band_rows
-      character.fact_aggregates
+      scope_fact_aggregates
                .bands
                .where(anchor_month:)
                .index_by(&:slot_key)
     end
 
     def cleanup_stale_band_anchors
-      character.fact_aggregates
+      scope_fact_aggregates
                .bands
                .where.not(anchor_month:)
                .delete_all
@@ -231,11 +233,15 @@ module AI::Actors
     end
 
     def month_slot_key(topic_id, bucket_month)
-      FactAggregate.slot_key_for(character_id: character.id, topic_id:, kind: "month", anchor_month: bucket_month)
+      FactAggregate.slot_key_for(character_id: character.id, partner_id: partner.id, topic_id:, kind: "month", anchor_month: bucket_month)
     end
 
     def band_slot_key(topic_id, band_kind)
-      FactAggregate.slot_key_for(character_id: character.id, topic_id:, kind: band_kind, anchor_month:)
+      FactAggregate.slot_key_for(character_id: character.id, partner_id: partner.id, topic_id:, kind: band_kind, anchor_month:)
+    end
+
+    def scope_fact_aggregates
+      character.fact_aggregates.where(partner:)
     end
 
     def flush_pending_changes!(rows)
@@ -258,6 +264,7 @@ module AI::Actors
     def tagged_logger
       logger.tagged("AggregatePersistentFacts")
             .tagged("character_id=#{character.id}")
+            .tagged("partner_id=#{partner.id}")
             .tagged("anchor_month=#{anchor_month}")
     end
   end

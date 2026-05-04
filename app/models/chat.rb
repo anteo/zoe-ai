@@ -25,8 +25,8 @@ class Chat < ApplicationRecord
 
   def described_character(character, mode: :xml, period_order: :asc)
     @described_characters ||= {}
-    key = [ character.id, mode.to_s, period_order.to_s ]
-    @described_characters[key] ||= AI::Actors::DescribeCharacter.result(character:, mode:, period_order:).description.to_s
+    key = [ character.id, partner_id, mode.to_s, period_order.to_s ]
+    @described_characters[key] ||= AI::Actors::DescribeCharacter.result(character:, partner:, mode:, period_order:).description.to_s
   end
 
   def known_characters_with_description(mode: :xml, period_order: :asc)

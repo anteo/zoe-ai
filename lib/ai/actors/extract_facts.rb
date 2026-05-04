@@ -62,6 +62,7 @@ module AI::Actors
     def build_fact(data, message)
       Fact.new(
         character: resolve_character(data),
+        partner: chat.partner,
         author: message.character,
         content: data["fact"],
         kind: data["kind"],

@@ -1,5 +1,6 @@
 class Fact < ApplicationRecord
   belongs_to :character
+  belongs_to :partner, class_name: "Character"
   belongs_to :author, class_name: "Character"
   belongs_to :message
   belongs_to :chat
@@ -72,6 +73,7 @@ class Fact < ApplicationRecord
     {
       character_id: character_id.to_s,
       character_name: character.name,
+      partner_id: partner_id,
       fact: content,
       kind:,
       time:,
@@ -97,6 +99,7 @@ class Fact < ApplicationRecord
   def current_persistent_month_slot_key
     month_aggregate_slot_key_for(
       character_id: character_id,
+      partner_id: partner_id,
       topic_id: topic_id,
       month: month,
       persistent: persistent?
@@ -108,18 +111,20 @@ class Fact < ApplicationRecord
 
     month_aggregate_slot_key_for(
       character_id: attribute_before_last_save("character_id"),
+      partner_id: attribute_before_last_save("partner_id"),
       topic_id: attribute_before_last_save("topic_id"),
       month: attribute_before_last_save("month"),
       persistent: attribute_before_last_save("persistent")
     )
   end
 
-  def month_aggregate_slot_key_for(character_id:, topic_id:, month:, persistent:)
+  def month_aggregate_slot_key_for(character_id:, partner_id:, topic_id:, month:, persistent:)
     return unless persistent
-    return if character_id.blank? || topic_id.blank? || month.blank?
+    return if character_id.blank? || partner_id.blank? || topic_id.blank? || month.blank?
 
     FactAggregate.slot_key_for(
       character_id:,
+      partner_id:,
       topic_id:,
       kind: "month",
       anchor_month: month

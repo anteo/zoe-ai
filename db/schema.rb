@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_03_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -112,6 +112,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
     t.integer "facts_count", default: 0, null: false
     t.string "kind", null: false
     t.bigint "parent_id"
+    t.bigint "partner_id", null: false
     t.string "slot_key", null: false
     t.datetime "source_updated_at"
     t.boolean "stale", default: false, null: false
@@ -120,9 +121,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
     t.string "summary_status", default: "pending", null: false
     t.bigint "topic_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["character_id", "kind", "anchor_month"], name: "idx_fact_aggregates_band_lookup"
+    t.index ["character_id", "partner_id", "kind", "anchor_month"], name: "idx_fact_aggregates_band_lookup"
     t.index ["character_id"], name: "index_fact_aggregates_on_character_id"
     t.index ["parent_id"], name: "index_fact_aggregates_on_parent_id"
+    t.index ["partner_id"], name: "index_fact_aggregates_on_partner_id"
     t.index ["slot_key"], name: "idx_fact_aggregates_unique_slot", unique: true
     t.index ["summary_status"], name: "index_fact_aggregates_on_summary_status"
     t.index ["topic_id"], name: "index_fact_aggregates_on_topic_id"
@@ -141,15 +143,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
     t.datetime "mentioned_at", precision: nil
     t.bigint "message_id"
     t.date "month"
+    t.bigint "partner_id", null: false
     t.boolean "persistent", default: true, null: false
     t.string "time", default: "present", null: false
     t.bigint "topic_id"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_facts_on_author_id"
-    t.index ["character_id", "persistent", "topic_id", "month"], name: "idx_facts_month_lookup"
+    t.index ["character_id", "partner_id", "persistent", "topic_id", "month"], name: "idx_facts_month_lookup"
     t.index ["character_id"], name: "index_facts_on_character_id"
     t.index ["chat_id"], name: "index_facts_on_chat_id"
     t.index ["message_id"], name: "index_facts_on_message_id"
+    t.index ["partner_id"], name: "index_facts_on_partner_id"
     t.index ["topic_id"], name: "index_facts_on_topic_id"
   end
 
@@ -426,8 +430,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
   add_foreign_key "chats", "models"
   add_foreign_key "chats", "users"
   add_foreign_key "fact_aggregates", "characters"
+  add_foreign_key "fact_aggregates", "characters", column: "partner_id"
   add_foreign_key "fact_aggregates", "fact_aggregates", column: "parent_id"
   add_foreign_key "fact_aggregates", "topics"
+  add_foreign_key "facts", "characters", column: "partner_id"
   add_foreign_key "facts", "chats"
   add_foreign_key "facts", "messages"
   add_foreign_key "facts", "topics"

@@ -38,7 +38,7 @@ class Character < ApplicationRecord
     return "assistant" if self == chat.partner
     return "interlocutor" if self == chat.character
 
-    "known"
+    familiar?(partner: chat.partner) ? "familiar" : "listed"
   end
 
   def prompt_type
@@ -48,14 +48,22 @@ class Character < ApplicationRecord
     "human"
   end
 
-  def last_conversation_time(except: nil)
-    scope = except ? chats.where.not(id: except) : chats
+  def last_conversation_time(partner: nil, except: nil)
+    scope = chats
+    scope = scope.where(partner:) if partner
+    scope = scope.where.not(id: except) if except
     last = scope.order(:created_at).last
     return unless last
     last.messages.maximum(:created_at)
   end
 
-  def facts_to_consider
-    ai? ? facts.excluding_kind("belief") : facts
+  def facts_to_consider(partner: nil)
+    scoped = facts
+    scoped = scoped.where(partner:) if partner
+    ai? ? scoped.excluding_kind("belief") : scoped
+  end
+
+  def familiar?(partner:)
+    fact_aggregates.where(partner:).bands.exists?
   end
 end

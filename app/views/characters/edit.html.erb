@@ -3,5 +3,5 @@
     <span><%= t(:label_edit_character) %></span>
   <% end %>
 
-  <%= component :"characters/details", character: @character, refresh: params[:refresh] %>
+  <%= component :"characters/details", character: @character, partner: current_partner, refresh: params[:refresh] %>
 <% end %>

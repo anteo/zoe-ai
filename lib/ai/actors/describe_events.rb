@@ -1,6 +1,7 @@
 module AI::Actors
   class DescribeEvents < Actor
     input :character, type: Character
+    input :partner, type: Character
     input :mode, default: :xml
     input :maximum_count, default: -> { Setting.events.maximum_count }
     input :period_limit,  default: -> { Setting.events.period_limit }
@@ -67,6 +68,7 @@ module AI::Actors
 
     def event_facts
       character.facts_to_consider
+               .where(partner:)
                .persistent(false)
                .preload(:author, :topic)
                .order(importance: :desc, mentioned_at: :desc, id: :desc)

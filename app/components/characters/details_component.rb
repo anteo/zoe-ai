@@ -2,10 +2,11 @@
 
 module Characters
   class DetailsComponent < ApplicationComponent
-    attr_reader :character, :refresh
+    attr_reader :character, :partner, :refresh
 
-    def initialize(character:, refresh: nil)
+    def initialize(character:, partner:, refresh: nil)
       @character = character
+      @partner = partner
       @refresh = refresh
     end
 
@@ -58,11 +59,11 @@ module Characters
     private
 
     def description
-      @description ||= AI::Actors::DescribeCharacter.result(character:, mode: :markdown, period_order: :desc).description.to_s
+      @description ||= AI::Actors::DescribeCharacter.result(character:, partner:, mode: :markdown, period_order: :desc).description.to_s
     end
 
     def events_result
-      @events_result ||= AI::Actors::DescribeEvents.result(character:)
+      @events_result ||= AI::Actors::DescribeEvents.result(character:, partner:)
     end
 
     def facts_count

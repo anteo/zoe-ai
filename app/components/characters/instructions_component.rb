@@ -2,10 +2,11 @@
 
 module Characters
   class InstructionsComponent < ApplicationComponent
-    attr_reader :character
+    attr_reader :character, :partner
 
-    def initialize(character:)
+    def initialize(character:, partner: nil)
       @character = character
+      @partner = partner
     end
 
     def existing_instructions_json

@@ -1,6 +1,7 @@
 module AI::Actors
   class DescribeCharacter < Actor
     input :character, type: Character
+    input :partner, type: Character
     input :mode, default: :xml
     input :period_order, default: :asc
     output :description
@@ -19,7 +20,7 @@ module AI::Actors
     private
 
     def current_band_rows
-      scoped = character.fact_aggregates.bands.includes(:topic)
+      scoped = character.fact_aggregates.where(partner:).bands.includes(:topic)
       return [] unless band_anchor_month
 
       scoped.where(anchor_month: band_anchor_month).order(:anchor_month).to_a
@@ -89,7 +90,7 @@ module AI::Actors
     end
 
     def band_anchor_month
-      @band_anchor_month ||= character.fact_aggregates.bands.latest_anchor_month
+      @band_anchor_month ||= character.fact_aggregates.where(partner:).bands.latest_anchor_month
     end
   end
 end

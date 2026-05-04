@@ -1,5 +1,6 @@
 class FactAggregate < ApplicationRecord
   belongs_to :character
+  belongs_to :partner, class_name: "Character"
   belongs_to :topic
   belongs_to :parent, class_name: "FactAggregate", optional: true
   has_many :children, class_name: "FactAggregate", foreign_key: :parent_id, dependent: :nullify
@@ -28,9 +29,10 @@ class FactAggregate < ApplicationRecord
       .update_all(stale: true, updated_at: Time.current)
   end
 
-  def self.slot_key_for(character_id:, topic_id:, kind:, anchor_month:)
+  def self.slot_key_for(character_id:, partner_id:, topic_id:, kind:, anchor_month:)
     [
       "character", character_id,
+      "partner", partner_id,
       "topic", topic_id,
       kind,
       anchor_month.to_date.beginning_of_month.iso8601
@@ -103,6 +105,7 @@ class FactAggregate < ApplicationRecord
 
   def source_facts
     character.facts_to_consider
+             .where(partner_id: partner_id)
              .persistent
              .where(topic_id: topic_id, month: anchor_month)
              .includes(:author, :topic)
@@ -114,6 +117,7 @@ class FactAggregate < ApplicationRecord
 
     self.slot_key = self.class.slot_key_for(
       character_id: character_id,
+      partner_id: partner_id,
       topic_id: topic_id,
       kind: kind,
       anchor_month: anchor_month

@@ -41,10 +41,16 @@ namespace :ai do
 
   desc "Describe characters"
   task describe_characters: :environment do
+    partner = if ENV["PARTNER_ID"].present?
+      Character.find(ENV["PARTNER_ID"])
+    else
+      Character.default_ai
+    end
+
     characters = Character.all
     characters = characters.where(id: ENV["CHARACTER_ID"]) if ENV["CHARACTER_ID"].present?
     characters.find_each do |character|
-      res = AI::Actors::DescribeCharacter.result(character:)
+      res = AI::Actors::DescribeCharacter.result(character:, partner:)
       unless res.success?
         puts "  Error: #{res.error}"
         next
@@ -60,7 +66,12 @@ namespace :ai do
   task aggregate_persistent_facts: :environment do
     if ENV["CHARACTER_ID"].present?
       character = Character.find(ENV["CHARACTER_ID"])
-      AggregatePersistentFactsJob.perform_now(character)
+      partner = if ENV["PARTNER_ID"].present?
+        Character.find(ENV["PARTNER_ID"])
+      else
+        Character.default_ai
+      end
+      AggregatePersistentFactsJob.perform_now(character, partner)
     else
       AggregatePersistentFactsJob.perform_now
     end

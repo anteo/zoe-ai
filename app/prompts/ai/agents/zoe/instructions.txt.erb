@@ -1,7 +1,7 @@
 <context>
 Today is <%= I18n.l(Time.zone.now, locale: :en) %>.
 You are talking with <%= chat.character.name %> (ID: <%= chat.character.id %>).
-<% if (time = chat.character.last_conversation_time(except: chat)).present? -%>
+<% if (time = chat.character.last_conversation_time(partner: chat.partner, except: chat)).present? -%>
 Your last conversation was <%= helpers.distance_of_time_in_words_to_now(time, locale: :en) %> ago.
 <% end -%>
 </context>
@@ -34,7 +34,7 @@ You are <%= chat.partner.name %>.
 <% end -%>
 
 <events subject="<%= chat.character %>">
-<%= AI::Actors::DescribeEvents.result(character: chat.character, mode: :xml).description %>
+<%= AI::Actors::DescribeEvents.result(character: chat.character, partner: chat.partner, mode: :xml).description %>
 </events>
 <% yesterday = chat.yesterday_summary -%>
 <% if yesterday.present? -%>
