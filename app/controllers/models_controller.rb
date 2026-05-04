@@ -3,7 +3,7 @@ class ModelsController < ApplicationController
 
   def search
     @models = Model
-      # .where("metadata ->> 'source' IS NULL")
+      .available
       .yield_self { |scope| apply_kind_filter(scope) }
       .yield_self { |scope| apply_query(scope) }
       .order(:model_id)

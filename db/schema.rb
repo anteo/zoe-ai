@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_03_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_04_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -237,12 +237,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_03_120000) do
     t.string "name", null: false
     t.jsonb "pricing", default: {}
     t.string "provider", null: false
+    t.boolean "stale", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["capabilities"], name: "index_models_on_capabilities", using: :gin
     t.index ["family"], name: "index_models_on_family"
     t.index ["modalities"], name: "index_models_on_modalities", using: :gin
     t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
     t.index ["provider"], name: "index_models_on_provider"
+    t.index ["stale"], name: "index_models_on_stale"
   end
 
   create_table "settings", force: :cascade do |t|

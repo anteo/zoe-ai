@@ -46,13 +46,13 @@ module AI::Actors
     end
 
     def validate_models!(models)
-      schema_path = RubyLLM::Models.schema_file
+      schema_path = Rails.root.join("config/models_schema.json").to_s
       models_data = models.all.map(&:to_h)
       validation_errors = JSON::Validator.fully_validate(schema_path, models_data)
 
       return if validation_errors.empty?
 
-      raise JSON::Schema::ValidationError, validation_errors.first
+      fail! error: validation_errors.first
     end
 
     def sorted_models_data(models)
