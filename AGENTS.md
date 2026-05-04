@@ -93,4 +93,6 @@ Key conventions: `label_*` (buttons/forms), `placeholder_*` (inputs), `confirm_*
 ## Commit Workflow
 
 When user asks to commit, analyze current git changes, group by feature, show proposed commit plan first, then commit after user approval.
+Prefer atomic commits: each commit should contain one logical change only (single concern), even if that results in more commits.
+Before starting any commit sequence, unstage everything first (`git restore --staged .`) and then stage files explicitly per planned commit.
 Run git commands sequentially; do not run git commands in parallel.
