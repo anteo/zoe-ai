@@ -93,3 +93,4 @@ Key conventions: `label_*` (buttons/forms), `placeholder_*` (inputs), `confirm_*
 ## Commit Workflow
 
 When user asks to commit, analyze current git changes, group by feature, show proposed commit plan first, then commit after user approval.
+Run git commands sequentially; do not run git commands in parallel.
