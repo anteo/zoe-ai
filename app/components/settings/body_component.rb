@@ -8,13 +8,13 @@ module Settings
         icon: "icon-[lucide--sparkles]",
         form: -> { Setting.ai },
         scope: "ai",
-        footer: true
       },
       "providers" => {
         icon: "icon-[lucide--plug]",
         form: -> { Setting.ai },
         scope: "ai",
-        footer: true,
+        show_apply: true,
+        show_save: false,
         html: lambda {
           {
             data: {

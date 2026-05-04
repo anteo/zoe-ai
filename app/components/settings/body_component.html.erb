@@ -32,12 +32,10 @@
             <%= component :"settings/#{@section}", f: f %>
           </div>
 
-          <% if section_opts[:footer] %>
-            <div class="mt-auto sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end z-40 gap-3">
-              <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-outline" %>
-              <%= f.button :submit, t(:label_save), name: "save", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+          <div class="mt-auto sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end z-40 gap-3">
+            <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-outline" if section_opts[:show_apply] %>
+            <%= f.button :submit, t(:label_save), name: "save", class: "btn btn-primary" if section_opts[:show_save] != false %>
+          </div>
         <% end %>
       <% else %>
         <div class="flex-1 overflow-y-auto p-5 space-y-8 text-sm bg-base-200  ">
