@@ -16,6 +16,13 @@ Rails.application.routes.draw do
 
   resource :profile, only: [ :show, :update ]
   resource :settings, only: [ :show, :update ]
+  namespace :admin do
+    resource :mission_control, only: :show
+  end
+
+  authenticate :user, lambda { |user| user.admin? } do
+    mount MissionControl::Jobs::Engine => "/admin/mission_control/app", as: :mission_control_jobs
+  end
 
   get "models/search", to: "models#search", as: :models_search
 

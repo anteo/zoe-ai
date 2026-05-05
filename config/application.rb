@@ -54,6 +54,9 @@ module Ai
 
     config.solid_queue.logger = ActiveSupport::Logger.new(STDOUT)
 
+    config.mission_control.jobs.http_basic_auth_enabled = false
+    config.mission_control.jobs.show_console_help = false
+
     if ENV["ZOE_APP__EXTRA_HOSTS"].present?
       config.hosts.push(*ENV["ZOE_APP__EXTRA_HOSTS"].split(","))
     end

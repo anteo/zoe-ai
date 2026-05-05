@@ -48,8 +48,8 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_setup_if_empty
-    return if [ new_user_registration_path, user_registration_path, "/up" ].include?(request.path)
-    redirect_to new_user_registration_path unless User.exists?
+    return if %w[/register /up].include?(request.path)
+    redirect_to "/register" unless User.exists?
   end
 
   def require_admin!

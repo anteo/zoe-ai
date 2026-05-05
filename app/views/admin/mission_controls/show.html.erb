@@ -1,0 +1,9 @@
+<%= component :"ui/modal", width: "max-w-7xl", height: false do |m| %>
+  <% m.with_title do %>
+    <span><%= t(:label_mission_control) %></span>
+  <% end %>
+
+  <iframe src="<%= mission_control_jobs_path(embedded: 1) %>"
+          title="<%= t(:label_mission_control) %>"
+          class="w-full h-[75vh]"></iframe>
+<% end %>

@@ -78,6 +78,7 @@ en:
   label_logout: Logout
   label_memory_mode_off: Memory off
   label_memory_mode_on: Memory on
+  label_mission_control: Mission Control
   label_my_character: My character
   label_new: New
   label_new_conversation: New conversation

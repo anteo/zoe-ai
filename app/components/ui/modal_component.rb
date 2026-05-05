@@ -14,13 +14,15 @@ module UI
                    title_classes: nil,
                    main_classes: nil,
                    footer_classes: nil,
-                   width: "max-w-5xl",
+                   width: nil,
+                   height: nil,
                    box_classes: nil)
 
       @close_button = close_button
       @header = header
       @padding = padding
       @width = width
+      @height = height
       @box_classes = box_classes
       @header_classes = header_classes
       @title_classes = title_classes
@@ -49,7 +51,8 @@ module UI
 
     def main_classes
       helpers.class_names(
-        "overflow-y-auto max-h-[75vh]",
+        "overflow-y-auto",
+        @height.nil? ? "max-h-[75vh]" : @height,
         @main_classes,
         ("p-4 pt-2" if padding)
       )
@@ -65,7 +68,7 @@ module UI
     def box_classes
       helpers.class_names(
         "modal-box p-0",
-        @width.presence || "max-w-5xl",
+        @width.nil? ? "max-w-5xl" : @width,
         @box_classes
       )
     end
