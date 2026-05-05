@@ -3,17 +3,15 @@
 class ProfilesController < ApplicationController
   def show
     @user = current_user
-    render layout: false if turbo_frame_request?
+    render_modal
   end
 
   def update
     @user = current_user
     attrs = profile_params
 
-    if @user.update(attrs)
-      redirect_after_profile_update
-    else
-      render :show, status: :unprocessable_entity, layout: !turbo_frame_request?
+    unless @user.update(attrs)
+      render :show, status: :unprocessable_entity
     end
   end
 
@@ -30,13 +28,5 @@ class ProfilesController < ApplicationController
               attrs.delete(:password_confirmation)
             end
           end
-  end
-
-  def redirect_after_profile_update
-    if turbo_frame_request?
-      redirect_back fallback_location: root_path, notice: t(:text_profile_updated), status: :see_other
-    else
-      redirect_to profile_path, notice: t(:text_profile_updated)
-    end
   end
 end

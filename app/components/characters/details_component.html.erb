@@ -5,8 +5,6 @@
   <%= helpers.simple_form_for character,
                               html: { multipart: true, class: "flex h-full min-h-0 flex-col" },
                               data: { action: "submit->character-instructions#handleSubmit" } do |f| %>
-    <%= hidden_field_tag :refresh, refresh if refresh.present? %>
-
     <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 px-5 py-7">
       <div class="flex min-w-0 items-center gap-4 md:grow-0 grow">
         <%= component :"ui/avatar_input",
@@ -34,7 +32,7 @@
           </button>
 
           <% if deletable? %>
-            <%= link_to character_path(character, refresh:),
+            <%= link_to character_path(character),
                         class: "btn btn-circle btn-ghost text-error",
                         title: t(:label_delete),
                         data: { turbo_method: :delete, turbo_confirm: t(:confirm_delete_character) } do %>

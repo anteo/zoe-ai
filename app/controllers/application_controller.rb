@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   include HttpAcceptLanguage::AutoLocale
 
+  append_view_path "#{Rails.root}/app/components"
+
   helper :view_components
 
   attr_reader :current_character, :current_partner
@@ -15,6 +17,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   helper_method :current_character, :current_partner
+  helper_method :turbo_referrer_frame_id
 
   private
 
@@ -35,7 +38,7 @@ class ApplicationController < ActionController::Base
   def set_current_partner
     return unless user_signed_in?
 
-    selected_id = session[:ai_character_id] || session[:character_id]
+    selected_id = session[:partner_id]
     @current_partner = current_user.characters.ai.find_by(id: selected_id) || Character.default_ai
   end
 
@@ -62,4 +65,22 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys:)
   end
 
+  def render_refresh
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.refresh(request_id: nil) }
+      format.html { redirect_back fallback_location: root_path }
+    end
+  end
+
+  def render_modal(**args)
+    html = render_to_string(**args, formats: [ :html ])
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.show_modal(html) }
+      format.html { redirect_to root_path }
+    end
+  end
+
+  def turbo_referrer_frame_id
+    request.headers["X-Turbo-Referrer-Frame-Id"]
+  end
 end

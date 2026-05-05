@@ -13,8 +13,8 @@
     <%= component :"chats/history_drawer" %>
 
     <%= link_to characters_path,
-                data: { turbo_frame: "modal" },
-                class: "btn btn-ghost" do %>
+                class: "btn btn-ghost",
+                data: { turbo_stream: true } do %>
       <span class="icon-[lucide--users]"></span>
       <%= t(:label_characters) %>
     <% end %>
@@ -28,9 +28,13 @@
       <span class="swap-on icon-[lucide--moon] w-4 h-4"></span>
     </label>
 
-    <%= component :"characters/selector", current_partner:, current_user: %>
+    <%= turbo_frame_tag :characters_selector do %>
+      <%= component :"characters/selector", current_partner:, current_user: %>
+    <% end %>
 
-    <%= component :"ui/profile_menu", current_user: %>
+    <%= turbo_frame_tag :profile_menu do %>
+      <%= component :"ui/profile_menu", current_user: %>
+    <% end %>
   </header>
 
   <%= component :"chats/chat", current_character:, chat: %>

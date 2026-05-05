@@ -1,140 +1,91 @@
 import {Controller} from "@hotwired/stimulus"
-import {clearAppModalSnapshots, popAppModalSnapshot} from "../lib/app_modal"
+import {waitForCloseAnimation} from "../lib/wait_for_close_animation"
 
 export default class extends Controller {
-  static CLOSE_FALLBACK_MS = 350
+  static targets = ["frame"]
+
+  static values = {
+    referrerFrameId: String
+  }
 
   connect() {
-    this.show()
-  }
-
-  show() {
-    const frame = this.element.closest("turbo-frame#modal")
-    const replacing = frame?.dataset.appModalReplacing === "true"
-    if (replacing) {
-      this.disableTransitionsForReplacement()
-      delete frame.dataset.appModalReplacing
-    }
-
-    if (this.element.open) {
-      if (replacing) {
-        requestAnimationFrame(() => this.restoreTransitionsAfterReplacement())
-      }
-      return
-    }
-
-    const x = window.scrollX
-    const y = window.scrollY
-
+    this.boundBeforeFetchRequestHandler = (event) => this.appendReferrerFrameHeader(event)
+    document.addEventListener("turbo:before-fetch-request", this.boundBeforeFetchRequestHandler)
+    if (this.element.open) return
     this.element.showModal()
-    window.scrollTo(x, y)
-
-    if (replacing) {
-      requestAnimationFrame(() => this.restoreTransitionsAfterReplacement())
-    }
   }
 
-  async close(event) {
-    event?.preventDefault()
-    await this.closeModal()
+  disconnect() {
+    if (!this.boundBeforeFetchRequestHandler) return
+    document.removeEventListener("turbo:before-fetch-request", this.boundBeforeFetchRequestHandler)
   }
 
-  async requestClose(event) {
-    event.preventDefault()
-    await this.closeModal()
-  }
-
-  async cancel(event) {
-    event.preventDefault()
-    await this.closeModal()
-  }
-
-  async backdropClick(event) {
-    if (event.target !== this.element) return
-    await this.closeModal()
-  }
-
-  async submitEnd(event) {
-    if (!event.detail.success) return
-
-    const response = event.detail.fetchResponse?.response
-    if (!response) return
-    if (response.redirected) {
-      const frame = this.element.closest("turbo-frame#modal")
-      if (frame) frame.dataset.appModalReplacing = "true"
-      clearAppModalSnapshots()
+  close(event) {
+    if (event?.type === "cancel" && event.target !== this.element) {
+      event.preventDefault()
+      event.stopPropagation()
       return
     }
-    if (response.status !== 204) return
 
-    await this.closeModal()
+    event?.preventDefault()
+    this.closeModal()
+  }
+
+  backdropClick(event) {
+    if (event.target !== this.element) return
+    this.closeModal()
   }
 
   async closeModal() {
-    const frame = this.element.closest("turbo-frame#modal")
-    if (frame && popAppModalSnapshot(frame)) return
     if (this.closing) return
     this.closing = true
 
-    // Let DaisyUI/native dialog transitions handle leave animation.
     this.element.classList.remove("modal-open")
     try {
       this.element.close()
     } catch (_) {
     }
 
-    await this.waitForCloseAnimation()
-
-    this.element.remove()
-
-    if (frame) {
-      clearAppModalSnapshots()
-      frame.removeAttribute("src")
-      frame.innerHTML = ""
-      frame.dispatchEvent(new Event("app-modal:closed"))
-    }
-
+    await this.removeWrapper()
     this.closing = false
   }
 
-  async waitForCloseAnimation() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  async removeWrapper() {
+    await waitForCloseAnimation({
+      nodes: [this.element, this.element.querySelector(".modal-box")]
+    })
+
+    this.element.remove()
+  }
+
+  appendReferrerFrameHeader(event) {
+    if (!this.hasReferrerFrameIdValue || this.referrerFrameIdValue.length === 0) return
+
+    const requestTarget = event.target
+    if (!this.shouldAttachHeader(requestTarget)) return
+
+    const headers = event.detail?.fetchOptions?.headers
+    if (!headers) return
+
+    if (headers instanceof Headers) {
+      headers.set("X-Turbo-Referrer-Frame-Id", this.referrerFrameIdValue)
       return
     }
 
-    const nodes = [this.element, this.element.querySelector(".modal-box")].filter(Boolean)
-    const animations = nodes.flatMap((node) => node.getAnimations().filter((a) => a.playState !== "finished"))
-
-    if (animations.length > 0) {
-      await Promise.all(animations.map((animation) => animation.finished.catch(() => null)))
-    } else {
-      await new Promise((resolve) => window.setTimeout(resolve, this.constructor.CLOSE_FALLBACK_MS))
-    }
+    headers["X-Turbo-Referrer-Frame-Id"] = this.referrerFrameIdValue
   }
 
-  disableTransitionsForReplacement() {
-    if (this.element.dataset.appModalTransitionBackup === undefined) {
-      this.element.dataset.appModalTransitionBackup = this.element.style.transition || ""
-    }
-    this.element.style.transition = "none"
+  shouldAttachHeader(requestTarget) {
+    if (!(requestTarget instanceof Element)) return false
+    if (this.element.contains(requestTarget)) return true
 
-    const box = this.element.querySelector(".modal-box")
-    if (!box) return
-
-    if (box.dataset.appModalTransitionBackup === undefined) {
-      box.dataset.appModalTransitionBackup = box.style.transition || ""
-    }
-    box.style.transition = "none"
+    return this.matchesGeneratedTurboMethodForm(requestTarget)
   }
 
-  restoreTransitionsAfterReplacement() {
-    this.element.style.transition = this.element.dataset.appModalTransitionBackup || ""
-    delete this.element.dataset.appModalTransitionBackup
+  matchesGeneratedTurboMethodForm(requestTarget) {
+    if (!this.hasFrameTarget || !this.frameTarget.id) return false
+    if (!(requestTarget instanceof HTMLFormElement)) return false
 
-    const box = this.element.querySelector(".modal-box")
-    if (!box) return
-
-    box.style.transition = box.dataset.appModalTransitionBackup || ""
-    delete box.dataset.appModalTransitionBackup
+    return requestTarget.getAttribute("data-turbo-frame") === this.frameTarget.id
   }
 }

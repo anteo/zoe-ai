@@ -4,7 +4,7 @@
   <% end %>
 
   <%= simple_form_for @character do |f| %>
-    <%= hidden_field_tag :refresh, params[:refresh] if params[:refresh].present? %>
+    <%= hidden_field_tag :select_on_save, params[:select_on_save] %>
     <%= f.input :name,
                 label: false,
                 required: true,

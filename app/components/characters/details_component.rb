@@ -2,12 +2,11 @@
 
 module Characters
   class DetailsComponent < ApplicationComponent
-    attr_reader :character, :partner, :refresh
+    attr_reader :character, :partner
 
-    def initialize(character:, partner:, refresh: nil)
+    def initialize(character:, partner:)
       @character = character
       @partner = partner
-      @refresh = refresh
     end
 
     def type_label
@@ -53,7 +52,7 @@ module Characters
     end
 
     def section_path(section)
-      helpers.section_character_path(character, section: section, refresh: refresh)
+      helpers.section_character_path(character, section: section)
     end
 
     private

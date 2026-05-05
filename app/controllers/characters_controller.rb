@@ -4,13 +4,12 @@ class CharactersController < ApplicationController
   before_action :find_character, only: [ :edit, :update, :destroy, :section ]
 
   def index
-    load_characters
-    render layout: false if turbo_frame_request?
+    render_modal
   end
 
   def new
     @character = Character.new
-    render layout: false if turbo_frame_request?
+    render_modal
   end
 
   def create
@@ -19,15 +18,15 @@ class CharactersController < ApplicationController
 
     if @character.save
       current_user.characters << @character
-      session[:ai_character_id] = @character.id
-      redirect_after_character_create
+      session[:partner_id] = @character.id if params[:select_on_save] == "1"
+      render action: :update
     else
-      render :new, status: :unprocessable_entity, layout: !turbo_frame_request?
+      render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    render layout: false if turbo_frame_request?
+    render_modal
   end
 
   def section
@@ -36,61 +35,36 @@ class CharactersController < ApplicationController
   end
 
   def update
-    if update_character!
-      redirect_after_character_save
-    else
-      render :edit, status: :unprocessable_entity, layout: !turbo_frame_request?
+    unless update_character!
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    return redirect_after_character_save unless deletable_character?
+    return head(:forbidden) unless deletable_character?
 
-    Character.transaction do
-      session[:ai_character_id] = nil if session[:ai_character_id].to_s == @character.id.to_s
-
-      if @character.users.where.not(id: current_user.id).exists?
-        current_user.characters.destroy(@character)
-      else
-        @character.destroy!
-      end
+    if @character.users.where.not(id: current_user.id).exists?
+      current_user.characters.destroy(@character)
+    else
+      @character.destroy!
     end
 
-    redirect_after_character_save
+    if @current_partner == @character
+      session[:partner_id] = nil
+      render_refresh
+    else
+      render action: :update
+    end
   end
 
   def select
     character_id = params[:id]
     character = current_user.characters.ai.find_by(id: character_id)
-    session[:ai_character_id] = character&.id || Character.default_ai.id
-    redirect_to root_path
+    session[:partner_id] = character&.id || Character.default_ai.id
+    render_refresh
   end
 
   private
-
-  def load_characters
-    characters = current_user.characters.order(:name)
-    @human_characters = characters.human
-    @ai_characters = characters.ai
-    @other_characters = characters.third_party
-  end
-
-  def redirect_after_character_save
-    refresh_path = params[:refresh].presence
-    if refresh_path
-      redirect_to refresh_path, status: :see_other
-    else
-      redirect_back fallback_location: root_path, status: :see_other
-    end
-  end
-
-  def redirect_after_character_create
-    if turbo_frame_request?
-      redirect_to edit_character_path(@character, refresh: params[:refresh]), status: :see_other
-    else
-      redirect_after_character_save
-    end
-  end
 
   def find_character
     @character = current_user.characters.find_by(id: params[:id])
@@ -134,8 +108,8 @@ class CharactersController < ApplicationController
     return if descriptions.empty?
 
     new_attachments = @character.images.attachments
-                              .where.not(id: existing_attachment_ids)
-                              .order(:created_at, :id)
+                                .where.not(id: existing_attachment_ids)
+                                .order(:created_at, :id)
 
     new_attachments.each_with_index do |attachment, index|
       attachment.description = descriptions[index]

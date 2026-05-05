@@ -3,15 +3,13 @@ import "@hotwired/turbo-rails"
 import "./controllers"
 import TC from "@rolemodel/turbo-confirm"
 import "./channels"
-import { closeAppModal, installAppModal } from "./lib/app_modal"
 
-installAppModal()
+Turbo.StreamActions.close_modal = function () {
+  const id = this.getAttribute("id")
+  const modal = id ? document.getElementById(id) : document.querySelector("dialog[data-controller~='app-modal']:last-of-type")
+  if (!modal) return
 
-Turbo.StreamActions.redirect = function () {
-  const url = this.getAttribute("url") || window.location.href
-  const visit = () => Turbo.visit(url, {action: "replace"})
-
-  closeAppModal().then(visit)
+  modal.dispatchEvent(new CustomEvent("app-modal:close", {bubbles: true}))
 }
 
 TC.start({

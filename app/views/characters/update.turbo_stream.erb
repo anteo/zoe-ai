@@ -1,0 +1,7 @@
+<%= turbo_stream.close_modal %>
+<% if turbo_referrer_frame_id == "characters_index" %>
+  <%= turbo_stream.update_component("characters_index", "characters/index", user: current_user.reload) %>
+  <%= turbo_stream.update_component("characters_selector", "characters/selector", current_partner:, current_user:) %>
+<% else %>
+  <%= turbo_stream.refresh(request_id: nil) %>
+<% end %>

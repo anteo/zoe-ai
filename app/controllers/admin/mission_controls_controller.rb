@@ -5,6 +5,7 @@ module Admin
     before_action :require_admin!
 
     def show
+      render_modal
     end
   end
 end

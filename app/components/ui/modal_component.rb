@@ -16,7 +16,8 @@ module UI
                    footer_classes: nil,
                    width: nil,
                    height: nil,
-                   box_classes: nil)
+                   box_classes: nil,
+                   frame_id: nil)
 
       @close_button = close_button
       @header = header
@@ -28,10 +29,19 @@ module UI
       @title_classes = title_classes
       @main_classes = main_classes
       @footer_classes = footer_classes
+      @frame_id = frame_id
     end
 
-    def modal_frame_request?
-      helpers.turbo_modal_frame?
+    def update_existing?
+      helpers.turbo_frame_request? && !helpers.request.get?
+    end
+
+    def referrer_frame_id
+      @referrer_frame_id ||= update_existing? ? helpers.params[:referrer_frame_id] : helpers.turbo_frame_request_id
+    end
+
+    def frame_id
+      @frame_id ||= update_existing? ? helpers.turbo_frame_request_id : "modal-#{SecureRandom.hex(6)}"
     end
 
     def header_classes
@@ -71,6 +81,10 @@ module UI
         @width.nil? ? "max-w-5xl" : @width,
         @box_classes
       )
+    end
+
+    def referrer_frame_hidden_tag
+      helpers.hidden_field_tag(:referrer_frame_id, helpers.params[:referrer_frame_id] || referrer_frame_id)
     end
   end
 end

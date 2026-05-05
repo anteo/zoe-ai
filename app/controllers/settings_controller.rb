@@ -6,6 +6,8 @@ class SettingsController < ApplicationController
     @section = params[:section]
     if turbo_frame_request_id == "settings-body"
       render :body
+    else
+      render_modal
     end
   end
 
@@ -15,7 +17,7 @@ class SettingsController < ApplicationController
     if @section_proxy.update(**normalized_settings_params, context: { user: current_user })
       if params[:save]
         flash[:notice] = t(:text_settings_saved)
-        return redirect_back(fallback_location: root_path, status: :see_other)
+        return close_modal
       else
         flash.now[:notice] = t(:text_settings_saved)
       end
