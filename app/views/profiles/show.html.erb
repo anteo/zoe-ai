@@ -23,11 +23,13 @@
     </div>
 
     <div class="space-y-4">
-      <%= f.input :first_name,
-                  label: t(:label_first_name),
-                  input_html: { required: true } %>
-      <%= f.input :last_name,
-                  label: t(:label_last_name) %>
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <%= f.input :first_name,
+                    label: t(:label_first_name),
+                    input_html: { required: true } %>
+        <%= f.input :last_name,
+                    label: t(:label_last_name) %>
+      </div>
       <%= f.input :email,
                   label: t(:label_email),
                   input_html: { required: true } %>
