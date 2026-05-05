@@ -8,6 +8,7 @@ import ChatController from "./chat_controller"
 import ChatInputController from "./chat_input_controller"
 import MessageController from "./message_controller"
 import ThemeController from "./theme_controller"
+import ThemeSelectController from "./theme_select_controller"
 import HistoryDrawerController from "./history_drawer_controller"
 import HistoryChatController from "./history_chat_controller"
 import FlashAlertController from "./flash_alert_controller"
@@ -30,6 +31,7 @@ application.register("chat", ChatController)
 application.register("chat-input", ChatInputController)
 application.register("message", MessageController)
 application.register("theme", ThemeController)
+application.register("theme-select", ThemeSelectController)
 application.register("history-drawer", HistoryDrawerController)
 application.register("history-chat", HistoryChatController)
 application.register("flash-alert", FlashAlertController)

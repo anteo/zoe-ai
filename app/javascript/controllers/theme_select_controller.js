@@ -48,48 +48,35 @@ export default class extends Controller {
     this.lightThemeStorageKey = "theme-light-id"
     this.darkThemeStorageKey = "theme-dark-id"
     this.mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-    this.boundHandleSystemThemeChange = this.handleSystemThemeChange.bind(this)
+    this.boundSync = this.sync.bind(this)
 
-    this.applyTheme()
-    this.syncControls()
-    this.mediaQuery.addEventListener("change", this.boundHandleSystemThemeChange)
+    this.sync()
+    document.addEventListener("theme:changed", this.boundSync)
+    document.addEventListener("turbo:after-stream-render", this.boundSync)
   }
 
   disconnect() {
-    if (this.mediaQuery) {
-      this.mediaQuery.removeEventListener("change", this.boundHandleSystemThemeChange)
-    }
+    document.removeEventListener("theme:changed", this.boundSync)
+    document.removeEventListener("turbo:after-stream-render", this.boundSync)
   }
 
-  toggle(event) {
-    const mode = event.target.checked ? "dark" : "light"
-    this.setMode(mode)
-    this.applyTheme()
-    this.syncControls()
-  }
-
-  handleSystemThemeChange() {
-    localStorage.removeItem(this.modeStorageKey)
-    this.applyTheme()
-    this.syncControls()
-  }
-
-  applyTheme() {
+  selectTheme(event) {
+    const themeId = event.target.value
     const mode = this.currentMode()
-    const themeId = this.themeIdForMode(mode)
 
-    document.documentElement.setAttribute("data-theme", themeId)
-    document.documentElement.setAttribute("data-theme-mode", mode)
-    document.dispatchEvent(new CustomEvent("theme:changed", { detail: { mode, themeId } }))
+    if (!this.validThemeForMode(themeId, mode)) return
+
+    this.setThemeIdForMode(mode, themeId)
+    this.applyTheme(mode)
+    this.sync()
   }
 
-  syncControls() {
+  sync() {
     const mode = this.currentMode()
-    const isDark = mode === "dark"
+    const select = this.element
 
-    document.querySelectorAll(".theme-mode-controller").forEach((switcher) => {
-      switcher.checked = isDark
-    })
+    this.renderThemeOptions(select, mode)
+    select.value = this.themeIdForMode(mode)
   }
 
   systemTheme() {
@@ -99,10 +86,6 @@ export default class extends Controller {
   currentMode() {
     const savedMode = localStorage.getItem(this.modeStorageKey)
     return savedMode || this.systemTheme()
-  }
-
-  setMode(mode) {
-    localStorage.setItem(this.modeStorageKey, mode)
   }
 
   themeIdForMode(mode) {
@@ -127,5 +110,23 @@ export default class extends Controller {
 
     const themes = mode === "dark" ? this.constructor.DARK_THEMES : this.constructor.LIGHT_THEMES
     return themes.includes(themeId)
+  }
+
+  renderThemeOptions(select, mode) {
+    const themes = mode === "dark" ? this.constructor.DARK_THEMES : this.constructor.LIGHT_THEMES
+    const optionMarkup = themes.map((id) => `<option value="${id}">${id}</option>`).join("")
+
+    if (select.dataset.themeMode === mode && select.options.length === themes.length) return
+
+    select.innerHTML = optionMarkup
+    select.dataset.themeMode = mode
+  }
+
+  applyTheme(mode) {
+    const themeId = this.themeIdForMode(mode)
+
+    document.documentElement.setAttribute("data-theme", themeId)
+    document.documentElement.setAttribute("data-theme-mode", mode)
+    document.dispatchEvent(new CustomEvent("theme:changed", { detail: { mode, themeId } }))
   }
 }
