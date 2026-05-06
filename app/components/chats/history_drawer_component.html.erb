@@ -53,7 +53,8 @@
 
         <div class="flex-1 min-h-0 lg:w-[26rem] lg:flex-none" data-history-drawer-target="listView">
           <turbo-frame id="history-chat-list"
-                       data-history-drawer-target="listFrame">
+                       data-history-drawer-target="listFrame"
+                       data-action="turbo:frame-load->history-drawer#syncListState">
             <div class="h-full p-6 text-sm opacity-60"><%= t(:text_select_chat_history) %></div>
           </turbo-frame>
         </div>

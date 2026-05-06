@@ -2,10 +2,11 @@ module Chats
   class HistoryListComponent < ApplicationComponent
     Entry = Data.define(:chat, :index, :day_label, :time_span, :message_count, :preview)
 
-    attr_reader :history_chats
+    attr_reader :history_chats, :query
 
-    def initialize(history_chats:)
+    def initialize(history_chats:, query: nil)
       @history_chats = history_chats
+      @query = query.to_s
     end
 
     def entries
@@ -28,6 +29,10 @@ module Chats
 
     def empty?
       entries.empty?
+    end
+
+    def searching?
+      query.present?
     end
 
     private

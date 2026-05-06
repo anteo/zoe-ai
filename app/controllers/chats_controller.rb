@@ -24,10 +24,14 @@ class ChatsController < ApplicationController
   end
 
   def history_list
+    @history_query = params[:q].to_s.strip
     @history_chats = current_user.chats
                                  .where(character: current_character, partner: current_partner)
+                                 .yield_self { |scope| filter_history_chats(scope, @history_query) }
                                  .preload(:last_visible_message)
                                  .order(created_at: :desc)
+
+    render(:history_results) if turbo_frame_request_id == "history-chat-results"
   end
 
   private
@@ -43,5 +47,14 @@ class ChatsController < ApplicationController
                                 .where(character: current_character, partner: current_partner)
                                 .find_by(id: params[:id])
     head(:not_found) unless @history_chat
+  end
+
+  def filter_history_chats(scope, query)
+    return scope if query.blank?
+
+    scope.joins(:messages)
+         .merge(Message.history_visible)
+         .where("messages.content ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(query)}%")
+         .distinct
   end
 end

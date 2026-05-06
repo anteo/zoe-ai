@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["toggle", "panel", "title", "backButton", "listView", "detailView", "detailFrame", "listFrame"]
+  static targets = ["toggle", "panel", "title", "backButton", "listView", "detailView", "detailFrame", "listFrame", "resultsFrame", "searchForm", "searchInput"]
   static values = {
     listTitle: String,
     listUrl: String
@@ -10,6 +10,8 @@ export default class extends Controller {
   connect() {
     this.currentIndex = null
     this.detailOpen = false
+    this.selectedChatId = null
+    this.searchTimeout = null
   }
 
   open() {
@@ -30,6 +32,7 @@ export default class extends Controller {
   openChat(event) {
     this.selectLink(event.currentTarget)
     this.showDetail()
+    this.detailFrameTarget.classList.add("is-loading")
     this.detailFrameTarget.src = event.currentTarget.href
   }
 
@@ -50,6 +53,7 @@ export default class extends Controller {
 
     this.selectLink(link)
     this.showDetail()
+    this.detailFrameTarget.classList.add("is-loading")
     this.detailFrameTarget.src = link.href
   }
 
@@ -61,6 +65,59 @@ export default class extends Controller {
     if (!this.hasListFrameTarget || this.listFrameTarget.src || !this.hasListUrlValue) return
 
     this.listFrameTarget.src = this.listUrlValue
+  }
+
+  queueSearch() {
+    if (!this.hasSearchFormTarget) return
+
+    clearTimeout(this.searchTimeout)
+    this.searchTimeout = setTimeout(() => {
+      this.searchFormTarget.requestSubmit()
+    }, 200)
+  }
+
+  submitSearch() {
+    clearTimeout(this.searchTimeout)
+  }
+
+  focusFirstSearchResult(event) {
+    const selectedLink = this.selectedChatId
+      ? this.chatLinks.find((link) => link.dataset.historyDrawerChatId === this.selectedChatId)
+      : null
+    const targetLink = selectedLink || this.chatLinks[0]
+    if (!targetLink) return
+
+    event.preventDefault()
+    if (selectedLink) {
+      this.selectLink(selectedLink)
+      this.showDetail()
+      selectedLink.focus({ preventScroll: true })
+      return
+    }
+
+    this.openByIndex(0)
+    targetLink.focus({ preventScroll: true })
+  }
+
+  selectSearchText(event) {
+    event.target.select()
+  }
+
+  syncListState() {
+    if (!this.selectedChatId) return
+
+    const selectedLink = this.chatLinks.find((link) => link.dataset.historyDrawerChatId === this.selectedChatId)
+    if (selectedLink) {
+      this.selectLink(selectedLink)
+      return
+    }
+
+    this.showList()
+    this.clearSelection()
+  }
+
+  finishFrameTransition() {
+    this.detailFrameTarget.classList.remove("is-loading")
   }
 
   handleKeydown(event) {
@@ -98,6 +155,7 @@ export default class extends Controller {
 
   clearSelection() {
     this.currentIndex = null
+    this.selectedChatId = null
     this.chatLinks.forEach((chatLink) => {
       chatLink.classList.remove("menu-active")
     })
@@ -107,6 +165,7 @@ export default class extends Controller {
     if (!link) return
 
     this.currentIndex = Number(link.dataset.historyDrawerIndex)
+    this.selectedChatId = link.dataset.historyDrawerChatId
     this.chatLinks.forEach((chatLink) => {
       chatLink.classList.toggle("menu-active", chatLink === link)
     })

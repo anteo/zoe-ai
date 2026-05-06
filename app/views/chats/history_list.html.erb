@@ -1,3 +1,32 @@
 <%= turbo_frame_tag "history-chat-list" do %>
-  <%= component :"chats/history_list", history_chats: @history_chats %>
+  <div class="h-full overflow-y-auto">
+    <%= form_with url: history_list_chats_path,
+                  method: :get,
+                  class: "sticky top-0 z-10 bg-base-100 p-3",
+                  data: {
+                    turbo_frame: "history-chat-results",
+                    history_drawer_target: "searchForm",
+                    action: "input->history-drawer#queueSearch submit->history-drawer#submitSearch"
+                  } do |form| %>
+      <label class="input input-bordered input-sm flex items-center gap-2 w-full">
+        <span class="icon-[lucide--search] h-4 w-4 opacity-60"></span>
+        <%= form.text_field :q,
+                            value: @history_query,
+                            autocomplete: "off",
+                            data: {
+                              history_drawer_target: "searchInput",
+                              action: "focus->history-drawer#selectSearchText keydown.down->history-drawer#focusFirstSearchResult"
+                            },
+                            placeholder: t(:placeholder_search_chat_history) %>
+      </label>
+    <% end %>
+
+    <%= turbo_frame_tag "history-chat-results",
+                        data: {
+                          history_drawer_target: "resultsFrame",
+                          action: "turbo:frame-load->history-drawer#syncListState"
+                        } do %>
+      <%= component :"chats/history_list", history_chats: @history_chats, query: @history_query %>
+    <% end %>
+  </div>
 <% end %>

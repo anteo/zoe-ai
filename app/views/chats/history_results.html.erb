@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "history-chat-results",
+                    data: {
+                      history_drawer_target: "resultsFrame",
+                      action: "turbo:frame-load->history-drawer#syncListState"
+                    } do %>
+  <%= component :"chats/history_list", history_chats: @history_chats, query: @history_query %>
+<% end %>

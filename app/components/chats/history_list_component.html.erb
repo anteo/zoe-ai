@@ -1,38 +1,37 @@
-<div class="h-full overflow-y-auto p-2">
-  <% if empty? %>
-    <div class="rounded-box bg-base-200 p-4 text-sm opacity-70">
-      <%= t(:text_no_chat_history) %>
-    </div>
-  <% end %>
+<% if empty? %>
+  <div class="rounded-box bg-base-200 p-4 text-sm opacity-70">
+    <%= searching? ? t(:text_no_chat_history_match) : t(:text_no_chat_history) %>
+  </div>
+<% end %>
 
-  <% if entries.any? %>
-    <ul class="menu w-full gap-1">
-      <% entries.each do |entry| %>
-        <li>
-          <%= link_to history_detail_chat_path(entry.chat),
-                      data: {
-                        turbo_frame: "history-chat-detail",
-                        turbo_prefetch: false,
-                        action: "click->history-drawer#openChat",
-                        history_drawer_title: entry.day_label,
-                        history_drawer_time_span: entry.time_span,
-                        history_drawer_index: entry.index,
-                        history_drawer_chat_link: true
-                      },
-                      class: "flex items-start gap-2 rounded-btn" do %>
-            <div class="flex w-full items-start gap-3">
-              <div class="text-left">
-                <div class="font-medium"><%= entry.day_label %></div>
-                <div class="text-xs opacity-70"><%= entry.time_span %></div>
-              </div>
-              <% if entry.preview.present? %>
-                <p class="line-clamp-2 flex-1 text-sm opacity-80"><%= entry.preview %></p>
-              <% end %>
+<% if entries.any? %>
+  <ul class="menu w-full gap-1">
+    <% entries.each do |entry| %>
+      <li>
+        <%= link_to history_detail_chat_path(entry.chat),
+                    data: {
+                      turbo_frame: "history-chat-detail",
+                      turbo_prefetch: false,
+                      action: "click->history-drawer#openChat",
+                      history_drawer_chat_id: entry.chat.id,
+                      history_drawer_title: entry.day_label,
+                      history_drawer_time_span: entry.time_span,
+                      history_drawer_index: entry.index,
+                      history_drawer_chat_link: true
+                    },
+                    class: "flex items-start gap-2 rounded-btn" do %>
+          <div class="flex w-full items-start gap-3">
+            <div class="text-left">
+              <div class="font-medium"><%= entry.day_label %></div>
+              <div class="text-xs opacity-70"><%= entry.time_span %></div>
             </div>
-            <span class="badge badge-ghost"><%= entry.message_count %></span>
+            <% if entry.preview.present? %>
+              <p class="line-clamp-2 flex-1 text-sm opacity-80"><%= entry.preview %></p>
+            <% end %>
+          </div>
+          <span class="badge badge-ghost"><%= entry.message_count %></span>
         <% end %>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
-</div>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
