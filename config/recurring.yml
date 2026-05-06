@@ -17,8 +17,8 @@ aggregate_persistent_facts:
   class: AggregatePersistentFactsJob
   schedule: at 12:30am every day
 
-retry_failed_fact_aggregates:
-  class: RetryFailedFactAggregatesJob
+enqueue_fact_aggregate_summaries:
+  class: EnqueueFactAggregateSummariesJob
   schedule: at 1am every day
 
 production:

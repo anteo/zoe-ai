@@ -77,8 +77,8 @@ namespace :ai do
     end
   end
 
-  desc "Rerun fact aggregate summaries (failed by default, or explicit IDs via FACT_AGGREGATE_IDS=1,2,3)"
-  task rerun_fact_aggregate_summaries: :environment do
+  desc "Summarize fact aggregates (pending and failed by default, or explicit IDs via FACT_AGGREGATE_IDS=1,2,3)"
+  task summarize_fact_aggregates: :environment do
     logger = Logger.new(STDOUT)
     ids = ENV.fetch("FACT_AGGREGATE_IDS", "")
              .split(/[,\s]+/)
@@ -90,7 +90,7 @@ namespace :ai do
     aggregates = if ids.any?
       FactAggregate.where(id: ids).order(:id)
     else
-      FactAggregate.failed.order(:id)
+      FactAggregate.where(summary_status: %w[pending failed]).order(:id)
     end
 
     puts "Rerunning summaries for #{aggregates.count} fact aggregate(s)..."

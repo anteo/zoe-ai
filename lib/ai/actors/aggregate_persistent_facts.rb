@@ -7,12 +7,9 @@ module AI::Actors
     fail_on ActiveRecord::RecordInvalid
 
     def call
-      month_rows_to_summarize = []
-
       FactAggregate.transaction do
         tagged_logger.info("Start aggregating facts (#{refresh_mode})...")
         month_rows = refresh_months(scope_fact_aggregates.months.index_by(&:slot_key))
-        month_rows_to_summarize = month_rows.values.select { it.dirty? && !it.marked_for_destruction? }
 
         band_rows = if refresh_mode == :current_rotation
           refresh_all_bands(month_rows)
@@ -27,8 +24,6 @@ module AI::Actors
         flush_pending_changes!(month_rows.values)
         cleanup_stale_band_anchors
       end
-
-      enqueue_month_summarization(month_rows_to_summarize)
     end
 
     private
@@ -254,13 +249,6 @@ module AI::Actors
       rows_to_destroy.each(&:destroy!)
       tagged_logger.info "Deleted rows: #{rows_to_destroy.map(&:slot_key).join(', ')}" if rows_to_destroy.any?
     end
-
-    def enqueue_month_summarization(rows)
-      rows.each do |row|
-        SummarizeFactAggregateJob.perform_later(row)
-      end
-    end
-
     def tagged_logger
       logger.tagged("AggregatePersistentFacts")
             .tagged("character_id=#{character.id}")

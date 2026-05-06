@@ -188,7 +188,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     assert_equal current_band.children.order(:anchor_month).to_a, current_band.source_records.to_a
   end
 
-  test "aggregation enqueues summarization for changed month aggregates" do
+  test "aggregation does not enqueue summarization for changed month aggregates" do
     character, chat, topic_work, = build_character_context
 
     create_fact!(
@@ -200,7 +200,7 @@ class AggregatePersistentFactsTest < ActiveSupport::TestCase
     )
 
     with_test_queue_adapter do
-      assert_enqueued_jobs 1, only: SummarizeFactAggregateJob do
+      assert_enqueued_jobs 0, only: SummarizeFactAggregateJob do
         travel_to Time.zone.local(2026, 4, 23, 9, 0, 0) do
           AI::Actors::AggregatePersistentFacts.call(character:, partner: chat.partner)
         end
