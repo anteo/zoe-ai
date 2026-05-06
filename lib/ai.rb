@@ -51,6 +51,6 @@ module AI
   end
 
   def console
-    ConsoleLogger.instance
+    SystemLogger.instance
   end
 end

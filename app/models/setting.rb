@@ -9,8 +9,11 @@ class Setting < ApplicationRecord
   end
 
   scope :ai do
-    setting :request_timeout, :integer, default: 30
+    setting :admin_console_lines, :integer, default: 100
     setting :debug, :boolean, default: false
+    setting :request_timeout, :integer, default: 30
+
+    validates :admin_console_lines, numericality: { greater_than: 0 }, allow_nil: true
 
     scope :models do
       setting :default_model, :string

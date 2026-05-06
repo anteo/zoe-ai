@@ -1,7 +1,7 @@
 rubyllm_logger = RubyLLM.logger
 
 Rails.application.config.to_prepare do
-  console_logger = AI::ConsoleLogger.instance
+  system_logger = AI::SystemLogger.instance
 
   Setting.watch(:ai) do |_context|
     RubyLLM.configure do |config|
@@ -29,11 +29,11 @@ Rails.application.config.to_prepare do
       config.default_image_model = cfg.models.default_image_model
       config.request_timeout = cfg.request_timeout
 
-      console_logger.level = cfg.debug? ? Logger::DEBUG : Logger::INFO
+      system_logger.level = cfg.debug? ? Logger::DEBUG : Logger::INFO
       rubyllm_logger.level = cfg.debug? ? Logger::DEBUG : Logger::INFO
 
       RubyLLM.instance_variable_set(:@logger, nil)
-      config.logger = ActiveSupport::BroadcastLogger.new(rubyllm_logger, console_logger)
+      config.logger = ActiveSupport::BroadcastLogger.new(rubyllm_logger, system_logger)
     end
 
     RubyLLM::Provider.register :openrouter, AI::Providers::OpenRouter

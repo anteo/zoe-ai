@@ -74,6 +74,12 @@ en:
   label_instructions: Instructions
   label_kind: Kind
   label_last_name: Last name
+  label_log_level: Level
+  label_log_level_debug: Debug
+  label_log_level_error: Error
+  label_log_level_fatal: Fatal
+  label_log_level_info: Info
+  label_log_level_warn: Warn
   label_login: Login
   label_logout: Logout
   label_memory_mode_off: Memory off
@@ -132,12 +138,12 @@ en:
   placeholder_image_description: Add image description
   settings:
     ai:
+      admin_console_lines: Admin console lines
       debug: Debug mode
       models:
         default_embedding_model: Default embedding model
         default_image_model: Default image model
         default_model: Default model
-      request_timeout: Request timeout (seconds)
       providers:
         anthropic:
           api_key: Anthropic API Key
@@ -165,12 +171,15 @@ en:
           project_id: Vertex AI Project ID
         xai:
           api_key: xAI API Key
+      request_timeout: Request timeout (seconds)
   text_access_denied: Access denied.
   text_character_create_failed: Failed to create character.
   text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.
   text_character_name_required: Character name can't be blank.
-  text_current_password_help: Required to save account changes.
+  text_console_new_messages: New messages
+  text_console_no_logs: No system logs yet.
   text_console_waiting_logs: Waiting for RubyLLM logs...
+  text_current_password_help: Required to save account changes.
   text_event_period_earlier_this_month: Earlier this month
   text_event_period_earlier_this_year: Earlier this year
   text_event_period_future_later: Later

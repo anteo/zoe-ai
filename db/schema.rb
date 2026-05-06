@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_04_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_05_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -376,6 +376,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_170000) do
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "system_logs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "logged_at", null: false
+    t.text "message", null: false
+    t.string "severity", null: false
+    t.string "source", null: false
+    t.datetime "updated_at", null: false
+    t.index ["logged_at", "id"], name: "index_system_logs_on_logged_at"
+    t.index ["severity", "logged_at", "id"], name: "index_system_logs_on_severity_and_logged_at"
   end
 
   create_table "tool_calls", force: :cascade do |t|

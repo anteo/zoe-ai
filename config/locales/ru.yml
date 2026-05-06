@@ -74,6 +74,12 @@ ru:
   label_instructions: Инструкции
   label_kind: Вид
   label_last_name: Фамилия
+  label_log_level: Уровень
+  label_log_level_debug: Debug
+  label_log_level_error: Error
+  label_log_level_fatal: Fatal
+  label_log_level_info: Info
+  label_log_level_warn: Warn
   label_login: Вход
   label_logout: Выйти
   label_memory_mode_off: Память выключена
@@ -132,12 +138,12 @@ ru:
   placeholder_image_description: Добавьте описание изображения
   settings:
     ai:
+      admin_console_lines: Количество строк консоли администратора
       debug: Режим отладки
       models:
         default_embedding_model: Модель эмбеддингов по умолчанию
         default_image_model: Модель изображений по умолчанию
         default_model: Модель по умолчанию
-      request_timeout: Таймаут запроса (секунды)
       providers:
         anthropic:
           api_key: API-ключ Anthropic
@@ -165,12 +171,15 @@ ru:
           project_id: ID проекта Vertex AI
         xai:
           api_key: API-ключ xAI
+      request_timeout: Таймаут запроса (секунды)
   text_access_denied: Доступ запрещён.
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
   text_character_name_required: Имя персонажа не может быть пустым.
-  text_current_password_help: Нужен для сохранения изменений аккаунта.
+  text_console_new_messages: Новые сообщения
+  text_console_no_logs: Системных логов пока нет.
   text_console_waiting_logs: Ожидание логов RubyLLM...
+  text_current_password_help: Нужен для сохранения изменений аккаунта.
   text_event_period_earlier_this_month: Ранее в этом месяце
   text_event_period_earlier_this_year: Ранее в этом году
   text_event_period_future_later: Позже
