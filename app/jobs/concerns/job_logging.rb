@@ -7,6 +7,7 @@ module JobLogging
 
   def logger
     SystemLogger.instance.with_payload(
+      source: "active_job",
       job_class: self.class.name,
       job_id:,
       provider_job_id:

@@ -107,11 +107,12 @@ class SystemLogger
     self.class.new(level:, payload: self.payload.merge(normalize_payload(payload)))
   end
 
-  def add(severity, message = nil, **payload)
+  def add(severity, message = nil, progname = nil, **payload, &block)
     return true if Thread.current[THREAD_GUARD_KEY]
-    return true unless severity_value(severity) >= level
+    resolved_severity = severity_value(severity)
+    return true unless resolved_severity >= level
 
-    line = safe_broadcast_line(message.to_s)
+    line = safe_broadcast_line(resolve_message(message, progname, &block).to_s)
     return true if line.empty?
 
     begin
@@ -120,7 +121,7 @@ class SystemLogger
         logged_at: Time.current,
         message: line,
         payload: normalize_payload(self.payload.merge(payload)),
-        severity: SystemLog.normalize_level(severity_name(severity))
+        severity: SystemLog.normalize_level(severity_name(severity || Logger::UNKNOWN))
       )
     ensure
       Thread.current[THREAD_GUARD_KEY] = false
@@ -129,32 +130,32 @@ class SystemLogger
     true
   end
 
-  def log(severity, message = nil, **payload)
-    add(severity, message, **payload)
+  def log(severity, message = nil, progname = nil, **payload, &block)
+    add(severity, message, progname, **payload, &block)
   end
 
-  def debug(message = nil, **payload)
-    add(:debug, message, **payload)
+  def debug(progname = nil, **payload, &block)
+    add(:debug, nil, progname, **payload, &block)
   end
 
-  def info(message = nil, **payload)
-    add(:info, message, **payload)
+  def info(progname = nil, **payload, &block)
+    add(:info, nil, progname, **payload, &block)
   end
 
-  def warn(message = nil, **payload)
-    add(:warn, message, **payload)
+  def warn(progname = nil, **payload, &block)
+    add(:warn, nil, progname, **payload, &block)
   end
 
-  def error(message = nil, **payload)
-    add(:error, message, **payload)
+  def error(progname = nil, **payload, &block)
+    add(:error, nil, progname, **payload, &block)
   end
 
-  def fatal(message = nil, **payload)
-    add(:fatal, message, **payload)
+  def fatal(progname = nil, **payload, &block)
+    add(:fatal, nil, progname, **payload, &block)
   end
 
-  def unknown(message = nil, **payload)
-    add(:unknown, message, **payload)
+  def unknown(progname = nil, **payload, &block)
+    add(:unknown, nil, progname, **payload, &block)
   end
 
   def debug?
@@ -189,11 +190,19 @@ class SystemLogger
   end
 
   def severity_value(severity)
+    return Logger::UNKNOWN if severity.nil?
     return severity if severity.is_a?(Integer)
 
     SEVERITY_LEVELS.fetch(severity.to_sym, Logger::INFO)
   rescue NoMethodError, KeyError
     Logger::INFO
+  end
+
+  def resolve_message(message, progname)
+    return message unless message.nil?
+    return yield if block_given?
+
+    progname
   end
 
   def normalize_payload(payload)

@@ -1,4 +1,5 @@
 require "test_helper"
+require "stringio"
 
 class SystemLoggerTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
@@ -61,5 +62,37 @@ class SystemLoggerTest < ActiveSupport::TestCase
     record = SystemLog.last
     assert_equal "hello from job", record.message
     assert_equal({ "request_id" => "abc123", "source" => "job" }, record.payload)
+  end
+
+  test "uses block content for standard logger methods" do
+    SystemLogger.instance.info(request_id: "abc123") { "hello from block" }
+    SystemLogger.flush
+
+    record = SystemLog.last
+    assert_equal "hello from block", record.message
+    assert_equal({ "request_id" => "abc123" }, record.payload)
+  end
+
+  test "accepts logger add progname argument" do
+    SystemLogger.instance.add(Logger::INFO, nil, "hello from progname", request_id: "abc123")
+    SystemLogger.flush
+
+    record = SystemLog.last
+    assert_equal "hello from progname", record.message
+    assert_equal({ "request_id" => "abc123" }, record.payload)
+  end
+
+  test "works with broadcast logger" do
+    io = StringIO.new
+    ruby_logger = Logger.new(io)
+    logger = ActiveSupport::BroadcastLogger.new(ruby_logger, SystemLogger.instance)
+
+    logger.info(request_id: "abc123") { "hello from broadcast" }
+    SystemLogger.flush
+
+    assert_includes io.string, "hello from broadcast"
+    record = SystemLog.last
+    assert_equal "hello from broadcast", record.message
+    assert_equal({ "request_id" => "abc123" }, record.payload)
   end
 end
