@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chats
   class TokenUsageGaugeComponent < ApplicationComponent
     attr_reader :chat

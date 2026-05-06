@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module TurboStreams
   module RedirectHelper
     def redirect(url)

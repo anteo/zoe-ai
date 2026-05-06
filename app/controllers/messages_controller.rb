@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class MessagesController < ApplicationController
   before_action :find_message, only: [ :update, :destroy, :resend ]
   before_action :find_chat

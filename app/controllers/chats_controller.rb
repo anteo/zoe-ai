@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class ChatsController < ApplicationController
   before_action :find_chat, only: [ :show, :destroy ]
   before_action :find_history_chat, only: [ :history_detail ]

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chats
   class ChatInputComponent < ApplicationComponent
     attr_reader :chat, :current_character

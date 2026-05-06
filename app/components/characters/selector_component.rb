@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Characters
   class SelectorComponent < ApplicationComponent
     attr_reader :current_partner, :current_user

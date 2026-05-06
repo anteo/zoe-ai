@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 SimpleForm.setup do |config|
   shared_components = lambda do |b|
     b.use :html5

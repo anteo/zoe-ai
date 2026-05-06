@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chats
   class HistoryListComponent < ApplicationComponent
     Entry = Data.define(:chat, :index, :day_label, :time_span, :message_count, :preview)

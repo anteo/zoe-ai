@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Characters
   class DetailsComponent < ApplicationComponent
     attr_reader :character, :partner

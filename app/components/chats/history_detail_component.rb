@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chats
   class HistoryDetailComponent < ApplicationComponent
     attr_reader :history_chat, :current_character

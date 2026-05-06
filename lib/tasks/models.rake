@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 namespace :models do
   desc "Refresh models registry from configured providers and sync DB"
   task update: :environment do

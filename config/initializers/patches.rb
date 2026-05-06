@@ -1,3 +1,5 @@
+require Rails.root.join("lib/patches").to_s
+
 Patches.register %w[
   MissionControl::Jobs::ApplicationController
   RubyLLM::Providers::DeepSeek::Capabilities

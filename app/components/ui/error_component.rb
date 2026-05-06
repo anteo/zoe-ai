@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module UI
   class ErrorComponent < ApplicationComponent
     attr_reader :chat, :current_character, :error

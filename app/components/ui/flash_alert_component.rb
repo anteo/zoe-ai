@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module UI
   class FlashAlertComponent < ApplicationComponent
     attr_reader :type, :message, :details

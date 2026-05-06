@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CharactersController < ApplicationController
   before_action :find_character, only: [ :edit, :update, :destroy, :section ]
 

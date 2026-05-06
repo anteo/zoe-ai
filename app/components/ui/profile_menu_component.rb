@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module UI
   class ProfileMenuComponent < ApplicationComponent
     attr_reader :current_user

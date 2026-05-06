@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.config.after_initialize do
   Setting.watch(:app, :mailer) do  # smtp changes bubble up to :mailer
     app_url_options = {

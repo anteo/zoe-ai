@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chats
   class ChatComponent < ApplicationComponent
     attr_reader :chat, :dom_id
