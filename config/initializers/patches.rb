@@ -2,8 +2,8 @@ require Rails.root.join("lib/patches").to_s
 
 Patches.register %w[
   MissionControl::Jobs::ApplicationController
+  RubyLLM::Providers::DeepSeek
   RubyLLM::Providers::DeepSeek::Capabilities
-  RubyLLM::Providers::DeepSeek::Chat
 ]
 
 Rails.application.config.to_prepare do
