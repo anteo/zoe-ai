@@ -6,7 +6,7 @@ class AggregatePersistentFactsJob < ApplicationJob
 
   def perform(character = nil, partner = nil)
     if character && partner
-      AI::Actors::AggregatePersistentFacts.call(character:, partner:)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner:, logger:)
       return
     end
 

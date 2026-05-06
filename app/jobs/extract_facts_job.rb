@@ -4,6 +4,6 @@ class ExtractFactsJob < ApplicationJob
                      on_conflict: :discard
 
   def perform(chat)
-    AI::Actors::ExtractFacts.call(chat:)
+    AI::Actors::ExtractFacts.call(chat:, logger:)
   end
 end

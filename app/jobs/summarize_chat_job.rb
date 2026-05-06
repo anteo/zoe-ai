@@ -3,6 +3,6 @@ class SummarizeChatJob < ApplicationJob
                      key: ->(chat) { "summarize_chat_#{chat.id}" }
 
   def perform(chat)
-    AI::Actors::SummarizeChat.call(chat:)
+    AI::Actors::SummarizeChat.call(chat:, logger:)
   end
 end
