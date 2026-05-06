@@ -14,7 +14,7 @@ class SystemLog < ApplicationRecord
   scope :for_level, ->(level) { where(severity: threshold_levels(level)) }
 
   def self.console_limit
-    Setting.ai.admin_console_lines
+    Setting.ui.admin_console_lines
   end
 
   def self.matches_level?(severity, level)

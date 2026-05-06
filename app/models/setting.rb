@@ -9,11 +9,8 @@ class Setting < ApplicationRecord
   end
 
   scope :ai do
-    setting :admin_console_lines, :integer, default: 100
     setting :debug, :boolean, default: false
     setting :request_timeout, :integer, default: 30
-
-    validates :admin_console_lines, numericality: { greater_than: 0 }, allow_nil: true
 
     scope :models do
       setting :default_model, :string
@@ -98,8 +95,11 @@ class Setting < ApplicationRecord
   end
 
   scope :ui do
+    setting :admin_console_lines, :integer, default: 100
     setting :max_message_bubbles, :integer, default: 3
     setting :flash_timeout_ms, :integer, default: 5000
+
+    validates :admin_console_lines, numericality: { greater_than: 0 }, allow_nil: true
   end
 
   scope :events do

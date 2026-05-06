@@ -18,7 +18,7 @@ class AdminConsoleChannelTest < ActionCable::Channel::TestCase
   end
 
   test "sends snapshot limited by level threshold" do
-    Setting.ai.update(admin_console_lines: 2)
+    Setting.ui.update(admin_console_lines: 2)
     SystemLog.create!(severity: "info", message: "info", logged_at: 3.seconds.ago)
     warn_log = SystemLog.create!(severity: "warn", message: "warn", logged_at: 2.seconds.ago)
     error_log = SystemLog.create!(severity: "error", message: "error", logged_at: 1.second.ago)

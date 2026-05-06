@@ -139,7 +139,6 @@ en:
   placeholder_search_chat_history: Search history
   settings:
     ai:
-      admin_console_lines: Admin console lines
       debug: Debug mode
       models:
         default_embedding_model: Default embedding model
@@ -173,6 +172,8 @@ en:
         xai:
           api_key: xAI API Key
       request_timeout: Request timeout (seconds)
+    ui:
+      admin_console_lines: Admin console lines
   text_access_denied: Access denied.
   text_character_create_failed: Failed to create character.
   text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.

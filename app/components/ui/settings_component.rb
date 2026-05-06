@@ -34,7 +34,8 @@ module UI
         icon: "icon-[lucide--mail]"
       },
       "ui" => {
-        icon: "icon-[lucide--monitor]"
+        icon: "icon-[lucide--monitor]",
+        form: -> { Setting.ui },
       },
       "events" => {
         icon: "icon-[lucide--history]"

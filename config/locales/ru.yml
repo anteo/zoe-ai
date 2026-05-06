@@ -139,7 +139,6 @@ ru:
   placeholder_search_chat_history: Поиск по истории
   settings:
     ai:
-      admin_console_lines: Количество строк консоли администратора
       debug: Режим отладки
       models:
         default_embedding_model: Модель эмбеддингов по умолчанию
@@ -173,6 +172,8 @@ ru:
         xai:
           api_key: API-ключ xAI
       request_timeout: Таймаут запроса (секунды)
+    ui:
+      admin_console_lines: Количество строк консоли администратора
   text_access_denied: Доступ запрещён.
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
