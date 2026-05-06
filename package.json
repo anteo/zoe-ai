@@ -10,6 +10,7 @@
     "add": "^2.0.6",
     "autoprefixer": "^10.4.23",
     "cropperjs": "1.6.2",
+    "dayjs": "^1.11.13",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1",

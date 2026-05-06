@@ -1,4 +1,5 @@
 class ApplicationJob < ActiveJob::Base
+  include JobLogging
   include JobMissionControl
   include JobLocalePropagation
   include JobRequestStoreContext

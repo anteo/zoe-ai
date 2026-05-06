@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AI::SystemLoggerTest < ActiveSupport::TestCase
+class SystemLoggerTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
   setup do
@@ -21,8 +21,8 @@ class AI::SystemLoggerTest < ActiveSupport::TestCase
     end
 
     begin
-      AI::SystemLogger.instance.info("hello")
-      AI::SystemLogger.flush
+      SystemLogger.instance.info("hello")
+      SystemLogger.flush
     ensure
       server.define_singleton_method(:broadcast) do |*args, **kwargs, &block|
         original_broadcast.call(*args, **kwargs, &block)
@@ -32,25 +32,34 @@ class AI::SystemLoggerTest < ActiveSupport::TestCase
     assert_equal 1, broadcasts.size
     channel, payload = broadcasts.first
     assert_equal AdminConsoleChannel::STREAM, channel
-    assert_equal "rubyllm", payload[:source]
     assert_equal "info", payload[:severity]
     assert_equal "hello", payload[:message]
+    assert_nil payload[:payload]
     assert payload[:logged_at].present?
 
     record = SystemLog.last
-    assert_equal "rubyllm", record.source
     assert_equal "info", record.severity
     assert_equal "hello", record.message
+    assert_equal({}, record.payload)
   end
 
   test "persists logs even when caller transaction rolls back" do
     ApplicationRecord.transaction do
-      AI::SystemLogger.instance.info("survives rollback")
+      SystemLogger.instance.info("survives rollback")
       raise ActiveRecord::Rollback
     end
 
-    AI::SystemLogger.flush
+    SystemLogger.flush
 
     assert SystemLog.exists?(message: "survives rollback")
+  end
+
+  test "persists logs with payload context" do
+    SystemLogger.instance.with_payload(source: "job").info("hello from job", request_id: "abc123")
+    SystemLogger.flush
+
+    record = SystemLog.last
+    assert_equal "hello from job", record.message
+    assert_equal({ "request_id" => "abc123", "source" => "job" }, record.payload)
   end
 end

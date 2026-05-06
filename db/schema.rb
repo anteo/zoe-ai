@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_05_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -382,8 +382,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_120000) do
     t.datetime "created_at", null: false
     t.datetime "logged_at", null: false
     t.text "message", null: false
+    t.jsonb "payload", default: {}, null: false
     t.string "severity", null: false
-    t.string "source", null: false
     t.datetime "updated_at", null: false
     t.index ["logged_at", "id"], name: "index_system_logs_on_logged_at"
     t.index ["severity", "logged_at", "id"], name: "index_system_logs_on_severity_and_logged_at"

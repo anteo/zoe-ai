@@ -1,4 +1,5 @@
 import {Controller} from "@hotwired/stimulus"
+import dayjs from "dayjs"
 import {createAdminConsoleSubscription} from "../channels/admin_console_channel"
 
 export default class extends Controller {
@@ -90,8 +91,12 @@ export default class extends Controller {
   }
 
   formatLine(payload) {
-    const timestamp = payload.logged_at ? `[${payload.logged_at}] ` : ""
+    const timestamp = payload.logged_at ? `[${this.formatTimestamp(payload.logged_at)}] ` : ""
     return `${timestamp}${payload.message}`
+  }
+
+  formatTimestamp(value) {
+    return dayjs(value).format("YYYY-MM-DD HH:mm:ss")
   }
 
   severityClass(severity) {

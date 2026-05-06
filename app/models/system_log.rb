@@ -3,10 +3,11 @@ class SystemLog < ApplicationRecord
   SEVERITY_LEVELS = %w[debug info warn error fatal].freeze
   SEVERITY_RANKS = SEVERITY_LEVELS.each_with_index.to_h.freeze
 
-  validates :logged_at, :message, :severity, :source, presence: true
+  validates :logged_at, :message, :severity, presence: true
   validates :severity, inclusion: { in: SEVERITY_LEVELS }
 
   before_validation :normalize_severity!
+  before_validation :normalize_payload!
   before_validation :set_logged_at!
 
   scope :newest_first, -> { order(logged_at: :desc, id: :desc) }
@@ -44,11 +45,14 @@ class SystemLog < ApplicationRecord
       logged_at: logged_at.iso8601(3),
       message: message,
       severity: severity,
-      source: source
     }
   end
 
   private
+
+  def normalize_payload!
+    self.payload = (payload || {}).deep_stringify_keys
+  end
 
   def normalize_severity!
     self.severity = self.class.normalize_level(severity)

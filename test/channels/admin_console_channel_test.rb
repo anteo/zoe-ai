@@ -19,9 +19,9 @@ class AdminConsoleChannelTest < ActionCable::Channel::TestCase
 
   test "sends snapshot limited by level threshold" do
     Setting.ai.update(admin_console_lines: 2)
-    SystemLog.create!(severity: "info", message: "info", source: "test", logged_at: 3.seconds.ago)
-    warn_log = SystemLog.create!(severity: "warn", message: "warn", source: "test", logged_at: 2.seconds.ago)
-    error_log = SystemLog.create!(severity: "error", message: "error", source: "test", logged_at: 1.second.ago)
+    SystemLog.create!(severity: "info", message: "info", logged_at: 3.seconds.ago)
+    warn_log = SystemLog.create!(severity: "warn", message: "warn", logged_at: 2.seconds.ago)
+    error_log = SystemLog.create!(severity: "error", message: "error", logged_at: 1.second.ago)
 
     stub_connection current_user: @admin
     subscribe(level: "warn")
@@ -39,8 +39,8 @@ class AdminConsoleChannelTest < ActionCable::Channel::TestCase
     stub_connection current_user: @admin
     subscribe(level: "error")
 
-    warn_log = SystemLog.create!(severity: "warn", message: "warn", source: "test", logged_at: 2.seconds.ago)
-    error_log = SystemLog.create!(severity: "error", message: "error", source: "test", logged_at: 1.second.ago)
+    warn_log = SystemLog.create!(severity: "warn", message: "warn", logged_at: 2.seconds.ago)
+    error_log = SystemLog.create!(severity: "error", message: "error", logged_at: 1.second.ago)
 
     assert_no_changes -> { transmissions.size } do
       subscription.send(:handle_stream_payload, warn_log.to_console_payload)
