@@ -2,6 +2,7 @@ require "json-schema"
 
 module AI::Actors
   class RefreshModelsRegistry < Actor
+    input :logger, default: -> { Rails.logger }
     output :stats
 
     fail_on RubyLLM::Error,
