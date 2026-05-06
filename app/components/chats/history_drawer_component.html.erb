@@ -1,64 +1,63 @@
-<div data-controller="history-drawer"
+<div class="drawer drawer-end w-auto shrink-0"
+     data-controller="history-drawer"
      data-action="keydown@window->history-drawer#handleKeydown"
      data-history-drawer-list-title-value="<%= t(:label_chat_history) %>"
      data-history-drawer-list-url-value="<%= history_list_chats_path %>">
-  <button type="button" class="btn btn-ghost" data-action="history-drawer#open">
-    <span class="icon-[lucide--history] w-4 h-4"></span>
-    <%= t(:label_chat_history) %>
-  </button>
+  <input id="history-drawer-toggle"
+         type="checkbox"
+         tabindex="-1"
+         class="drawer-toggle"
+         data-history-drawer-target="toggle"
+         data-action="change->history-drawer#handleToggleChange">
 
-  <div class="fixed inset-0 z-40 bg-black/40 opacity-0 hidden transition-opacity duration-200"
-       data-history-drawer-target="overlay"
-       data-action="click->history-drawer#close"></div>
+  <div class="drawer-content">
+    <button type="button" class="btn btn-ghost" data-action="history-drawer#open">
+      <span class="icon-[lucide--history] w-4 h-4"></span>
+      <%= t(:label_chat_history) %>
+    </button>
+  </div>
 
-  <aside class="history-drawer-panel fixed top-0 right-0 z-50 h-full w-full max-w-2xl bg-base-100 shadow-xl translate-x-full transition-transform duration-200 flex flex-col"
-         data-history-drawer-target="panel">
-    <header class="border-b border-base-300 px-4 py-3 flex items-center gap-2">
-      <button type="button"
-              class="btn btn-ghost btn-sm hidden"
-              data-history-drawer-target="backButton"
-              data-action="history-drawer#showList"
-              title="<%= t(:label_back) %>">
-        <span class="icon-[lucide--arrow-left] w-4 h-4"></span>
-      </button>
-      <div class="flex-1 min-w-0">
-        <h2 class="font-semibold text-base truncate" data-history-drawer-target="title"><%= t(:label_chat_history) %></h2>
-        <p class="hidden text-xs opacity-60 truncate" data-history-drawer-target="timeSpan"></p>
-      </div>
-      <div class="hidden items-center gap-1" data-history-drawer-target="navButtons">
+  <div class="drawer-side z-50">
+    <label for="history-drawer-toggle"
+           aria-label="<%= t(:label_close) %>"
+           class="drawer-overlay"></label>
+
+    <aside class="history-drawer-panel ml-auto h-full w-full max-w-[26rem] bg-base-100 shadow-xl transition-[max-width] duration-200 flex flex-col"
+           data-history-drawer-target="panel">
+      <header class="border-b border-base-300 px-4 py-3 flex items-center gap-2">
         <button type="button"
-                class="btn btn-ghost btn-sm"
-                data-history-drawer-target="previousButton"
-                data-action="history-drawer#openPrevious"
-                title="<%= t(:label_previous_chat) %>">
-          <span class="icon-[lucide--chevron-left] w-4 h-4"></span>
+                class="btn btn-ghost btn-sm hidden lg:hidden"
+                data-history-drawer-target="backButton"
+                data-action="history-drawer#showList"
+                title="<%= t(:label_back) %>">
+          <span class="icon-[lucide--arrow-left] w-4 h-4"></span>
         </button>
-        <button type="button"
-                class="btn btn-ghost btn-sm"
-                data-history-drawer-target="nextButton"
-                data-action="history-drawer#openNext"
-                title="<%= t(:label_next_chat) %>">
-          <span class="icon-[lucide--chevron-right] w-4 h-4"></span>
+        <div class="flex-1 min-w-0">
+          <h2 class="font-semibold text-base truncate" data-history-drawer-target="title"><%= t(:label_chat_history) %></h2>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" data-action="history-drawer#close" title="<%= t(:label_close) %>">
+          <span class="icon-[lucide--x] w-4 h-4"></span>
         </button>
+      </header>
+
+      <div class="flex-1 min-h-0 flex justify-end">
+        <div class="hidden min-h-0 border-r border-base-300 bg-base-100 lg:flex-1 w-full"
+             data-history-drawer-target="detailView">
+          <turbo-frame id="history-chat-detail"
+                       data-history-drawer-target="detailFrame"
+                       data-action="turbo:frame-load->history-drawer#finishFrameTransition"
+                       class="history-chat-frame block h-full">
+            <div class="h-full p-6 text-sm opacity-60"><%= t(:text_select_chat_history) %></div>
+          </turbo-frame>
+        </div>
+
+        <div class="flex-1 min-h-0 lg:w-[26rem] lg:flex-none" data-history-drawer-target="listView">
+          <turbo-frame id="history-chat-list"
+                       data-history-drawer-target="listFrame">
+            <div class="h-full p-6 text-sm opacity-60"><%= t(:text_select_chat_history) %></div>
+          </turbo-frame>
+        </div>
       </div>
-      <button type="button" class="btn btn-ghost btn-sm" data-action="history-drawer#close" title="<%= t(:label_close) %>">
-        <span class="icon-[lucide--x] w-4 h-4"></span>
-      </button>
-    </header>
-
-    <div class="flex-1 min-h-0" data-history-drawer-target="listView">
-      <turbo-frame id="history-chat-list" data-history-drawer-target="listFrame">
-        <div class="h-full p-6 text-sm opacity-60"><%= t(:text_select_chat_history) %></div>
-      </turbo-frame>
-    </div>
-
-    <div class="hidden flex-1 min-h-0" data-history-drawer-target="detailView">
-      <turbo-frame id="history-chat-detail"
-                   data-history-drawer-target="detailFrame"
-                   data-action="turbo:frame-load->history-drawer#finishFrameTransition"
-                   class="history-chat-frame block h-full">
-        <div class="h-full p-6 text-sm opacity-60"><%= t(:text_select_chat_history) %></div>
-      </turbo-frame>
-    </div>
-  </aside>
+    </aside>
+  </div>
 </div>

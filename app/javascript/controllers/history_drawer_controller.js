@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["overlay", "panel", "title", "timeSpan", "backButton", "listView", "detailView", "detailFrame", "listFrame", "navButtons", "previousButton", "nextButton"]
+  static targets = ["toggle", "panel", "title", "backButton", "listView", "detailView", "detailFrame", "listFrame"]
   static values = {
     listTitle: String,
     listUrl: String
@@ -9,111 +9,48 @@ export default class extends Controller {
 
   connect() {
     this.currentIndex = null
-    this.updateNavigationState()
+    this.detailOpen = false
   }
 
   open() {
     this.loadList()
-    this.overlayTarget.classList.remove("hidden")
-    requestAnimationFrame(() => {
-      this.overlayTarget.classList.remove("opacity-0")
-      this.panelTarget.classList.remove("translate-x-full")
-    })
+    this.toggleTarget.checked = true
   }
 
   close() {
-    this.overlayTarget.classList.add("opacity-0")
-    this.panelTarget.classList.add("translate-x-full")
-
-    setTimeout(() => {
-      this.overlayTarget.classList.add("hidden")
-    }, 200)
-
+    this.toggleTarget.checked = false
     this.showList()
+    this.clearSelection()
+  }
+
+  handleToggleChange() {
+    if (this.toggleTarget.checked) this.loadList()
   }
 
   openChat(event) {
-    const title = event.currentTarget.dataset.historyDrawerTitle
-    const timeSpan = event.currentTarget.dataset.historyDrawerTimeSpan
-    this.currentIndex = Number(event.currentTarget.dataset.historyDrawerIndex)
-    this.titleTarget.textContent = title || this.listTitleValue
-    this.updateTimeSpan(timeSpan)
-    this.backButtonTarget.classList.remove("hidden")
-    this.navButtonsTarget.classList.remove("hidden")
-    this.navButtonsTarget.classList.add("flex")
-    this.listViewTarget.classList.add("hidden")
-    this.detailViewTarget.classList.remove("hidden")
-    this.startFrameTransition()
-    this.updateNavigationState()
-  }
-
-  openPrevious() {
-    this.openByIndex(this.currentIndex + 1)
-  }
-
-  openNext() {
-    this.openByIndex(this.currentIndex - 1)
+    this.selectLink(event.currentTarget)
+    this.showDetail()
+    this.detailFrameTarget.src = event.currentTarget.href
   }
 
   showList() {
-    this.currentIndex = null
-    this.titleTarget.textContent = this.listTitleValue
-    this.updateTimeSpan(null)
+    this.detailOpen = false
     this.backButtonTarget.classList.add("hidden")
-    this.navButtonsTarget.classList.add("hidden")
-    this.navButtonsTarget.classList.remove("flex")
     this.detailViewTarget.classList.add("hidden")
+    this.detailViewTarget.classList.remove("block")
     this.listViewTarget.classList.remove("hidden")
+    this.panelTarget.classList.remove("max-w-6xl")
+    this.panelTarget.classList.add("max-w-[26rem]")
     this.detailFrameTarget.innerHTML = ""
-    this.updateNavigationState()
   }
 
   openByIndex(index) {
     const link = this.chatLinks[index]
     if (!link) return
 
-    this.currentIndex = index
-    const title = link.dataset.historyDrawerTitle
-    const timeSpan = link.dataset.historyDrawerTimeSpan
-    this.titleTarget.textContent = title || this.listTitleValue
-    this.updateTimeSpan(timeSpan)
-    this.startFrameTransition()
+    this.selectLink(link)
+    this.showDetail()
     this.detailFrameTarget.src = link.href
-    this.updateNavigationState()
-  }
-
-  startFrameTransition() {
-    this.detailFrameTarget.classList.add("is-loading")
-    this.detailFrameTarget.classList.remove("is-ready")
-  }
-
-  finishFrameTransition() {
-    this.detailFrameTarget.classList.remove("is-loading")
-    this.detailFrameTarget.classList.add("is-ready")
-  }
-
-  updateTimeSpan(timeSpan) {
-    if (!this.hasTimeSpanTarget) return
-
-    if (timeSpan) {
-      this.timeSpanTarget.textContent = timeSpan
-      this.timeSpanTarget.classList.remove("hidden")
-      return
-    }
-
-    this.timeSpanTarget.textContent = ""
-    this.timeSpanTarget.classList.add("hidden")
-  }
-
-  updateNavigationState() {
-    if (!this.hasPreviousButtonTarget || !this.hasNextButtonTarget) return
-
-    const hasCurrent = Number.isInteger(this.currentIndex)
-    const hasOlder = hasCurrent && this.currentIndex < this.chatLinks.length - 1
-    const hasNewer = hasCurrent && this.currentIndex > 0
-
-    this.previousButtonTarget.disabled = !hasOlder
-    this.nextButtonTarget.disabled = !hasNewer
   }
 
   get chatLinks() {
@@ -127,8 +64,74 @@ export default class extends Controller {
   }
 
   handleKeydown(event) {
-    if (event.key === "Escape" && !this.overlayTarget.classList.contains("hidden")) {
-      this.close()
+    if (!this.toggleTarget.checked) return
+    if (this.isTypingTarget(event.target)) return
+
+    switch (event.key) {
+      case "Escape":
+        if (this.detailOpen) {
+          this.showList()
+        } else {
+          this.close()
+        }
+        break
+      case "ArrowDown":
+        this.moveSelection(1)
+        event.preventDefault()
+        break
+      case "ArrowUp":
+        this.moveSelection(-1)
+        event.preventDefault()
+        break
     }
+  }
+
+  moveSelection(offset) {
+    if (!this.chatLinks.length) return
+
+    const nextIndex = Number.isInteger(this.currentIndex)
+      ? Math.min(Math.max(this.currentIndex + offset, 0), this.chatLinks.length - 1)
+      : offset > 0 ? 0 : this.chatLinks.length - 1
+
+    this.openByIndex(nextIndex)
+  }
+
+  clearSelection() {
+    this.currentIndex = null
+    this.chatLinks.forEach((chatLink) => {
+      chatLink.classList.remove("menu-active")
+    })
+  }
+
+  selectLink(link) {
+    if (!link) return
+
+    this.currentIndex = Number(link.dataset.historyDrawerIndex)
+    this.chatLinks.forEach((chatLink) => {
+      chatLink.classList.toggle("menu-active", chatLink === link)
+    })
+
+    link.scrollIntoView({ behavior: "smooth", block: "nearest" })
+  }
+
+  showDetail() {
+    this.detailOpen = true
+    this.backButtonTarget.classList.toggle("hidden", this.isDesktop())
+    this.detailViewTarget.classList.remove("hidden")
+    this.detailViewTarget.classList.add("block")
+    this.listViewTarget.classList.toggle("hidden", !this.isDesktop())
+    this.panelTarget.classList.remove("max-w-[26rem]")
+    this.panelTarget.classList.add("max-w-6xl")
+  }
+
+  isDesktop() {
+    return window.matchMedia("(min-width: 1024px)").matches
+  }
+
+  isTypingTarget(target) {
+    return target instanceof HTMLElement && (
+      target.isContentEditable ||
+      ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)
+    )
   }
 }

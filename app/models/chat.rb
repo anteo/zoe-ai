@@ -4,6 +4,8 @@ class Chat < ApplicationRecord
   belongs_to :user
   belongs_to :character, class_name: "Character"
   belongs_to :partner, class_name: "Character"
+  belongs_to :first_visible_message, class_name: "Message", optional: true
+  belongs_to :last_visible_message, class_name: "Message", optional: true
 
   has_many :facts, dependent: :delete_all
   has_many :attachments_blobs, through: :messages
@@ -78,6 +80,18 @@ class Chat < ApplicationRecord
     ((token_usage_total.to_f / token_usage_context_window) * 100).round.clamp(0, 100)
   end
 
+  def refresh_history_message_metadata!
+    first_message = history_visible_messages.reorder(:created_at, :id).first
+    last_message = history_visible_messages.reorder(created_at: :desc, id: :desc).first
+
+    update_columns(
+      first_visible_message_id: first_message&.id,
+      first_visible_message_at: first_message&.created_at,
+      last_visible_message_id: last_message&.id,
+      last_visible_message_at: last_message&.created_at
+    )
+  end
+
   def to_llm
     resolve_model_from_strings
     raise AI::ModelNotConfiguredError if model.blank?
@@ -91,6 +105,10 @@ class Chat < ApplicationRecord
   end
 
   private
+
+  def history_visible_messages
+    messages.history_visible
+  end
 
   def token_usage_message
     messages.where(role: "assistant").where.not(input_tokens: nil).reorder(created_at: :desc).first

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_06_123000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -92,6 +92,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
     t.boolean "closed", default: false, null: false
     t.datetime "created_at", null: false
     t.boolean "facts_extracted", default: false, null: false
+    t.datetime "first_visible_message_at"
+    t.bigint "first_visible_message_id"
+    t.datetime "last_visible_message_at"
+    t.bigint "last_visible_message_id"
     t.boolean "memorize", default: true, null: false
     t.bigint "model_id"
     t.bigint "partner_id"
@@ -99,6 +103,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.index ["character_id"], name: "index_chats_on_character_id"
+    t.index ["first_visible_message_at"], name: "index_chats_on_first_visible_message_at"
+    t.index ["first_visible_message_id"], name: "index_chats_on_first_visible_message_id"
+    t.index ["last_visible_message_at"], name: "index_chats_on_last_visible_message_at"
+    t.index ["last_visible_message_id"], name: "index_chats_on_last_visible_message_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["partner_id"], name: "index_chats_on_partner_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
@@ -440,6 +448,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
   add_foreign_key "agents_mcp_servers", "mcp_servers"
   add_foreign_key "chats", "characters"
   add_foreign_key "chats", "characters", column: "partner_id"
+  add_foreign_key "chats", "messages", column: "first_visible_message_id", on_delete: :nullify
+  add_foreign_key "chats", "messages", column: "last_visible_message_id", on_delete: :nullify
   add_foreign_key "chats", "models"
   add_foreign_key "chats", "users"
   add_foreign_key "fact_aggregates", "characters"

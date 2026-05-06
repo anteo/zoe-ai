@@ -11,20 +11,16 @@ module Chats
     def entries
       @entries ||= begin
         chats = history_chats.to_a
-        messages_by_chat = load_messages(chats)
+        counts_by_chat = load_message_counts(chats)
 
         chats.each_with_index.map do |chat, index|
-          messages = messages_by_chat[chat.id] || []
-          first_message = messages.first
-          last_message = messages.last
-
           Entry.new(
             chat:,
             index:,
             day_label: I18n.l(chat.created_at.to_date),
-            time_span: format_time_span(chat:, first_message:, last_message:),
-            message_count: messages.size,
-            preview: last_message&.human_content.to_s.squish
+            time_span: format_time_span(chat:),
+            message_count: counts_by_chat[chat.id].to_i,
+            preview: chat.last_visible_message&.human_content.to_s.squish
           )
         end
       end
@@ -36,19 +32,19 @@ module Chats
 
     private
 
-    def load_messages(chats)
+    def load_message_counts(chats)
       chat_ids = chats.map(&:id)
       return {} if chat_ids.empty?
 
-      Message.visible
+      Message.history_visible
              .where(chat_id: chat_ids)
-             .order(:created_at)
-             .group_by(&:chat_id)
+             .group(:chat_id)
+             .count
     end
 
-    def format_time_span(chat:, first_message:, last_message:)
-      if first_message && last_message
-        "#{first_message.created_at.strftime("%H:%M")} - #{last_message.created_at.strftime("%H:%M")}"
+    def format_time_span(chat:)
+      if chat.first_visible_message_at && chat.last_visible_message_at
+        "#{chat.first_visible_message_at.strftime("%H:%M")} - #{chat.last_visible_message_at.strftime("%H:%M")}"
       else
         chat.created_at.strftime("%H:%M")
       end

@@ -8,6 +8,8 @@ class Message < ApplicationRecord
 
   before_save :set_character
   before_create :inherit_memorize
+  after_commit :append_chat_history_message_metadata, on: [ :create, :update ]
+  after_destroy_commit :refresh_chat_history_message_metadata
 
   scope :visible, -> {
     attachments = ActiveStorage::Attachment.arel_table
@@ -17,6 +19,7 @@ class Message < ApplicationRecord
     where(role: %w[user assistant])
       .where(arel_table[:content].not_eq("").or(arel_table[:id].in(has_attachment)))
   }
+  scope :history_visible, -> { where(role: %w[user assistant]).where.not(content: [ nil, "" ]) }
 
   def self.humanize_content(content)
     content.gsub(/\n*\(files attached: \[.*?\]\)/m, "").rstrip
@@ -87,5 +90,28 @@ class Message < ApplicationRecord
     content.instance_variable_set(:@text, text)
 
     content
+  end
+
+  def append_chat_history_message_metadata
+    return unless role.in?(%w[user assistant]) && content.present?
+
+    chat = Chat.find_by(id: chat_id)
+    return unless chat
+
+    updates = {
+      last_visible_message_id: id,
+      last_visible_message_at: created_at
+    }
+
+    if chat.first_visible_message_id.blank?
+      updates[:first_visible_message_id] = id
+      updates[:first_visible_message_at] = created_at
+    end
+
+    chat.update_columns(updates) if updates.any?
+  end
+
+  def refresh_chat_history_message_metadata
+    Chat.find_by(id: chat_id)&.refresh_history_message_metadata!
   end
 end

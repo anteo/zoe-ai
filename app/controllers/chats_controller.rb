@@ -26,6 +26,7 @@ class ChatsController < ApplicationController
   def history_list
     @history_chats = current_user.chats
                                  .where(character: current_character, partner: current_partner)
+                                 .preload(:last_visible_message)
                                  .order(created_at: :desc)
   end
 
