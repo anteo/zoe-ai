@@ -1,4 +1,6 @@
-<div class="overflow-y-auto p-4 rounded-field shadow-sm bg-base-100" id="<%= dom_id %>" data-controller="<%= read_only? ? "history-chat" : "chat" %>">
+<div class="overflow-y-auto p-4 rounded-field shadow-sm bg-base-100"
+     id="<%= dom_id %>"
+     data-controller="<%= [read_only? ? "history-chat" : "chat", "lightbox"].join(" ") %>">
   <% if new? %>
     <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
       <div class="animate-[float_6s_ease-in-out_infinite]">

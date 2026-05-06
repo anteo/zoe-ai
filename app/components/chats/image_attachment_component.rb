@@ -22,6 +22,18 @@ module Chats
       rails_blob_path(attachment, disposition: "inline")
     end
 
+    def width
+      attachment.width
+    end
+
+    def height
+      attachment.height
+    end
+
+    def lightbox?
+      width.present? && height.present?
+    end
+
     def image_class
       "h-64 rounded-3xl object-cover"
     end

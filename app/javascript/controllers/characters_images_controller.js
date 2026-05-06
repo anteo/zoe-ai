@@ -84,7 +84,14 @@ export default class extends Controller {
   }
 
   buildExistingImageCard(image) {
-    const card = this.buildImageCard({src: image.url, alt: image.filename, description: image.description})
+    const card = this.buildImageCard({
+      alt: image.filename,
+      description: image.description,
+      fullSrc: image.full_url,
+      height: image.height,
+      src: image.url,
+      width: image.width
+    })
     const idInput = card.querySelector("[data-role='id']")
     const destroyInput = card.querySelector("[data-role='destroy']")
     const descriptionInput = card.querySelector("[data-role='description']")
@@ -110,7 +117,7 @@ export default class extends Controller {
     this.nextNewImageIndex = index + 1
 
     const previewUrl = URL.createObjectURL(file)
-    const card = this.buildImageCard({src: previewUrl, alt: file.name, description: ""})
+    const card = this.buildImageCard({src: previewUrl, fullSrc: previewUrl, alt: file.name, description: ""})
     const idInput = card.querySelector("[data-role='id']")
     const destroyInput = card.querySelector("[data-role='destroy']")
     const descriptionInput = card.querySelector("[data-role='description']")
@@ -141,16 +148,32 @@ export default class extends Controller {
     this.updateCountBadge()
   }
 
-  buildImageCard({src, alt, description}) {
+  buildImageCard({src, fullSrc, alt, description, width, height}) {
     const fragment = this.imageCardTemplateTarget.content.cloneNode(true)
     const card = fragment.querySelector("[data-character-image-card]")
     if (!card) return document.createElement("article")
 
     const image = card.querySelector("img")
+    const lightboxLink = card.querySelector("[data-role='lightboxLink']")
+
+    if (lightboxLink) {
+      lightboxLink.href = fullSrc || src
+    }
+
     if (image) {
+      image.addEventListener("load", () => {
+        this.syncLightboxLink(lightboxLink, {
+          src: fullSrc || src,
+          width: width || image.naturalWidth,
+          height: height || image.naturalHeight
+        })
+      }, { once: true })
+
       image.src = src
       image.alt = alt || ""
     }
+
+    this.syncLightboxLink(lightboxLink, { src: fullSrc || src, width, height })
 
     const descriptionInput = card.querySelector("[data-role='description']")
     if (descriptionInput) {
@@ -192,5 +215,21 @@ export default class extends Controller {
   applyFieldIndex(field, index) {
     if (!field?.name) return
     field.name = field.name.replace("__INDEX__", `${index}`)
+  }
+
+  syncLightboxLink(link, { src, width, height }) {
+    if (!link || !src) return
+
+    link.href = src
+
+    if (width && height) {
+      link.classList.add("lightbox-link")
+      link.dataset.pswpWidth = `${width}`
+      link.dataset.pswpHeight = `${height}`
+    } else {
+      link.classList.remove("lightbox-link")
+      delete link.dataset.pswpWidth
+      delete link.dataset.pswpHeight
+    }
   }
 }

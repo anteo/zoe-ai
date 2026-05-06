@@ -25,4 +25,31 @@ module ActiveStorageAttachmentConcern
 
     blob.metadata = metadata
   end
+
+  def width
+    dimensions["width"]
+  end
+
+  def height
+    dimensions["height"]
+  end
+
+  def dimensions
+    return {} unless image?
+
+    ensure_image_dimensions!
+    blob.metadata.slice("width", "height")
+  rescue ActiveStorage::FileNotFoundError, Errno::ENOENT
+    {}
+  end
+
+  private
+
+  def ensure_image_dimensions!
+    return if blob.metadata["width"].present? && blob.metadata["height"].present?
+    return if blob.analyzed?
+
+    blob.analyze
+    blob.reload
+  end
 end

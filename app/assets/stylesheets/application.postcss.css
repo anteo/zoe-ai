@@ -1,6 +1,6 @@
 /* Entry point for your PostCSS build */
 @import "tailwindcss";
-@import "vistaview/dist/style.css";
+@import "photoswipe/dist/photoswipe.css";
 @import "cropperjs/dist/cropper.css";
 
 @plugin "daisyui" {

@@ -1,5 +1,14 @@
 <div class="image-with-caption">
-  <a href="<%= image_url %>" data-lightbox="attachments" data-title="<%= filename %>" class="lightbox-link inline-block">
+  <a href="<%= image_url %>"
+     <% if lightbox? %>
+     data-pswp-width="<%= width %>"
+     data-pswp-height="<%= height %>"
+     class="lightbox-link inline-block"
+     <% else %>
+     class="inline-block"
+     <% end %>
+     rel="noopener"
+     target="_blank">
     <%= image_tag image_url, class: image_class, alt: filename %>
   </a>
   <% if prompt.present? %>

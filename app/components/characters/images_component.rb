@@ -14,10 +14,13 @@ module Characters
     def existing_images
       @existing_images ||= image_attachments.map do |attachment|
         {
+          full_url: helpers.rails_blob_path(attachment, disposition: "inline"),
+          height: attachment.height,
           id: attachment.id,
           url: helpers.url_for(attachment.variant(resize_to_limit: [ 1200, 1200 ])),
           filename: attachment.filename.to_s,
-          description: attachment.description
+          description: attachment.description,
+          width: attachment.width
         }
       end
     end

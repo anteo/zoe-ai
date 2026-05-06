@@ -1,6 +1,6 @@
 <section data-existing-images-json="<%= existing_images.to_json %>">
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 mb-4">
-    <div class="contents" data-characters-images-target="images"></div>
+    <div class="contents" data-controller="lightbox" data-characters-images-target="images"></div>
 
     <label class="relative block cursor-pointer overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition hover:border-base-content/30">
       <div class="aspect-[4/3] w-full">
@@ -22,10 +22,15 @@
   <div class="hidden" data-characters-images-target="newImageInputs"></div>
 
   <template data-characters-images-target="imageCardTemplate">
-    <article class="overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition"
+    <article class="flex min-h-0 flex-col overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition"
              data-character-image-card>
-      <div class="relative">
-        <img class="aspect-[4/3] w-full object-cover" alt="">
+      <div class="relative flex-1">
+        <a class="inline-block w-full"
+           rel="noopener"
+           target="_blank"
+           data-role="lightboxLink">
+          <img class="aspect-[4/3] w-full object-cover" alt="">
+        </a>
 
         <button type="button"
                 class="btn btn-circle btn-sm absolute right-3 top-3 border-none bg-base-100/90"
@@ -35,7 +40,7 @@
         </button>
       </div>
 
-      <div class="p-2">
+      <div class="mt-auto p-2">
         <input type="hidden"
                name="character[images_attachments_attributes][__INDEX__][id]"
                data-role="id">
