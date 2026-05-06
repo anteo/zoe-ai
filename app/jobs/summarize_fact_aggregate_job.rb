@@ -3,6 +3,6 @@ class SummarizeFactAggregateJob < ApplicationJob
                      key: ->(*) { "summarize_fact_aggregate" }
 
   def perform(fact_aggregate)
-    AI::Actors::SummarizeFactAggregate.call(fact_aggregate:)
+    AI::Actors::SummarizeFactAggregate.call(fact_aggregate:, logger:)
   end
 end

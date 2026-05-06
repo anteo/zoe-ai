@@ -70,6 +70,28 @@ class FactAggregate < ApplicationRecord
     !month?
   end
 
+  def summarizable?
+    return true if month?
+
+    children.exists? && children.all?(&:done?)
+  end
+
+  def current_summary_source_updated_at
+    if month?
+      source_updated_at
+    else
+      children.maximum(:summary_source_updated_at)
+    end
+  end
+
+  def needs_summary_refresh?
+    return false if in_progress?
+    return false unless summarizable?
+    return true if pending? || failed?
+
+    summary_source_updated_at != current_summary_source_updated_at
+  end
+
   def period(anchor_month = self.anchor_month)
     anchor_month = anchor_month.to_date.beginning_of_month
 
