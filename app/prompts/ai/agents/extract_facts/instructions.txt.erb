@@ -36,6 +36,7 @@ When in doubt, ask: "Would this still be true about the person a year from now?"
 Each extracted fact must include:
 
 - **`character_id`** — ID of an existing known character this fact is about (preferred over `character_name` when the person is in the known list)
+- **`character_bio`** — optional short identifying bio for a newly discovered person/pet, only when the current replica gives enough stable identity detail; keep it to one short phrase such as "Anton is Zoe's friend" or "Сима is Anton's cat"
 - **`character_name`** — name of the person/pet this fact is about, only if not in the known characters list (will create a new third-party character)
 - **`fact`** — 3rd-person description; replace pronouns with real names; write in English, but keep Russian personal names in the nominative case, do not translate them
 - **`kind`** — one of: `attribute` (stable personal trait), `experience` (something that happened), `belief` (what the person thinks/values), `preference` (what the person likes/dislikes/wants), `plan` (future intention)
@@ -56,15 +57,18 @@ Each extracted fact must include:
 
 <% if characters.any? %>
 # Known characters (assign one by its ID when the fact is about an existing person):
+<characters>
 <% characters.each do |character| -%>
-- ID: <%= character.id %>, Name: "<%= character.name %>"<%= " [third party]" if character.third_party? %>
+  <character id="<%= character.id %>" name="<%= ERB::Util.h(character.name) %>" type="<%= character.prompt_type %>"<%= %( bio="#{ERB::Util.h(character.bio)}") if character.bio.present? %> />
 <% end -%>
+</characters>
 <% end -%>
 
 <% if topics.any? %>
 # Existing topics (you may assign one of these by its ID):
+<topics>
 <% topics.each do |topic| -%>
-- ID: <%= topic.id %>, Name: "<%= topic.name %>"
+  <topic id="<%= topic.id %>" name="<%= ERB::Util.h(topic.name) %>" />
 <% end -%>
+</topics>
 <% end -%>
-

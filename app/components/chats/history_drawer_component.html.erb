@@ -11,9 +11,13 @@
          data-action="change->history-drawer#handleToggleChange">
 
   <div class="drawer-content">
-    <button type="button" class="btn btn-ghost" data-action="history-drawer#open">
+    <button type="button"
+            class="btn btn-ghost"
+            title="<%= t(:label_chat_history) %>"
+            aria-label="<%= t(:label_chat_history) %>"
+            data-action="history-drawer#open">
       <span class="icon-[lucide--history] w-4 h-4"></span>
-      <%= t(:label_chat_history) %>
+      <span class="hidden md:inline"><%= t(:label_chat_history) %></span>
     </button>
   </div>
 

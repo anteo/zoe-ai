@@ -1,7 +1,7 @@
 <div class="dropdown dropdown-end ml-1 group">
-  <button class="btn btn-ghost gap-2 px-2">
+  <button class="btn btn-ghost gap-2 px-2 shrink-0">
     <%= avatar_for_character(current_partner) %>
-    <span class="font-bold"><%= current_partner&.name %></span>
+    <span class="font-bold hidden xl:inline"><%= current_partner&.name %></span>
     <span class="icon-[lucide--chevron-down] w-4 h-4 opacity-70 transition-transform group-focus-within:rotate-180"></span>
   </button>
 

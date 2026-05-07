@@ -19,7 +19,9 @@ class Character < ApplicationRecord
   accepts_nested_attributes_for :images_attachments,
     allow_destroy: true
 
+  normalizes :bio, with: ->(value) { value.to_s.strip }
   normalizes :name, with: ->(value) { value.to_s.strip.presence }
+  validates :bio, length: { maximum: 160 }
   validates :name, presence: true, length: { maximum: 50 }
 
   scope :third_party, ->(third_party = true) { where(third_party:) }

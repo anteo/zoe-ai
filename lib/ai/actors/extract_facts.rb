@@ -79,6 +79,7 @@ module AI::Actors
     end
 
     def resolve_character(data)
+      bio = data["character_bio"].to_s.strip
       name = data["character_name"].presence
       character_id = data["character_id"].presence
 
@@ -91,9 +92,14 @@ module AI::Actors
 
       return unless name
 
-      current_user.characters.find_or_create_by(name:) do |c|
-        c.third_party = true
-      end
+      character = current_user.characters.find_or_initialize_by(name:)
+      created = character.new_record?
+      character.third_party = true if character.new_record?
+      character.bio = bio if bio.present? && character.third_party? && character.bio.blank?
+      character.save! if character.changed?
+      current_user.characters << character if created
+
+      character
     end
 
     def resolve_topic(data)

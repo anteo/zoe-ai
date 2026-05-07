@@ -52,11 +52,13 @@ export default class extends Controller {
 
     this.sync()
     document.addEventListener("theme:changed", this.boundSync)
+    document.addEventListener("turbo:render", this.boundSync)
     document.addEventListener("turbo:after-stream-render", this.boundSync)
   }
 
   disconnect() {
     document.removeEventListener("theme:changed", this.boundSync)
+    document.removeEventListener("turbo:render", this.boundSync)
     document.removeEventListener("turbo:after-stream-render", this.boundSync)
   }
 

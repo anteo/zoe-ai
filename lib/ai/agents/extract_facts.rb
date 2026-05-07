@@ -11,6 +11,7 @@ module AI
         array :facts do
           object do
             integer :character_id, required: false
+            string :character_bio, required: false
             string :character_name
             string :fact
             string :kind, enum: %w[attribute experience belief preference plan]

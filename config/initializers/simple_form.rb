@@ -11,7 +11,7 @@ SimpleForm.setup do |config|
 
   config.wrappers :daisy_input, tag: :div, class: "space-y-1", error_class: "has-error" do |b|
     shared_components.call(b)
-    b.wrapper tag: :div, class: "flex items-center gap-2" do |ba|
+    b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
       ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
     end
@@ -21,7 +21,7 @@ SimpleForm.setup do |config|
 
   config.wrappers :daisy_textarea, tag: :div, class: "space-y-1", error_class: "has-error" do |b|
     shared_components.call(b)
-    b.wrapper tag: :div, class: "flex items-center gap-2" do |ba|
+    b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
       ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
     end
@@ -31,7 +31,7 @@ SimpleForm.setup do |config|
 
   config.wrappers :daisy_select, tag: :div, class: "space-y-1", error_class: "has-error" do |b|
     shared_components.call(b)
-    b.wrapper tag: :div, class: "flex items-center gap-2" do |ba|
+    b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
       ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
     end
@@ -56,7 +56,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :readonly
 
-    b.wrapper tag: :div, class: "flex items-center gap-2" do |ba|
+    b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
       ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
     end

@@ -71,7 +71,7 @@ class CharactersController < ApplicationController
 
   def character_create_params
     params.require(:character).permit(
-      :name, :avatar,
+      :bio, :name, :avatar,
       avatar_attachment_attributes: [ :id, :_destroy ],
       instructions_attributes: [ :id, :content, :_destroy ]
     )
@@ -79,6 +79,7 @@ class CharactersController < ApplicationController
 
   def character_update_params
     params.fetch(:character, {}).permit(
+      :bio,
       :avatar,
       avatar_attachment_attributes: [ :id, :_destroy ],
       images: [],

@@ -33,7 +33,7 @@ module Characters
 
     def sections
       [
-        ({ key: "description", label: t(:label_description), icon_class: "icon-[lucide--file-text]", count: nil } if description.present?),
+        ({ key: "description", label: t(:label_memory_profile), icon_class: "icon-[lucide--file-text]", count: nil } if description.present?),
         ({ key: "events", label: t(:label_events), icon_class: "icon-[lucide--calendar-days]", count: events_count } if events_count.positive?),
         ({ key: "instructions", label: t(:label_instructions), icon_class: "icon-[lucide--sparkles]", count: instructions_count } if character.ai?),
         ({ key: "facts", label: t(:label_facts), icon_class: "icon-[lucide--brain]", count: facts_count } if character.facts.any?),

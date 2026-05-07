@@ -1,5 +1,6 @@
 <div data-controller="avatar-input"
-     data-avatar-input-can-remove-value="<%= can_remove? ? "true" : "false" %>">
+     data-avatar-input-can-remove-value="<%= can_remove? ? "true" : "false" %>"
+     class="shrink-0">
   <div class="group relative shrink-0">
     <label class="cursor-pointer">
       <span data-avatar-input-target="preview"><%= content %></span>
@@ -52,7 +53,7 @@
           </button>
         </div>
         <div class="avatar-cropper rounded-box border border-base-300 bg-base-200 p-3" data-avatar-crop-dialog-target="cropperHost">
-          <img data-avatar-crop-dialog-target="cropImage" alt="" />
+          <img data-avatar-crop-dialog-target="cropImage" alt=""/>
         </div>
         <div class="modal-action mt-4">
           <button type="button" class="btn btn-ghost" data-action="click->avatar-crop-dialog#cancel"><%= t(:label_cancel) %></button>

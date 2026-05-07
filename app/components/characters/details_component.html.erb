@@ -5,44 +5,55 @@
   <%= helpers.simple_form_for character,
                               html: { multipart: true, class: "flex h-full min-h-0 flex-col" },
                               data: { action: "submit->character-instructions#handleSubmit" } do |f| %>
-    <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 px-5 py-7">
-      <div class="flex min-w-0 items-center gap-4 md:grow-0 grow">
+    <section class="flex flex-col md:flex-row md:items-start md:justify-between gap-5 px-5 py-7">
+      <div class="flex min-w-0 grow items-start gap-4">
         <%= component :"ui/avatar_input",
                       form: f,
-                      icon_wrapper_class: "h-9 w-9",
+                      icon_wrapper_class: "h-9 w-9 shrink-0",
                       removable: true do |component| %>
-            <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview") %>
-            <% component.with_fallback do %>
-              <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview", fallback: true) %>
-            <% end %>
+          <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview") %>
+          <% component.with_fallback do %>
+            <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview", fallback: true) %>
+          <% end %>
         <% end %>
 
-        <div class="min-w-0 space-y-2 grow">
-          <div class="flex flex-wrap flex-col items-left gap-1">
-            <h2 class="truncate text-2xl font-semibold tracking-tight"><%= character.name %></h2>
-            <span class="badge badge-sm <%= type_badge_class %>"><%= type_label %></span>
+        <div class="min-w-0 grow space-y-2">
+          <div class="flex items-start gap-3">
+            <div class="min-w-0">
+              <h2 class="truncate text-2xl font-semibold tracking-tight"><%= character.name %></h2>
+              <span class="badge badge-sm mt-1 w-fit <%= type_badge_class %>"><%= type_label %></span>
+            </div>
+
+            <div class="flex shrink-0 items-center">
+              <button type="button"
+                      class="btn btn-circle btn-ghost"
+                      disabled>
+                <span class="icon-[lucide--share-2] h-5 w-5"></span>
+              </button>
+
+              <% if deletable? %>
+                <%= link_to character_path(character),
+                            class: "btn btn-circle btn-ghost text-error",
+                            title: t(:label_delete),
+                            data: { turbo_method: :delete, turbo_confirm: t(:confirm_delete_character) } do %>
+                  <span class="icon-[lucide--trash-2] h-5 w-5"></span>
+                <% end %>
+              <% end %>
+            </div>
           </div>
-        </div>
 
-        <div class="flex">
-          <button type="button"
-                  class="btn btn-circle btn-ghost"
-                  disabled>
-            <span class="icon-[lucide--share-2] h-5 w-5"></span>
-          </button>
-
-          <% if deletable? %>
-            <%= link_to character_path(character),
-                        class: "btn btn-circle btn-ghost text-error",
-                        title: t(:label_delete),
-                        data: { turbo_method: :delete, turbo_confirm: t(:confirm_delete_character) } do %>
-              <span class="icon-[lucide--trash-2] h-5 w-5"></span>
-            <% end %>
-          <% end %>
+          <%= f.input :bio,
+                      as: :string,
+                      label: false,
+                      input_html: {
+                        class: "input-ghost bg-transparent px-0 text-sm outline-none rounded-md",
+                        maxlength: 160,
+                        placeholder: t(:placeholder_enter_character_bio)
+                      } %>
         </div>
       </div>
 
-        <%= f.submit t(:label_save), class: "btn btn-primary" %>
+      <%= f.submit t(:label_save), class: "btn btn-primary shrink-0" %>
     </section>
 
     <section class="flex min-h-0 flex-1 flex-col">

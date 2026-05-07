@@ -3,8 +3,9 @@
     <span><%= t(:label_create_character) %></span>
   <% end %>
 
-  <%= simple_form_for @character do |f| %>
+  <%= simple_form_for @character, html: { class: "space-y-1" } do |f| %>
     <%= hidden_field_tag :select_on_save, params[:select_on_save] %>
+
     <%= f.input :name,
                 label: false,
                 required: true,
@@ -13,6 +14,14 @@
                   class: "input-ghost outline-none",
                   placeholder: t(:placeholder_enter_character_name),
                   maxlength: 50
+                } %>
+
+    <%= f.input :bio,
+                label: false,
+                input_html: {
+                  class: "textarea-ghost outline-none",
+                  maxlength: 160,
+                  placeholder: t(:placeholder_enter_character_bio),
                 } %>
 
     <div class="modal-action">

@@ -19,6 +19,7 @@ xml.characters do
       role: character.prompt_role(chat),
       type: character.prompt_type
     }
+    attrs[:bio] = character.bio if character.bio.present?
     attrs[:relation] = character.prompt_relation(partner: chat.partner) if character != chat.partner
     xml.character(attrs)
   end
