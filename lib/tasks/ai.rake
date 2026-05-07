@@ -1,4 +1,8 @@
 namespace :ai do
+  def logger
+    @logger ||= ActiveSupport::TaggedLogging.new(Logger.new($stdout))
+  end
+
   # desc "Objectify chats"
   # task objectify_chats: :environment do
   #   Chat.where(objectified: false).find_each do |chat|
@@ -12,7 +16,7 @@ namespace :ai do
     puts "Extracting facts for #{chats.count} chats..."
     chats.find_each do |chat|
       puts "  Chat ##{chat.id}"
-      res = AI::Actors::ExtractFacts.result(chat:, logger: Logger.new(STDOUT))
+      res = AI::Actors::ExtractFacts.result(chat:, logger:)
       unless res.success?
         puts "  Error: #{res.error}"
       end
@@ -71,15 +75,14 @@ namespace :ai do
       else
         Character.default_ai
       end
-      AggregatePersistentFactsJob.perform_now(character, partner)
+      AI::Actors::AggregatePersistentFacts.call(character:, partner:, logger:)
     else
-      AggregatePersistentFactsJob.perform_now
+      AI::Actors::RunAggregatePersistentFacts.call(logger:)
     end
   end
 
   desc "Summarize fact aggregates (pending and failed by default, or explicit IDs via FACT_AGGREGATE_IDS=1,2,3)"
   task summarize_fact_aggregates: :environment do
-    logger = Logger.new(STDOUT)
     ids = ENV.fetch("FACT_AGGREGATE_IDS", "")
              .split(/[,\s]+/)
              .map(&:strip)
@@ -93,7 +96,7 @@ namespace :ai do
       FactAggregate.where(summary_status: %w[pending failed]).order(:id)
     end
 
-    puts "Rerunning summaries for #{aggregates.count} fact aggregate(s)..."
+    puts "Processing summaries for #{aggregates.count} fact aggregate(s)..."
     puts "IDs filter: #{ids.join(', ')}" if ids.any?
 
     found_ids = aggregates.pluck(:id)

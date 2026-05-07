@@ -249,11 +249,20 @@ module AI::Actors
       rows_to_destroy.each(&:destroy!)
       tagged_logger.info "Deleted rows: #{rows_to_destroy.map(&:slot_key).join(', ')}" if rows_to_destroy.any?
     end
+
     def tagged_logger
-      logger.tagged("AggregatePersistentFacts")
-            .tagged("character_id=#{character.id}")
-            .tagged("partner_id=#{partner.id}")
-            .tagged("anchor_month=#{anchor_month}")
+      if logger.respond_to?(:with_payload)
+        logger.with_payload(
+          character_id: character.id,
+          partner_id: partner.id,
+          anchor_month: anchor_month
+        )
+      else
+        logger.tagged("AggregatePersistentFacts")
+              .tagged("character_id=#{character.id}")
+              .tagged("partner_id=#{partner.id}")
+              .tagged("anchor_month=#{anchor_month}")
+      end
     end
   end
 end
