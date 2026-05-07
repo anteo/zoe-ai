@@ -7,7 +7,7 @@ class Chat < ApplicationRecord
   belongs_to :first_visible_message, class_name: "Message", optional: true
   belongs_to :last_visible_message, class_name: "Message", optional: true
 
-  has_many :facts, dependent: :delete_all
+  has_many :facts, dependent: :destroy
   has_many :attachments_blobs, through: :messages
 
   scope :by_character, ->(character) {

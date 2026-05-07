@@ -14,7 +14,7 @@ module AI::Actors
     def call
       if force
         chat.messages.update_all facts_extracted: false
-        chat.facts.delete_all
+        chat.facts.destroy_all
       end
       logger.debug ">>> #{llm_chat.instructions}"
       messages = chat.messages

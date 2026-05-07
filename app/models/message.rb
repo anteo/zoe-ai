@@ -2,7 +2,7 @@ class Message < ApplicationRecord
   acts_as_message
 
   has_many_attached :attachments
-  has_many :facts, dependent: :delete_all
+  has_many :facts, dependent: :destroy
 
   belongs_to :character, optional: true
 
