@@ -17,6 +17,7 @@ ru:
         one: Пользователь
         other: Пользователи
   confirm_delete_character: Удалить этого персонажа?
+  confirm_delete_chat: Удалить этот чат?
   confirm_delete_message: Удалить это сообщение и все последующие?
   confirm_logout: Выйти из аккаунта?
   date:

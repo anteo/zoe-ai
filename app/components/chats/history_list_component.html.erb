@@ -7,8 +7,8 @@
 <% if entries.any? %>
   <ul class="menu w-full gap-1">
     <% entries.each do |entry| %>
-      <li>
-        <%= link_to history_detail_chat_path(entry.chat),
+      <li class="group relative">
+        <%= link_to history_detail_chat_path(entry.chat, q: query.presence),
                     data: {
                       turbo_frame: "history-chat-detail",
                       turbo_prefetch: false,
@@ -19,8 +19,8 @@
                       history_drawer_index: entry.index,
                       history_drawer_chat_link: true
                     },
-                    class: "flex items-start gap-2 rounded-btn" do %>
-          <div class="flex w-full items-start gap-3">
+                    class: "flex gap-2 rounded-btn" do %>
+          <div class="flex w-full gap-3">
             <div class="text-left">
               <div class="font-medium"><%= entry.day_label %></div>
               <div class="text-xs opacity-70"><%= entry.time_span %></div>
@@ -29,7 +29,21 @@
               <p class="line-clamp-2 flex-1 text-sm opacity-80"><%= entry.preview %></p>
             <% end %>
           </div>
-          <span class="badge badge-ghost"><%= entry.message_count %></span>
+          <span class="badge badge-ghost <%= "opacity-100 transition-opacity group-hover:opacity-0" if helpers.current_user&.admin? %>"><%= entry.message_count %></span>
+        <% end %>
+
+        <% if helpers.current_user&.admin? %>
+          <%= helpers.button_to helpers.chat_path(entry.chat, q: query.presence),
+                                method: :delete,
+                                form: {
+                                  class: "absolute right-3 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 p-0",
+                                  data: { turbo_frame: "history-chat-results" }
+                                },
+                                data: { turbo_confirm: helpers.t(:confirm_delete_chat) },
+                                class: "btn btn-xs text-error",
+                                title: helpers.t(:label_delete) do %>
+            <span class="icon-[lucide--trash-2] h-4 w-4"></span>
+          <% end %>
         <% end %>
       </li>
     <% end %>

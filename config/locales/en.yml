@@ -17,6 +17,7 @@ en:
         one: User
         other: Users
   confirm_delete_character: Delete this character?
+  confirm_delete_chat: Delete this chat?
   confirm_delete_message: Delete this message and all subsequent ones?
   confirm_logout: Logout from your account?
   date:

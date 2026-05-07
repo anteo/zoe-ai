@@ -1,8 +1,10 @@
 class ChatsController < ApplicationController
-  before_action :find_chat, only: [ :show, :destroy ]
-  before_action :find_history_chat, only: [ :history_detail ]
+  before_action :find_chat, only: [ :show ]
+  before_action :find_history_chat, only: [ :history_detail, :destroy ]
   before_action :find_default_chat, only: [ :show ]
   before_action :build_default_chat, only: [ :new, :show ]
+  before_action :load_history_chats, only: [ :history_list, :destroy ]
+  before_action :require_admin!, only: [ :destroy ]
 
   attr_reader :chat
   helper_method :chat
@@ -15,8 +17,9 @@ class ChatsController < ApplicationController
   end
 
   def destroy
-    chat&.destroy
-    redirect_to(root_path)
+    @history_chat.destroy
+
+    render :history_results
   end
 
   def history_detail
@@ -24,14 +27,7 @@ class ChatsController < ApplicationController
   end
 
   def history_list
-    @history_query = params[:q].to_s.strip
-    @history_chats = current_user.chats
-                                 .where(character: current_character, partner: current_partner)
-                                 .yield_self { |scope| filter_history_chats(scope, @history_query) }
-                                 .preload(:last_visible_message)
-                                 .order(created_at: :desc)
-
-    render(:history_results) if turbo_frame_request_id == "history-chat-results"
+    render :history_results if turbo_frame_request_id == "history-chat-results"
   end
 
   private
@@ -43,10 +39,20 @@ class ChatsController < ApplicationController
   end
 
   def find_history_chat
-    @history_chat = current_user.chats
-                                .where(character: current_character, partner: current_partner)
-                                .find_by(id: params[:id])
+    @history_chat = history_chats_scope.find_by(id: params[:id])
     head(:not_found) unless @history_chat
+  end
+
+  def history_chats_scope
+    current_user.chats.where(character: current_character, partner: current_partner)
+  end
+
+  def load_history_chats
+    @history_query = params[:q].to_s.strip
+    @history_chats = history_chats_scope
+      .yield_self { |scope| filter_history_chats(scope, @history_query) }
+      .preload(:last_visible_message)
+      .order(created_at: :desc)
   end
 
   def filter_history_chats(scope, query)
