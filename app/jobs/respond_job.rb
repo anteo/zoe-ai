@@ -1,6 +1,9 @@
 class RespondJob < ApplicationJob
   include JobChatSupport
 
+  limits_concurrency to: 1,
+                     key: ->(chat) { "respond_chat_#{chat.id}" }
+
   def perform(chat)
     ensure_chat_model!(chat)
     show_message_placeholder(chat)
@@ -32,6 +35,11 @@ class RespondJob < ApplicationJob
 
   def schedule_message(chat, message)
     if execution.cancelled?
+      message.destroy
+      return
+    end
+
+    unless message.replayable_for_llm?
       message.destroy
       return
     end

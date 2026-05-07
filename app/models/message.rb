@@ -37,6 +37,14 @@ class Message < ApplicationRecord
     (user? || assistant?) && (content.present? || attachments.attached?)
   end
 
+  def replayable_for_llm?
+    return true if content_raw.present?
+    return true if content.present?
+    return true if attachments.attached?
+
+    false
+  end
+
   def to_direct_speech(**)
     I18n.t(:direct_speech, character:, text: content, **)
   end
