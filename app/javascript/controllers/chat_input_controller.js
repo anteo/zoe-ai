@@ -11,6 +11,8 @@ export default class extends Controller {
   selectedFiles = []
 
   connect() {
+    this.submitting = false
+
     if (this.textInputTarget) {
       this.textInputTarget.focus()
 
@@ -101,8 +103,8 @@ export default class extends Controller {
   handleKeydown(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
-      if (this.hasContent()) {
-        event.target.closest('form').requestSubmit()
+      if (!this.submitting && this.hasContent()) {
+        event.target.closest('form').requestSubmit(this.sendButtonTarget)
       }
     }
   }
@@ -110,7 +112,23 @@ export default class extends Controller {
   handleSubmit(event) {
     if (!this.hasContent()) {
       event.preventDefault()
+      return
     }
+
+    if (this.submitting) {
+      event.preventDefault()
+      return
+    }
+
+    this.submitting = true
+    this.sendButtonTarget.disabled = true
+  }
+
+  handleSubmitEnd(event) {
+    if (event.detail.success) return
+
+    this.submitting = false
+    this.sendButtonTarget.disabled = false
   }
 
   hasContent() {
