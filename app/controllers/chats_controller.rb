@@ -10,14 +10,17 @@ class ChatsController < ApplicationController
   helper_method :chat
 
   def new
-    render 'show'
+    render "show"
   end
 
   def show
   end
 
   def destroy
+    deleted_current_chat = @history_chat.id == params[:current_chat_id].to_i
     @history_chat.destroy
+
+    return render_refresh if deleted_current_chat
 
     render :history_results
   end

@@ -2,7 +2,7 @@
      data-controller="history-drawer"
      data-action="keydown@window->history-drawer#handleKeydown"
      data-history-drawer-list-title-value="<%= t(:label_chat_history) %>"
-     data-history-drawer-list-url-value="<%= history_list_chats_path %>">
+     data-history-drawer-list-url-value="<%= history_list_chats_path(current_chat_id:) %>">
   <input id="history-drawer-toggle"
          type="checkbox"
          tabindex="-1"

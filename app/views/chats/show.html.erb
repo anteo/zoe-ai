@@ -10,7 +10,7 @@
       <span class="hidden md:inline"><%= t(:label_new_conversation) %></span>
     <% end %>
 
-    <%= component :"chats/history_drawer" %>
+    <%= component :"chats/history_drawer", current_chat_id: chat&.id %>
 
     <%= link_to characters_path,
                 class: "btn btn-ghost",

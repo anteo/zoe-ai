@@ -3,5 +3,5 @@
                       history_drawer_target: "resultsFrame",
                       action: "turbo:frame-load->history-drawer#syncListState"
                     } do %>
-  <%= component :"chats/history_list", history_chats: @history_chats, query: @history_query %>
+  <%= component :"chats/history_list", history_chats: @history_chats, query: @history_query, current_chat_id: params[:current_chat_id] %>
 <% end %>

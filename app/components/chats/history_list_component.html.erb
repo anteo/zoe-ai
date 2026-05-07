@@ -35,6 +35,7 @@
         <% if helpers.current_user&.admin? %>
           <%= helpers.button_to helpers.chat_path(entry.chat, q: query.presence),
                                 method: :delete,
+                                params: { current_chat_id: },
                                 form: {
                                   class: "absolute right-3 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 p-0",
                                   data: { turbo_frame: "history-chat-results" }
