@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_06_123000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_07_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -113,7 +113,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_123000) do
   end
 
   create_table "fact_aggregates", force: :cascade do |t|
-    t.date "anchor_month"
+    t.date "anchor_month", null: false
     t.text "body", default: "", null: false
     t.bigint "character_id", null: false
     t.datetime "created_at", null: false
@@ -140,7 +140,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_123000) do
 
   create_table "facts", force: :cascade do |t|
     t.bigint "author_id"
-    t.bigint "character_id"
+    t.bigint "character_id", null: false
     t.bigint "chat_id"
     t.text "content"
     t.datetime "created_at", null: false
@@ -150,11 +150,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_123000) do
     t.string "kind"
     t.datetime "mentioned_at", precision: nil
     t.bigint "message_id"
-    t.date "month"
+    t.date "month", null: false
     t.bigint "partner_id", null: false
     t.boolean "persistent", default: true, null: false
     t.string "time", default: "present", null: false
-    t.bigint "topic_id"
+    t.bigint "topic_id", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_facts_on_author_id"
     t.index ["character_id", "partner_id", "persistent", "topic_id", "month"], name: "idx_facts_month_lookup"

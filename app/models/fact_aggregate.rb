@@ -12,7 +12,7 @@ class FactAggregate < ApplicationRecord
     failed: "failed"
   }, validate: true
 
-  validates :kind, presence: true
+  validates :anchor_month, :kind, presence: true
   validates :slot_key, presence: true, uniqueness: true
   validates :body, presence: true
   validates :facts_count, numericality: { greater_than_or_equal_to: 0 }
@@ -135,7 +135,7 @@ class FactAggregate < ApplicationRecord
   end
 
   def set_slot_key
-    return if character_id.blank? || topic_id.blank? || kind.blank? || anchor_month.blank?
+    return unless anchor_month.present?
 
     self.slot_key = self.class.slot_key_for(
       character_id: character_id,

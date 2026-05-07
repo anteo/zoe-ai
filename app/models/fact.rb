@@ -6,7 +6,7 @@ class Fact < ApplicationRecord
   belongs_to :chat
   belongs_to :topic
 
-  before_save :set_month
+  before_validation :set_month
   after_commit :mark_month_aggregates_stale, on: [ :create, :update, :destroy ]
 
   scope :persistent, ->(persistent = true) { where(persistent:) }
@@ -15,7 +15,7 @@ class Fact < ApplicationRecord
   scope :by_kind, ->(kind) { where(kind:) }
   scope :excluding_kind, ->(kind) { where.not(kind:) }
 
-  validates :content, :time, presence: true
+  validates :content, :month, :time, presence: true
 
   def to_s
     "#{"#{topic}: " if topic}#{content}"
@@ -97,30 +97,7 @@ class Fact < ApplicationRecord
   end
 
   def current_persistent_month_slot_key
-    month_aggregate_slot_key_for(
-      character_id: character_id,
-      partner_id: partner_id,
-      topic_id: topic_id,
-      month: month,
-      persistent: persistent?
-    )
-  end
-
-  def previous_persistent_month_slot_key
-    return if destroyed?
-
-    month_aggregate_slot_key_for(
-      character_id: attribute_before_last_save("character_id"),
-      partner_id: attribute_before_last_save("partner_id"),
-      topic_id: attribute_before_last_save("topic_id"),
-      month: attribute_before_last_save("month"),
-      persistent: attribute_before_last_save("persistent")
-    )
-  end
-
-  def month_aggregate_slot_key_for(character_id:, partner_id:, topic_id:, month:, persistent:)
-    return unless persistent
-    return if character_id.blank? || partner_id.blank? || topic_id.blank? || month.blank?
+    return unless persistent?
 
     FactAggregate.slot_key_for(
       character_id:,
@@ -128,6 +105,18 @@ class Fact < ApplicationRecord
       topic_id:,
       kind: "month",
       anchor_month: month
+    )
+  end
+
+  def previous_persistent_month_slot_key
+    return if destroyed? || previously_new_record? || !attribute_before_last_save("persistent")
+
+    FactAggregate.slot_key_for(
+      character_id: attribute_before_last_save("character_id"),
+      partner_id: attribute_before_last_save("partner_id"),
+      topic_id: attribute_before_last_save("topic_id"),
+      kind: "month",
+      anchor_month: attribute_before_last_save("month")
     )
   end
 
