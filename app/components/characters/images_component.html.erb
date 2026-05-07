@@ -1,60 +1,86 @@
 <section data-existing-images-json="<%= existing_images.to_json %>">
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 mb-4">
-    <div class="contents" data-controller="lightbox" data-characters-images-target="images"></div>
+    <div class="contents" data-controller="lightbox" data-characters-images-target="images">
+      <% unless editable %>
+        <% image_attachments.each do |attachment| %>
+          <article class="overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md">
+            <a class="lightbox-link block"
+               href="<%= helpers.rails_blob_path(attachment, disposition: "inline") %>"
+               data-pswp-width="<%= attachment.width %>"
+               data-pswp-height="<%= attachment.height %>"
+               rel="noopener"
+               target="_blank">
+              <%= image_tag helpers.url_for(attachment.variant(resize_to_limit: [ 1200, 1200 ])),
+                            class: "aspect-[4/3] w-full object-cover",
+                            alt: attachment.description.to_s %>
+            </a>
+            <% if attachment.description.present? %>
+              <div class="p-3 text-sm leading-6"><%= attachment.description %></div>
+            <% end %>
+          </article>
+        <% end %>
+      <% end %>
+    </div>
 
-    <label class="relative block cursor-pointer overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition hover:border-base-content/30">
-      <div class="aspect-[4/3] w-full">
-        <div class="flex h-full w-full flex-col items-center justify-center gap-2 text-sm opacity-70">
-          <span class="icon-[lucide--image-plus] h-6 w-6"></span>
-          <span><%= t(:label_upload_images) %></span>
+    <% if editable %>
+      <label class="relative block cursor-pointer overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition hover:border-base-content/30">
+        <div class="aspect-[4/3] w-full">
+          <div class="flex h-full w-full flex-col items-center justify-center gap-2 text-sm opacity-70">
+            <span class="icon-[lucide--image-plus] h-6 w-6"></span>
+            <span><%= t(:label_upload_images) %></span>
+          </div>
         </div>
-      </div>
-      <%= file_field_tag "character[images][]",
-                         class: "hidden",
-                         accept: "image/*",
-                         multiple: true,
-                         data: {
-                           action: "change->characters-images#handleImagesChange"
-                         } %>
-    </label>
+        <%= file_field_tag "character[images][]",
+                           class: "hidden",
+                           accept: "image/*",
+                           multiple: true,
+                           data: {
+                             action: "change->characters-images#handleImagesChange"
+                           } %>
+      </label>
+    <% end %>
   </div>
 
-  <div class="hidden" data-characters-images-target="newImageInputs"></div>
+  <% if editable %>
+    <div class="hidden" data-characters-images-target="newImageInputs"></div>
+  <% end %>
 
-  <template data-characters-images-target="imageCardTemplate">
-    <article class="flex min-h-0 flex-col overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition"
-             data-character-image-card>
-      <div class="relative flex-1">
-        <a class="inline-block w-full"
-           rel="noopener"
-           target="_blank"
-           data-role="lightboxLink">
-          <img class="aspect-[4/3] w-full object-cover" alt="">
-        </a>
+  <% if editable %>
+    <template data-characters-images-target="imageCardTemplate">
+      <article class="flex min-h-0 flex-col overflow-hidden rounded-[1.5rem] border border-base-300 bg-base-100 shadow-md transition"
+               data-character-image-card>
+        <div class="relative flex-1">
+          <a class="inline-block w-full"
+             rel="noopener"
+             target="_blank"
+             data-role="lightboxLink">
+            <img class="aspect-[4/3] w-full object-cover" alt="">
+          </a>
 
-        <button type="button"
-                class="btn btn-circle btn-sm absolute right-3 top-3 border-none bg-base-100/90"
-                data-action="click->characters-images#toggleImageRemoval"
-                title="<%= t(:label_delete) %>">
-          <span class="icon-[lucide--trash-2] h-4 w-4"></span>
-        </button>
-      </div>
+          <button type="button"
+                  class="btn btn-circle btn-sm absolute right-3 top-3 border-none bg-base-100/90"
+                  data-action="click->characters-images#toggleImageRemoval"
+                  title="<%= t(:label_delete) %>">
+            <span class="icon-[lucide--trash-2] h-4 w-4"></span>
+          </button>
+        </div>
 
-      <div class="mt-auto p-2">
-        <input type="hidden"
-               name="character[images_attachments_attributes][__INDEX__][id]"
-               data-role="id">
-        <input type="hidden"
-               name="character[images_attachments_attributes][__INDEX__][_destroy]"
-               value="0"
-               data-role="destroy">
-        <input type="text"
-               name="character[images_attachments_attributes][__INDEX__][description]"
-               class="input input-ghost w-full"
-               placeholder="<%= t(:placeholder_image_description) %>"
-               data-new-name="character[new_images_descriptions][__INDEX__]"
-               data-role="description">
-      </div>
-    </article>
-  </template>
+        <div class="mt-auto p-2">
+          <input type="hidden"
+                 name="character[images_attachments_attributes][__INDEX__][id]"
+                 data-role="id">
+          <input type="hidden"
+                 name="character[images_attachments_attributes][__INDEX__][_destroy]"
+                 value="0"
+                 data-role="destroy">
+          <input type="text"
+                 name="character[images_attachments_attributes][__INDEX__][description]"
+                 class="input input-ghost w-full"
+                 placeholder="<%= t(:placeholder_image_description) %>"
+                 data-new-name="character[new_images_descriptions][__INDEX__]"
+                 data-role="description">
+        </div>
+      </article>
+    </template>
+  <% end %>
 </section>

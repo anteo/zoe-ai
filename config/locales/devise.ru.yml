@@ -25,7 +25,7 @@ ru:
       email_changed:
         greeting: Здравствуйте, %{email}!
         instruction_confirmed: Сообщаем, что email вашего аккаунта был изменен на %{email}.
-        instruction_unconfirmed: Сообщаем, что email вашего аккаунта изменяется на %{email}.
+        instruction_unconfirmed: Сообщаем, что email вашего аккаунта будет изменен на %{email}.
         subject: Email изменен
       password_change:
         greeting: Здравствуйте, %{email}!

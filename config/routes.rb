@@ -41,7 +41,12 @@ Rails.application.routes.draw do
     end
   end
   resources :characters, only: [:index, :new, :create, :edit, :update, :destroy] do
+    collection do
+      get :accept_share
+    end
     post :select, on: :member
     get :section, on: :member
+    get :share, on: :member
+    post :deliver_share, on: :member
   end
 end

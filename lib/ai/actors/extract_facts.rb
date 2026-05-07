@@ -94,6 +94,7 @@ module AI::Actors
 
       character = current_user.characters.find_or_initialize_by(name:)
       created = character.new_record?
+      character.author ||= current_user if character.new_record?
       character.third_party = true if character.new_record?
       character.bio = bio if bio.present? && character.third_party? && character.bio.blank?
       character.save! if character.changed?

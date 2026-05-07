@@ -1,5 +1,6 @@
 class CharactersController < ApplicationController
-  before_action :find_character, only: [ :edit, :update, :destroy, :section ]
+  before_action :find_character, only: [ :edit, :update, :destroy, :section, :share, :deliver_share ]
+  before_action :require_owned_character!, only: [ :update, :share, :deliver_share ]
 
   def index
     render_modal
@@ -13,6 +14,7 @@ class CharactersController < ApplicationController
   def create
     @character = Character.new(character_create_params)
     @character.ai = true
+    @character.author = current_user
 
     if @character.save
       current_user.characters << @character
@@ -33,18 +35,20 @@ class CharactersController < ApplicationController
   end
 
   def update
+    return head(:forbidden) unless @character.editable_by?(current_user)
+
     unless update_character!
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    return head(:forbidden) unless deletable_character?
+    return head(:forbidden) unless @character.detachable_by?(current_user)
 
-    if @character.users.where.not(id: current_user.id).exists?
-      current_user.characters.destroy(@character)
-    else
+    if @character.owned_by?(current_user)
       @character.destroy!
+    else
+      current_user.characters.destroy(@character)
     end
 
     if @current_partner == @character
@@ -60,6 +64,50 @@ class CharactersController < ApplicationController
     character = current_user.characters.ai.find_by(id: character_id)
     session[:partner_id] = character&.id || Character.default_ai.id
     render_refresh
+  end
+
+  def share
+    @character_share_form = CharacterShareForm.new
+    render_modal
+  end
+
+  def deliver_share
+    @character_share_form = CharacterShareForm.new(character_share_params)
+    unless @character_share_form.valid?
+      return render :share, status: :unprocessable_entity
+    end
+
+    recipient_email = @character_share_form.email
+
+    share_url = accept_share_characters_url(
+      token: @character.signed_id(purpose: share_purpose(recipient_email), expires_in: 14.days),
+      email: recipient_email
+    )
+
+    CharacterShareMailer.with(
+      character: @character,
+      recipient_email:,
+      sender: current_user,
+      share_url:
+    ).share_link.deliver_later
+
+    flash[:notice] = t(:text_character_share_sent, email: recipient_email)
+  end
+
+  def accept_share
+    recipient_email = normalize_email(params[:email])
+    character = Character.find_signed!(params[:token], purpose: share_purpose(recipient_email))
+
+    unless current_user.email == recipient_email
+      return redirect_to root_path, alert: t(:text_character_share_wrong_account, email: recipient_email)
+    end
+
+    already_shared = current_user.characters.exists?(character.id)
+    current_user.characters << character unless already_shared
+
+    redirect_to root_path, notice: t(already_shared ? :text_character_share_already_added : :text_character_share_accepted, character: character.name)
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveRecord::RecordNotFound
+    redirect_to root_path, alert: t(:text_character_share_invalid)
   end
 
   private
@@ -132,7 +180,7 @@ class CharactersController < ApplicationController
   end
 
   def deletable_character?
-    !@character.is_default? && current_user.main_character_id != @character.id
+    @character.detachable_by?(current_user)
   end
 
   def permitted_section
@@ -140,5 +188,21 @@ class CharactersController < ApplicationController
     allowed << "instructions" if @character.ai?
 
     params[:section].to_s.in?(allowed) ? params[:section].to_s : allowed.first
+  end
+
+  def normalize_email(value)
+    value.to_s.strip.downcase
+  end
+
+  def character_share_params
+    params.fetch(:character_share, {}).permit(:email)
+  end
+
+  def require_owned_character!
+    head(:forbidden) unless @character&.owned_by?(current_user)
+  end
+
+  def share_purpose(email)
+    "character_share:#{email}"
   end
 end

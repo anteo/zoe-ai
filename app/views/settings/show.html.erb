@@ -1,5 +1,12 @@
-<%= component :"ui/modal", width: "max-w-3xl", padding: false, main_classes: "overflow-hidden", header: false do |m| %>
+<%= component :"ui/modal",
+              width: "max-w-3xl",
+              padding: false,
+              main_classes: "overflow-hidden",
+              header: false,
+              frame_id: "settings-modal" do |m| %>
   <% m.with_title { t(:label_settings) } %>
 
-  <%= component :"ui/settings", section: @section %>
+  <%= turbo_frame_tag "settings-body" do %>
+    <%= component :"ui/settings", section: @section %>
+  <% end %>
 <% end %>

@@ -6,6 +6,7 @@ class User < ApplicationRecord
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   has_and_belongs_to_many :characters
+  has_many :authored_characters, class_name: "Character", foreign_key: :author_id, dependent: :nullify
   belongs_to :main_character, class_name: "Character", optional: true
   has_many :chats, dependent: :destroy
   has_one_attached :avatar
@@ -67,7 +68,7 @@ class User < ApplicationRecord
 
     return if characters.human.exists?
 
-    character = Character.create!(name: first_name)
+    character = Character.create!(author: self, name: first_name)
 
     characters << character
     update_column(:main_character_id, character.id)

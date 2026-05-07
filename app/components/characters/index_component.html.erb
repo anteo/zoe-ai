@@ -5,18 +5,20 @@
 
 <div class="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
 
-  <fieldset class="space-y-2 border-t border-base-300">
-    <legend class="text-sm font-semibold opacity-80"><%= t(:label_human_characters) %></legend>
-    <ul class="menu menu-horizontal flex-wrap items-start justify-evenly gap-1">
-      <% human_characters.each do |character| %>
-        <li>
-          <%= link_to_character character,
-                                edit_character_path(character),
-                                **link_opts %>
-        </li>
-      <% end %>
-    </ul>
-  </fieldset>
+  <% if human_characters.any? %>
+    <fieldset class="space-y-2 border-t border-base-300">
+      <legend class="text-sm font-semibold opacity-80"><%= t(:label_human_characters) %></legend>
+      <ul class="menu menu-horizontal flex-wrap items-start justify-evenly gap-1">
+        <% human_characters.each do |character| %>
+          <li>
+            <%= link_to_character character,
+                                  edit_character_path(character),
+                                  **link_opts %>
+          </li>
+        <% end %>
+      </ul>
+    </fieldset>
+  <% end %>
 
   <fieldset class="space-y-2 border-t border-base-300">
     <legend class="text-sm font-semibold opacity-80"><%= t(:label_ai_characters) %></legend>
@@ -36,17 +38,19 @@
     </ul>
   </fieldset>
 
-  <fieldset class="space-y-2 border-t border-base-300">
-    <legend class="text-sm font-semibold opacity-80"><%= t(:label_other_characters) %></legend>
-    <ul class="menu menu-horizontal flex-wrap items-start justify-evenly gap-1">
-      <% other_characters.each do |character| %>
-        <li>
-          <%= link_to_character character,
-                                edit_character_path(character),
-                                **link_opts %>
-        </li>
-      <% end %>
-    </ul>
-  </fieldset>
+  <% if other_characters.any? %>
+    <fieldset class="space-y-2 border-t border-base-300">
+      <legend class="text-sm font-semibold opacity-80"><%= t(:label_other_characters) %></legend>
+      <ul class="menu menu-horizontal flex-wrap items-start justify-evenly gap-1">
+        <% other_characters.each do |character| %>
+          <li>
+            <%= link_to_character character,
+                                  edit_character_path(character),
+                                  **link_opts %>
+          </li>
+        <% end %>
+      </ul>
+    </fieldset>
+  <% end %>
 
 </div>

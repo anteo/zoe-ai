@@ -1,9 +1,10 @@
 module Characters
   class ImagesComponent < ApplicationComponent
-    attr_reader :character, :partner
+    attr_reader :character, :editable, :partner
 
-    def initialize(character:, partner: nil)
+    def initialize(character:, partner: nil, editable: false)
       @character = character
+      @editable = editable
       @partner = partner
     end
 

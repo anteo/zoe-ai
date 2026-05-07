@@ -14,11 +14,13 @@
                                 data: { turbo_method: :post },
                                 avatar_class: "w-20 h-20" %>
 
-          <%= link_to edit_character_path(character),
-                      class: "btn btn-circle bg-base-100 hover:btn-neutral hover:bg-neutral btn-xs absolute top-1 right-1 opacity-0 pointer-events-none transition-opacity group-hover/character-item:opacity-100 group-focus-within/character-item:opacity-100 group-hover/character-item:pointer-events-auto group-focus-within/character-item:pointer-events-auto",
-                      data: { turbo_stream: true },
-                      aria: { label: t(:label_edit_character) } do %>
-            <span class="icon-[lucide--square-pen] w-3.5 h-3.5"></span>
+          <% if character.editable_by?(current_user) %>
+            <%= link_to edit_character_path(character),
+                        class: "btn btn-circle bg-base-100 hover:btn-neutral hover:bg-neutral btn-xs absolute top-1 right-1 opacity-0 pointer-events-none transition-opacity group-hover/character-item:opacity-100 group-focus-within/character-item:opacity-100 group-hover/character-item:pointer-events-auto group-focus-within/character-item:pointer-events-auto",
+                        data: { turbo_stream: true },
+                        aria: { label: t(:label_edit_character) } do %>
+              <span class="icon-[lucide--square-pen] w-3.5 h-3.5"></span>
+            <% end %>
           <% end %>
         </li>
       <% end %>

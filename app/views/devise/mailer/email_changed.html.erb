@@ -1,5 +1,3 @@
-<p><%= t(".greeting", email: @email) %></p>
-
 <% if @resource.try(:unconfirmed_email?) %>
   <p><%= t(".instruction_unconfirmed", email: @resource.unconfirmed_email) %></p>
 <% else %>

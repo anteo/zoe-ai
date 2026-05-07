@@ -10,7 +10,8 @@
         <%= component :"ui/avatar_input",
                       form: f,
                       icon_wrapper_class: "h-9 w-9 shrink-0",
-                      removable: true do |component| %>
+                      removable: true,
+                      disabled: !editable? do |component| %>
           <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview") %>
           <% component.with_fallback do %>
             <%= helpers.avatar_for_character(character, css_class: "w-24 h-24", id: "character-avatar-preview", fallback: true) %>
@@ -21,39 +22,55 @@
           <div class="flex items-start gap-3">
             <div class="min-w-0">
               <h2 class="truncate text-2xl font-semibold tracking-tight"><%= character.name %></h2>
-              <span class="badge badge-sm mt-1 w-fit <%= type_badge_class %>"><%= type_label %></span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <span class="badge badge-sm w-fit <%= type_badge_class %>"><%= type_label %></span>
+                <% if shared? %>
+                  <span class="badge badge-sm badge-outline w-fit"><%= t(:label_shared) %></span>
+                <% end %>
+              </div>
             </div>
 
             <div class="flex shrink-0 items-center">
-              <button type="button"
-                      class="btn btn-circle btn-ghost"
-                      disabled>
-                <span class="icon-[lucide--share-2] h-5 w-5"></span>
-              </button>
+              <% if shareable? %>
+                <%= link_to share_character_path(character),
+                            class: "btn btn-circle btn-ghost",
+                            title: t(:label_share_character),
+                            data: { turbo_stream: true } do %>
+                  <span class="icon-[lucide--share-2] h-5 w-5"></span>
+                <% end %>
+              <% end %>
 
               <% if deletable? %>
                 <%= link_to character_path(character),
                             class: "btn btn-circle btn-ghost text-error",
-                            title: t(:label_delete),
-                            data: { turbo_method: :delete, turbo_confirm: t(:confirm_delete_character) } do %>
+                            title: destroy_title,
+                            data: { turbo_method: :delete, turbo_confirm: destroy_confirm_text } do %>
                   <span class="icon-[lucide--trash-2] h-5 w-5"></span>
                 <% end %>
               <% end %>
             </div>
           </div>
 
-          <%= f.input :bio,
-                      as: :string,
-                      label: false,
-                      input_html: {
-                        class: "input-ghost bg-transparent px-0 text-sm outline-none rounded-md",
-                        maxlength: 160,
-                        placeholder: t(:placeholder_enter_character_bio)
-                      } %>
+          <% if editable? %>
+            <%= f.input :bio,
+                        as: :string,
+                        label: false,
+                        input_html: {
+                          class: "input-ghost bg-transparent px-0 text-sm outline-none rounded-md",
+                          maxlength: 160,
+                          placeholder: t(:placeholder_enter_character_bio)
+                        } %>
+          <% elsif character.bio.present? %>
+            <p class="text-sm leading-6 opacity-70"><%= character.bio %></p>
+          <% else %>
+            <p class="text-sm leading-6 opacity-50"><%= t(:text_no_character_bio) %></p>
+          <% end %>
         </div>
       </div>
 
-      <%= f.submit t(:label_save), class: "btn btn-primary shrink-0" %>
+      <% if editable? %>
+        <%= f.submit t(:label_save), class: "btn btn-primary shrink-0" %>
+      <% end %>
     </section>
 
     <section class="flex min-h-0 flex-1 flex-col">

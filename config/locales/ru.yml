@@ -21,11 +21,13 @@ ru:
   confirm_delete_chat: Удалить этот чат?
   confirm_delete_message: Удалить это сообщение и все последующие?
   confirm_logout: Выйти из аккаунта?
+  confirm_unshare_character: Убрать этого общего персонажа из вашего списка?
   date:
     formats:
       default: "%d %B %Y"
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_account_settings: Настройки аккаунта
+  label_accept_character_invitation: Принять приглашение
   label_ai: ИИ
   label_ai_characters: ИИ-персонажи
   label_app_title: 'Зоя :: твой персональный ассистент'
@@ -119,6 +121,7 @@ ru:
   label_settings_events: Память и события
   label_settings_mailer: Почта
   label_settings_providers: Провайдеры
+  label_shared: Общий
   label_settings_ui: Интерфейс
   label_share_character: Поделиться персонажем
   label_sign_in_with: Войти через %{provider}
@@ -131,12 +134,14 @@ ru:
   label_time_present: Настоящее
   label_token_usage: Токены
   label_topic: Тема
+  label_unshare_character: Убрать персонажа
   label_unlock_instructions: Повторить разблокировку
   label_upload_images: Загрузить изображения
   label_yes: Да
   placeholder_add_instruction: добавьте инструкцию...
   placeholder_chat_input: Введите сообщение...
   placeholder_choose_model: Выберите модель...
+  placeholder_enter_email: Введите email
   placeholder_enter_character_bio: Добавьте краткое описание
   placeholder_enter_character_name: Введите имя персонажа
   placeholder_filter_facts_text: Фильтр фактов
@@ -183,6 +188,18 @@ ru:
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
   text_character_name_required: Имя персонажа не может быть пустым.
+  text_character_read_only: Этот персонаж был открыт вам по ссылке. Редактировать и пересылать его может только автор.
+  text_character_share_accepted: "%{character} добавлен в ваши персонажи."
+  text_character_share_already_added: "%{character} уже есть в вашем списке персонажей."
+  text_character_share_email_greeting: Здравствуйте,
+  text_character_share_email_intro: "%{sender} поделился(ась) с вами персонажем %{character}."
+  text_character_share_email_outro: Откройте ссылку, войдя в аккаунт %{email}.
+  text_character_share_email_required: Введите email адрес.
+  text_character_share_invalid: Эта ссылка недействительна или уже истекла.
+  text_character_share_prompt: Отправить ссылку на персонажа %{character} на этот email адрес.
+  text_character_share_sent: Ссылка отправлена на %{email}.
+  text_character_share_subject: "%{sender} поделился(ась) персонажем %{character}"
+  text_character_share_wrong_account: Чтобы принять персонажа, войдите как %{email}.
   text_console_new_messages: Новые сообщения
   text_console_no_logs: Системных логов пока нет.
   text_console_waiting_logs: Ожидание логов RubyLLM...
@@ -209,6 +226,9 @@ ru:
   text_google_sign_in_failed: Не удалось войти через Google. Попробуйте снова.
   text_greeting_html: "Привет, я %{name} \U0001F642<br> Давай поболтаем!"
   text_loading: Загрузка...
+  text_mailer_greeting: Здравствуйте,
+  text_mailer_signature: Зоя - твой персональный ассистент
+  text_mailer_tagline: твой персональный ассистент
   text_models_sync_failed: Не удалось обновить реестр моделей.
   text_models_sync_finished: 'Реестр моделей обновлен: %{models_count} моделей (%{json_status}).'
   text_models_sync_json_unchanged: models.json без изменений
@@ -217,9 +237,11 @@ ru:
   text_model_not_configured: Модель не настроена. Укажите модель в Настройки -> Модели.
   text_no_available_models: Нет доступных моделей
   text_no_character_description: Пока нет описания.
+  text_no_character_bio: Пока нет краткого описания.
   text_no_character_events: Пока нет событий.
   text_no_character_facts: Пока нет фактов.
   text_no_character_images: Пока нет изображений.
+  text_no_character_instructions: Пока нет инструкций.
   text_no_chat_history: Пока нет предыдущих разговоров.
   text_no_chat_history_match: По вашему запросу ничего не найдено.
   text_password_minimum: Минимум %{count} символов

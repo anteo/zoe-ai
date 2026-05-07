@@ -1,4 +1,5 @@
 class Character < ApplicationRecord
+  belongs_to :author, class_name: "User", optional: true
   has_and_belongs_to_many :users
 
   has_one_attached :avatar
@@ -34,6 +35,26 @@ class Character < ApplicationRecord
 
   def to_s
     name
+  end
+
+  def owned_by?(user)
+    user.present? && author_id == user.id
+  end
+
+  def editable_by?(user)
+    owned_by?(user) || user&.admin?
+  end
+
+  def shareable_by?(user)
+    owned_by?(user)
+  end
+
+  def detachable_by?(user)
+    return false unless user.present?
+    return false if is_default?
+    return false if user.main_character_id == id
+
+    true
   end
 
   def prompt_role(chat)

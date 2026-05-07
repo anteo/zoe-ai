@@ -2,6 +2,10 @@
         data-controller="app-modal"
         data-app-modal-referrer-frame-id-value="<%= referrer_frame_id %>"
         data-action="cancel->app-modal#close click->app-modal#backdropClick app-modal:close->app-modal#close">
+  <div class="pointer-events-none absolute left-1/2 top-4 z-10 w-full max-w-2xl -translate-x-1/2 px-4">
+    <div id="<%= alerts_dom_id %>" class="space-y-2"></div>
+  </div>
+
   <div class="<%= box_classes %>">
     <div class="relative max-h-screen overflow-hidden w-full">
       <% if header %>

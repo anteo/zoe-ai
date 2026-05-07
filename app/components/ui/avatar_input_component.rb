@@ -2,10 +2,11 @@ module UI
   class AvatarInputComponent < ApplicationComponent
     renders_one :fallback
 
-    attr_reader :form, :field, :icon_wrapper_class, :removable
+    attr_reader :disabled, :form, :field, :icon_wrapper_class, :removable
 
     def initialize(form:, field: :avatar, icon_wrapper_class: "h-8 w-8",
-                   removable: false)
+                   removable: false, disabled: false)
+      @disabled = disabled
       @form = form
       @field = field
       @icon_wrapper_class = icon_wrapper_class
@@ -34,6 +35,10 @@ module UI
 
     def attachment_destroy_field_name
       "#{attachment_attributes_base}[_destroy]"
+    end
+
+    def disabled?
+      disabled
     end
 
   end

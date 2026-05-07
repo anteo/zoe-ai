@@ -84,5 +84,9 @@ module UI
     def referrer_frame_hidden_tag
       helpers.hidden_field_tag(:referrer_frame_id, helpers.params[:referrer_frame_id] || referrer_frame_id)
     end
+
+    def alerts_dom_id
+      helpers.modal_alerts_dom_id(frame_id)
+    end
   end
 end

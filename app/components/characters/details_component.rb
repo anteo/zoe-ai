@@ -28,7 +28,31 @@ module Characters
     end
 
     def deletable?
-      !character.is_default? && character.id != helpers.current_user.main_character_id
+      character.detachable_by?(helpers.current_user)
+    end
+
+    def editable?
+      character.editable_by?(helpers.current_user)
+    end
+
+    def owned?
+      character.owned_by?(helpers.current_user)
+    end
+
+    def shared?
+      !owned?
+    end
+
+    def shareable?
+      character.shareable_by?(helpers.current_user)
+    end
+
+    def destroy_confirm_text
+      owned? ? t(:confirm_delete_character) : t(:confirm_unshare_character)
+    end
+
+    def destroy_title
+      owned? ? t(:label_delete) : t(:label_unshare_character)
     end
 
     def sections

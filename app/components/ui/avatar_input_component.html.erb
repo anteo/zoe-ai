@@ -2,7 +2,7 @@
      data-avatar-input-can-remove-value="<%= can_remove? ? "true" : "false" %>"
      class="shrink-0">
   <div class="group relative shrink-0">
-    <label class="cursor-pointer">
+    <label class="<%= disabled? ? "" : "cursor-pointer" %>">
       <span data-avatar-input-target="preview"><%= content %></span>
       <template data-avatar-input-target="fallbackTemplate">
         <% if fallback? %>
@@ -14,16 +14,19 @@
           </span>
         <% end %>
       </template>
-      <span class="absolute -bottom-1 -right-1 flex items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-transform group-hover:scale-105 <%= icon_wrapper_class %>">
-        <span class="icon-[lucide--camera] h-4 w-4"></span>
-      </span>
+      <% unless disabled? %>
+        <span class="absolute -bottom-1 -right-1 flex items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-transform group-hover:scale-105 <%= icon_wrapper_class %>">
+          <span class="icon-[lucide--camera] h-4 w-4"></span>
+        </span>
+      <% end %>
       <%= form.file_field field,
                           class: "hidden",
                           accept: "image/*",
+                          disabled: disabled?,
                           data: { avatar_input_target: "input", action: "click->avatar-input#rememberFiles change->avatar-input#openCropper" } %>
     </label>
 
-    <% if removable %>
+    <% if removable && !disabled? %>
       <button type="button"
               class="absolute -top-1 -right-1 z-10 items-center justify-center rounded-2xl border border-base-300 bg-base-100 shadow-sm opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer <%= icon_wrapper_class %> <%= can_remove? ? "flex" : "hidden" %>"
               aria-label="<%= t(:label_remove_avatar) %>"
@@ -31,6 +34,8 @@
               data-action="click->avatar-input#removeAvatar">
         <span class="icon-[lucide--x] h-3.5 w-3.5"></span>
       </button>
+    <% end %>
+    <% if removable %>
       <%= hidden_field_tag attachment_id_field_name, attachment_record&.id, disabled: true, data: { avatar_input_target: "attachmentId" } %>
       <%= hidden_field_tag attachment_destroy_field_name, "0", disabled: true, data: { avatar_input_target: "removeFlag" } %>
     <% end %>

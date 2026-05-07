@@ -10,15 +10,6 @@ module ApplicationHelper
                        .render(text).html_safe
   end
 
-  def turbo_stream_flash_alerts(messages = flash, target: "top-alerts")
-    rendered = Array(messages).filter_map do |type, message|
-      next if message.blank?
-
-      turbo_stream.append(target, component(:"ui/flash_alert", type:, message:))
-    end
-
-    safe_join(rendered)
-  end
 
   def avatar_for(url: nil, css_class: "w-8 h-8", content: nil, id: nil)
     css = "rounded-full shrink-0 object-cover shadow-md #{css_class}"
@@ -82,5 +73,35 @@ module ApplicationHelper
     return unless blob&.persisted?
 
     url_for(blob.variant(resize_to_limit: [ size_px * 2 ] * 2))
+  end
+
+  def modal_alerts_dom_id(frame_id = nil)
+    frame_id ||= turbo_referrer_frame_id
+    frame_id.present? ? "modal-alerts-#{frame_id}" : "top-alerts"
+  end
+
+  def turbo_stream_flash_alerts(messages: flash, target: nil)
+    flash_store = messages.respond_to?(:flash) ? messages.flash : messages
+    items = if flash_store.respond_to?(:to_hash)
+      flash_store.to_hash.to_a
+    elsif flash_store.respond_to?(:to_h)
+      flash_store.to_h.to_a
+    else
+      Array(flash_store)
+    end
+
+    target_id = modal_alerts_dom_id(target)
+    consumed_keys = []
+
+    rendered = items.filter_map do |type, message|
+      next if message.blank?
+
+      consumed_keys << type
+      turbo_stream.append(target_id, component(:"ui/flash_alert", type:, message:))
+    end
+
+    flash_store.discard(*consumed_keys) if consumed_keys.any? && flash_store.respond_to?(:discard)
+
+    safe_join(rendered)
   end
 end

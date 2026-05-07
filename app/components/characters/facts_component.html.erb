@@ -46,7 +46,9 @@
           <th><%= t(:label_importance) %></th>
           <th><%= t(:label_topic) %></th>
           <th><%= t(:label_persistent) %></th>
-          <th class="w-10"></th>
+          <% if editable %>
+            <th class="w-10"></th>
+          <% end %>
         </tr>
         </thead>
         <tbody data-character-facts-target="rows">
@@ -59,20 +61,24 @@
               data-topic="<%= fact.topic&.name.to_s %>"
               data-search-text="<%= [ fact.content, fact.author&.name, fact.topic&.name ].compact.join(" ").downcase %>">
             <td class="text-left">
-              <input type="hidden"
-                     name="character[facts_attributes][<%= fact.id %>][id]"
-                     value="<%= fact.id %>"
-                     data-role="id">
-              <input type="hidden"
-                     name="character[facts_attributes][<%= fact.id %>][_destroy]"
-                     value="0"
-                     data-role="destroy">
-              <textarea name="character[facts_attributes][<%= fact.id %>][content]"
-                        rows="3"
-                        class="textarea textarea-sm p-0 rounded-sm textarea-ghost outline-none w-full bg-transparent min-h-[4.5rem] max-h-40 resize-none overflow-y-auto leading-6"
-                        data-original-content="<%= fact.content %>"
-                        data-role="content"
-                        data-action="input->character-facts#syncSearchText"><%= fact.content %></textarea>
+              <% if editable %>
+                <input type="hidden"
+                       name="character[facts_attributes][<%= fact.id %>][id]"
+                       value="<%= fact.id %>"
+                       data-role="id">
+                <input type="hidden"
+                       name="character[facts_attributes][<%= fact.id %>][_destroy]"
+                       value="0"
+                       data-role="destroy">
+                <textarea name="character[facts_attributes][<%= fact.id %>][content]"
+                          rows="3"
+                          class="textarea textarea-sm p-0 rounded-sm textarea-ghost outline-none w-full bg-transparent min-h-[4.5rem] max-h-40 resize-none overflow-y-auto leading-6"
+                          data-original-content="<%= fact.content %>"
+                          data-role="content"
+                          data-action="input->character-facts#syncSearchText"><%= fact.content %></textarea>
+              <% else %>
+                <div class="leading-6 whitespace-pre-wrap"><%= fact.content %></div>
+              <% end %>
             </td>
             <td>
               <span class="inline-flex items-center gap-2" title="<%= fact_time_label(fact) %>">
@@ -100,14 +106,16 @@
                 <span class="<%= fact_persistence_icon(fact) %> h-4 w-4 <%= "text-success" if fact.persistent? %>"></span>
               </span>
             </td>
-            <td>
-              <button type="button"
-                      class="btn btn-ghost btn-xs btn-square text-error"
-                      title="<%= t(:label_delete) %>"
-                      data-action="click->character-facts#toggleDelete">
-                <span class="icon-[lucide--trash-2] h-4 w-4"></span>
-              </button>
-            </td>
+            <% if editable %>
+              <td>
+                <button type="button"
+                        class="btn btn-ghost btn-xs btn-square text-error"
+                        title="<%= t(:label_delete) %>"
+                        data-action="click->character-facts#toggleDelete">
+                  <span class="icon-[lucide--trash-2] h-4 w-4"></span>
+                </button>
+              </td>
+            <% end %>
           </tr>
         <% end %>
         </tbody>

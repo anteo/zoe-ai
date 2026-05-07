@@ -21,11 +21,13 @@ en:
   confirm_delete_chat: Delete this chat?
   confirm_delete_message: Delete this message and all subsequent ones?
   confirm_logout: Logout from your account?
+  confirm_unshare_character: Remove this shared character from your list?
   date:
     formats:
       default: "%Y-%m-%d"
   direct_speech: '%{character} said: "%{text}"'
   label_account_settings: Account settings
+  label_accept_character_invitation: Accept invitation
   label_ai: AI
   label_ai_characters: AI characters
   label_app_title: 'Zoe :: your personal assistant'
@@ -119,6 +121,7 @@ en:
   label_settings_events: Memory & Events
   label_settings_mailer: Email
   label_settings_providers: Providers
+  label_shared: Shared
   label_settings_ui: Interface
   label_share_character: Share character
   label_sign_in_with: Sign in with %{provider}
@@ -131,12 +134,14 @@ en:
   label_time_present: Present
   label_token_usage: Tokens
   label_topic: Topic
+  label_unshare_character: Unshare character
   label_unlock_instructions: Resend unlock instructions
   label_upload_images: Upload images
   label_yes: 'Yes'
   placeholder_add_instruction: add instruction...
   placeholder_chat_input: Type your message...
   placeholder_choose_model: Choose model...
+  placeholder_enter_email: Enter email
   placeholder_enter_character_bio: Add a short bio
   placeholder_enter_character_name: Enter character name
   placeholder_filter_facts_text: Filter facts
@@ -183,6 +188,18 @@ en:
   text_character_create_failed: Failed to create character.
   text_character_images_hint: Upload one or more reference images. Descriptions can be edited below each image.
   text_character_name_required: Character name can't be blank.
+  text_character_read_only: This character was shared with you. Only the author can edit or reshare it.
+  text_character_share_accepted: "%{character} was added to your characters."
+  text_character_share_already_added: "%{character} is already in your characters."
+  text_character_share_email_greeting: Hello,
+  text_character_share_email_intro: "%{sender} shared the character %{character} with you."
+  text_character_share_email_outro: Open the link while signed in as %{email}.
+  text_character_share_email_required: Enter an email address.
+  text_character_share_invalid: This share link is invalid or expired.
+  text_character_share_prompt: Send a share link for %{character} to this email address.
+  text_character_share_sent: Share link sent to %{email}.
+  text_character_share_subject: "%{sender} shared %{character} with you"
+  text_character_share_wrong_account: Sign in as %{email} to accept this shared character.
   text_console_new_messages: New messages
   text_console_no_logs: No system logs yet.
   text_console_waiting_logs: Waiting for RubyLLM logs...
@@ -209,6 +226,9 @@ en:
   text_google_sign_in_failed: Google sign-in failed. Please try again.
   text_greeting_html: "Hi, I'm %{name} \U0001F642<br> Let's chat!"
   text_loading: Loading...
+  text_mailer_greeting: Hello,
+  text_mailer_signature: Zoe - your personal assistant
+  text_mailer_tagline: your personal assistant
   text_models_sync_failed: Failed to update model registry.
   text_models_sync_finished: 'Model registry updated: %{models_count} models (%{json_status}).'
   text_models_sync_json_unchanged: models.json unchanged
@@ -217,9 +237,11 @@ en:
   text_model_not_configured: Model is not configured. Please set a model in Settings -> LLM.
   text_no_available_models: No available models
   text_no_character_description: No description yet.
+  text_no_character_bio: No bio yet.
   text_no_character_events: No events yet.
   text_no_character_facts: No facts yet.
   text_no_character_images: No images yet.
+  text_no_character_instructions: No instructions yet.
   text_no_chat_history: No previous chats yet.
   text_no_chat_history_match: No chats match your search.
   text_password_minimum: "%{count} characters minimum"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_07_143000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -69,6 +69,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_130000) do
 
   create_table "characters", force: :cascade do |t|
     t.boolean "ai", default: false, null: false
+    t.bigint "author_id"
     t.string "bio", default: "", null: false
     t.datetime "created_at", null: false
     t.text "description", default: "", null: false
@@ -77,6 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_130000) do
     t.string "name", limit: 50, null: false
     t.boolean "third_party", default: false, null: false
     t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_characters_on_author_id"
     t.index ["is_default"], name: "index_characters_on_is_default"
     t.index ["is_default"], name: "index_characters_on_single_default_ai", unique: true, where: "((ai = true) AND (is_default = true))"
   end
@@ -447,6 +449,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_130000) do
   add_foreign_key "agents", "models"
   add_foreign_key "agents_mcp_servers", "agents"
   add_foreign_key "agents_mcp_servers", "mcp_servers"
+  add_foreign_key "characters", "users", column: "author_id"
   add_foreign_key "chats", "characters"
   add_foreign_key "chats", "characters", column: "partner_id"
   add_foreign_key "chats", "messages", column: "first_visible_message_id", on_delete: :nullify
