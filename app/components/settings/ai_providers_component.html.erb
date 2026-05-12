@@ -1,35 +1,37 @@
 <div class="space-y-4">
-  <%= f.simple_fields_for :openai do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <%= f.simple_fields_for :openai do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :anthropic do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :anthropic do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :gemini do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :gemini do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :mistral do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :mistral do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :perplexity do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :perplexity do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :xai do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :xai do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :openrouter do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :openrouter do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
 
-  <%= f.simple_fields_for :deepseek do |of| %>
-    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-  <% end %>
+    <%= f.simple_fields_for :deepseek do |of| %>
+      <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+    <% end %>
+  </div>
 
   <%= f.simple_fields_for :ollama do |of| %>
     <%= of.input :api_base %>
@@ -39,8 +41,10 @@
     <legend class="px-1 font-semibold text-sm">Vertex AI</legend>
     <div class="space-y-3">
       <%= f.simple_fields_for :vertexai do |of| %>
-        <%= of.input :project_id, input_html: { autocomplete: "off" } %>
-        <%= of.input :location, input_html: { autocomplete: "off" } %>
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <%= of.input :project_id, input_html: { autocomplete: "off" } %>
+          <%= of.input :location, input_html: { autocomplete: "off" } %>
+        </div>
       <% end %>
     </div>
   </fieldset>
@@ -49,10 +53,12 @@
     <legend class="px-1 font-semibold text-sm">Bedrock</legend>
     <div class="space-y-3">
       <%= f.simple_fields_for :bedrock do |of| %>
-        <%= of.input :api_key, input_html: { autocomplete: "off" } %>
-        <%= of.input :secret_key, input_html: { autocomplete: "off" } %>
-        <%= of.input :region, input_html: { autocomplete: "off" } %>
-        <%= of.input :session_token, input_html: { autocomplete: "off" } %>
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+          <%= of.input :secret_key, input_html: { autocomplete: "off" } %>
+          <%= of.input :region, input_html: { autocomplete: "off" } %>
+          <%= of.input :session_token, input_html: { autocomplete: "off" } %>
+        </div>
       <% end %>
     </div>
   </fieldset>

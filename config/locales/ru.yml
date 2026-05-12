@@ -108,6 +108,7 @@ ru:
   label_register: Регистрация
   label_remember_me: Запомнить меня
   label_remove_avatar: Удалить аватар
+  label_test_smtp: Отправить проверочный Email
   label_remove_instruction: Удалить инструкцию
   label_resend: Отправить повторно
   label_save: Сохранить
@@ -148,6 +149,10 @@ ru:
   placeholder_image_description: Добавьте описание изображения
   placeholder_search_chat_history: Поиск по истории
   settings:
+    app:
+      host: Имя хоста приложения
+      port: Порт приложения
+      protocol: Протокол URL приложения
     ai:
       debug: Режим отладки
       models:
@@ -182,8 +187,43 @@ ru:
         xai:
           api_key: API-ключ xAI
       request_timeout: Таймаут запроса (секунды)
+    events:
+      maximum_count: Максимум событий в сводке памяти
+      period_limit: Максимум событий в одном периоде
+      search_default_limit: Результатов поиска событий по умолчанию
+      search_max_limit: Максимум результатов поиска событий
+    mailer:
+      from: Адрес отправителя
+      perform_deliveries: Выполнять отправку
+      raise_delivery_errors: Вызывать ошибки доставки
+      reply_to: Адрес для ответа
+      smtp:
+        address: SMTP адрес
+        authentication: SMTP аутентификация
+        domain: SMTP домен
+        enable_starttls_auto: Автоматически включать STARTTLS
+        password: SMTP пароль
+        port: SMTP порт
+        username: SMTP пользователь
     ui:
-      admin_console_lines: Количество строк консоли администратора
+      admin_console_lines: Строк лога в консоли администратора
+      flash_timeout_ms: Длительность успешного уведомления (мс)
+      max_message_bubbles: Максимум пузырей ответа ассистента
+  descriptions:
+    ai:
+      debug: Включает подробные логи RubyLLM и системные логи для AI-запросов и работы инструментов.
+      models:
+        default_model: Основная чат-модель по умолчанию для Зои и агентов, если для конкретного агента не задана более точная настройка.
+      request_timeout: Максимальное число секунд ожидания ответа от AI-провайдера, после которого запрос считается неудачным.
+    events:
+      maximum_count: Максимальное число сохранённых событий, которые Зоя включает в сводку временных воспоминаний по персонажу во всех периодах вместе.
+      period_limit: Максимальное число событий внутри одной временной группы, например Сегодня, Последние 3 месяца или Позже.
+      search_default_limit: Сколько результатов возвращает поиск событий, если лимит не был указан явно.
+      search_max_limit: Жёсткий верхний предел для количества результатов, которое может вернуть инструмент поиска событий.
+    ui:
+      admin_console_lines: Сколько последних строк лога загружать в окне консоли администратора.
+      flash_timeout_ms: Как долго показывать успешные уведомления перед автоматическим закрытием. Ошибки остаются открытыми.
+      max_message_bubbles: Длинные ответы ассистента будут разбиваться максимум на столько пузырей в чате.
   text_access_denied: Доступ запрещён.
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
@@ -249,7 +289,12 @@ ru:
   text_profile_updated: Профиль успешно обновлен.
   text_select_chat_history: Выберите разговор из списка.
   text_setting_env_override: Задано через переменную окружения (только чтение).
+  text_setting_env_override_short: Настройка только для чтения
   text_settings_saved: Настройки сохранены.
+  text_settings_smtp_test_body: Eсли вы видите это письмо, настройка почтовых уведомлений выполнена успешно.
+  text_settings_smtp_test_failed: "Отправка письма не удалась: %{error}"
+  text_settings_smtp_test_sent: "Проверочное письмо отправлено на %{email}."
+  text_settings_smtp_test_subject: Проверка отправки Email
   text_setup_first_user: Пользователей пока нет. Первый зарегистрированный пользователь станет администратором.
   text_setup_title: Добро пожаловать в Zoe!
   text_share_character_coming_soon: Возможность поделиться персонажем пока не реализована.
