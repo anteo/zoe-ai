@@ -66,6 +66,12 @@ module SettingConcern
 
     def id = nil
 
+    def initialize(attributes = nil)
+      provided_attributes = attributes&.to_h&.stringify_keys || {}
+      super(attributes)
+      apply_callable_defaults(provided_attributes)
+    end
+
     def save(context: {})
       success, changed_scopes = save_with_changes(context:)
       return false unless success
@@ -83,6 +89,16 @@ module SettingConcern
     end
 
     private
+
+    def apply_callable_defaults(provided_attributes)
+      self.class._defs.each do |attr_name, definition|
+        next unless definition.default.respond_to?(:call)
+        next if provided_attributes.key?(attr_name.to_s)
+        next if public_send(attr_name).present?
+
+        public_send(:"#{attr_name}=", definition.default_value(self))
+      end
+    end
 
     def save_with_changes(context:)
       return [ false, [] ] unless valid?
@@ -131,7 +147,7 @@ module SettingConcern
     def attr_changed_for_persistence?(attr_name, definition, normalized, persisted, has_persisted)
       return has_persisted if normalized.nil?
       unless has_persisted
-        default_value = definition.default
+        default_value = definition.default_value(self)
         return normalized != default_value
       end
 

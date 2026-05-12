@@ -17,20 +17,24 @@
     </div>
 
     <% if section_opts[:form] %>
-      <% form_html = { class: "min-h-full flex flex-col" }.merge(section_opts[:html]&.call || {}) %>
+      <% form_html = { class: "h-full flex flex-col overflow-hidden" }.merge(section_opts[:html]&.call || {}) %>
 
       <%= helpers.simple_form_for section_opts[:form].call,
                                   url: settings_path(scope: section_opts[:scope]),
                                   method: :patch,
                                   builder: SettingsFormBuilder,
                                   html: form_html do |f| %>
+        <% section_component = section_component(f) %>
         <%= helpers.hidden_field_tag :section, @section %>
 
-        <div class="<%= helpers.class_names('flex-1 overflow-y-auto p-5 space-y-8 text-sm bg-base-200', 'pb-28' => section_opts[:footer]) %>">
-          <%= component :"settings/#{@section}", f: f %>
+        <div class="flex-1 overflow-y-auto p-5 pb-8 space-y-8 text-sm bg-base-200">
+          <%= render section_component %>
         </div>
 
-        <div class="mt-auto sticky bottom-0 bg-base-100 border-t border-base-300 p-5 flex justify-end z-40 gap-3">
+        <div class="mt-auto shrink-0 bg-base-100 border-t border-base-300 p-5 flex justify-end gap-3">
+          <% if section_component.footer? %>
+            <%= section_component.footer %>
+          <% end %>
           <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-primary" %>
         </div>
       <% end %>

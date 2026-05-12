@@ -1,5 +1,7 @@
 module Settings
-  class ProvidersComponent < ApplicationComponent
+  class SectionComponent < ApplicationComponent
+    renders_one :footer
+
     def initialize(f:)
       @f = f
     end

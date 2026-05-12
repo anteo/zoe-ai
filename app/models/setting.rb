@@ -1,11 +1,16 @@
 class Setting < ApplicationRecord
   include SettingConcern
 
+  APP_PROTOCOLS = %w[http https].freeze
+  SMTP_AUTHENTICATION_METHODS = %w[plain login cram_md5].freeze
+
   scope :app do
     setting :host, :string, default: "localhost"
     setting :port, :integer, default: 3000
     setting :protocol, :string, default: "http"
     setting :extra_hosts, :string, static: true # Rack host allowlist, boot-only
+
+    validates :protocol, inclusion: { in: APP_PROTOCOLS }
   end
 
   scope :ai do
@@ -16,6 +21,8 @@ class Setting < ApplicationRecord
       setting :default_model, :string
       setting :default_embedding_model, :string
       setting :default_image_model, :string
+
+      validates :default_model, presence: true
     end
 
     scope :providers do
@@ -76,20 +83,21 @@ class Setting < ApplicationRecord
   end
 
   scope :mailer do
-    setting :from, :string
-    setting :reply_to, :string
+    setting :from, :string, default: -> { "no-reply@#{Setting.app.host}" }
+    setting :reply_to, :string, default: -> { "no-reply@#{Setting.app.host}" }
     setting :perform_deliveries, :boolean, default: true
     setting :raise_delivery_errors, :boolean # nil → env-dependent default in initializer
 
     scope :smtp do
       setting :address, :string, default: "localhost"
       setting :port, :integer, default: 1025
-      setting :domain, :string
+      setting :domain, :string, default: -> { Setting.app.host }
       setting :username, :string
       setting :password, :string
       setting :authentication, :string
       setting :enable_starttls_auto, :boolean, default: true
 
+      validates :authentication, inclusion: { in: SMTP_AUTHENTICATION_METHODS }, allow_blank: true
       validates :port, numericality: { greater_than: 0, less_than: 65_536 }, allow_nil: true
     end
   end

@@ -1,4 +1,4 @@
 module Settings
-  class EventsComponent < ApplicationComponent
+  class EventsComponent < SectionComponent
   end
 end

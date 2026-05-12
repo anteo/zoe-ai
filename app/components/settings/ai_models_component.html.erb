@@ -2,6 +2,7 @@
   <%= f.input :default_model,
               as: :autocomplete,
               url: helpers.models_search_path(kind: "chat"),
+              required: true,
               placeholder: t(:placeholder_choose_model) %>
   <%= f.input :default_embedding_model,
               as: :autocomplete,

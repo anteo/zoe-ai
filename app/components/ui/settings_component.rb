@@ -2,7 +2,9 @@ module UI
   class SettingsComponent < ApplicationComponent
     SECTIONS = {
       "app" => {
-        icon: "icon-[lucide--settings]"
+        icon: "icon-[lucide--settings]",
+        form: -> { Setting.app },
+        scope: "app"
       },
       "ai" => {
         icon: "icon-[lucide--sparkles]",
@@ -31,14 +33,18 @@ module UI
         }
       },
       "mailer" => {
-        icon: "icon-[lucide--mail]"
+        icon: "icon-[lucide--mail]",
+        form: -> { Setting.mailer },
+        scope: "mailer"
       },
       "ui" => {
         icon: "icon-[lucide--monitor]",
         form: -> { Setting.ui },
       },
       "events" => {
-        icon: "icon-[lucide--history]"
+        icon: "icon-[lucide--history]",
+        form: -> { Setting.events },
+        scope: "events"
       }
     }.freeze
 
@@ -59,5 +65,16 @@ module UI
     end
 
     def section_options = SECTIONS.fetch(@section)
+
+    def section_component(f)
+      @section_components ||= {}
+      @section_components[f.object_name] ||= section_component_class.new(f:)
+    end
+
+    private
+
+    def section_component_class
+      "Settings::#{@section.camelize}Component".constantize
+    end
   end
 end

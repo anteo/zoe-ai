@@ -21,6 +21,13 @@ module SettingConcern
       !!static
     end
 
+    def default_value(context = nil)
+      return default unless default.respond_to?(:call)
+      return context.instance_exec(&default) if context
+
+      default.call
+    end
+
     def resolve(value)
       overridden? ? env_value : value
     end

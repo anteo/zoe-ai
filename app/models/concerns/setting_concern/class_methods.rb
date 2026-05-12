@@ -131,7 +131,7 @@ module SettingConcern
         builder.defs.each_key do |attr_name|
           define_method(:"#{attr_name}_readonly?") { self.class._defs[attr_name].readonly? }
           define_method(:"#{attr_name}_static?") { self.class._defs[attr_name].static? }
-          define_method(:"#{attr_name}_default") { self.class._defs[attr_name].default }
+          define_method(:"#{attr_name}_default") { self.class._defs[attr_name].default_value(self) }
         end
 
         _defs.merge!(builder.defs)

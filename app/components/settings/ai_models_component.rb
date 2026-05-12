@@ -1,11 +1,4 @@
 module Settings
-  class AIModelsComponent < ApplicationComponent
-    def initialize(f:)
-      @f = f
-    end
-
-    private
-
-    attr_reader :f
+  class AIModelsComponent < SectionComponent
   end
 end

@@ -1,0 +1,43 @@
+<div class="space-y-6">
+  <div class="space-y-4">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <%= f.input :from %>
+      <%= f.input :reply_to %>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <%= f.input :perform_deliveries, as: :boolean %>
+      <%= f.input :raise_delivery_errors, as: :boolean %>
+    </div>
+  </div>
+
+  <fieldset class="border border-base-300 rounded-lg p-4">
+    <legend class="px-1 font-semibold text-sm">SMTP</legend>
+    <div class="space-y-4">
+      <%= f.simple_fields_for :smtp do |sf| %>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,2fr)_minmax(9rem,1fr)]">
+          <%= sf.input :address %>
+          <%= sf.input :port %>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <%= sf.input :domain %>
+          <%= sf.input :authentication,
+                       as: :select,
+                       collection: authentication_options,
+                       include_blank: true %>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <%= sf.input :username, input_html: { autocomplete: "off" } %>
+          <%= sf.input :password,
+                       as: :password,
+                       placeholder: ("•••" if sf.object.password.present?),
+                       input_html: { autocomplete: "new-password" } %>
+        </div>
+
+        <%= sf.input :enable_starttls_auto, as: :boolean %>
+      <% end %>
+    </div>
+  </fieldset>
+</div>
