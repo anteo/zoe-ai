@@ -1,4 +1,12 @@
+require Rails.root.join("lib/simple_form/components/description")
+
 SimpleForm.setup do |config|
+  SimpleForm.include_component(SimpleForm::Components::Description)
+
+  description_wrap = { class: "ml-1 mt-1 mb-1 border-l-2 border-base-300 pl-3 text-xs leading-6 text-base-content/45" }
+  hint_wrap = { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
+  error_wrap = { tag: :p, class: "validator-hint text-error text-xs leading-tight" }
+
   shared_components = lambda do |b|
     b.use :html5
     b.use :placeholder
@@ -13,40 +21,46 @@ SimpleForm.setup do |config|
     shared_components.call(b)
     b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
-      ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
+      ba.use :hint, wrap_with: hint_wrap.dup
     end
-    b.use :input, class: "input w-full", error_class: "input-error"
-    b.use :error, wrap_with: { tag: :p, class: "text-error text-xs leading-tight mt-0" }
+    b.use :description, wrap_with: description_wrap.dup
+    b.use :input, class: "input validator w-full", error_class: "input-error"
+    b.use :error, wrap_with: error_wrap.dup
   end
 
   config.wrappers :daisy_textarea, tag: :div, class: "space-y-1", error_class: "has-error" do |b|
     shared_components.call(b)
     b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
-      ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
+      ba.use :hint, wrap_with: hint_wrap.dup
     end
-    b.use :input, class: "textarea w-full", error_class: "textarea-error"
-    b.use :error, wrap_with: { tag: :p, class: "text-error text-xs leading-tight mt-0" }
+    b.use :input, class: "textarea validator w-full", error_class: "textarea-error"
+    b.use :error, wrap_with: error_wrap.dup
   end
 
   config.wrappers :daisy_select, tag: :div, class: "space-y-1", error_class: "has-error" do |b|
     shared_components.call(b)
     b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
-      ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
+      ba.use :hint, wrap_with: hint_wrap.dup
     end
-    b.use :input, class: "select w-full", error_class: "select-error"
-    b.use :error, wrap_with: { tag: :p, class: "text-error text-xs leading-tight mt-0" }
+    b.use :description, wrap_with: description_wrap.dup
+    b.use :input, class: "select validator w-full", error_class: "select-error"
+    b.use :error, wrap_with: error_wrap.dup
   end
 
   config.wrappers :daisy_boolean, tag: :div, class: "mt-1" do |b|
     b.use :html5
     b.optional :readonly
-    b.wrapper tag: :label, class: "label cursor-pointer justify-start gap-3" do |ba|
-      ba.use :input, class: "checkbox checkbox-sm"
-      ba.use :label_text
+    b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
+      ba.wrapper tag: :label, class: "label cursor-pointer justify-start gap-3 p-0 m-0" do |bl|
+        bl.use :input, class: "checkbox checkbox-sm"
+        bl.use :label_text
+      end
+      ba.use :hint, wrap_with: hint_wrap.dup
     end
-    b.use :error, wrap_with: { tag: :p, class: "text-error text-xs mt-1" }
+    b.use :description, wrap_with: description_wrap.dup
+    b.use :error, wrap_with: error_wrap.dup
   end
 
   config.wrappers :autocomplete, tag: :div, class: "space-y-1", error_class: "has-error" do |b|
@@ -58,16 +72,17 @@ SimpleForm.setup do |config|
 
     b.wrapper tag: :div, class: "flex items-center gap-2", unless_blank: true do |ba|
       ba.use :label, class: "label p-0 m-0"
-      ba.use :hint, wrap_with: { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
+      ba.use :hint, wrap_with: hint_wrap.dup
     end
+    b.use :description, wrap_with: description_wrap.dup
 
     b.use :input,
-          class: "select select-bordered w-full cursor-text pr-10",
+          class: "select select-bordered validator w-full cursor-text pr-10",
           error_class: "select-error",
           autocomplete_container_class: "relative w-full",
           autocomplete_results_class: "menu bg-base-100 rounded-box shadow-md absolute z-50 w-full mt-2 max-h-60 overflow-auto flex-nowrap border border-base-300"
 
-    b.use :error, wrap_with: { tag: :p, class: "text-error text-xs leading-tight mt-0" }
+    b.use :error, wrap_with: error_wrap.dup
   end
 
   config.default_wrapper = :daisy_input

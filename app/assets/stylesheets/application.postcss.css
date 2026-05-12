@@ -13,6 +13,21 @@
     .input-ghost:hover, .textarea-ghost:hover {
         outline: color-mix(in oklab, var(--color-base-content) 40%, transparent) 1px dashed;
     }
+
+    .input:disabled,
+    .input[disabled],
+    .select:disabled,
+    .select[disabled],
+    .textarea:disabled,
+    .textarea[disabled] {
+        border-color: color-mix(in oklab, var(--color-base-content) 16%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-base-content) 10%, transparent);
+        opacity: 0.75;
+    }
+
+    .has-error .validator-hint {
+        visibility: visible;
+    }
 }
 
 /* Theme-based logo visibility */
