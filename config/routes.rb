@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   end
   get "up" => "rails/health#show", as: :rails_health_check
 
+  unauthenticated do
+    root to: redirect("/login"), as: :unauthenticated_root
+  end
+
   root "chats#show"
 
   resource :profile, only: [ :show, :update ]
