@@ -6,6 +6,20 @@ module UI
         form: -> { Setting.app },
         scope: "app"
       },
+      "mailer" => {
+        icon: "icon-[lucide--mail]",
+        form: -> { Setting.mailer },
+        scope: "mailer"
+      },
+      "ui" => {
+        icon: "icon-[lucide--monitor]",
+        form: -> { Setting.ui },
+      },
+      "events" => {
+        icon: "icon-[lucide--history]",
+        form: -> { Setting.events },
+        scope: "events"
+      },
       "ai" => {
         icon: "icon-[lucide--sparkles]",
         form: -> { Setting.ai },
@@ -35,20 +49,6 @@ module UI
       "mcp_servers" => {
         icon: "icon-[lucide--server-cog]",
         parent: "ai"
-      },
-      "mailer" => {
-        icon: "icon-[lucide--mail]",
-        form: -> { Setting.mailer },
-        scope: "mailer"
-      },
-      "ui" => {
-        icon: "icon-[lucide--monitor]",
-        form: -> { Setting.ui },
-      },
-      "events" => {
-        icon: "icon-[lucide--history]",
-        form: -> { Setting.events },
-        scope: "events"
       }
     }.freeze
 
