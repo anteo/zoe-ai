@@ -39,7 +39,7 @@
         </div>
         <div class="flex items-center gap-2">
           <div id="token-usage-gauge-<%= chat.id %>">
-            <%= component :"chats/token_usage_gauge", chat: %>
+            <%= component :chats__token_usage_gauge, chat: %>
           </div>
           <%= f.button class: "btn btn-sm gap-2",
                 data: { chat_input_target: "sendButton" } do %>

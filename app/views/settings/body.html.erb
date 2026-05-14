@@ -1,4 +1,4 @@
 <%= turbo_frame_tag "settings-body" do %>
   <%= turbo_stream_flash_alerts(target: "settings-modal") %>
-  <%= component :"ui/settings", section: @section %>
+  <%= component :ui__settings, section: @section %>
 <% end %>

@@ -1,7 +1,7 @@
 <% base_errors = resource.errors[:base] %>
 <% if base_errors.any? %>
   <% content_for :top_alerts do %>
-    <%= component :"ui/flash_alert",
+    <%= component :ui__flash_alert,
                   type: :alert,
                   message: base_errors.first,
                   details: base_errors.drop(1) %>

@@ -10,7 +10,7 @@
       <span class="hidden md:inline"><%= t(:label_new_conversation) %></span>
     <% end %>
 
-    <%= component :"chats/history_drawer", current_chat_id: chat&.id %>
+    <%= component :chats__history_drawer, current_chat_id: chat&.id %>
 
     <%= link_to characters_path,
                 class: "btn btn-ghost",
@@ -31,15 +31,15 @@
     </label>
 
     <%= turbo_frame_tag :characters_selector do %>
-      <%= component :"characters/selector", current_partner:, current_user: %>
+      <%= component :characters__selector, current_partner:, current_user: %>
     <% end %>
 
     <%= turbo_frame_tag :profile_menu do %>
-      <%= component :"ui/profile_menu", current_user: %>
+      <%= component :ui__profile_menu, current_user: %>
     <% end %>
   </header>
 
-  <%= component :"chats/chat", current_character:, chat: %>
+  <%= component :chats__chat, chat: %>
 
-  <%= component :"chats/chat_input", current_character:, chat: %>
+  <%= component :chats__chat_input, current_character:, chat: %>
 </div>

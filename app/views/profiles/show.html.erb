@@ -1,4 +1,4 @@
-<%= component :"ui/modal", width: "w-xl" do |m| %>
+<%= component :ui__modal, width: "w-xl" do |m| %>
   <% m.with_title do %>
     <span><%= t(:label_profile) %></span>
   <% end %>
@@ -7,7 +7,7 @@
     <%#= f.error_notification %>
 
     <div class="flex items-center gap-4">
-      <%= component :"ui/avatar_input",
+      <%= component :ui__avatar_input,
                     form: f,
                     removable: true do |component| %>
         <%= avatar_for_user(@user, css_class: "w-20 h-20", id: "profile-avatar-preview") %>

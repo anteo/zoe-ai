@@ -6,4 +6,8 @@ class ApplicationComponent < ViewComponent::Base
   def to_s
     ApplicationController.render(self, layout: false)
   end
+
+  def name
+    self.class.name.underscore.gsub("/", "__").to_sym
+  end
 end

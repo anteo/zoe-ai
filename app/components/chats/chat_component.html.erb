@@ -14,11 +14,11 @@
     <%= turbo_stream_from chat if stream? %>
 
     <% messages.each do |message| %>
-      <%= helpers.component :"chats/message", message:, current_character:, read_only: read_only? %>
+      <%= helpers.component :chats__message, message:, current_character:, read_only: read_only? %>
     <% end %>
 
     <% if !read_only? && (c = RespondJob.get_running_execution(chat)) && !c.cancelled? %>
-      <%= helpers.component :"chats/message_placeholder", chat:, current_character: %>
+      <%= helpers.component :chats__message_placeholder, chat:, current_character: %>
     <% end %>
   <% end %>
 </div>

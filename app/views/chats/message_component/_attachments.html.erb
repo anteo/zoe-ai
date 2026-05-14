@@ -3,14 +3,14 @@
     <% if image_attachments.any? %>
       <div class="image-attachments">
         <% image_attachments.each do |attachment| %>
-          <%= component :"chats/image_attachment", attachment: attachment %>
+          <%= component :chats__image_attachment, attachment: attachment %>
         <% end %>
       </div>
     <% end %>
     <% if file_attachments.any? %>
       <div class="file-attachments">
         <% file_attachments.each do |attachment| %>
-          <%= component :"chats/attachment", attachment: attachment %>
+          <%= component :chats__attachment, attachment: attachment %>
         <% end %>
       </div>
     <% end %>

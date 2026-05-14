@@ -1,4 +1,4 @@
-<%= component :"ui/modal",
+<%= component :ui__modal,
               width: "max-w-3xl",
               padding: false,
               main_classes: "overflow-hidden",
@@ -7,6 +7,6 @@
   <% m.with_title { t(:label_settings) } %>
 
   <%= turbo_frame_tag "settings-body" do %>
-    <%= component :"ui/settings", section: @section %>
+    <%= component :ui__settings, section: @section %>
   <% end %>
 <% end %>
