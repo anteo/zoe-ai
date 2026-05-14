@@ -75,9 +75,10 @@ module SettingConcern
     def save(context: {})
       success, changed_scopes = save_with_changes(context:)
       return false unless success
-      return true if changed_scopes.empty?
 
       Setting.invalidate_cache!
+      return true if changed_scopes.empty?
+
       hook_context = context.merge(_setting_fired_hooks: {})
       changed_scopes.each { |scope_path| Setting.run_change_hooks(scope_path, context: hook_context) }
       true

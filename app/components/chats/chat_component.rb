@@ -2,7 +2,7 @@ module Chats
   class ChatComponent < ApplicationComponent
     attr_reader :chat, :dom_id
 
-    def initialize(chat:, current_character:, read_only: false, stream: true, dom_id: "chat-messages")
+    def initialize(chat:, stream: true, dom_id: "chat-messages")
       @chat = chat
       @stream = stream
       @dom_id = dom_id

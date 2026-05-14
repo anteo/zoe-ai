@@ -18,6 +18,12 @@ Rails.application.routes.draw do
 
   root "chats#show"
 
+  resources :mcp_servers, only: [ :new, :create, :edit, :update, :destroy ] do
+    member do
+      patch :start
+      patch :stop
+    end
+  end
   resource :profile, only: [ :show, :update ]
   resource :settings, only: [ :show, :update ]
   namespace :admin do

@@ -183,6 +183,9 @@ class SettingTest < ActiveSupport::TestCase
     Setting.on_change(:"ai.providers") { providers_calls << :fired }
 
     Setting.ai.update(
+      models_attributes: {
+        default_model: "gpt-4.1-mini"
+      },
       providers_attributes: {
         openrouter_attributes: { api_key: "sk-openrouter" },
         deepseek_attributes: { api_key: "sk-deepseek" }
@@ -342,7 +345,12 @@ class SettingTest < ActiveSupport::TestCase
     Setting.on_change(:ai) { ai_calls << :ai }
 
     Setting.ui.update(flash_timeout_ms: 3_333)
-    Setting.ai.update(request_timeout: 45)
+    Setting.ai.update(
+      request_timeout: 45,
+      models_attributes: {
+        default_model: "gpt-4.1-mini"
+      }
+    )
     Setting.sync_hooks_if_stale!
     ui_calls.clear
     ai_calls.clear

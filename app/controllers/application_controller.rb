@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   include HttpAcceptLanguage::AutoLocale
+  extend ViewComponentsHelper
 
   append_view_path "#{Rails.root}/app/components"
 

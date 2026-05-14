@@ -20,6 +20,7 @@ import CharactersImagesController from "./characters_images_controller"
 import AvatarCropDialogController from "./avatar_crop_dialog_controller"
 import AvatarInputController from "./avatar_input_controller"
 import AppModalController from "./app_modal_controller"
+import CodeMirrorController from "./code_mirror_controller"
 import TextareaAutosizeController from "./textarea_autosize_controller"
 import AdminConsoleModalController from "./admin_console_modal_controller"
 import AdminConsoleOpenerController from "./admin_console_opener_controller"
@@ -43,6 +44,7 @@ application.register("characters-images", CharactersImagesController)
 application.register("avatar-crop-dialog", AvatarCropDialogController)
 application.register("avatar-input", AvatarInputController)
 application.register("app-modal", AppModalController)
+application.register("code-mirror", CodeMirrorController)
 application.register("textarea-autosize", TextareaAutosizeController)
 application.register("admin-console-modal", AdminConsoleModalController)
 application.register("admin-console-opener", AdminConsoleOpenerController)

@@ -1,9 +1,8 @@
-<div class="flex h-full min-h-0 w-full flex-col"
-     data-controller="character-details character-instructions characters-images"
+<div data-controller="character-details character-instructions characters-images"
      data-action="character-facts:count-changed->character-details#updateFactsCountBadge"
      data-character-details-current-section-value="<%= default_section %>">
   <%= helpers.simple_form_for character,
-                              html: { multipart: true, class: "flex h-full min-h-0 flex-col" },
+                              html: { multipart: true },
                               data: { action: "submit->character-instructions#handleSubmit" } do |f| %>
     <section class="flex flex-col md:flex-row md:items-start md:justify-between gap-5 px-5 py-7">
       <div class="flex min-w-0 grow items-start gap-4">

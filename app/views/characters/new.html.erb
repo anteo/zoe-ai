@@ -1,6 +1,10 @@
 <%= component :ui__modal, width: "w-xl" do |m| %>
   <% m.with_title do %>
-    <span><%= t(:label_create_character) %></span>
+    <%= t(:label_create_character) %>
+  <% end %>
+
+  <% m.with_footer do %>
+    <%= submit_tag t(:label_save), class: "btn btn-primary" %>
   <% end %>
 
   <%= simple_form_for @character, html: { class: "space-y-1" } do |f| %>
@@ -11,7 +15,7 @@
                 required: true,
                 input_html: {
                   autofocus: true,
-                  class: "input-ghost outline-none",
+                  class: "input-ghost outline-none text-xl bg-transparent",
                   placeholder: t(:placeholder_enter_character_name),
                   maxlength: 50
                 } %>
@@ -19,13 +23,9 @@
     <%= f.input :bio,
                 label: false,
                 input_html: {
-                  class: "textarea-ghost outline-none",
+                  class: "textarea-ghost outline-none bg-transparent",
                   maxlength: 160,
                   placeholder: t(:placeholder_enter_character_bio),
                 } %>
-
-    <div class="modal-action">
-      <%= f.submit t(:label_save), class: "btn btn-primary" %>
-    </div>
   <% end %>
 <% end %>

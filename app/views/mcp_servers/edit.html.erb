@@ -1,0 +1,11 @@
+<%= component :ui__modal, width: "max-w-3xl" do |m| %>
+  <% m.with_title do %>
+    <%= t(:label_edit_mcp_server) %>
+  <% end %>
+
+  <% m.with_footer do %>
+    <%= submit_tag t(:label_save), class: "btn btn-primary" %>
+  <% end %>
+
+  <%= render "form" %>
+<% end %>

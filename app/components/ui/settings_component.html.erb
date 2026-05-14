@@ -1,51 +1,43 @@
-<% section_opts = section_options %>
-
-<div class="drawer drawer-open">
+<div class="drawer drawer-open h-[65vh]">
   <input type="checkbox" class="drawer-toggle"/>
-  <div class="drawer-content h-[65vh] flex flex-col overflow-hidden">
-    <div class="px-5 py-4 border-b border-base-300 shrink-0">
-      <header class="flex items-center gap-3">
-        <h3 class="text-lg font-bold"><%= t(:"label_settings_#{@section}") %></h3>
-        <button type="button"
-                class="btn btn-ghost btn-sm btn-circle ml-auto"
-                data-action="click->app-modal#close"
-                aria-label="<%= t(:label_close) %>">
-          <span class="icon-[lucide--x] w-5 h-5"></span>
-          <span class="sr-only"><%= t(:label_close) %></span>
-        </button>
-      </header>
-    </div>
+  <div class="drawer-content flex flex-col overflow-hidden">
+    <%= with_optional_form do |f| %>
+      <% body = section_body %>
 
-    <% if section_opts[:form] %>
-      <% form_html = { class: "h-full flex flex-col overflow-hidden" }.merge(section_opts[:html]&.call || {}) %>
+      <div class="px-5 py-4 border-b border-base-300 shrink-0">
+        <header class="flex items-center gap-3">
+          <h3 class="text-lg font-bold mr-auto"><%= title %></h3>
+          <%= section_component.header %>
+          <button type="button"
+                  class="btn btn-ghost btn-sm btn-circle"
+                  data-action="click->app-modal#close"
+                  aria-label="<%= t(:label_close) %>">
+            <span class="icon-[lucide--x] w-5 h-5"></span>
+            <span class="sr-only"><%= t(:label_close) %></span>
+          </button>
+        </header>
+      </div>
 
-      <%= helpers.simple_form_for section_opts[:form].call,
-                                  url: settings_path(scope: section_opts[:scope]),
-                                  method: :patch,
-                                  builder: SettingsFormBuilder,
-                                  html: form_html do |f| %>
-        <% section_component = section_component(f) %>
+      <% if form? %>
         <%= helpers.hidden_field_tag :section, @section %>
 
         <div class="flex-1 overflow-y-auto p-5 pb-8 space-y-8 text-sm bg-base-200">
-          <%= render section_component %>
+          <%= body %>
         </div>
 
         <div class="mt-auto shrink-0 bg-base-100 border-t border-base-300 p-5 flex justify-end gap-3">
-          <% if section_component.footer? %>
-            <%= section_component.footer %>
-          <% end %>
+          <%= section_component.footer %>
           <%= f.button :submit, t(:label_apply), name: "apply", class: "btn btn-primary" %>
         </div>
+      <% else %>
+        <div class="flex-1 overflow-y-auto p-5 space-y-8 text-sm bg-base-200">
+          <%= body %>
+        </div>
       <% end %>
-    <% else %>
-      <div class="flex-1 overflow-y-auto p-5 space-y-8 text-sm bg-base-200  ">
-        <%= component :"settings/#{@section}" %>
-      </div>
     <% end %>
   </div>
-  <div class="drawer-side h-full overflow-hidden">
-    <ul class="menu bg-base-300 h-full py-5 px-2 gap-0.5">
+  <div class="drawer-side h-full overflow-y-auto bg-base-300">
+    <ul class="menu h-full py-5 px-2 gap-0.5 flex-nowrap">
       <% top_level_sections.each do |section, opts| %>
         <li>
           <%= link_to settings_path(section:),

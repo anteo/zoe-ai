@@ -7,35 +7,35 @@
   </div>
 
   <div class="<%= box_classes %>">
-    <div class="relative max-h-screen overflow-hidden w-full">
-      <% if header %>
-        <div class="<%= header_classes %>">
-          <h3 class="<%= title_classes %>"><%= title %></h3>
-          <% if close_button %>
-            <button type="button"
-                    class="btn btn-ghost btn-sm btn-circle ml-auto"
-                    data-action="click->app-modal#close"
-                    aria-label="<%= t(:label_close) %>">
-              <span class="icon-[lucide--x] w-5 h-5"></span>
-              <span class="sr-only"><%= t(:label_close) %></span>
-            </button>
-          <% end %>
-        </div>
-      <% end %>
-
-      <div class="<%= main_classes %>">
-        <% if frame_id.present? %>
-          <%= helpers.turbo_frame_tag frame_id, data: { app_modal_target: "frame" } do %>
-            <%= content %>
-          <% end %>
-        <% else %>
-          <%= content %>
+    <% if header %>
+      <div class="<%= header_classes %>">
+        <h3 class="<%= title_classes %>"><%= title %></h3>
+        <% if close_button %>
+          <button type="button"
+                  class="btn btn-ghost btn-sm btn-circle ml-auto"
+                  data-action="click->app-modal#close"
+                  aria-label="<%= t(:label_close) %>">
+            <span class="icon-[lucide--x] w-5 h-5"></span>
+            <span class="sr-only"><%= t(:label_close) %></span>
+          </button>
         <% end %>
       </div>
+    <% end %>
 
-      <% if footer? %>
-        <div class="<%= footer_classes %>"><%= footer %></div>
+    <div class="<%= main_classes %>" data-app-modal-target="body">
+      <% if frame_id.present? %>
+        <%= helpers.turbo_frame_tag frame_id, data: { app_modal_target: "frame" } do %>
+          <%= content %>
+        <% end %>
+      <% else %>
+        <%= content %>
       <% end %>
     </div>
+
+    <% if footer? %>
+      <div class="<%= footer_classes %>"
+           data-app-modal-target="footer"
+           data-action="click->app-modal#submitFromFooter"><%= footer %></div>
+    <% end %>
   </div>
 </dialog>

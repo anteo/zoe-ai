@@ -2,7 +2,7 @@ import {Controller} from "@hotwired/stimulus"
 import {waitForCloseAnimation} from "../lib/wait_for_close_animation"
 
 export default class extends Controller {
-  static targets = ["frame"]
+  static targets = ["body", "footer", "frame"]
 
   static values = {
     referrerFrameId: String
@@ -34,6 +34,25 @@ export default class extends Controller {
   backdropClick(event) {
     if (event.target !== this.element) return
     this.closeModal()
+  }
+
+  submitFromFooter(event) {
+    const submitter = event.target.closest("button, input")
+    if (!submitter || !this.footerTarget.contains(submitter)) return
+    if (!this.isSubmitControl(submitter)) return
+    if (submitter.form) return
+
+    const form = this.findBodyForm(submitter)
+    if (!form) return
+
+    event.preventDefault()
+    const proxySubmitter = this.buildProxySubmitter(submitter, form)
+
+    try {
+      form.requestSubmit(proxySubmitter)
+    } finally {
+      proxySubmitter.remove()
+    }
   }
 
   async closeModal() {
@@ -87,5 +106,45 @@ export default class extends Controller {
     if (!(requestTarget instanceof HTMLFormElement)) return false
 
     return requestTarget.getAttribute("data-turbo-frame") === this.frameTarget.id
+  }
+
+  isSubmitControl(element) {
+    if (element.tagName === "BUTTON") {
+      return (element.getAttribute("type") || "submit").toLowerCase() === "submit"
+    }
+
+    if (element.tagName === "INPUT") {
+      return element.type === "submit"
+    }
+
+    return false
+  }
+
+  findBodyForm(submitter) {
+    const selector = submitter.getAttribute("data-modal-form-selector")
+    if (selector) return this.bodyTarget.querySelector(selector)
+
+    return this.bodyTarget.querySelector("form")
+  }
+
+  buildProxySubmitter(submitter, form) {
+    const proxy = document.createElement("button")
+    proxy.type = "submit"
+    proxy.hidden = true
+
+    if (submitter.name) proxy.name = submitter.name
+    if ("value" in submitter) proxy.value = submitter.value
+
+    for (const attribute of ["formaction", "formmethod", "formenctype", "formtarget"]) {
+      const value = submitter.getAttribute(attribute)
+      if (value !== null) proxy.setAttribute(attribute, value)
+    }
+
+    if (submitter.hasAttribute("formnovalidate")) {
+      proxy.setAttribute("formnovalidate", "")
+    }
+
+    form.append(proxy)
+    return proxy
   }
 }

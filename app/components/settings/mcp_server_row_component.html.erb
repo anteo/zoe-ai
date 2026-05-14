@@ -1,0 +1,58 @@
+<tr id="<%= mcp_server.dom_id %>">
+  <td><%= mcp_server.name %></td>
+  <td><code><%= mcp_server.key %></code></td>
+  <td class="max-w-xs">
+    <div class="text-xs <%= "text-error" if mcp_server.last_error.present? %>">
+      <%= mcp_server.last_error.presence || "—" %>
+    </div>
+  </td>
+  <td class="w-1">
+    <div class="flex justify-end gap-2">
+
+      <% if in_progress? %>
+        <button class="btn btn-ghost btn-xs btn-square" disabled type="button">
+          <span class="loading loading-spinner loading-xs"></span>
+        </button>
+      <% elsif mcp_server.active? %>
+        <div class="tooltip tooltip-left" data-tip="<%= t(:label_stop) %>">
+          <%= helpers.button_to stop_mcp_server_path(mcp_server),
+                                method: :patch,
+                                class: "btn btn-ghost btn-xs btn-square text-error",
+                                form: { data: { turbo_stream: true } } do %>
+            <span class="icon-[lucide--pause] h-4 w-4"></span>
+            <span class="sr-only"><%= t(:label_stop) %></span>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="tooltip tooltip-left" data-tip="<%= t(:label_start) %>">
+          <%= helpers.button_to start_mcp_server_path(mcp_server),
+                                method: :patch,
+                                class: "btn btn-ghost btn-xs btn-square text-success",
+                                form: { data: { turbo_stream: true } } do %>
+            <span class="icon-[lucide--play] h-4 w-4"></span>
+            <span class="sr-only"><%= t(:label_start) %></span>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="tooltip tooltip-left" data-tip="<%= t(:label_edit) %>">
+        <%= helpers.link_to edit_mcp_server_path(mcp_server),
+                            class: "btn btn-ghost btn-xs btn-square",
+                            data: { turbo_stream: true } do %>
+          <span class="icon-[lucide--square-pen] h-4 w-4"></span>
+          <span class="sr-only"><%= t(:label_edit) %></span>
+        <% end %>
+      </div>
+
+      <div class="tooltip tooltip-left" data-tip="<%= t(:label_delete) %>">
+        <%= helpers.button_to mcp_server_path(mcp_server),
+                              method: :delete,
+                              class: "btn btn-ghost btn-xs btn-square",
+                              form: { data: { turbo_confirm: t(:confirm_delete_mcp_server), turbo_stream: true } } do %>
+          <span class="icon-[lucide--trash-2] h-4 w-4"></span>
+          <span class="sr-only"><%= t(:label_delete) %></span>
+        <% end %>
+      </div>
+    </div>
+  </td>
+</tr>

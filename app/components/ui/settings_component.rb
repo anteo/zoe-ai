@@ -32,6 +32,10 @@ module UI
           }
         }
       },
+      "mcp_servers" => {
+        icon: "icon-[lucide--server-cog]",
+        parent: "ai"
+      },
       "mailer" => {
         icon: "icon-[lucide--mail]",
         form: -> { Setting.mailer },
@@ -66,9 +70,42 @@ module UI
 
     def section_options = SECTIONS.fetch(@section)
 
-    def section_component(f)
-      @section_components ||= {}
-      @section_components[f.object_name] ||= section_component_class.new(f:)
+    def section_component
+      @section_component ||= section_component_class.new
+    end
+
+    def section_frame_id
+      "settings__#{@section}".to_sym
+    end
+
+    def section_body
+      helpers.turbo_frame_tag(section_frame_id) do
+        render(section_component)
+      end
+    end
+
+    def title
+      I18n.t(:"label_settings_#{@section}")
+    end
+
+    def form?
+      section_options[:form]
+    end
+
+    def with_optional_form(&block)
+      if form?
+        form_html = { class: "flex h-full min-h-0 flex-col overflow-hidden" }.merge(section_options[:html]&.call || {})
+        helpers.simple_form_for section_options[:form].call,
+                                url: settings_path(scope: section_options[:scope]),
+                                method: :patch,
+                                builder: SettingsFormBuilder,
+                                html: form_html do |f|
+          section_component.f = f
+          helpers.capture(f, &block)
+        end
+      else
+        helpers.capture(&block)
+      end
     end
 
     private

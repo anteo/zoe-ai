@@ -1,0 +1,3 @@
+<%= turbo_stream.close_modal if @close_modal %>
+<%= turbo_stream_flash_alerts(target: "settings-modal") %>
+<%= turbo_stream.replace_component(@mcp_server.dom_id, :settings__mcp_server_row, in_progress: @mcp_server.job_started?, mcp_server_row: @mcp_server) %>

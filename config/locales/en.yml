@@ -4,22 +4,38 @@ en:
       character:
         bio: Bio
         name: Name
+      mcp_server:
+        command: Command
+        config_json: JSON configuration
+        key: Key
+        name: Name
+        transport_type: Transport type
       user:
         email: Email
         first_name: First name
         last_name: Last name
         password: Password
         password_confirmation: Password confirmation
+    errors:
+      models:
+        mcp_server:
+          attributes:
+            config_json:
+              invalid_json: must be a valid JSON object
     models:
       character:
         one: Character
         other: Characters
+      mcp_server:
+        one: MCP server
+        other: MCP servers
       user:
         one: User
         other: Users
   confirm_delete_character: Delete this character?
   confirm_delete_chat: Delete this chat?
   confirm_delete_message: Delete this message and all subsequent ones?
+  confirm_delete_mcp_server: Delete this MCP server?
   confirm_logout: Logout from your account?
   confirm_unshare_character: Remove this shared character from your list?
   date:
@@ -50,6 +66,7 @@ en:
   label_confirmation_instructions: Resend confirmation
   label_content: Content
   label_create_character: New character
+  label_create_mcp_server: New MCP server
   label_crop_avatar: Crop avatar
   label_current_password_required: Current password
   label_date_time: Date/time
@@ -57,6 +74,7 @@ en:
   label_description: Description
   label_edit: Edit
   label_edit_character: Edit character
+  label_edit_mcp_server: Edit MCP server
   label_edit_profile: Edit profile
   label_email: Email
   label_event: Event
@@ -77,7 +95,9 @@ en:
   label_images: Images
   label_importance: Importance
   label_instructions: Instructions
+  label_key: Key
   label_kind: Kind
+  label_last_error: Error
   label_last_name: Last name
   label_log_level: Level
   label_log_level_debug: Debug
@@ -92,6 +112,7 @@ en:
   label_memory_profile: Memory profile
   label_mission_control: Mission Control
   label_my_character: My character
+  label_name: Name
   label_new: New
   label_new_conversation: New conversation
   label_new_password: New password
@@ -121,6 +142,7 @@ en:
   label_settings_app: System
   label_settings_events: Memory & Events
   label_settings_mailer: Email
+  label_settings_mcp_servers: MCP servers
   label_settings_providers: Providers
   label_shared: Shared
   label_settings_ui: Interface
@@ -129,6 +151,8 @@ en:
   label_sign_in_with_google: Sign in with Google
   label_sort_mentioned_at_asc: Mentioned date (oldest)
   label_sort_mentioned_at_desc: Mentioned date (newest)
+  label_start: Start
+  label_stop: Stop
   label_time: Time
   label_time_future: Future
   label_time_past: Past
@@ -284,6 +308,7 @@ en:
   text_no_character_instructions: No instructions yet.
   text_no_chat_history: No previous chats yet.
   text_no_chat_history_match: No chats match your search.
+  text_no_mcp_servers: No MCP servers configured yet.
   text_password_minimum: "%{count} characters minimum"
   text_pending_confirmation: 'Waiting confirmation for: %{email}'
   text_profile_updated: Profile updated.
@@ -298,6 +323,8 @@ en:
   text_setup_first_user: No accounts exist yet. The first registered user becomes the administrator.
   text_setup_title: Welcome to Zoe!
   text_share_character_coming_soon: Sharing is not implemented yet.
+  text_successful_save: "%{name} successfully saved."
+  text_successful_delete: "%{name} successfully deleted."
   text_token_usage_hint: "%{used} / %{context} tokens used"
   time:
     formats:

@@ -1,11 +1,13 @@
 <%= component :ui__modal, width: "w-xl" do |m| %>
   <% m.with_title do %>
-    <span><%= t(:label_profile) %></span>
+    <%= t(:label_profile) %>
+  <% end %>
+
+  <% m.with_footer do %>
+    <%= submit_tag t(:label_save), class: "btn btn-primary" %>
   <% end %>
 
   <%= simple_form_for @user, url: profile_path, method: :patch, html: { class: "space-y-5", multipart: true } do |f| %>
-    <%#= f.error_notification %>
-
     <div class="flex items-center gap-4">
       <%= component :ui__avatar_input,
                     form: f,
@@ -37,10 +39,6 @@
                   label: t(:label_new_password_optional) %>
       <%= f.input :password_confirmation,
                   label: t(:label_password_confirmation) %>
-    </div>
-
-    <div class="modal-action">
-      <%= f.button :submit, t(:label_save), class: "btn btn-primary" %>
     </div>
   <% end %>
 <% end %>

@@ -5,7 +5,7 @@ SimpleForm.setup do |config|
 
   description_wrap = { class: "ml-1 mt-1 mb-1 border-l-2 border-base-300 pl-3 text-xs leading-6 text-base-content/45" }
   hint_wrap = { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
-  error_wrap = { tag: :p, class: "validator-hint text-error text-xs leading-tight" }
+  error_wrap = { tag: :p, class: "validator-hint text-error text-xs leading-tight mt-0" }
 
   shared_components = lambda do |b|
     b.use :html5

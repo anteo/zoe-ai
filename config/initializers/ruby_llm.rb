@@ -1,7 +1,7 @@
 rubyllm_logger = RubyLLM.logger
 
 Rails.application.config.to_prepare do
-  system_logger = SystemLogger.instance.with_payload(source: "rubyllm")
+  system_logger = SystemLogger.instance.with_payload(source: "ruby_llm")
 
   Setting.watch(:ai) do |_context|
     RubyLLM.configure do |config|

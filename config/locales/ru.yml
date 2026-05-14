@@ -4,22 +4,38 @@ ru:
       character:
         bio: Краткое описание
         name: Имя персонажа
+      mcp_server:
+        command: Команда
+        config_json: JSON конфигурация
+        key: Ключ
+        name: Имя
+        transport_type: Тип транспорта
       user:
         email: Email
         first_name: Имя
         last_name: Фамилия
         password: Пароль
         password_confirmation: Подтверждение пароля
+    errors:
+      models:
+        mcp_server:
+          attributes:
+            config_json:
+              invalid_json: должен быть валидным JSON-объектом
     models:
       character:
         one: Персонаж
         other: Персонажи
+      mcp_server:
+        one: MCP сервер
+        other: MCP серверы
       user:
         one: Пользователь
         other: Пользователи
   confirm_delete_character: Удалить этого персонажа?
   confirm_delete_chat: Удалить этот чат?
   confirm_delete_message: Удалить это сообщение и все последующие?
+  confirm_delete_mcp_server: Удалить этот MCP сервер?
   confirm_logout: Выйти из аккаунта?
   confirm_unshare_character: Убрать этого общего персонажа из вашего списка?
   date:
@@ -50,6 +66,7 @@ ru:
   label_confirmation_instructions: Повторить подтверждение
   label_content: Содержание
   label_create_character: Новый персонаж
+  label_create_mcp_server: Новый MCP сервер
   label_crop_avatar: Обрезать аватар
   label_current_password_required: Текущий пароль
   label_date_time: Дата/время
@@ -57,6 +74,7 @@ ru:
   label_description: Описание
   label_edit: Редактировать
   label_edit_character: Редактировать персонажа
+  label_edit_mcp_server: Редактировать MCP сервер
   label_edit_profile: Редактировать профиль
   label_email: Email
   label_event: Событие
@@ -77,7 +95,9 @@ ru:
   label_images: Изображения
   label_importance: Важность
   label_instructions: Инструкции
+  label_key: Ключ
   label_kind: Вид
+  label_last_error: Ошибка
   label_last_name: Фамилия
   label_log_level: Уровень
   label_log_level_debug: Debug
@@ -92,6 +112,7 @@ ru:
   label_memory_profile: Профиль памяти
   label_mission_control: Mission Control
   label_my_character: Мой персонаж
+  label_name: Имя
   label_new: Новый
   label_new_conversation: Новый разговор
   label_new_password: Новый пароль
@@ -121,6 +142,7 @@ ru:
   label_settings_app: Система
   label_settings_events: Память и события
   label_settings_mailer: Почта
+  label_settings_mcp_servers: MCP серверы
   label_settings_providers: Провайдеры
   label_shared: Общий
   label_settings_ui: Интерфейс
@@ -129,6 +151,8 @@ ru:
   label_sign_in_with_google: Войти через Google
   label_sort_mentioned_at_asc: Упомянуто (сначала старые)
   label_sort_mentioned_at_desc: Упомянуто (сначала новые)
+  label_start: Запустить
+  label_stop: Остановить
   label_time: Время
   label_time_future: Будущее
   label_time_past: Прошлое
@@ -284,6 +308,7 @@ ru:
   text_no_character_instructions: Пока нет инструкций.
   text_no_chat_history: Пока нет предыдущих разговоров.
   text_no_chat_history_match: По вашему запросу ничего не найдено.
+  text_no_mcp_servers: MCP серверы пока не настроены.
   text_password_minimum: Минимум %{count} символов
   text_pending_confirmation: 'Ожидает подтверждения: %{email}'
   text_profile_updated: Профиль успешно обновлен.
@@ -298,6 +323,8 @@ ru:
   text_setup_first_user: Пользователей пока нет. Первый зарегистрированный пользователь станет администратором.
   text_setup_title: Добро пожаловать в Zoe!
   text_share_character_coming_soon: Возможность поделиться персонажем пока не реализована.
+  text_successful_save: "%{name} успешно сохранен(а)."
+  text_successful_delete: "%{name} успешно удален(а)."
   text_token_usage_hint: "%{used} / %{context} токенов использовано"
   time:
     formats:

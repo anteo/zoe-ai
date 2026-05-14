@@ -3,11 +3,12 @@ module UI
     renders_one :title
     renders_one :footer
 
-    attr_reader :close_button, :header, :padding
+    attr_reader :close_button, :header, :padding, :background
 
     def initialize(close_button: true,
                    header: true,
                    padding: true,
+                   background: true,
                    header_classes: nil,
                    title_classes: nil,
                    main_classes: nil,
@@ -20,6 +21,7 @@ module UI
       @close_button = close_button
       @header = header
       @padding = padding
+      @background = background
       @width = width
       @height = height
       @box_classes = box_classes
@@ -45,6 +47,7 @@ module UI
     def header_classes
       helpers.class_names(
         "flex justify-between items-center w-full px-4 py-4 rounded-t-box",
+        ("border-base-300 border-b" if background),
         @header_classes
       )
     end
@@ -59,23 +62,25 @@ module UI
 
     def main_classes
       helpers.class_names(
-        "overflow-y-auto",
-        @height.nil? ? "max-h-[75vh]" : @height,
+        "flex-1 min-h-0 overflow-y-auto",
+        @height,
         @main_classes,
-        ("p-4 pt-2" if padding)
+        ("bg-base-200" if background),
+        ("p-4" if padding)
       )
     end
 
     def footer_classes
       helpers.class_names(
-        "modal-action m-0 p-4",
+        "modal-action m-0 shrink-0 p-4",
+        ("border-base-300 border-t" if background),
         @footer_classes
       )
     end
 
     def box_classes
       helpers.class_names(
-        "modal-box p-0",
+        "modal-box flex max-h-[calc(100dvh-2rem)] flex-col p-0",
         @width.nil? ? "max-w-5xl" : @width,
         @box_classes
       )
