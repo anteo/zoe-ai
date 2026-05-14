@@ -2,14 +2,11 @@
   <%= f.input :default_model,
               as: :autocomplete,
               url: helpers.models_search_path(kind: "chat"),
-              required: true,
-              placeholder: t(:placeholder_choose_model) %>
+              required: true %>
   <%= f.input :default_embedding_model,
               as: :autocomplete,
-              url: helpers.models_search_path(kind: "embedding"),
-              placeholder: t(:placeholder_choose_model) %>
+              url: helpers.models_search_path(kind: "embedding") %>
   <%= f.input :default_image_model,
               as: :autocomplete,
-              url: helpers.models_search_path(kind: "image"),
-              placeholder: t(:placeholder_choose_model) %>
+              url: helpers.models_search_path(kind: "image") %>
 </div>

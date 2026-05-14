@@ -1,22 +1,13 @@
 <div class="space-y-4">
   <%= turbo_stream_from MCPServer %>
 
-  <% if mcp_servers.any? %>
-    <table class="table table-zebra table-sm w-full rounded-box border border-base-300 bg-base-100">
-      <thead>
-        <tr>
-          <th><%= t(:label_name) %></th>
-          <th><%= t(:label_key) %></th>
-          <th><%= t(:label_last_error) %></th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <%= component_collection(:settings__mcp_server_row, mcp_servers) %>
-      </tbody>
-    </table>
-  <% else %>
-    <p class="text-sm opacity-60"><%= t(:text_no_mcp_servers) %></p>
+  <%= helpers.turbo_frame_tag Settings::MCPServersDatatableComponent.frame_id,
+                              src: helpers.settings_mcp_servers_datatable_path do %>
+    <%= helpers.turbo_frame_tag Settings::MCPServersDatatableComponent.results_frame_id do %>
+      <div class="flex items-center justify-center py-8">
+        <span class="loading loading-spinner loading-md"></span>
+      </div>
+    <% end %>
   <% end %>
 </div>
 

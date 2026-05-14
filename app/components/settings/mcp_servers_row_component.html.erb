@@ -1,0 +1,16 @@
+<tr id="<%= row_id %>">
+  <td><%= mcp_server.name %></td>
+  <td><code><%= mcp_server.key %></code></td>
+  <td class="max-w-xs">
+    <div class="<%= status_text_class %>">
+      <%= mcp_server.last_error.presence || "—" %>
+    </div>
+  </td>
+  <td class="w-1">
+    <div class="flex justify-end gap-2">
+      <%= status_action %>
+      <%= edit_action %>
+      <%= delete_action %>
+    </div>
+  </td>
+</tr>

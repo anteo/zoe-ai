@@ -16,6 +16,14 @@ class MCPServer < ApplicationRecord
 
   scope :active, -> { where(active: true) }
 
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at key last_error name]
+  end
+
   def mcp_client
     RubyLLM::MCP.clients[key]
   end
@@ -67,8 +75,8 @@ class MCPServer < ApplicationRecord
     Turbo::StreamsChannel.broadcast_component_replace_to(
       MCPServer,
       target: dom_id,
-      component: :settings__mcp_server_row,
-      mcp_server_row: self
+      component: :settings__mcp_servers_row,
+      record: self
     )
   end
 

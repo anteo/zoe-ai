@@ -1,0 +1,17 @@
+<thead>
+  <tr>
+    <%= component :datatable__header_cell, header: self, sort: :name do %>
+      <%= t(:label_name) %>
+    <% end %>
+
+    <%= component :datatable__header_cell, header: self, sort: :key do %>
+      <%= t(:label_key) %>
+    <% end %>
+
+    <%= component :datatable__header_cell, header: self do %>
+      <%= t(:label_last_error) %>
+    <% end %>
+
+    <%= component :datatable__header_cell, header: self, th_class: "w-1" %>
+  </tr>
+</thead>

@@ -1,0 +1,9 @@
+<% filter_form = component_instance(:datatable__filters, datatable:, filters:) %>
+<% filter_form.with_controls do |form| %>
+  <%= form.input :name_or_key_or_last_error_cont,
+                 as: :search,
+                 label: false,
+                 wrapper_html: { class: "w-full input-sm" },
+                 input_html: { autocomplete: "off" } %>
+<% end %>
+<%= render filter_form %>
