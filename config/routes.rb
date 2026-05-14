@@ -12,10 +12,6 @@ Rails.application.routes.draw do
   end
   get "up" => "rails/health#show", as: :rails_health_check
 
-  unauthenticated do
-    root to: redirect("/login"), as: :unauthenticated_root
-  end
-
   root "chats#show"
 
   resources :mcp_servers, only: [ :new, :create, :edit, :update, :destroy ] do
@@ -23,6 +19,9 @@ Rails.application.routes.draw do
       patch :start
       patch :stop
     end
+  end
+  namespace :settings do
+    resource :mcp_servers_datatable, only: :show, controller: :mcp_servers_datatables
   end
   resource :profile, only: [ :show, :update ]
   resource :settings, only: [ :show, :update ]

@@ -1,8 +1,36 @@
 en:
   simple_form:
+    descriptions:
+      ai:
+        debug: Enables verbose RubyLLM and system logging for AI requests and tool activity.
+        request_timeout: Maximum number of seconds to wait for an AI provider response before the request is treated as failed.
+      events:
+        maximum_count: Maximum number of remembered events Zoe includes when summarizing a character's time-bound memories across all periods.
+        period_limit: Maximum number of events shown inside a single period group, such as Today, Last 3 months, or Later.
+        search_default_limit: Number of event results returned when event search is used without an explicit limit.
+        search_max_limit: Hard upper limit for the number of results the event search tool may return.
+      models:
+        default_model: Default chat model used by Zoe and agents unless a more specific model is configured for that agent.
+      ui:
+        admin_console_lines: How many recent log lines to load in the admin console window.
+        datatable_per_page: How many rows each datatable page should render by default.
+        flash_timeout_ms: How long success notifications stay visible before they close automatically. Error alerts stay open.
+        max_message_bubbles: Long assistant replies are split into at most this many chat bubbles.
     error_notification:
       default_message: 'Please review the problems below:'
     'no': 'No'
+    placeholders:
+      character:
+        bio: Add a short bio
+        name: Enter character name
+      character_share:
+        email: Enter email
+      q:
+        name_or_key_or_last_error_cont: Search MCP servers
+      models:
+        default_embedding_model: Choose model...
+        default_image_model: Choose model...
+        default_model: Choose model...
     required:
       mark: "*"
       text: required

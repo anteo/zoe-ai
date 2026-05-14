@@ -1,0 +1,20 @@
+<%= helpers.turbo_frame_tag datatable.results_frame_id do %>
+  <% if empty? %>
+    <div class="<%= empty_state_classes %>">
+      <%= t(empty_state_i18n_key) %>
+    </div>
+  <% else %>
+    <div class="<%= table_wrapper_classes %>">
+      <table class="<%= table_classes %>">
+        <%= render header_component %>
+        <tbody id="<%= body_id %>">
+          <% records.each do |record| %>
+            <%= render row_component(record) %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <%= render footer_component %>
+<% end %>

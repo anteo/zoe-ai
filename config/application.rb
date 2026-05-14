@@ -18,6 +18,7 @@ require_relative "../lib/pragmatic_segmenter/languages/russian_with_emoji"
 require "builder"
 require "rainbow/refinement"
 require "redcarpet"
+require "pagy"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

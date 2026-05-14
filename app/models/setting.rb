@@ -104,10 +104,12 @@ class Setting < ApplicationRecord
 
   scope :ui do
     setting :admin_console_lines, :integer, default: 100
+    setting :datatable_per_page, :integer, default: 10
     setting :max_message_bubbles, :integer, default: 3
     setting :flash_timeout_ms, :integer, default: 5000
 
     validates :admin_console_lines, numericality: { greater_than: 0 }, allow_nil: true
+    validates :datatable_per_page, numericality: { greater_than: 0 }, allow_nil: true
   end
 
   scope :events do

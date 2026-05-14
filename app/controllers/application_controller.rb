@@ -2,7 +2,10 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
+  include Pagy::Method
   include HttpAcceptLanguage::AutoLocale
+  include DatatableSupport
+
   extend ViewComponentsHelper
 
   append_view_path "#{Rails.root}/app/components"
@@ -12,7 +15,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_character, :current_partner
 
   before_action :redirect_to_setup_if_empty
-  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :authenticate_user_without_root_alert!, unless: :devise_controller?
   before_action :set_current_character, unless: :devise_controller?
   before_action :set_current_partner, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -21,6 +24,16 @@ class ApplicationController < ActionController::Base
   helper_method :turbo_referrer_frame_id
 
   private
+
+  def authenticate_user_without_root_alert!
+    return if user_signed_in?
+    return authenticate_user! unless suppress_unauthenticated_root_alert?
+
+    return if warden.authenticate(scope: :user)
+
+    store_location_for(:user, request.fullpath) if request.get?
+    redirect_to new_user_session_path
+  end
 
   def default_chat
     @default_chat ||= current_user.chats
@@ -54,6 +67,10 @@ class ApplicationController < ActionController::Base
   def redirect_to_setup_if_empty
     return if %w[/register /up].include?(request.path)
     redirect_to "/register" unless User.exists?
+  end
+
+  def suppress_unauthenticated_root_alert?
+    request.get? && request.path == root_path
   end
 
   def require_admin!

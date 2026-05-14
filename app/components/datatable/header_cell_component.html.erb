@@ -1,0 +1,12 @@
+<th class="<%= th_class %>">
+  <% if sortable? %>
+    <%= helpers.link_to header.sort_url_for(sort),
+                        class: header.sort_classes(sort),
+                        data: { turbo_frame: header.datatable.frame_id } do %>
+      <span><%= content %></span>
+      <span aria-hidden="true" class="<%= helpers.class_names(header.sort_indicator_icon_class(sort), 'h-4 w-4') %>"></span>
+    <% end %>
+  <% else %>
+    <%= content %>
+  <% end %>
+</th>

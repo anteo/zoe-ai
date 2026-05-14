@@ -8,3 +8,7 @@ class ActiveSupport::TestCase
 
   include ActiveSupport::Testing::TimeHelpers
 end
+
+class ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+end

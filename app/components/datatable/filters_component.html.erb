@@ -1,0 +1,18 @@
+<%= helpers.simple_form_for filters,
+                            as: :q,
+                            url: datatable.request_path,
+                            method: :get,
+                            html: {
+                              class: form_classes
+                            },
+                            data: {
+                              turbo_frame: datatable.results_frame_id,
+                              controller: "datatable-filters",
+                              action: "input->datatable-filters#submit change->datatable-filters#submit"
+                            } do |form| %>
+  <% hidden_filter_fields.each do |key, value| %>
+    <%= form.hidden_field key, value: %>
+  <% end %>
+
+  <%= render_controls(form) if controls? %>
+<% end %>

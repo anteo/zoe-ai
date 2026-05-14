@@ -1,7 +1,9 @@
 require Rails.root.join("lib/simple_form/components/description")
+require Rails.root.join("lib/simple_form/components/search_icon")
 
 SimpleForm.setup do |config|
   SimpleForm.include_component(SimpleForm::Components::Description)
+  SimpleForm.include_component(SimpleForm::Components::SearchIcon)
 
   description_wrap = { class: "ml-1 mt-1 mb-1 border-l-2 border-base-300 pl-3 text-xs leading-6 text-base-content/45" }
   hint_wrap = { tag: :span, class: "ml-auto text-xs text-base-content/60 text-right" }
@@ -85,8 +87,15 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: error_wrap.dup
   end
 
+  config.wrappers :daisy_search, tag: :label, class: "input input-bordered flex items-center gap-2" do |b|
+    shared_components.call(b)
+    b.use :search_icon
+    b.use :input, class: "grow bg-transparent border-none px-0 outline-none focus:outline-none"
+  end
+
   config.default_wrapper = :daisy_input
   config.wrapper_mappings = {
+    search: :daisy_search,
     text: :daisy_textarea,
     file: :daisy_input,
     select: :daisy_select,

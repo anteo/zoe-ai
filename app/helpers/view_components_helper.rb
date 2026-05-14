@@ -1,10 +1,14 @@
 module ViewComponentsHelper
   def component(name, **args, &block)
-    render component_class(name).new(**args), layout: false, &block
+    render component_instance(name, **args), layout: false, &block
   end
 
   def component_collection(name, collection)
     render component_class(name).with_collection(collection), layout: false
+  end
+
+  def component_instance(name, **args)
+    component_class(name).new(**args)
   end
 
   def component_class(name)

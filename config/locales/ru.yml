@@ -118,13 +118,16 @@ ru:
   label_new_password: Новый пароль
   label_new_password_optional: Новый пароль (необязательно)
   label_next_chat: Следующий чат
+  label_next_page: Вперёд
   label_no: Нет
   label_other: Другое
   label_other_characters: Другие персонажи
+  label_pagination: Пагинация
   label_password: Пароль
   label_password_confirmation: Подтвердите пароль
   label_persistent: Постоянный
   label_previous_chat: Предыдущий чат
+  label_previous_page: Назад
   label_profile: Профиль
   label_register: Регистрация
   label_remember_me: Запомнить меня
@@ -165,10 +168,6 @@ ru:
   label_yes: Да
   placeholder_add_instruction: добавьте инструкцию...
   placeholder_chat_input: Введите сообщение...
-  placeholder_choose_model: Выберите модель...
-  placeholder_enter_email: Введите email
-  placeholder_enter_character_bio: Добавьте краткое описание
-  placeholder_enter_character_name: Введите имя персонажа
   placeholder_filter_facts_text: Фильтр фактов
   placeholder_image_description: Добавьте описание изображения
   placeholder_search_chat_history: Поиск по истории
@@ -231,23 +230,9 @@ ru:
         username: SMTP пользователь
     ui:
       admin_console_lines: Строк лога в консоли администратора
+      datatable_per_page: Строк на странице таблицы
       flash_timeout_ms: Длительность успешного уведомления (мс)
       max_message_bubbles: Максимум пузырей ответа ассистента
-  descriptions:
-    ai:
-      debug: Включает подробные логи RubyLLM и системные логи для AI-запросов и работы инструментов.
-      models:
-        default_model: Основная чат-модель по умолчанию для Зои и агентов, если для конкретного агента не задана более точная настройка.
-      request_timeout: Максимальное число секунд ожидания ответа от AI-провайдера, после которого запрос считается неудачным.
-    events:
-      maximum_count: Максимальное число сохранённых событий, которые Зоя включает в сводку временных воспоминаний по персонажу во всех периодах вместе.
-      period_limit: Максимальное число событий внутри одной временной группы, например Сегодня, Последние 3 месяца или Позже.
-      search_default_limit: Сколько результатов возвращает поиск событий, если лимит не был указан явно.
-      search_max_limit: Жёсткий верхний предел для количества результатов, которое может вернуть инструмент поиска событий.
-    ui:
-      admin_console_lines: Сколько последних строк лога загружать в окне консоли администратора.
-      flash_timeout_ms: Как долго показывать успешные уведомления перед автоматическим закрытием. Ошибки остаются открытыми.
-      max_message_bubbles: Длинные ответы ассистента будут разбиваться максимум на столько пузырей в чате.
   text_access_denied: Доступ запрещён.
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
@@ -268,6 +253,7 @@ ru:
   text_console_no_logs: Системных логов пока нет.
   text_console_waiting_logs: Ожидание логов RubyLLM...
   text_current_password_help: Нужен для сохранения изменений аккаунта.
+  text_datatable_results_count: Показаны %{from}-%{to} из %{total}
   text_event_period_earlier_this_month: Ранее в этом месяце
   text_event_period_earlier_this_year: Ранее в этом году
   text_event_period_future_later: Позже
@@ -299,6 +285,7 @@ ru:
   text_models_sync_json_updated: models.json обновлен
   text_models_sync_started: Обновление реестра моделей...
   text_model_not_configured: Модель не настроена. Укажите модель в Настройки -> Модели.
+  text_nothing_found: Ничего не найдено
   text_no_available_models: Нет доступных моделей
   text_no_character_description: Пока нет описания.
   text_no_character_bio: Пока нет краткого описания.

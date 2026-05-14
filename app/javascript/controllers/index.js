@@ -26,6 +26,7 @@ import AdminConsoleModalController from "./admin_console_modal_controller"
 import AdminConsoleOpenerController from "./admin_console_opener_controller"
 import AutocompleteController from "./autocomplete_controller"
 import MissionControlLinkController from "./mission_control_link_controller"
+import DatatableFiltersController from "./datatable_filters_controller"
 
 application.register("hello", HelloController)
 application.register("chat", ChatController)
@@ -50,3 +51,4 @@ application.register("admin-console-modal", AdminConsoleModalController)
 application.register("admin-console-opener", AdminConsoleOpenerController)
 application.register("autocomplete", AutocompleteController)
 application.register("mission-control-link", MissionControlLinkController)
+application.register("datatable-filters", DatatableFiltersController)
