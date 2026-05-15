@@ -164,6 +164,7 @@ en:
   label_send_reset_instructions: Send reset instructions
   label_settings: Settings
   label_settings_ai: AI
+  label_settings_ai_instructions: Instructions
   label_settings_agents: Agents
   label_settings_ai_models: Models
   label_settings_ai_providers: Providers

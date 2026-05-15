@@ -15,7 +15,7 @@ import FlashAlertController from "./flash_alert_controller"
 import FormErrorsController from "./form_errors_controller"
 import CharacterDetailsController from "./character_details_controller"
 import CharacterFactsController from "./character_facts_controller"
-import CharacterInstructionsController from "./character_instructions_controller"
+import InstructionsController from "./instructions_controller"
 import CharactersImagesController from "./characters_images_controller"
 import AvatarCropDialogController from "./avatar_crop_dialog_controller"
 import AvatarInputController from "./avatar_input_controller"
@@ -41,7 +41,7 @@ application.register("flash-alert", FlashAlertController)
 application.register("form-errors", FormErrorsController)
 application.register("character-details", CharacterDetailsController)
 application.register("character-facts", CharacterFactsController)
-application.register("character-instructions", CharacterInstructionsController)
+application.register("instructions", InstructionsController)
 application.register("characters-images", CharactersImagesController)
 application.register("avatar-crop-dialog", AvatarCropDialogController)
 application.register("avatar-input", AvatarInputController)

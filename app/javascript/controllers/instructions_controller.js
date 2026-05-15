@@ -5,8 +5,15 @@ export default class extends Controller {
   static values = {existingInstructions: Array}
 
   connect() {
+    this.boundHandleSubmit = this.handleSubmit.bind(this)
+    this.form = this.element.closest("form")
+    this.form?.addEventListener("submit", this.boundHandleSubmit)
     this.instructionsInitialized = false
     this.renderExistingInstructions()
+  }
+
+  disconnect() {
+    this.form?.removeEventListener("submit", this.boundHandleSubmit)
   }
 
   instructionsTargetConnected() {
@@ -73,6 +80,7 @@ export default class extends Controller {
     if (!this.hasInstructionTemplateTarget || !this.hasInstructionsTarget) return
 
     const fragment = this.instructionTemplateTarget.content.cloneNode(true)
+    const instructionItem = fragment.querySelector("li")
     const contentInput = fragment.querySelector("textarea[name*='[content]'], input[name*='[content]']")
     if (!contentInput) return
 
@@ -89,7 +97,11 @@ export default class extends Controller {
 
     if (destroyInput) {
       this.applyFieldIndex(destroyInput, index)
-      destroyInput.value = "0"
+      destroyInput.value = instruction._destroy || "0"
+    }
+
+    if (instructionItem && destroyInput?.value === "1") {
+      instructionItem.classList.add("hidden")
     }
 
     this.instructionsTarget.appendChild(fragment)

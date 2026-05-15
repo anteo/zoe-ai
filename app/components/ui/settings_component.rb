@@ -1,6 +1,6 @@
 module UI
   class SettingsComponent < ApplicationComponent
-    SECTIONS = %i[app mailer ui events ai ai_models ai_providers agents mcp_servers].freeze
+    SECTIONS = %i[app mailer ui events ai ai_instructions ai_models ai_providers agents mcp_servers].freeze
 
     def initialize(section: nil)
       @section = section_keys.include?(section.to_s) ? section.to_s : section_keys.first

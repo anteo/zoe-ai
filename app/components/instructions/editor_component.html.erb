@@ -1,0 +1,46 @@
+<% if editable %>
+  <div class="space-y-3">
+    <ul class="space-y-3" data-instructions-target="instructions"></ul>
+
+    <template data-instructions-target="instructionTemplate">
+      <li class="flex items-start gap-2">
+        <button type="button"
+                class="group/icon relative mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition-colors hover:bg-base-200 focus-visible:bg-base-200"
+                aria-label="<%= t(:label_remove_instruction) %>"
+                data-action="click->instructions#removeInstruction">
+          <span class="icon-[lucide--check] h-4 w-4 visible group-hover/icon:invisible group-focus-within/icon:invisible"></span>
+          <span class="icon-[lucide--trash-2] absolute h-4 w-4 invisible group-hover/icon:visible group-focus-within/icon:visible group-hover/icon:text-error"></span>
+        </button>
+        <textarea rows="1"
+                  class="min-h-[2rem] w-full resize-none overflow-hidden bg-transparent py-1 text-sm leading-6 outline-none"
+                  name="<%= field_name(:content) %>"
+                  data-controller="textarea-autosize"></textarea>
+        <input type="hidden"
+               name="<%= field_name(:id) %>">
+        <input type="hidden"
+               value="0"
+               name="<%= field_name(:_destroy) %>">
+      </li>
+    </template>
+
+    <div class="flex items-start gap-2">
+      <span class="mt-1 flex h-7 w-7 shrink-0 items-center justify-center">
+        <span class="icon-[lucide--plus] h-4 w-4 opacity-60"></span>
+      </span>
+      <textarea rows="1"
+                class="min-h-[2rem] w-full resize-none overflow-hidden bg-transparent py-1 text-sm leading-6 outline-none"
+                placeholder="<%= t(:placeholder_add_instruction) %>"
+                data-controller="textarea-autosize"
+                data-instructions-target="instructionInput"
+                data-action="keydown->instructions#handleInstructionKeydown"></textarea>
+    </div>
+  </div>
+<% elsif instructions.any? %>
+  <ul class="space-y-3">
+    <% instructions.each do |instruction| %>
+      <li class="text-sm leading-6"><%= instruction[:content] %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-sm opacity-60"><%= empty_text %></p>
+<% end %>

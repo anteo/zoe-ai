@@ -1,49 +1,5 @@
-<% if editable %>
-  <div class="space-y-3">
-    <ul class="space-y-3" data-character-instructions-target="instructions"></ul>
-
-    <template data-character-instructions-target="instructionTemplate">
-      <li class="flex items-start gap-2">
-        <button type="button"
-                class="group/icon relative mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition-colors hover:bg-base-200 focus-visible:bg-base-200"
-                aria-label="<%= t(:label_remove_instruction) %>"
-                data-action="click->character-instructions#removeInstruction">
-          <span class="icon-[lucide--check] h-4 w-4 visible group-hover/icon:invisible group-focus-within/icon:invisible"></span>
-          <span class="icon-[lucide--trash-2] absolute h-4 w-4 invisible group-hover/icon:visible group-focus-within/icon:visible group-hover/icon:text-error"></span>
-        </button>
-        <textarea rows="1"
-                  class="min-h-[2rem] w-full resize-none overflow-hidden bg-transparent py-1 text-sm leading-6 outline-none"
-                  name="character[instructions_attributes][__INDEX__][content]"
-                  data-controller="textarea-autosize"></textarea>
-        <input type="hidden"
-               name="character[instructions_attributes][__INDEX__][id]">
-        <input type="hidden"
-               value="0"
-               name="character[instructions_attributes][__INDEX__][_destroy]">
-      </li>
-    </template>
-
-    <div class="flex items-start gap-2">
-      <span class="mt-1 flex h-7 w-7 shrink-0 items-center justify-center">
-        <span class="icon-[lucide--plus] h-4 w-4 opacity-60"></span>
-      </span>
-      <textarea rows="1"
-                class="min-h-[2rem] w-full resize-none overflow-hidden bg-transparent py-1 text-sm leading-6 outline-none"
-                placeholder="<%= t(:placeholder_add_instruction) %>"
-                data-controller="textarea-autosize"
-                data-character-instructions-target="instructionInput"
-                data-action="keydown->character-instructions#handleInstructionKeydown"></textarea>
-    </div>
-  </div>
-<% else %>
-  <% instructions = character.instructions.active.ordered %>
-  <% if instructions.any? %>
-    <ul class="space-y-3">
-      <% instructions.each do |instruction| %>
-        <li class="text-sm leading-6"><%= instruction.content %></li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p class="text-sm opacity-60"><%= t(:text_no_character_instructions) %></p>
-  <% end %>
-<% end %>
+<%= component :instructions__editor,
+              instructions:,
+              field_name_prefix: "character[instructions_attributes]",
+              editable: editable,
+              empty_text: t(:text_no_character_instructions) %>

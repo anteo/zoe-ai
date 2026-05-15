@@ -1,0 +1,7 @@
+<div data-controller="instructions"
+     data-existing-instructions-json="<%= existing_instructions_json %>">
+  <%= component :instructions__editor,
+                instructions:,
+                field_name_prefix: "#{f.object.model_name.param_key}[instructions_attributes]",
+                editable: true %>
+</div>

@@ -13,7 +13,7 @@ module Characters
     end
 
     def section_tab_badge_data
-      { character_instructions_target: "countBadge" }
+      { instructions_target: "countBadge" }
     end
 
     def visible?
@@ -21,7 +21,11 @@ module Characters
     end
 
     def existing_instructions_json
-      character.instructions.active.ordered.map { { id: it.id, content: it.content } }.to_json
+      instructions.to_json
+    end
+
+    def instructions
+      character.instructions.active.ordered.map { { id: it.id, content: it.content } }
     end
   end
 end
