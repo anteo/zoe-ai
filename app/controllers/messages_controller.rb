@@ -81,7 +81,7 @@ class MessagesController < ApplicationController
 
   def render_chat
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", Chats::ChatComponent.new(chat:, current_character:)) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("chat-messages", Chats::ChatComponent.new(chat:)) }
       format.html { redirect_to chat_path(chat) }
     end
   end
