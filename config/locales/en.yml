@@ -203,6 +203,7 @@ en:
       host: App host name
       port: App port
       protocol: App URL protocol
+      self_registration: Allow self-registration
     ai:
       debug: Debug mode
       models:
@@ -329,6 +330,7 @@ en:
   text_password_minimum: "%{count} characters minimum"
   text_pending_confirmation: 'Waiting confirmation for: %{email}'
   text_profile_updated: Profile updated.
+  text_self_registration_disabled: Self-registration is disabled.
   text_select_chat_history: Select a chat from the list.
   text_setting_env_override: Set via environment variable (read-only).
   text_setting_env_override_short: Read-only setting

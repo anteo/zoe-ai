@@ -6,7 +6,7 @@
     <% end %>
   <% end %>
 
-  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' && self_registration_open? %>
     <%= link_to t(:label_register), new_registration_path(resource_name), class: "btn btn-ghost btn-sm" %>
   <% end %>
 
@@ -14,7 +14,7 @@
     <%= link_to t(:label_forgot_password), new_password_path(resource_name), class: "btn btn-ghost btn-sm" %>
   <% end %>
 
-  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' && controller_name != 'registrations' %>
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' && controller_name != 'registrations' && self_registration_open? %>
     <%= link_to t(:label_confirmation_instructions), new_confirmation_path(resource_name), class: "btn btn-ghost btn-sm" %>
   <% end %>
 

@@ -203,6 +203,7 @@ ru:
       host: Имя хоста приложения
       port: Порт приложения
       protocol: Протокол URL приложения
+      self_registration: Разрешить самостоятельную регистрацию
     ai:
       debug: Режим отладки
       models:
@@ -329,6 +330,7 @@ ru:
   text_password_minimum: Минимум %{count} символов
   text_pending_confirmation: 'Ожидает подтверждения: %{email}'
   text_profile_updated: Профиль успешно обновлен.
+  text_self_registration_disabled: Самостоятельная регистрация отключена.
   text_select_chat_history: Выберите разговор из списка.
   text_setting_env_override: Задано через переменную окружения (только чтение).
   text_setting_env_override_short: Настройка только для чтения

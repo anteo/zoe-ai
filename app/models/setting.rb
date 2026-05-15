@@ -8,6 +8,7 @@ class Setting < ApplicationRecord
     setting :host, :string, default: "localhost"
     setting :port, :integer, default: 3000
     setting :protocol, :string, default: "http"
+    setting :self_registration, :boolean, default: false
     setting :extra_hosts, :string, static: true # Rack host allowlist, boot-only
 
     validates :protocol, inclusion: { in: APP_PROTOCOLS }

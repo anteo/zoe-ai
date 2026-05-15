@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   helper_method :current_character, :current_partner
-  helper_method :turbo_referrer_frame_id
+  helper_method :self_registration_open?, :turbo_referrer_frame_id
 
   private
 
@@ -67,6 +67,10 @@ class ApplicationController < ActionController::Base
   def redirect_to_setup_if_empty
     return if %w[/register /up].include?(request.path)
     redirect_to "/register" unless User.exists?
+  end
+
+  def self_registration_open?
+    !User.exists? || Setting.app.self_registration
   end
 
   def suppress_unauthenticated_root_alert?

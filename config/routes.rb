@@ -4,11 +4,12 @@ Rails.application.routes.draw do
     sign_out: "logout",
     sign_up: "register"
   }, controllers: {
+    registrations: "users/registrations",
     omniauth_callbacks: "users/omniauth_callbacks"
   }
   devise_scope :user do
-    get "register", to: "devise/registrations#new", as: :new_user_registration
-    post "register", to: "devise/registrations#create", as: :user_registration
+    get "register", to: "users/registrations#new", as: :new_user_registration
+    post "register", to: "users/registrations#create", as: :user_registration
   end
   get "up" => "rails/health#show", as: :rails_health_check
 
