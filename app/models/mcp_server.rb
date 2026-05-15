@@ -75,7 +75,7 @@ class MCPServer < ApplicationRecord
     Turbo::StreamsChannel.broadcast_component_replace_to(
       MCPServer,
       target: dom_id,
-      component: :settings__mcp_servers_row,
+      component: :settings__mcp_servers_datatable_component__row,
       record: self
     )
   end

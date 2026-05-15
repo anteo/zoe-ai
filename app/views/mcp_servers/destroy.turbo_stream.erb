@@ -1,2 +1,2 @@
 <%= turbo_stream_flash_alerts(target: "settings-modal") %>
-<%= turbo_stream.replace_component(@mcp_server.dom_id, :settings__mcp_servers_row, in_progress: true, record: @mcp_server) %>
+<%= turbo_stream.replace_component(@mcp_server.dom_id, :settings__mcp_servers_datatable_component__row, in_progress: true, record: @mcp_server) %>

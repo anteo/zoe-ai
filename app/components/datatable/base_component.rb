@@ -130,13 +130,11 @@ module Datatable
       private
 
       def infer_component_class(suffix)
-        class_name = [ component_namespace, "#{component_basename}#{suffix}Component" ].compact.join("::")
-        class_name.constantize
+        infer_nested_component_class(suffix) || raise(NameError, "uninitialized constant #{name}::#{suffix}Component")
       end
 
       def infer_optional_component_class(suffix)
-        class_name = [ component_namespace, "#{component_basename}#{suffix}Component" ].compact.join("::")
-        class_name.safe_constantize
+        infer_nested_component_class(suffix)
       end
 
       def infer_optional_filters_model_class
@@ -148,6 +146,13 @@ module Datatable
         filters_component_class&.const_get(:Model, false)
       rescue NameError
         nil
+      end
+
+      def infer_nested_component_class(suffix)
+        component_const = :"#{suffix}Component"
+        return unless const_defined?(component_const, false)
+
+        const_get(component_const, false)
       end
     end
 
