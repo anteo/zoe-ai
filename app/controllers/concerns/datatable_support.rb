@@ -1,12 +1,16 @@
 module DatatableSupport
   extend ActiveSupport::Concern
 
+  included do
+    attr_reader :datatable
+  end
+
   private
 
-  def load_datatable(datatable_class:, scope:)
+  def load_datatable(datatable_class:, scope:, **component_options)
     filters = datatable_class.filters_model_class.from_params(ransack_params)
     search = scope.ransack(filters.to_ransack_params)
-    search.sorts = datatable_class.default_sort if search.sorts.empty? && datatable_class.default_sort.present?
+    search.sorts = normalize_sorts(datatable_class.default_sort) if search.sorts.empty? && datatable_class.default_sort.present?
     filters.s = search.sorts.map { |sort| "#{sort.name} #{sort.dir}" }.join(", ").presence
 
     pagy, records = pagy(search.result, limit: datatable_class.per_page, page_param: datatable_class.page_param)
@@ -21,7 +25,8 @@ module DatatableSupport
       pagy:,
       params: datatable_params(datatable_class),
       path: request.path,
-      search:
+      search:,
+      **component_options
     )
   end
 
@@ -37,5 +42,9 @@ module DatatableSupport
     return {} unless query.respond_to?(:to_unsafe_h)
 
     query.to_unsafe_h
+  end
+
+  def normalize_sorts(sorts)
+    Array.wrap(sorts).flat_map { |value| value.to_s.split(",") }.map(&:strip).reject(&:blank?)
   end
 end

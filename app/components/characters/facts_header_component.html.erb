@@ -1,0 +1,29 @@
+<thead class="sticky top-0 z-10 bg-base-100">
+  <tr class="text-center">
+    <%= component :datatable__header_cell, header: self, sort: :content, th_class: text_header_class do %>
+      <%= t(:label_content) %>
+    <% end %>
+
+    <%= component :datatable__header_cell, header: self, sort: :mentioned_at, th_class: icon_cell_class do %>
+      <%= t(:label_time) %>
+    <% end %>
+
+    <%= component :datatable__header_cell, header: self, sort: :kind, th_class: icon_cell_class do %>
+      <%= t(:label_kind) %>
+    <% end %>
+    <th><%= t(:label_author) %></th>
+
+    <%= component :datatable__header_cell, header: self, sort: :importance do %>
+      <%= t(:label_importance) %>
+    <% end %>
+
+    <%= component :datatable__header_cell, header: self, sort: :topic_name do %>
+      <%= t(:label_topic) %>
+    <% end %>
+    <th><%= t(:label_persistent) %></th>
+
+    <% if editable? %>
+      <th class="w-10"></th>
+    <% end %>
+  </tr>
+</thead>

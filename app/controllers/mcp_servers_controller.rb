@@ -2,6 +2,11 @@ class MCPServersController < ApplicationController
   before_action :require_admin!
   before_action :find_mcp_server, only: [ :edit, :update, :start, :stop, :destroy ]
 
+  def index
+    load_datatable(datatable_class: Settings::MCPServersDatatableComponent, scope: MCPServer.all)
+    render turbo_frame_request_id == @datatable.results_frame_id ? @datatable.results_component : @datatable, layout: false
+  end
+
   def new
     @mcp_server = MCPServer.new(active: false, transport_type: "stdio")
     render_modal

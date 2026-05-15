@@ -1,4 +1,4 @@
-<%= helpers.turbo_frame_tag frame_id do %>
+<%= helpers.turbo_frame_tag frame_id, data: { controller: "datatable" } do %>
   <div class="<%= container_classes %>">
     <%= render filters_component if filters_component? %>
     <%= render results_component %>

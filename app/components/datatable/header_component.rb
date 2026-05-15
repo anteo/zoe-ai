@@ -27,20 +27,10 @@ module Datatable
       end
     end
 
-    def sort_url_for(attribute)
-      next_direction = sort_direction_for(attribute) == "asc" ? "desc" : "asc"
-      merged_q = query_params.merge("s" => "#{attribute} #{next_direction}")
-      datatable.url_for_params(datatable.params.merge("q" => merged_q, datatable.page_param.to_s => nil))
-    end
-
     private
 
     def current_sort(attribute)
       search.sorts.detect { |sort| sort.name == attribute.to_s }
-    end
-
-    def query_params
-      @query_params ||= datatable.params.fetch("q", {})
     end
   end
 end

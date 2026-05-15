@@ -1,3 +1,15 @@
-<%= turbo_frame_tag "character-section-#{@section}" do %>
-  <%= component :"characters__#{@section}", character: @character, partner: current_partner, editable: @character.editable_by?(current_user) %>
+<% section_component = component_instance(:"characters__#{@section}",
+                                         character: @character,
+                                         controller: controller,
+                                         partner: current_partner,
+                                         editable: @character.editable_by?(current_user)) %>
+
+<% if section_component.section_frame_request? %>
+  <%= turbo_frame_tag section_component.section_frame_id do %>
+    <%= tag.section(**section_component.section_attributes) do %>
+      <%= render section_component %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= render section_component %>
 <% end %>

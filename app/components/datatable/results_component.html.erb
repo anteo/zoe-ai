@@ -1,4 +1,15 @@
-<%= helpers.turbo_frame_tag datatable.results_frame_id do %>
+<%= helpers.turbo_frame_tag datatable.results_frame_id,
+                            data: {
+                              datatable_target: "resultsFrame",
+                              current_sort_value: datatable.current_sort_value
+                            },
+                            action: "turbo:before-fetch-request->datatable#beforeRefresh turbo:frame-load->datatable#afterRefresh" do %>
+  <% if top_pagination_visible? %>
+    <div class="<%= top_pagination_classes %>">
+      <%= render pagination_component %>
+    </div>
+  <% end %>
+
   <% if empty? %>
     <div class="<%= empty_state_classes %>">
       <%= t(empty_state_i18n_key) %>
@@ -16,5 +27,13 @@
     </div>
   <% end %>
 
-  <%= render footer_component %>
+  <% if bottom_section_visible? %>
+    <div class="<%= bottom_layout_classes %>">
+      <%= render footer_component if footer_component.visible? %>
+      <% if bottom_spacer_visible? %>
+        <span class="<%= bottom_spacer_classes %>"></span>
+      <% end %>
+      <%= render pagination_component if bottom_pagination_visible? %>
+    </div>
+  <% end %>
 <% end %>

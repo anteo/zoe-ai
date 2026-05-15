@@ -83,6 +83,11 @@ Do not run asset build commands in development (e.g. `npm run build`, `bun bun.c
 
 After implementation is done, skip running checks/validations (tests, linters, formatters, static checks). The user runs all validation steps manually.
 
+## Patching
+
+Patches for app code can live under `lib/patches` and be applied via `Patches.apply!`.
+Patches for gem/framework classes should live under `lib_static/patches` so they are autoloaded once, even if they are still routed through `Patches.apply!` in `to_prepare`.
+
 ## Internationalization (i18n)
 
 Rails i18n with `config/locales/en.yml` and `ru.yml`. Always add keys to **both** files.

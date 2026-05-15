@@ -1,0 +1,53 @@
+<tr id="<%= row_id %>"
+    class="text-center"
+    data-character-facts-target="row"
+    data-fact-id="<%= fact.id %>"
+    data-original-content="<%= fact.content %>"
+    data-deleted="false">
+  <td class="text-left">
+    <% if editable? %>
+      <textarea rows="3"
+                class="textarea textarea-sm textarea-ghost min-h-[4.5rem] w-full resize-none overflow-y-auto rounded-sm bg-transparent p-0 leading-6 outline-none"
+                data-role="content"
+                data-action="input->character-facts#handleContentInput"><%= fact.content %></textarea>
+    <% else %>
+      <div class="leading-6 whitespace-pre-wrap" data-role="content-display"><%= fact.content %></div>
+    <% end %>
+  </td>
+  <td>
+    <span class="inline-flex items-center gap-2" title="<%= fact_time_label %>">
+      <span class="<%= fact_time_icon_class %> h-4 w-4 opacity-80"></span>
+      <span class="inline-flex min-w-max flex-col text-left leading-tight">
+        <% if fact_date.present? %>
+          <span class="whitespace-nowrap text-xs opacity-70"><%= fact_date %></span>
+        <% end %>
+        <% if fact_time.present? %>
+          <span class="whitespace-nowrap text-xs opacity-60"><%= fact_time %></span>
+        <% end %>
+      </span>
+    </span>
+  </td>
+  <td>
+    <span class="inline-flex items-center" title="<%= fact_kind_label %>">
+      <span class="<%= fact_kind_icon_class %> h-4 w-4 opacity-80"></span>
+    </span>
+  </td>
+  <td><%= fact.author&.name %></td>
+  <td><%= fact.importance %>%</td>
+  <td><%= fact.topic&.name %></td>
+  <td>
+    <span class="inline-flex items-center" title="<%= fact.persistent? ? t(:label_persistent) : t(:label_event) %>">
+      <span class="<%= fact_persistence_icon_class %> h-4 w-4 <%= "text-success" if fact.persistent? %>"></span>
+    </span>
+  </td>
+  <% if editable? %>
+    <td>
+      <button type="button"
+              class="btn btn-ghost btn-xs btn-square text-error"
+              title="<%= t(:label_delete) %>"
+              data-action="click->character-facts#toggleDelete">
+        <span class="icon-[lucide--trash-2] h-4 w-4"></span>
+      </button>
+    </td>
+  <% end %>
+</tr>

@@ -168,7 +168,6 @@ ru:
   label_yes: Да
   placeholder_add_instruction: добавьте инструкцию...
   placeholder_chat_input: Введите сообщение...
-  placeholder_filter_facts_text: Фильтр фактов
   placeholder_image_description: Добавьте описание изображения
   placeholder_search_chat_history: Поиск по истории
   settings:

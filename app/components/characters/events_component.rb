@@ -1,11 +1,7 @@
 module Characters
-  class EventsComponent < ApplicationComponent
-    attr_reader :character, :editable, :partner
-
-    def initialize(character:, partner: nil, editable: false)
-      @character = character
-      @editable = editable
-      @partner = partner
+  class EventsComponent < SectionComponent
+    def badge_count
+      groups.sum { it[:facts].size }
     end
 
     def groups
@@ -14,6 +10,14 @@ module Characters
 
     def events?
       groups.any?
+    end
+
+    def section_icon_class
+      "icon-[lucide--calendar-days]"
+    end
+
+    def visible?
+      events?
     end
 
     def event_date(fact)

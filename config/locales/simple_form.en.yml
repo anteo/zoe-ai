@@ -27,6 +27,7 @@ en:
         email: Enter email
       q:
         name_or_key_or_last_error_cont: Search MCP servers
+        query: Filter facts
       models:
         default_embedding_model: Choose model...
         default_image_model: Choose model...

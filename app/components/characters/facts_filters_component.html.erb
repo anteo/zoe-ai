@@ -1,0 +1,27 @@
+<%= form.input :query,
+               as: :search,
+               label: false,
+               placeholder: true,
+               validator: false,
+               wrapper_html: { class: "w-full input-sm" },
+               input_html: { autocomplete: "off" } %>
+
+<%= form.input :persistent,
+               as: :select,
+               label: false,
+               validator: false,
+               collection: [
+                 [t(:label_filter_persistent_all), "all"],
+                 [t(:label_persistent), "true"],
+                 [t(:label_event), "false"]
+               ],
+               include_blank: false,
+               input_html: { class: "select-sm w-full" } %>
+
+<%= form.input :topic,
+               as: :select,
+               label: false,
+               validator: false,
+               collection: datatable.topic_options,
+               include_blank: t(:label_filter_topic_all),
+               input_html: { class: "select-sm w-full" } %>

@@ -40,8 +40,22 @@ module Datatable
       attributes.slice(*self.class.preserved_attribute_names).compact_blank
     end
 
-    def to_ransack_params
+    def common_ransack_params
+      {}.tap do |params|
+        params["s"] = normalized_sorts if normalized_sorts.present?
+      end
+    end
+
+    def specific_ransack_params
       attributes.compact_blank
+    end
+
+    def to_ransack_params
+      specific_ransack_params.merge(common_ransack_params)
+    end
+
+    def normalized_sorts
+      s.to_s.split(",").map(&:strip).reject(&:blank?)
     end
   end
 end

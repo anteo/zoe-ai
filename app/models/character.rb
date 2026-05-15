@@ -29,6 +29,14 @@ class Character < ApplicationRecord
   scope :human, -> { third_party(false).where(ai: false) }
   scope :ai, -> { third_party(false).where(ai: true) }
 
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id name]
+  end
+
   def self.default_ai
     RequestStore[:default_ai] ||= ai.where(is_default: true).first!
   end

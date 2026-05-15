@@ -2,7 +2,7 @@
   <%= turbo_stream_from MCPServer %>
 
   <%= helpers.turbo_frame_tag Settings::MCPServersDatatableComponent.frame_id,
-                              src: helpers.settings_mcp_servers_datatable_path do %>
+                              src: helpers.mcp_servers_path do %>
     <%= helpers.turbo_frame_tag Settings::MCPServersDatatableComponent.results_frame_id do %>
       <div class="flex items-center justify-center py-8">
         <span class="loading loading-spinner loading-md"></span>

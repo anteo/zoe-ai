@@ -1,46 +1,5 @@
 <% if visible? %>
-  <div class="<%= layout_classes %>">
-    <% if results_count? %>
-      <p class="text-sm opacity-70">
-        <%= t(:text_datatable_results_count, from: pagy.from, to: pagy.to, total: pagy.count) %>
-      </p>
-    <% else %>
-      <span></span>
-    <% end %>
-
-    <% if pagination? %>
-      <nav class="<%= nav_classes %>" aria-label="<%= t(:label_pagination) %>">
-        <% if pagy.previous %>
-          <%= helpers.link_to t(:label_previous_page),
-                              page_url(pagy.previous),
-                              class: page_button_classes,
-                              data: { turbo_frame: datatable.results_frame_id } %>
-        <% else %>
-          <button aria-disabled="true" class="<%= page_button_classes(disabled: true) %>" type="button"><%= t(:label_previous_page) %></button>
-        <% end %>
-
-        <% page_series.each do |item| %>
-          <% if item == Datatable::FooterComponent::GAP %>
-            <button aria-disabled="true" class="<%= page_button_classes(disabled: true) %>" type="button">…</button>
-          <% elsif page_token?(item) %>
-            <%= helpers.link_to item,
-                                page_url(item),
-                                class: page_button_classes,
-                                data: { turbo_frame: datatable.results_frame_id } %>
-          <% else %>
-            <button aria-current="page" class="<%= page_button_classes(active: true) %>" type="button"><%= item %></button>
-          <% end %>
-        <% end %>
-
-        <% if pagy.next %>
-          <%= helpers.link_to t(:label_next_page),
-                              page_url(pagy.next),
-                              class: page_button_classes,
-                              data: { turbo_frame: datatable.results_frame_id } %>
-        <% else %>
-          <button aria-disabled="true" class="<%= page_button_classes(disabled: true) %>" type="button"><%= t(:label_next_page) %></button>
-        <% end %>
-      </nav>
-    <% end %>
-  </div>
+  <p class="<%= summary_classes %>">
+    <%= t(:text_datatable_results_count, from: pagy.from, to: pagy.to, total: pagy.count) %>
+  </p>
 <% end %>

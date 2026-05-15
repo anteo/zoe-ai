@@ -4,6 +4,7 @@ module Datatable
     class_attribute :configured_empty_state_i18n_key, instance_accessor: false
     class_attribute :configured_frame_id, instance_accessor: false
     class_attribute :configured_page_param, default: :page, instance_accessor: false
+    class_attribute :configured_pagination_position, default: :bottom, instance_accessor: false
     class_attribute :configured_path_helper, instance_accessor: false
     class_attribute :configured_per_page, instance_accessor: false
     class_attribute :configured_row_component_class, instance_accessor: false
@@ -41,7 +42,7 @@ module Datatable
       end
 
       def footer_component_class(value = nil)
-        return configured_footer_component_class || infer_component_class("Footer") if value.nil?
+        return configured_footer_component_class || infer_optional_component_class("Footer") || Datatable::FooterComponent if value.nil?
 
         self.configured_footer_component_class = value
       end
@@ -96,6 +97,12 @@ module Datatable
         return configured_per_page || Setting.ui.datatable_per_page if value.nil?
 
         self.configured_per_page = value
+      end
+
+      def pagination(value = nil)
+        return configured_pagination_position if value.nil?
+
+        self.configured_pagination_position = value.to_sym
       end
 
       def row_component_class(value = nil)
@@ -177,11 +184,15 @@ module Datatable
       filters_component_class = self.class.filters_component_class
       return unless filters_component_class
 
-      filters_component_class.new(datatable: self, filters:)
+      Datatable::FiltersFormComponent.new(datatable: self, filters:, filter_component_class: filters_component_class)
     end
 
     def filters_component?
       filters_component.present?
+    end
+
+    def current_sort_value
+      search.sorts.map { |sort| "#{sort.name} #{sort.dir}" }.join(", ")
     end
 
     def frame_id
@@ -194,6 +205,22 @@ module Datatable
 
     def page_param
       self.class.page_param
+    end
+
+    def pagination_component
+      Datatable::PaginationComponent.new(pagy:, datatable: self)
+    end
+
+    def pagination_position
+      self.class.pagination
+    end
+
+    def pagination_top?
+      %i[top both].include?(pagination_position)
+    end
+
+    def pagination_bottom?
+      %i[bottom both].include?(pagination_position)
     end
 
     def request_path

@@ -14,14 +14,11 @@ Rails.application.routes.draw do
 
   root "chats#show"
 
-  resources :mcp_servers, only: [ :new, :create, :edit, :update, :destroy ] do
+  resources :mcp_servers, only: [ :index, :new, :create, :edit, :update, :destroy ] do
     member do
       patch :start
       patch :stop
     end
-  end
-  namespace :settings do
-    resource :mcp_servers_datatable, only: :show, controller: :mcp_servers_datatables
   end
   resource :profile, only: [ :show, :update ]
   resource :settings, only: [ :show, :update ]

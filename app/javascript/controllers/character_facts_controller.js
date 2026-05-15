@@ -1,73 +1,40 @@
-import {Controller} from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["rows", "row", "textFilter", "persistentFilter", "topicFilter", "sortFilter"]
+  static targets = ["draftStore", "row"]
+  static values = { totalCount: Number }
 
   connect() {
-    this.sortRows(this.currentSortDirection())
-    this.applyFilters()
     this.updateCountBadge()
-
-    this.form = this.element.closest("form")
-    this.boundBeforeSubmit = this.prepareChangedFactsForSubmit.bind(this)
-    this.form?.addEventListener("submit", this.boundBeforeSubmit)
   }
 
   disconnect() {
-    this.form?.removeEventListener("submit", this.boundBeforeSubmit)
-    if (this.filterTimer) clearTimeout(this.filterTimer)
+    this.cancelPendingRestore()
   }
 
-  applyFilters() {
-    const textQuery = (this.hasTextFilterTarget ? this.textFilterTarget.value : "").trim().toLowerCase()
-    const persistentValue = this.hasPersistentFilterTarget ? this.persistentFilterTarget.value : "all"
-    const topicValue = this.hasTopicFilterTarget ? this.topicFilterTarget.value : ""
-
-    this.rowTargets.forEach((row) => {
-      const rowText = (row.dataset.searchText || "").toLowerCase()
-      const rowPersistent = row.dataset.persistent
-      const rowTopic = row.dataset.topic || ""
-
-      const textMatch = textQuery === "" || rowText.includes(textQuery)
-      const persistentMatch = persistentValue === "all" || rowPersistent === persistentValue
-      const topicMatch = topicValue === "" || rowTopic === topicValue
-
-      row.classList.toggle("hidden", !(textMatch && persistentMatch && topicMatch))
-    })
+  rowTargetConnected(row) {
+    this.restoreRow(row)
+    this.updateCountBadge()
   }
 
-  queueApplyFilters() {
-    if (this.filterTimer) clearTimeout(this.filterTimer)
-    this.filterTimer = setTimeout(() => this.applyFilters(), 120)
-  }
-
-  handleSortChange() {
-    this.sortRows(this.currentSortDirection())
-    this.applyFilters()
-  }
-
-  sortRows(direction) {
-    const sortedRows = [...this.rowTargets].sort((a, b) => {
-      const aTs = Number.parseInt(a.dataset.mentionedAt || "0", 10)
-      const bTs = Number.parseInt(b.dataset.mentionedAt || "0", 10)
-      return direction === "asc" ? aTs - bTs : bTs - aTs
-    })
-
-    sortedRows.forEach((row) => row.parentElement.appendChild(row))
-  }
-
-  syncSearchText(event) {
+  handleContentInput(event) {
     const row = event.currentTarget.closest("tr")
     if (!row) return
 
-    const content = event.currentTarget.value || ""
-    const author = row.dataset.author || ""
-    const topic = row.dataset.topic || ""
-    row.dataset.searchText = `${content} ${author} ${topic}`.toLowerCase()
+    this.syncDraftForRow(row)
+  }
 
-    if (this.hasActiveTextFilter()) {
-      this.queueApplyFilters()
-    }
+  restoreDrafts() {
+    this.cancelPendingRestore()
+    this.restoreFrame = window.requestAnimationFrame(() => {
+      this.rowTargets.forEach((row) => this.restoreRow(row))
+      this.updateCountBadge()
+      this.restoreFrame = null
+    })
+  }
+
+  storeDrafts() {
+    this.rowTargets.forEach((row) => this.syncDraftForRow(row))
   }
 
   toggleDelete(event) {
@@ -76,63 +43,134 @@ export default class extends Controller {
     const row = event.currentTarget.closest("tr")
     if (!row) return
 
-    const destroyInput = row.querySelector("input[name*='[_destroy]']")
-    if (!destroyInput) return
+    row.dataset.deleted = this.deleted(row) ? "false" : "true"
+    this.applyRowState(row)
+    this.syncDraftForRow(row)
+  }
 
-    const shouldDelete = destroyInput.value !== "1"
-    destroyInput.value = shouldDelete ? "1" : "0"
+  activeFactsCount() {
+    return Math.max(this.totalCountValue - this.deletedDraftCount(), 0)
+  }
 
-    row.classList.toggle("opacity-40", shouldDelete)
-    row.classList.toggle("line-through", shouldDelete)
+  applyRowState(row) {
+    row.classList.toggle("opacity-40", this.deleted(row))
+    row.classList.toggle("line-through", this.deleted(row))
+  }
+
+  contentInput(row) {
+    return row.querySelector("[data-role='content']")
+  }
+
+  contentDisplay(row) {
+    return row.querySelector("[data-role='content-display']")
+  }
+
+  deleted(row) {
+    return row.dataset.deleted === "true"
+  }
+
+  deletedDraftCount() {
+    return this.draftEntries().filter((entry) => this.draftDeleted(entry)).length
+  }
+
+  draftContent(entry) {
+    return entry.querySelector("[data-role='content']")?.value || ""
+  }
+
+  draftDeleted(entry) {
+    return entry.querySelector("[data-role='destroy']")?.value === "1"
+  }
+
+  draftEntries() {
+    return this.hasDraftStoreTarget ? Array.from(this.draftStoreTarget.querySelectorAll("[data-fact-id]")) : []
+  }
+
+  draftEntry(factId) {
+    return this.hasDraftStoreTarget ? this.draftStoreTarget.querySelector(`[data-fact-id="${factId}"]`) : null
+  }
+
+  ensureDraftEntry(factId) {
+    let entry = this.draftEntry(factId)
+    if (entry) return entry
+
+    entry = document.createElement("div")
+    entry.dataset.factId = factId
+
+    entry.appendChild(this.hiddenInput(`character[facts_attributes][${factId}][id]`, factId, "id"))
+    entry.appendChild(this.hiddenInput(`character[facts_attributes][${factId}][content]`, "", "content"))
+    entry.appendChild(this.hiddenInput(`character[facts_attributes][${factId}][_destroy]`, "0", "destroy"))
+
+    this.draftStoreTarget.appendChild(entry)
+    return entry
+  }
+
+  hiddenInput(name, value, role) {
+    const input = document.createElement("input")
+    input.type = "hidden"
+    input.name = name
+    input.value = value
+    input.dataset.role = role
+    return input
+  }
+
+  originalContent(row) {
+    return row.dataset.originalContent || ""
+  }
+
+  removeDraft(factId) {
+    this.draftEntry(factId)?.remove()
+  }
+
+  restoreRow(row) {
+    const draft = this.draftEntry(row.dataset.factId)
+    const contentInput = this.contentInput(row)
+    const contentDisplay = this.contentDisplay(row)
+
+    if (!draft) {
+      row.dataset.deleted = "false"
+      this.applyRowState(row)
+      return
+    }
+
+    if (contentInput) {
+      contentInput.value = this.draftContent(draft)
+    }
+
+    if (contentDisplay) {
+      contentDisplay.textContent = this.draftContent(draft)
+    }
+
+    row.dataset.deleted = this.draftDeleted(draft) ? "true" : "false"
+    this.applyRowState(row)
+  }
+
+  syncDraftForRow(row) {
+    const factId = row.dataset.factId
+    const contentInput = this.contentInput(row)
+    const content = contentInput ? contentInput.value : this.originalContent(row)
+    const deleted = this.deleted(row)
+
+    if (!deleted && content === this.originalContent(row)) {
+      this.removeDraft(factId)
+      this.updateCountBadge()
+      return
+    }
+
+    const entry = this.ensureDraftEntry(factId)
+    entry.querySelector("[data-role='content']").value = content
+    entry.querySelector("[data-role='destroy']").value = deleted ? "1" : "0"
+
     this.updateCountBadge()
   }
 
   updateCountBadge() {
-    this.dispatch("count-changed", {detail: {count: this.activeFactsCount()}})
+    this.dispatch("count-changed", { detail: { count: this.activeFactsCount() } })
   }
 
-  activeFactsCount() {
-    return this.rowTargets.filter((row) => {
-      const destroyInput = row.querySelector("input[name*='[_destroy]']")
-      return !destroyInput || destroyInput.value !== "1"
-    }).length
-  }
+  cancelPendingRestore() {
+    if (!this.restoreFrame) return
 
-  prepareChangedFactsForSubmit() {
-    this.rowTargets.forEach((row) => {
-      const idInput = row.querySelector("[data-role='id']")
-      const destroyInput = row.querySelector("[data-role='destroy']")
-      const contentInput = row.querySelector("[data-role='content']")
-      if (!idInput || !destroyInput || !contentInput) return
-
-      const deleted = destroyInput.value === "1"
-      const changed = contentInput.value !== (contentInput.dataset.originalContent || "")
-
-      if (deleted) {
-        idInput.disabled = false
-        destroyInput.disabled = false
-        contentInput.disabled = true
-        return
-      }
-
-      if (changed) {
-        idInput.disabled = false
-        destroyInput.disabled = true
-        contentInput.disabled = false
-        return
-      }
-
-      idInput.disabled = true
-      destroyInput.disabled = true
-      contentInput.disabled = true
-    })
-  }
-
-  currentSortDirection() {
-    return this.hasSortFilterTarget ? this.sortFilterTarget.value : "desc"
-  }
-
-  hasActiveTextFilter() {
-    return this.hasTextFilterTarget && this.textFilterTarget.value.trim().length > 0
+    window.cancelAnimationFrame(this.restoreFrame)
+    this.restoreFrame = null
   }
 }

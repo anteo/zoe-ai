@@ -9,6 +9,7 @@ Patches.register %w[
   RubyLLM::MCP::Native::Transports::Stdio
   RubyLLM::Providers::DeepSeek
   RubyLLM::Providers::DeepSeek::Capabilities
+  SimpleForm::Inputs::Base
   Turbo::Streams::TagBuilder
   Turbo::StreamsChannel
 ]

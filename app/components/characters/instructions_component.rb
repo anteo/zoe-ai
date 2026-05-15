@@ -1,11 +1,23 @@
 module Characters
-  class InstructionsComponent < ApplicationComponent
-    attr_reader :character, :editable, :partner
+  class InstructionsComponent < SectionComponent
+    def badge_count
+      character.instructions.active.count
+    end
 
-    def initialize(character:, partner: nil, editable: false)
-      @character = character
-      @editable = editable
-      @partner = partner
+    def section_icon_class
+      "icon-[lucide--sparkles]"
+    end
+
+    def section_data
+      { existing_instructions_json: existing_instructions_json }
+    end
+
+    def section_tab_badge_data
+      { character_instructions_target: "countBadge" }
+    end
+
+    def visible?
+      character.ai?
     end
 
     def existing_instructions_json

@@ -1,80 +1,65 @@
 module Characters
-  class FactsComponent < ApplicationComponent
-    attr_reader :character, :editable, :partner
+  class FactsComponent < SectionComponent
+    delegate :datatable, to: :controller, allow_nil: true
 
-    def initialize(character:, partner: nil, editable: false)
-      @character = character
-      @editable = editable
-      @partner = partner
+    def initialize(character:, controller: nil, partner: nil, editable: false)
+      super
+      return unless controller
+
+      controller.send(
+        :load_datatable,
+        datatable_class: Characters::FactsDatatableComponent,
+        scope: facts_scope,
+        character:,
+        editable:,
+        path: datatable_path
+      )
     end
 
-    def facts
-      @facts ||= character.facts.includes(:topic, :author).order(mentioned_at: :desc, created_at: :desc)
+    def badge_count
+      total_count
     end
 
-    def topic_options
-      @topic_options ||= facts.filter_map { it.topic&.name.presence }.uniq.sort
+    def datatable_frame_request?
+      turbo_frame_request_id == datatable.frame_id
     end
 
-    def fact_persistence_icon(fact)
-      fact.persistent? ? "icon-[lucide--check]" : ""
+    def results_frame_request?
+      turbo_frame_request_id == datatable.results_frame_id
     end
 
-    def fact_time_icon(fact)
-      case fact.time
-      when "past"
-        "icon-[lucide--rewind]"
-      when "future"
-        "icon-[lucide--fast-forward]"
-      else
-        "icon-[lucide--play]"
-      end
+    def section_icon_class
+      "icon-[lucide--brain]"
     end
 
-    def fact_time_label(fact)
-      case fact.time
-      when "past"
-        t(:label_time_past)
-      when "future"
-        t(:label_time_future)
-      else
-        t(:label_time_present)
-      end
+    def section_data
+      {
+        controller: "character-facts",
+        character_facts_total_count_value: total_count,
+        action: "datatable:before-refresh->character-facts#storeDrafts datatable:after-refresh->character-facts#restoreDrafts"
+      }
     end
 
-    def fact_kind_icon(fact)
-      case fact.kind.to_s
-      when "attribute"
-        "icon-[lucide--id-card]"
-      when "experience"
-        "icon-[lucide--sparkles]"
-      when "belief"
-        "icon-[lucide--lightbulb]"
-      when "preference"
-        "icon-[lucide--heart]"
-      when "plan"
-        "icon-[lucide--map]"
-      else
-        "icon-[lucide--tag]"
-      end
+    def section_tab_badge_data
+      { character_details_target: "factsCountBadge" }
     end
 
-    def fact_kind_label(fact)
-      t(:"label_fact_kind_#{fact.kind}")
-    rescue I18n::MissingTranslationData
-      fact.kind.to_s.humanize
+    def total_count
+      character.facts.count
     end
 
-    def fact_date(fact)
-      return unless fact.mentioned_at
-
-      l(fact.mentioned_at.to_date)
+    def visible?
+      character.facts.any?
     end
 
-    def fact_time(fact)
-      return unless fact.mentioned_at
+    private
 
-      l(fact.mentioned_at, format: "%H:%M")
+    def facts_scope
+      character.facts.includes(:topic, :author)
+    end
+
+    def datatable_path
+      controller.section_character_path(character)
     end
   end
 end

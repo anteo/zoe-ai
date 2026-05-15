@@ -1,10 +1,13 @@
 module Characters
   class DetailsComponent < ApplicationComponent
+    SECTIONS = %i[memory_profile events instructions facts images].freeze
+
     attr_reader :character, :partner
 
-    def initialize(character:, partner:)
+    def initialize(character:, partner:, controller:)
       @character = character
       @partner = partner
+      @controller = controller
     end
 
     def type_label
@@ -55,52 +58,19 @@ module Characters
       owned? ? t(:label_delete) : t(:label_unshare_character)
     end
 
+    def section_components
+      SECTIONS.map { component_class(:"characters__#{it}") }
+    end
+
     def sections
-      [
-        ({ key: "description", label: t(:label_memory_profile), icon_class: "icon-[lucide--file-text]", count: nil } if description.present?),
-        ({ key: "events", label: t(:label_events), icon_class: "icon-[lucide--calendar-days]", count: events_count } if events_count.positive?),
-        ({ key: "instructions", label: t(:label_instructions), icon_class: "icon-[lucide--sparkles]", count: instructions_count } if character.ai?),
-        ({ key: "facts", label: t(:label_facts), icon_class: "icon-[lucide--brain]", count: facts_count } if character.facts.any?),
-        { key: "images", label: t(:label_images), icon_class: "icon-[lucide--images]", count: images_count }
-      ].compact
+      @sections ||= section_components.filter_map do |component_class|
+        component = component_class.new(character:, partner:, controller:, editable: editable?)
+        component if component.visible?
+      end
     end
 
     def default_section
-      sections.first[:key]
-    end
-
-    def section_frame_id(section)
-      "character-section-#{section}"
-    end
-
-    def section_path(section)
-      helpers.section_character_path(character, section: section)
-    end
-
-    private
-
-    def description
-      @description ||= AI::Actors::DescribeCharacter.result(character:, partner:, mode: :markdown, period_order: :desc).description.to_s
-    end
-
-    def events_result
-      @events_result ||= AI::Actors::DescribeEvents.result(character:, partner:)
-    end
-
-    def facts_count
-      @facts_count ||= character.facts.count
-    end
-
-    def events_count
-      @events_count ||= events_result.groups.sum { it[:facts].size }
-    end
-
-    def images_count
-      @images_count ||= character.images.attachments.count
-    end
-
-    def instructions_count
-      @instructions_count ||= character.instructions.active.count
+      sections.first.section_key
     end
   end
 end

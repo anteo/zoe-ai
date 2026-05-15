@@ -77,36 +77,32 @@
         <% sections.each do |section| %>
           <button type="button"
                   role="tab"
-                  aria-controls="<%= "#{section_frame_id(section[:key])}-panel" %>"
+                  aria-controls="<%= "#{section.section_frame_id}-panel" %>"
                   class="tab gap-2"
                   data-character-details-target="tab"
-                  data-section="<%= section[:key] %>"
+                  data-section="<%= section.section_key %>"
                   data-action="click->character-details#showSection"
-                  title="<%= section[:label] %>">
-            <span class="<%= section[:icon_class] %> h-4 w-4"></span>
-            <span><%= section[:label] %></span>
-            <% if section[:count].present? %>
-              <% badge_data = {} %>
-              <% badge_data[:character_instructions_target] = "countBadge" if section[:key] == "instructions" %>
-              <% badge_data[:characters_images_target] = "countBadge" if section[:key] == "images" %>
-              <% badge_data[:character_details_target] = "factsCountBadge" if section[:key] == "facts" %>
-              <%= tag.span section[:count], class: "badge badge-sm badge-neutral", data: badge_data %>
+                  title="<%= section.section_label %>">
+            <span class="<%= section.section_icon_class %> h-4 w-4"></span>
+            <span><%= section.section_label %></span>
+            <% if section.badge_count.present? %>
+              <%= tag.span section.badge_count, class: "badge badge-sm badge-neutral", data: section.section_tab_badge_data %>
             <% end %>
           </button>
         <% end %>
         <span class="grow border-b border-base-300"></span>
       </nav>
 
-      <div class="flex min-h-0 flex-1 flex-col overflow-hidden bg-base-100 p-5">
+      <div class="flex min-h-0 flex-1 flex-col bg-base-100 p-5">
         <% sections.each do |section| %>
-          <% active = section[:key] == default_section %>
-          <div id="<%= "#{section_frame_id(section[:key])}-panel" %>"
+          <% active = section.section_key == default_section %>
+          <div id="<%= "#{section.section_frame_id}-panel" %>"
                role="tabpanel"
-               class="<%= active ? "block" : "hidden" %> <%= section[:key] == "facts" ? "h-full overflow-hidden" : "overflow-y-auto" %>"
+               class="<%= section.section_panel_classes(active:) %>"
                data-character-details-target="panel"
-               data-section="<%= section[:key] %>">
-            <%= helpers.turbo_frame_tag section_frame_id(section[:key]),
-                                        src: section_path(section[:key]),
+               data-section="<%= section.section_key %>">
+            <%= helpers.turbo_frame_tag section.section_frame_id,
+                                        src: section.section_path,
                                         class: "block h-full",
                                         loading: "lazy" do %>
               <div class="flex items-center justify-center py-12">

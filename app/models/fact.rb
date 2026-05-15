@@ -15,6 +15,14 @@ class Fact < ApplicationRecord
   scope :by_kind, ->(kind) { where(kind:) }
   scope :excluding_kind, ->(kind) { where.not(kind:) }
 
+  def self.ransackable_associations(_auth_object = nil)
+    %w[author topic]
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[content created_at id importance kind mentioned_at persistent topic_id]
+  end
+
   validates :content, :month, :time, presence: true
 
   def to_s

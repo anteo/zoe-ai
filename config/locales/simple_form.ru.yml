@@ -27,6 +27,7 @@ ru:
         email: Введите email
       q:
         name_or_key_or_last_error_cont: Поиск MCP серверов
+        query: Фильтр фактов
       models:
         default_embedding_model: Выберите модель...
         default_image_model: Выберите модель...
