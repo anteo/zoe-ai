@@ -1,0 +1,19 @@
+<div class="space-y-4">
+  <%= helpers.turbo_frame_tag Settings::AgentsDatatableComponent.frame_id,
+                              src: helpers.agents_path do %>
+    <%= helpers.turbo_frame_tag Settings::AgentsDatatableComponent.results_frame_id do %>
+      <div class="flex items-center justify-center py-8">
+        <span class="loading loading-spinner loading-md"></span>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<% header do %>
+  <%= helpers.link_to new_agent_path,
+                      class: "btn btn-primary btn-sm",
+                      data: { turbo_stream: true } do %>
+    <span class="icon-[lucide--plus] h-4 w-4"></span>
+    <%= t(:label_new) %>
+  <% end %>
+<% end %>

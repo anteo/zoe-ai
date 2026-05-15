@@ -1,6 +1,16 @@
 ru:
   activerecord:
     attributes:
+      agent:
+        active: Активен
+        instructions: Инструкции
+        key: Ключ
+        mcp_servers: MCP серверы
+        model: Модель
+        name: Имя
+        temperature: Температура
+        thinking_budget: Бюджет рассуждений
+        thinking_effort: Уровень рассуждений
       character:
         bio: Краткое описание
         name: Имя персонажа
@@ -17,12 +27,21 @@ ru:
         password: Пароль
         password_confirmation: Подтверждение пароля
     errors:
+      messages:
+        readonly: доступно только для чтения и не может быть изменено
       models:
+        agent:
+          attributes:
+            base:
+              restrict_destroy: Встроенные агенты не могут быть удалены
         mcp_server:
           attributes:
             config_json:
               invalid_json: должен быть валидным JSON-объектом
     models:
+      agent:
+        one: Агент
+        other: Агенты
       character:
         one: Персонаж
         other: Персонажи
@@ -32,6 +51,7 @@ ru:
       user:
         one: Пользователь
         other: Пользователи
+  confirm_delete_agent: Удалить этого агента?
   confirm_delete_character: Удалить этого персонажа?
   confirm_delete_chat: Удалить этот чат?
   confirm_delete_message: Удалить это сообщение и все последующие?
@@ -42,6 +62,7 @@ ru:
     formats:
       default: "%d %B %Y"
   direct_speech: "%{character} сказал(а): «%{text}»"
+  label_active: Активен
   label_account_settings: Настройки аккаунта
   label_accept_character_invitation: Принять приглашение
   label_ai: ИИ
@@ -65,6 +86,7 @@ ru:
   label_confirmation: Подтверждение
   label_confirmation_instructions: Повторить подтверждение
   label_content: Содержание
+  label_create_agent: Новый агент
   label_create_character: Новый персонаж
   label_create_mcp_server: Новый MCP сервер
   label_crop_avatar: Обрезать аватар
@@ -73,6 +95,7 @@ ru:
   label_delete: Удалить
   label_description: Описание
   label_edit: Редактировать
+  label_edit_agent: Редактировать агента
   label_edit_character: Редактировать персонажа
   label_edit_mcp_server: Редактировать MCP сервер
   label_edit_profile: Редактировать профиль
@@ -110,7 +133,9 @@ ru:
   label_memory_mode_off: Память выключена
   label_memory_mode_on: Память включена
   label_memory_profile: Профиль памяти
+  label_mcp_servers: MCP серверы
   label_mission_control: Mission Control
+  label_model: Модель
   label_my_character: Мой персонаж
   label_name: Имя
   label_new: Новый
@@ -132,7 +157,6 @@ ru:
   label_register: Регистрация
   label_remember_me: Запомнить меня
   label_remove_avatar: Удалить аватар
-  label_test_smtp: Отправить проверочный Email
   label_remove_instruction: Удалить инструкцию
   label_resend: Отправить повторно
   label_save: Сохранить
@@ -140,6 +164,7 @@ ru:
   label_send_reset_instructions: Отправить инструкцию по сбросу
   label_settings: Настройки
   label_settings_ai: ИИ
+  label_settings_agents: Агенты
   label_settings_ai_models: Модели
   label_settings_ai_providers: Провайдеры
   label_settings_app: Система
@@ -156,6 +181,8 @@ ru:
   label_sort_mentioned_at_desc: Упомянуто (сначала новые)
   label_start: Запустить
   label_stop: Остановить
+  label_test_smtp: Отправить проверочный Email
+  label_thinking: Рассуждения
   label_time: Время
   label_time_future: Будущее
   label_time_past: Прошлое
@@ -233,6 +260,8 @@ ru:
       flash_timeout_ms: Длительность успешного уведомления (мс)
       max_message_bubbles: Максимум пузырей ответа ассистента
   text_access_denied: Доступ запрещён.
+  text_agent_key_optional: Оставьте поле пустым, чтобы агент остался без ключа.
+  text_agent_mcp_servers_hint: Выбранные серверы будут доступны этому агенту.
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
   text_character_name_required: Имя персонажа не может быть пустым.
@@ -285,6 +314,7 @@ ru:
   text_models_sync_started: Обновление реестра моделей...
   text_model_not_configured: Модель не настроена. Укажите модель в Настройки -> Модели.
   text_nothing_found: Ничего не найдено
+  text_no_agents: Агенты пока не настроены.
   text_no_available_models: Нет доступных моделей
   text_no_character_description: Пока нет описания.
   text_no_character_bio: Пока нет краткого описания.

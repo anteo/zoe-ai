@@ -3,17 +3,20 @@
     <a class="menu-title"><%= t(:text_no_available_models) %> </a>
   </li>
 <% else %>
+  <% use_record_id = params[:value].to_s == "id" %>
   <% @models.group_by(&:provider).each do |provider, models| %>
     <li>
       <h2 class="menu-title"><%= provider.humanize %></h2>
       <ul>
         <% models.each do |model| %>
+          <% option_value = use_record_id ? model.id : model.model_id %>
+          <% option_label = model.model_id %>
           <li
             role="option"
-            data-autocomplete-value="<%= model.model_id %>"
-            data-autocomplete-label="<%= model.model_id %>">
+            data-autocomplete-value="<%= option_value %>"
+            data-autocomplete-label="<%= option_label %>">
             <a>
-              <%= model.model_id %>
+              <%= option_label %>
             </a>
           </li>
         <% end %>

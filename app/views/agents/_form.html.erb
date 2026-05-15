@@ -1,0 +1,53 @@
+<%= simple_form_for @agent, html: { class: "space-y-5" } do |f| %>
+  <div class="grid grid-cols-1 gap-4">
+    <%= f.input :name, input_html: { autofocus: true } %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <%= f.input :model_id,
+                as: :autocomplete,
+                required: false,
+                url: models_search_path(kind: "chat", value: "id"),
+                input_html: {
+                  value: @agent.model&.model_id
+                } %>
+    <%= f.input :temperature, required: false %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <%= f.input :thinking_effort,
+                collection: Agent::THINKING_EFFORTS,
+                include_blank: true,
+                required: false %>
+    <%= f.input :thinking_budget, required: false %>
+  </div>
+
+  <%= f.input :instructions,
+              required: false,
+              input_html: { rows: 10 } %>
+
+  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4">
+    <legend class="fieldset-legend px-1"><%= Agent.human_attribute_name(:mcp_servers) %></legend>
+
+    <% mcp_servers = MCPServer.order(:name) %>
+    <% if mcp_servers.exists? %>
+      <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+        <%= f.collection_check_boxes :mcp_server_ids, mcp_servers, :id, :name do |b| %>
+          <label class="flex cursor-pointer items-center gap-3 rounded-box border border-base-300 bg-base-100 px-4 py-3 transition-colors hover:border-base-content/20 hover:bg-base-100/80">
+            <%= b.check_box class: "checkbox checkbox-sm mt-0.5 shrink-0" %>
+            <span class="text-sm leading-5"><%= b.text %></span>
+          </label>
+        <% end %>
+      </div>
+      <p class="label"><%= t(:text_agent_mcp_servers_hint) %></p>
+    <% else %>
+      <div class="rounded-box border border-dashed border-base-300 bg-base-100 px-4 py-3 text-sm text-base-content/70">
+        <%= t(:text_no_mcp_servers) %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <% unless @agent.builtin? %>
+    <%= f.input :active, as: :boolean %>
+  <% end %>
+<% end %>

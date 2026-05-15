@@ -46,6 +46,10 @@ module UI
           }
         }
       },
+      "agents" => {
+        icon: "icon-[lucide--bot-message-square]",
+        parent: "ai"
+      },
       "mcp_servers" => {
         icon: "icon-[lucide--server-cog]",
         parent: "ai"
@@ -72,6 +76,10 @@ module UI
 
     def section_component
       @section_component ||= section_component_class.new
+    end
+
+    def section_icon_class
+      section_options.fetch(:icon)
     end
 
     def section_frame_id

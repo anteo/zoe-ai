@@ -95,6 +95,12 @@ Keep lines sorted alphabetically.
 
 Key conventions: `label_*` (buttons/forms), `placeholder_*` (inputs), `confirm_*` (dialogs), `text_*` (static text/HTML).
 
+## UI Conventions
+
+Prefer DaisyUI components and semantics as the default UI building blocks whenever a suitable component exists.
+Favor DaisyUI classes such as `fieldset`, `fieldset-legend`, `label`, `input`, `select`, `textarea`, `toggle`, `checkbox`, `btn`, and `card` over bespoke utility-only markup.
+Only fall back to custom utility compositions when DaisyUI does not cover the interaction or when extending an existing pattern already established in the app.
+
 ## Commit Workflow
 
 When user asks to commit, analyze current git changes, group by feature, show proposed commit plan first, then commit after user approval.

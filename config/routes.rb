@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   root "chats#show"
 
+  resources :agents, only: [ :index, :new, :create, :edit, :update, :destroy ]
   resources :mcp_servers, only: [ :index, :new, :create, :edit, :update, :destroy ] do
     member do
       patch :start
