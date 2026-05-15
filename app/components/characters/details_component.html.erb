@@ -20,7 +20,17 @@
         <div class="min-w-0 grow space-y-2">
           <div class="flex items-start gap-3">
             <div class="min-w-0">
-              <h2 class="truncate text-2xl font-semibold tracking-tight"><%= character.name %></h2>
+              <% if name_editable? %>
+                <%= f.input_field :name,
+                                  class: "input input-ghost h-auto w-full max-w-full bg-transparent px-0 text-2xl font-semibold tracking-tight outline-none",
+                                  maxlength: 50,
+                                  data: { character_details_target: "nameInput" } %>
+                <% if character.errors[:name].present? %>
+                  <p class="mt-1 text-sm text-error"><%= character.errors.full_messages_for(:name).to_sentence %></p>
+                <% end %>
+              <% else %>
+                <h2 class="truncate text-2xl font-semibold tracking-tight"><%= character.name %></h2>
+              <% end %>
               <div class="mt-1 flex flex-wrap gap-2">
                 <span class="badge badge-sm w-fit <%= type_badge_class %>"><%= type_label %></span>
                 <% if shared? %>

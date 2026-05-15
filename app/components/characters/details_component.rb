@@ -38,6 +38,10 @@ module Characters
       character.editable_by?(helpers.current_user)
     end
 
+    def name_editable?
+      editable? && character.name_editable?
+    end
+
     def owned?
       character.owned_by?(helpers.current_user)
     end

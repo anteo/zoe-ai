@@ -40,7 +40,7 @@ module ApplicationHelper
       avatar_for(content: tag.span(class: "icon-[lucide--plus]"), css_class:, id:)
     else
       url = attached_avatar_variant_url(character.avatar, size_px) unless fallback
-      avatar_for(url:, content: character.name[0].upcase, css_class:, id:)
+      avatar_for(url:, content: character.name.to_s.first&.upcase, css_class:, id:)
     end
   end
 

@@ -126,7 +126,8 @@ class CharactersController < ApplicationController
   end
 
   def character_update_params
-    params.fetch(:character, {}).permit(
+    update_params = params.fetch(:character, {}).permit(
+      :name,
       :bio,
       :avatar,
       avatar_attachment_attributes: [ :id, :_destroy ],
@@ -136,6 +137,9 @@ class CharactersController < ApplicationController
       instructions_attributes: [ :id, :content, :_destroy ],
       images_attachments_attributes: [ :id, :description, :_destroy ]
     )
+
+    update_params.delete(:name) unless @character.name_editable?
+    update_params
   end
 
   def update_character!

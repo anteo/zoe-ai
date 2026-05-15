@@ -24,6 +24,7 @@ class Character < ApplicationRecord
   normalizes :name, with: ->(value) { value.to_s.strip.presence }
   validates :bio, length: { maximum: 160 }
   validates :name, presence: true, length: { maximum: 50 }
+  validate :name_is_editable, on: :update, if: :will_save_change_to_name?
 
   scope :third_party, ->(third_party = true) { where(third_party:) }
   scope :human, -> { third_party(false).where(ai: false) }
@@ -51,6 +52,14 @@ class Character < ApplicationRecord
 
   def editable_by?(user)
     owned_by?(user) || user&.admin?
+  end
+
+  def name_editable?
+    return true if new_record?
+    return false if facts.exists?
+    return false if Chat.by_character(self).joins(:messages).exists?
+
+    true
   end
 
   def shareable_by?(user)
@@ -100,5 +109,11 @@ class Character < ApplicationRecord
 
   def familiar?(partner:)
     fact_aggregates.where(partner:).bands.exists?
+  end
+
+  private
+
+  def name_is_editable
+    errors.add(:name, :readonly) unless name_editable?
   end
 end
