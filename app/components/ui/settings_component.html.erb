@@ -19,7 +19,7 @@
         </header>
       </div>
 
-      <% if form? %>
+      <% if section_component.form? %>
         <%= helpers.hidden_field_tag :section, @section %>
 
         <div class="flex-1 overflow-y-auto p-5 pb-8 space-y-8 text-sm bg-base-200">
@@ -39,27 +39,27 @@
   </div>
   <div class="drawer-side h-full overflow-y-auto bg-base-300">
     <ul class="menu h-full py-5 px-2 gap-0.5 flex-nowrap">
-      <% top_level_sections.each do |section, opts| %>
+      <% top_level_sections.each do |section| %>
         <li>
-          <%= link_to settings_path(section:),
+          <%= link_to settings_path(section: section.section_key),
                       class: helpers.class_names("flex w-full items-center justify-start gap-2",
-                                                 "menu-active" => active?(section)),
+                                                 "menu-active" => active?(section.section_key)),
                       data: { turbo_frame: "settings-body" } do %>
-            <span class="<%= opts[:icon] %> w-4 h-4 shrink-0"></span>
-            <%= t(:"label_settings_#{section}") %>
+            <span class="<%= section.section_icon_class %> w-4 h-4 shrink-0"></span>
+            <%= section.section_label %>
           <% end %>
 
-          <% children = child_sections(section) %>
+          <% children = child_sections(section.section_key) %>
           <% if children.any? %>
             <ul class="menu gap-0.5">
-              <% children.each do |child_section, child_opts| %>
+              <% children.each do |child_section| %>
                 <li>
-                  <%= link_to settings_path(section: child_section),
+                  <%= link_to settings_path(section: child_section.section_key),
                               class: helpers.class_names("flex w-full items-center justify-start gap-2",
-                                                         "menu-active" => active?(child_section)),
+                                                         "menu-active" => active?(child_section.section_key)),
                               data: { turbo_frame: "settings-body" } do %>
-                    <span class="<%= child_opts[:icon] %> w-4 h-4 shrink-0"></span>
-                    <%= t(:"label_settings_#{child_section}") %>
+                    <span class="<%= child_section.section_icon_class %> w-4 h-4 shrink-0"></span>
+                    <%= child_section.section_label %>
                   <% end %>
                 </li>
               <% end %>
