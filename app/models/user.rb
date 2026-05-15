@@ -16,6 +16,7 @@ class User < ApplicationRecord
   normalizes :first_name, :last_name, with: ->(value) { value.strip.presence }
   validates :first_name, :email, presence: true
 
+  before_create :skip_confirmation_if_first_user!
   after_create_commit :ensure_default_characters!
   after_create_commit :promote_to_admin_if_first!
 
@@ -57,6 +58,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def skip_confirmation_if_first_user!
+    skip_confirmation! unless User.exists?
+  end
 
   def promote_to_admin_if_first!
     update_column(:admin, true) if User.count == 1
