@@ -42,4 +42,6 @@
   <%= component :chats__chat, chat: %>
 
   <%= component :chats__chat_input, current_character:, chat: %>
+
+  <%= turbo_stream_from chat, class: "hidden" if chat.persisted? %>
 </div>

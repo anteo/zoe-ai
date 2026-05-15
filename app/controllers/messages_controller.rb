@@ -9,6 +9,7 @@ class MessagesController < ApplicationController
   def create
     content = RubyLLM::Content.new(message_params[:content], message_params[:attachments])
     memorize = message_params[:memorize] != "false"
+    respond_delay = nil
 
     if chat.new_record?
       CloseChatJob.perform_later(default_chat) if default_chat
@@ -17,6 +18,7 @@ class MessagesController < ApplicationController
       chat.save!
       message = chat.add_message(role: :user, content:)
       message.update_column(:memorize, chat.memorize)
+      respond_delay = 0.5.seconds
 
       redirect_to chat_path(chat)
     else
@@ -40,7 +42,7 @@ class MessagesController < ApplicationController
       end
     end
 
-    RespondJob.perform_later(chat)
+    RespondJob.set(wait: respond_delay).perform_later(chat)
   end
 
   def update

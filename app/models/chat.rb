@@ -110,6 +110,10 @@ class Chat < ApplicationRecord
     messages.history_visible
   end
 
+  def order_messages_for_llm(messages)
+    super(messages.reject(&:error?))
+  end
+
   def token_usage_message
     messages.where(role: "assistant").where.not(input_tokens: nil).reorder(created_at: :desc).first
   end

@@ -16,10 +16,10 @@ class Message < ApplicationRecord
     has_attachment = attachments.project(attachments[:record_id])
                                 .where(attachments[:record_type].eq("Message"))
                                 .distinct
-    where(role: %w[user assistant])
+    where(role: %w[user assistant error])
       .where(arel_table[:content].not_eq("").or(arel_table[:id].in(has_attachment)))
   }
-  scope :history_visible, -> { where(role: %w[user assistant]).where.not(content: [ nil, "" ]) }
+  scope :history_visible, -> { where(role: %w[user assistant error]).where.not(content: [ nil, "" ]) }
 
   def self.humanize_content(content)
     content.gsub(/\n*\(files attached: \[.*?\]\)/m, "").rstrip
@@ -33,11 +33,16 @@ class Message < ApplicationRecord
     role == "assistant"
   end
 
+  def error?
+    role == "error"
+  end
+
   def visible?
-    (user? || assistant?) && (content.present? || attachments.attached?)
+    (user? || assistant? || error?) && (content.present? || attachments.attached?)
   end
 
   def replayable_for_llm?
+    return false if error?
     return true if content_raw.present?
     return true if content.present?
     return true if attachments.attached?
@@ -64,7 +69,7 @@ class Message < ApplicationRecord
   private
 
   def inherit_memorize
-    return if user?
+    return if user? || error?
     last_user_message = chat.messages.where(role: "user").last
     self.memorize = last_user_message.nil? || last_user_message.memorize
   end
@@ -101,7 +106,7 @@ class Message < ApplicationRecord
   end
 
   def append_chat_history_message_metadata
-    return unless role.in?(%w[user assistant]) && content.present?
+    return unless role.in?(%w[user assistant error]) && content.present?
 
     chat = Chat.find_by(id: chat_id)
     return unless chat

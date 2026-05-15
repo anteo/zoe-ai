@@ -10,10 +10,16 @@ module JobChatSupport
   end
 
   def broadcast_error(chat, error)
-    Turbo::StreamsChannel.broadcast_replace_to(
+    message = chat.messages.create!(role: :error, content: error)
+
+    sleep 0.3
+
+    remove_message_placeholder(chat)
+
+    Turbo::StreamsChannel.broadcast_append_to(
       chat,
-      target: "message-placeholder-#{chat.id}",
-      content: UI::ErrorComponent.new(current_character: chat.character, chat:, error:),
+      target: "chat-messages",
+      content: Chats::MessageComponent.new(message:, current_character: chat.character),
     )
   end
 

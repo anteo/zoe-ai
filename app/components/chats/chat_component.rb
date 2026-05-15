@@ -2,9 +2,9 @@ module Chats
   class ChatComponent < ApplicationComponent
     attr_reader :chat, :dom_id
 
-    def initialize(chat:, stream: true, dom_id: "chat-messages")
+    def initialize(chat:, read_only: false, dom_id: "chat-messages")
       @chat = chat
-      @stream = stream
+      @read_only = read_only
       @dom_id = dom_id
     end
 
@@ -20,10 +20,6 @@ module Chats
 
     def read_only?
       @read_only
-    end
-
-    def stream?
-      @stream
     end
 
     def current_character

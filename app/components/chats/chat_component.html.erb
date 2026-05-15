@@ -11,8 +11,6 @@
       </p>
     </div>
   <% else %>
-    <%= turbo_stream_from chat if stream? %>
-
     <% messages.each do |message| %>
       <%= helpers.component :chats__message, message:, current_character:, read_only: read_only? %>
     <% end %>

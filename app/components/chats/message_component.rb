@@ -21,6 +21,8 @@ module Chats
     end
 
     def bubble_color
+      return "chat-bubble-error" if message.error?
+
       is_current_character? ? "bg-primary text-primary-content" : "bg-base-300"
     end
 
