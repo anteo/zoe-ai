@@ -29,11 +29,20 @@ module SettingConcern
     end
 
     def load_data
-      return {} unless connection.table_exists?(:settings)
+      return {} unless settings_table_available?
 
       all.each_with_object({}) do |row, h|
         (h[row.scope] ||= {})[row.key] = row.value
       end
+    rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::NoDatabaseError, PG::ConnectionBad
+      {}
+    end
+
+    def settings_table_available?
+      return false unless connection.table_exists?(:settings)
+      true
+    rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::NoDatabaseError, PG::ConnectionBad
+      false
     end
 
     # Calls block immediately and registers it for future changes to any of the given scopes.
@@ -64,7 +73,7 @@ module SettingConcern
     # Re-runs setting hooks in the current process if DB-backed settings changed
     # since the last sync point in this process.
     def sync_hooks_if_stale!(context: {})
-      return unless connection.table_exists?(:settings)
+      return unless settings_table_available?
 
       HOOKS_SYNC_MUTEX.synchronize do
         latest_update = maximum(:updated_at)
@@ -101,6 +110,8 @@ module SettingConcern
         @_hooks_synced_at = latest_update
         @_hooks_synced_keys = current_keys
       end
+    rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::NoDatabaseError, PG::ConnectionBad
+      nil
     end
 
     def scope(scope_name, &block)
