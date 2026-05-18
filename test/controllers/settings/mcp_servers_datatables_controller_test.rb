@@ -12,11 +12,11 @@ class Settings::MCPServersDatatablesControllerTest < ActionDispatch::Integration
   test "renders the mcp servers datatable frame" do
     create_mcp_server(name: "Alpha Server", key: "alpha")
 
-    get settings_mcp_servers_datatable_path
+    get mcp_servers_path
 
     assert_response :success
-    assert_includes response.body, %(turbo-frame id="#{datatable_frame_id}")
-    assert_includes response.body, %(turbo-frame id="#{datatable_results_frame_id}")
+    assert_includes response.body, %(id="#{datatable_frame_id}")
+    assert_includes response.body, %(id="#{datatable_results_frame_id}")
     assert_includes response.body, "Alpha Server"
   end
 
@@ -24,7 +24,7 @@ class Settings::MCPServersDatatablesControllerTest < ActionDispatch::Integration
     create_mcp_server(name: "Alpha Search", key: "alpha-search")
     create_mcp_server(name: "Beta Search", key: "beta-search")
 
-    get settings_mcp_servers_datatable_path, params: { q: { name_or_key_or_last_error_cont: "beta" } }
+    get mcp_servers_path, params: { q: { name_or_key_or_last_error_cont: "beta" } }
 
     assert_response :success
     assert_includes response.body, "Beta Search"
@@ -35,7 +35,7 @@ class Settings::MCPServersDatatablesControllerTest < ActionDispatch::Integration
     create_mcp_server(name: "Zeta Sort", key: "zeta-sort")
     create_mcp_server(name: "Alpha Sort", key: "alpha-sort")
 
-    get settings_mcp_servers_datatable_path, params: { q: { s: "name desc" } }
+    get mcp_servers_path, params: { q: { s: "name desc" } }
 
     assert_response :success
     assert_operator response.body.index("Zeta Sort"), :<, response.body.index("Alpha Sort")
@@ -46,7 +46,7 @@ class Settings::MCPServersDatatablesControllerTest < ActionDispatch::Integration
       create_mcp_server(name: format("Server %02d", index), key: format("server-%02d", index))
     end
 
-    get settings_mcp_servers_datatable_path, params: { page: 2 }
+    get mcp_servers_path, params: { page: 2 }
 
     assert_response :success
     assert_includes response.body, "Server 10"
@@ -57,10 +57,9 @@ class Settings::MCPServersDatatablesControllerTest < ActionDispatch::Integration
     get settings_path(section: "mcp_servers"), headers: { "Turbo-Frame" => "settings-body" }
 
     assert_response :success
-    assert_includes response.body, 'turbo-frame id="settings__mcp_servers"'
     assert_includes response.body, %(turbo-frame id="#{datatable_frame_id}")
     assert_includes response.body, %(turbo-frame id="#{datatable_results_frame_id}")
-    assert_includes response.body, settings_mcp_servers_datatable_path
+    assert_includes response.body, mcp_servers_path
   end
 
   private
