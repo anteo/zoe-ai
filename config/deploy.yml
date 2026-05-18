@@ -1,0 +1,94 @@
+service: zoe-ai
+image: anteo/zoe-ai
+minimum_version: 2.10.0
+
+servers:
+  web:
+    hosts:
+      - app1.example.com
+    env:
+      clear:
+        DB_PREPARE: 1
+        LOAD_MODELS: 1
+  worker:
+    hosts:
+      - worker1.example.com
+    cmd: bin/docker-entrypoint jobs
+
+proxy:
+  app_port: 3000
+  host: app.example.com
+  ssl: true
+  forward_headers: true
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 3
+
+registry:
+  server: ghcr.io
+  username:
+    - KAMAL_REGISTRY_USERNAME
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  clear:
+    ACTIVE_STORAGE_SERVICE: local
+    JOB_CONCURRENCY: 1
+    JOB_THREADS: 3
+    LOAD_MODELS: 0
+    RAILS_ENV: production
+    RAILS_LOG_LEVEL: info
+    RAILS_MAX_THREADS: 3
+    RAILS_SERVE_STATIC_FILES: true
+    WEB_CONCURRENCY: 0
+    ZOE_APP__EXTRA_HOSTS: app.example.com
+    ZOE_APP__HOST: app.example.com
+    ZOE_APP__PORT: 443
+    ZOE_APP__PROTOCOL: https
+  secret:
+    - DATABASE_URL
+    - RAILS_MASTER_KEY
+    - SECRET_KEY_BASE
+    - ZOE_AI__PROVIDERS__ANTHROPIC__API_KEY
+    - ZOE_AI__PROVIDERS__BEDROCK__API_KEY
+    - ZOE_AI__PROVIDERS__BEDROCK__REGION
+    - ZOE_AI__PROVIDERS__BEDROCK__SECRET_KEY
+    - ZOE_AI__PROVIDERS__BEDROCK__SESSION_TOKEN
+    - ZOE_AI__PROVIDERS__DEEPSEEK__API_KEY
+    - ZOE_AI__PROVIDERS__GEMINI__API_KEY
+    - ZOE_AI__PROVIDERS__MISTRAL__API_KEY
+    - ZOE_AI__PROVIDERS__OPENAI__API_KEY
+    - ZOE_AI__PROVIDERS__OPENROUTER__API_KEY
+    - ZOE_AI__PROVIDERS__PERPLEXITY__API_KEY
+    - ZOE_AI__PROVIDERS__VERTEXAI__LOCATION
+    - ZOE_AI__PROVIDERS__VERTEXAI__PROJECT_ID
+    - ZOE_AI__PROVIDERS__XAI__API_KEY
+    - ZOE_GOOGLE_CLIENT__ID
+    - ZOE_GOOGLE_CLIENT__SECRET
+    - ZOE_MAILER__FROM
+    - ZOE_MAILER__REPLY_TO
+    - ZOE_MAILER__SMTP__ADDRESS
+    - ZOE_MAILER__SMTP__AUTHENTICATION
+    - ZOE_MAILER__SMTP__DOMAIN
+    - ZOE_MAILER__SMTP__ENABLE_STARTTLS_AUTO
+    - ZOE_MAILER__SMTP__PASSWORD
+    - ZOE_MAILER__SMTP__PORT
+    - ZOE_MAILER__SMTP__USERNAME
+
+volumes:
+  - zoe_storage:/rails/storage
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+
+ssh:
+  user: deploy
+
+aliases:
+  console: app exec -i --reuse "bin/rails console"
+  logs: app logs -f
+  migrate: app exec --primary -i "bin/rails db:migrate"

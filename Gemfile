@@ -20,10 +20,10 @@ group :development, :test do
   # Omakase Ruby styling [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
   gem "rubocop-rails-omakase", require: false
   gem "foreman"
+  gem "kamal", require: false
 end
 
 gem "rails-i18n"
-gem "pgvector"
 gem "neighbor"
 gem "rainbow"
 gem "faraday"

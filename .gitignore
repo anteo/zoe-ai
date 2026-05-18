@@ -35,6 +35,8 @@
 
 /.idea
 /.claude
+/.kamal/secrets*
+!/.kamal/*.example
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
