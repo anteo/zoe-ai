@@ -1,6 +1,6 @@
 # Zoe AI — Project Context
 
-Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and SolidQueue. The core concept is a conversational AI ("Zoe") that builds up persistent knowledge about people through structured fact extraction.
+Rails 8.0 AI companion app using RubyLLM, PostgreSQL, and SolidQueue. The core concept is a conversational AI ("Zoe") that builds up persistent knowledge about people through structured fact extraction.
 
 **Why:** Personalized AI companion that remembers who you are across conversations, not just within a session.
 
@@ -75,7 +75,7 @@ Rails 8.0 AI companion app using RubyLLM, PostgreSQL (with vector support), and 
 
 ## Running Commands
 
-Always use `bash -lc "rvm 3.4.4@ai do <command>"` — e.g. `bash -lc "rvm 3.4.4@ai do bin/rails db:migrate"` to run Rake/Rails/Ruby commands.
+Always use `bash -lc "rvm 4.0.4@zoe-ai do <command>"` — e.g. `bash -lc "rvm 4.0.4@zoe-ai do bin/rails db:migrate"` to run Rake/Rails/Ruby commands.
 
 Do not run asset build commands in development (e.g. `npm run build`, `bun bun.config.js`, or equivalent JS/CSS build tasks). Assume a dev watcher/process handles assets.
 
@@ -106,5 +106,8 @@ Only fall back to custom utility compositions when DaisyUI does not cover the in
 When user asks to commit, analyze current git changes, group by feature, show proposed commit plan first, then commit after user approval.
 Use Conventional Commits format only for all commit messages, specifically: `<type>(<scope>): <subject>`.
 Prefer atomic commits: each commit should contain one logical change only (single concern), even if that results in more commits.
+Do not mix unrelated concerns in one commit just because the files are all currently modified. Split setup, release tooling, licensing, deployment, refactors, and app behavior changes into separate commits whenever they can stand on their own.
+If a change can be described with `and`, it probably should be split into multiple commits.
+Examples of changes that should usually stay separate: MIT license addition, `release-it` configuration, Docker image setup, Kamal deployment config, and application feature or bugfix work.
 Before starting any commit sequence, unstage everything first (`git restore --staged .`) and then stage files explicitly per planned commit.
 Run git commands sequentially; do not run git commands in parallel.
