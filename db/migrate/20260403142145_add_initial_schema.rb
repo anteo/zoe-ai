@@ -1,7 +1,5 @@
 class AddInitialSchema < ActiveRecord::Migration[8.1]
   def change
-    enable_extension "vector"
-
     create_table "users", force: :cascade do |t|
       t.boolean "admin", default: false, null: false
       t.datetime "confirmation_sent_at"
