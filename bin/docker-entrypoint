@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+
+rm -f /rails/tmp/pids/server.pid
+
+if [ "${DB_PREPARE:-0}" = "1" ]; then
+  bundle exec rails db:prepare
+  bundle exec rails db:seed
+fi
+
+if [ "${LOAD_MODELS:-0}" = "1" ]; then
+  bundle exec rake ruby_llm:load_models
+fi
+
+case "${1:-web}" in
+  web)
+    exec bundle exec puma -C config/puma.rb
+    ;;
+  jobs|worker)
+    exec bundle exec ruby ./bin/jobs start
+    ;;
+  *)
+    exec "$@"
+    ;;
+esac

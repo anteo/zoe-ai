@@ -1,0 +1,17 @@
+.bundle
+.env*
+.git
+.github
+.idea
+.kamal/secrets*
+.run
+.DS_Store
+log/*
+node_modules
+storage/*
+tmp/*
+vendor/bundle
+
+!/log/.keep
+!/tmp/.keep
+!/tmp/pids/.keep
