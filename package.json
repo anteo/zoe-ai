@@ -1,7 +1,8 @@
 {
-  "name": "app",
+  "name": "zoe-ai",
   "private": "true",
   "license": "MIT",
+  "version": "0.1.0",
   "dependencies": {
     "@codemirror/commands": "^6.10.3",
     "@codemirror/lang-json": "^6.0.2",
@@ -27,14 +28,48 @@
   },
   "scripts": {
     "build:css": "postcss ./app/assets/stylesheets/application.postcss.css -o ./app/assets/builds/application.css",
-    "build": "bun bun.config.js"
+    "build": "bun bun.config.js",
+    "release": "release-it",
+    "release:dry-run": "release-it --dry-run"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): v${version}",
+      "push": true,
+      "requireCleanWorkingDir": true,
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": false
+    },
+    "plugins": {
+      "@release-it/bumper": {
+        "out": {
+          "file": "lib/ai/version.rb",
+          "type": "text/plain"
+        }
+      },
+      "@release-it/conventional-changelog": {
+        "header": "# Changelog",
+        "infile": "CHANGELOG.md",
+        "preset": {
+          "name": "conventionalcommits"
+        }
+      }
+    }
   },
   "devDependencies": {
     "@egoist/tailwindcss-icons": "^1.9.0",
     "@iconify-json/lucide": "^1.2.102",
     "@iconify/tailwind4": "^1.2.1",
+    "@release-it/bumper": "^7.0.5",
+    "@release-it/conventional-changelog": "^11.0.0",
     "@tailwindcss/postcss": "^4.1.18",
     "daisyui": "^5.5.14",
+    "release-it": "^20.0.1",
     "tailwindcss": "^4.1.18"
   }
 }

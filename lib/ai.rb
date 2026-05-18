@@ -1,3 +1,5 @@
+require_relative "ai/version"
+
 module AI
   module_function
 
