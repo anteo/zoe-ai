@@ -1,0 +1,72 @@
+name: zoe-ai
+
+services:
+  web:
+    build:
+      context: .
+    command: ["web"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@postgres:5432/zoe_ai}
+      DB_PREPARE: ${DB_PREPARE:-1}
+      JOB_CONCURRENCY: ${JOB_CONCURRENCY:-1}
+      JOB_THREADS: ${JOB_THREADS:-3}
+      LOAD_MODELS: ${LOAD_MODELS:-1}
+      RAILS_ENV: ${RAILS_ENV:-production}
+      RAILS_LOG_LEVEL: ${RAILS_LOG_LEVEL:-info}
+      RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-3}
+      RAILS_SERVE_STATIC_FILES: ${RAILS_SERVE_STATIC_FILES:-true}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-local-compose-secret-key-base}
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-0}
+    ports:
+      - "3000:3000"
+    volumes:
+      - storage_data:/rails/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/up > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  jobs:
+    build:
+      context: .
+    command: ["jobs"]
+    depends_on:
+      web:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@postgres:5432/zoe_ai}
+      JOB_CONCURRENCY: ${JOB_CONCURRENCY:-1}
+      JOB_THREADS: ${JOB_THREADS:-3}
+      LOAD_MODELS: ${LOAD_MODELS:-0}
+      RAILS_ENV: ${RAILS_ENV:-production}
+      RAILS_LOG_LEVEL: ${RAILS_LOG_LEVEL:-info}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-local-compose-secret-key-base}
+    volumes:
+      - storage_data:/rails/storage
+
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:17}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-zoe_ai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d zoe_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  storage_data:
