@@ -194,28 +194,6 @@ That starts:
 
 Solid Queue is configured in-process for development via `SOLID_QUEUE_IN_PUMA=true`, so background jobs run alongside the web app.
 
-## Releases
-
-Releases are managed with `release-it`.
-
-The release flow is configured to:
-
-- bump the version in `package.json`
-- sync `AI::VERSION` in `lib/ai/version.rb` via `@release-it/bumper`
-- create and push a Git tag like `v0.1.0`
-- push the release commit to GitHub
-- update `CHANGELOG.md` with the conventional changelog plugin
-- skip npm publishing
-
-Example commands:
-
-```bash
-bun run release:dry-run
-GITHUB_TOKEN=... bun run release
-```
-
-If you want GitHub Releases to be created automatically, `GITHUB_TOKEN` must be available in the environment used for the release.
-
 ## Running with Docker Compose
 
 The repository ships with [`compose.yml`](compose.yml), so you can boot the app, worker, and PostgreSQL together with Docker Compose.

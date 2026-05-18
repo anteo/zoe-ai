@@ -111,3 +111,28 @@ If a change can be described with `and`, it probably should be split into multip
 Examples of changes that should usually stay separate: MIT license addition, `release-it` configuration, Docker image setup, Kamal deployment config, and application feature or bugfix work.
 Before starting any commit sequence, unstage everything first (`git restore --staged .`) and then stage files explicitly per planned commit.
 Run git commands sequentially; do not run git commands in parallel.
+
+## Release Workflow
+
+Releases are managed with `release-it`.
+
+The release flow is configured to:
+
+- bump the version in `package.json`
+- sync `AI::VERSION` in `lib/ai/version.rb` via `@release-it/bumper`
+- create and push a Git tag like `v1.0.1`
+- push the release commit to GitHub
+- update `CHANGELOG.md` with the conventional changelog plugin
+- skip npm publishing
+
+Typical commands:
+
+```bash
+bun run release:dry-run
+GITHUB_TOKEN=... bun run release -- <version> --ci
+```
+
+Notes:
+
+- SSH is enough for git push operations.
+- `GITHUB_TOKEN` is still required when `github.release: true` is enabled and the release should be created through the GitHub API.
