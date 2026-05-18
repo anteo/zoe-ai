@@ -27,6 +27,9 @@
 threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
 
+workers_count = ENV.fetch("WEB_CONCURRENCY", 0).to_i
+workers workers_count if workers_count > 1
+
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 port ENV.fetch("PORT", 3000)
 
@@ -37,5 +40,5 @@ plugin :tmp_restart
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
 
-plugin :solid_queue if ENV.fetch("SOLID_QUEUE_IN_PUMA", "development") == "development"
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"] == "true"
 # plugin :tailwindcss if ENV.fetch("RAILS_ENV", "development") == "development"

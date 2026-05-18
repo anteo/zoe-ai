@@ -46,8 +46,7 @@ module Ai
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    # Store files `locally.
-    config.active_storage.service = :local
+    config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", "local").to_sym
 
     config.i18n.available_locales = [ :en, :ru ] # Add all supported locales
     config.i18n.default_locale = :en
