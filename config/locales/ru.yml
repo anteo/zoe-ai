@@ -314,7 +314,7 @@ ru:
   text_models_sync_json_unchanged: models.json без изменений
   text_models_sync_json_updated: models.json обновлен
   text_models_sync_started: Обновление реестра моделей...
-  text_model_not_configured: Модель не настроена. Укажите модель в Настройки -> Модели.
+  text_model_not_configured: Модель не выбрана или не настроена. Проверьте настройки приложения.
   text_nothing_found: Ничего не найдено
   text_no_agents: Агенты пока не настроены.
   text_no_available_models: Нет доступных моделей

@@ -314,7 +314,7 @@ en:
   text_models_sync_json_unchanged: models.json unchanged
   text_models_sync_json_updated: models.json refreshed
   text_models_sync_started: Updating model registry...
-  text_model_not_configured: Model is not configured. Please set a model in Settings -> LLM.
+  text_model_not_configured: Model is not selected or not configured. Please check application settings.
   text_nothing_found: Nothing found
   text_no_agents: No agents configured yet.
   text_no_available_models: No available models

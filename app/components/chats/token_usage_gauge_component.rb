@@ -6,6 +6,13 @@ module Chats
       @chat = chat
     end
 
+    def enabled?
+      chat.token_usage_context_window
+      true
+    rescue RubyLLM::Error
+      false
+    end
+
     def percentage
       chat.token_usage_percentage
     end

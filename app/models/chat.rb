@@ -10,6 +10,9 @@ class Chat < ApplicationRecord
   has_many :facts, dependent: :destroy
   has_many :attachments_blobs, through: :messages
 
+  skip_callback :save, :before, :resolve_model_from_strings
+  before_save :resolve_model_from_strings_safe
+
   scope :by_character, ->(character) {
     where(character:).or(where(partner: character))
   }
@@ -105,6 +108,18 @@ class Chat < ApplicationRecord
   end
 
   private
+
+  def resolve_model_from_strings
+    super
+  rescue RubyLLM::ConfigurationError
+    raise AI::ModelNotConfiguredError
+  end
+
+  def resolve_model_from_strings_safe
+    resolve_model_from_strings
+  rescue AI::ModelNotConfiguredError
+    nil
+  end
 
   def history_visible_messages
     messages.history_visible
