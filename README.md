@@ -19,6 +19,28 @@ It is also not limited to a single user talking to a single bot. Many users can 
 
 In practice, Zoe behaves less like a stateless assistant and more like an AI relationship layer: create characters, chat, remember, refine, share, and reuse that memory in later conversations.
 
+## Screenshots
+
+### Main chat
+
+![Main chat](docs/screenshots/main_chat.png)
+
+### Chat history
+
+![Chat history](docs/screenshots/chat_history.png)
+
+### Characters list
+
+![Characters list](docs/screenshots/characters_list.png)
+
+### Character profile
+
+![Character profile](docs/screenshots/character.png)
+
+### Settings
+
+![Settings](docs/screenshots/settings.png)
+
 ## How it works
 
 1. A user sends a message in a chat.
