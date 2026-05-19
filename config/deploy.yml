@@ -84,7 +84,6 @@ accessories:
     service: postgres
     host: <%= server_host %>
     image: postgres:17
-    port: "127.0.0.1:5432:5432"
     directories:
       - postgres_data:/var/lib/postgresql/data
     env:
