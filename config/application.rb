@@ -54,6 +54,7 @@ module Ai
     config.active_job.queue_adapter = :solid_queue
 
     config.solid_queue.logger = ActiveSupport::Logger.new(STDOUT)
+    config.middleware.use Rack::Attack
 
     config.mission_control.jobs.http_basic_auth_enabled = false
     config.mission_control.jobs.show_console_help = false
