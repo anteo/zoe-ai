@@ -5,8 +5,8 @@ Dotenv.load(".kamal/secrets-common", ".kamal/secrets")
 
 server_host = ENV.fetch("KAMAL_SERVER_HOST")
 app_host = ENV.fetch("KAMAL_APP_HOST")
-app_data_dir = ENV.fetch("KAMAL_APP_DATA_DIR")
-postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR")
+app_data_dir = ENV.fetch("KAMAL_APP_DATA_DIR", "zoe_storage")
+postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR", "zoe_postgres_data")
 %>
 
 service: zoe-ai
@@ -14,19 +14,28 @@ image: anteo/zoe-ai
 minimum_version: 2.10.0
 deploy_timeout: 60
 
+proxy:
+  app_port: 3000
+  host: <%= app_host %>
+  ssl: false
+  forward_headers: true
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 3
+  run:
+    http_port: 3000
+    https_port: 3001
+    bind_ips:
+      - 127.0.0.1
+    options:
+      env:
+        - "KAMAL_PROXY_HTTP_PORT=3000"
+        - "KAMAL_PROXY_HTTPS_PORT=3001"
 servers:
   web:
     hosts:
       - <%= server_host %>
-    proxy: false
-    options:
-      publish:
-        - "127.0.0.1:3000:3000"
-      health-cmd: "curl -f http://localhost:3000/up || exit 1"
-      health-interval: "5s"
-      health-timeout: "5s"
-      health-retries: "10"
-      health-start-period: "20s"
     env:
       clear:
         DB_PREPARE: 1
@@ -54,6 +63,8 @@ env:
     RAILS_MAX_THREADS: 3
     RAILS_SERVE_STATIC_FILES: true
     WEB_CONCURRENCY: 0
+    ZOE_GOOGLE_CLIENT__ID: <%= ENV["ZOE_GOOGLE_CLIENT__ID"].to_s %>
+    ZOE_GOOGLE_CLIENT__SECRET: <%= ENV["ZOE_GOOGLE_CLIENT__SECRET"].to_s %>
     ZOE_APP__HOST: <%= app_host %>
     ZOE_APP__PORT: 443
     ZOE_APP__PROTOCOL: https
@@ -88,6 +99,6 @@ ssh:
 
 aliases:
   console: app exec -i --reuse "bin/rails console"
-  dbconsole: accessory exec postgres -i "sh -lc 'PGPASSWORD=\"$POSTGRES_PASSWORD\" exec psql -h zoe-ai-postgres0 -U zoe_ai -d zoe_ai_production'"
+  dbconsole: accessory exec postgres -i "psql -U zoe_ai -d zoe_ai_production"
   logs: app logs -f
   migrate: app exec --primary -i "bin/rails db:migrate"
