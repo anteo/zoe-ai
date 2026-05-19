@@ -15,6 +15,15 @@ servers:
   web:
     hosts:
       - <%= server_host %>
+    proxy: false
+    options:
+      publish:
+        - "127.0.0.1:3000:3000"
+      health-cmd: "curl -f http://localhost:3000/up || exit 1"
+      health-interval: "10s"
+      health-timeout: "5s"
+      health-retries: "5"
+      health-start-period: "40s"
     env:
       clear:
         DB_PREPARE: 1
@@ -23,16 +32,6 @@ servers:
     hosts:
       - <%= server_host %>
     cmd: bin/docker-entrypoint jobs
-
-proxy:
-  app_port: 3000
-  host: <%= app_host %>
-  ssl: true
-  forward_headers: true
-  healthcheck:
-    path: /up
-    interval: 3
-    timeout: 3
 
 registry:
   server: ghcr.io
@@ -75,15 +74,7 @@ env:
     - ZOE_AI__PROVIDERS__XAI__API_KEY
     - ZOE_GOOGLE_CLIENT__ID
     - ZOE_GOOGLE_CLIENT__SECRET
-    - ZOE_MAILER__FROM
-    - ZOE_MAILER__REPLY_TO
-    - ZOE_MAILER__SMTP__ADDRESS
-    - ZOE_MAILER__SMTP__AUTHENTICATION
-    - ZOE_MAILER__SMTP__DOMAIN
-    - ZOE_MAILER__SMTP__ENABLE_STARTTLS_AUTO
     - ZOE_MAILER__SMTP__PASSWORD
-    - ZOE_MAILER__SMTP__PORT
-    - ZOE_MAILER__SMTP__USERNAME
 
 volumes:
   - zoe_storage:/rails/storage
