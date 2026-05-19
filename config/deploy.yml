@@ -5,6 +5,8 @@ Dotenv.load(".kamal/secrets-common", ".kamal/secrets")
 
 server_host = ENV.fetch("KAMAL_SERVER_HOST")
 app_host = ENV.fetch("KAMAL_APP_HOST")
+app_data_dir = ENV.fetch("KAMAL_APP_DATA_DIR")
+postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR")
 %>
 
 service: zoe-ai
@@ -77,7 +79,7 @@ env:
     - ZOE_MAILER__SMTP__PASSWORD
 
 volumes:
-  - zoe_storage:/rails/storage
+  - <%= app_data_dir %>:/rails/storage
 
 accessories:
   postgres:
@@ -85,7 +87,7 @@ accessories:
     host: <%= server_host %>
     image: postgres:17
     directories:
-      - postgres_data:/var/lib/postgresql/data
+      - <%= postgres_data_dir %>:/var/lib/postgresql/data
     env:
       clear:
         POSTGRES_DB: zoe_ai_production
