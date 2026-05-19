@@ -15,7 +15,7 @@ It is also not limited to a single user talking to a single bot. Many users can 
 - **Memory is organized by person and topic.** Facts are attached to characters and grouped into topic-based aggregates, so recall can stay specific instead of collapsing into a single summary blob.
 - **Memory evolves over time.** Zoe maintains monthly and rolling summaries of persistent facts, which lets it keep a compressed but durable picture of someone as conversations accumulate.
 - **Conversations stay conversational.** Fact extraction and summarization run asynchronously in background jobs, so the chat flow remains responsive while memory is updated behind the scenes.
-- **It is built as a conventional Rails app.** The core is ActiveRecord models, background jobs, prompt templates, and service actors rather than a black-box chatbot stack.
+- **It is built as a conventional Rails app.** The core is ActiveRecord models, Hotwire and Stimulus for the interactive UI, background jobs, prompt templates, and service actors rather than a black-box chatbot stack.
 
 In practice, Zoe behaves less like a stateless assistant and more like an AI relationship layer: create characters, chat, remember, refine, share, and reuse that memory in later conversations.
 
@@ -54,6 +54,7 @@ In practice, Zoe behaves less like a stateless assistant and more like an AI rel
 
 - Ruby on Rails 8
 - PostgreSQL
+- Hotwire and Stimulus
 - Solid Queue for background jobs
 - RubyLLM for model/provider integration
 - Bun, Tailwind, and DaisyUI for frontend assets
