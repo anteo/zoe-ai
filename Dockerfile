@@ -38,6 +38,8 @@ RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 FROM base AS runtime
 
+LABEL org.opencontainers.image.source="https://github.com/anteo/zoe-ai"
+
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       curl \
