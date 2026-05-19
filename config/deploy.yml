@@ -13,6 +13,7 @@ service: zoe-ai
 image: anteo/zoe-ai
 minimum_version: 2.10.0
 deploy_timeout: 60
+retain_containers: 2
 
 proxy:
   app_port: 3000
