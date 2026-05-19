@@ -34,7 +34,8 @@ RUN bun install --frozen-lockfile
 
 COPY . .
 
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile && \
+    rm -rf node_modules log/* tmp/*
 
 FROM base AS runtime
 
@@ -45,8 +46,7 @@ RUN apt-get update -qq && \
       curl \
       libpq5 \
       libyaml-0-2 \
-      libvips \
-      postgresql-client && \
+      libvips && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /usr/local/bundle /usr/local/bundle
