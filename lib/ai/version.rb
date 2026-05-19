@@ -1,3 +1,7 @@
 module AI
-  VERSION = "1.0.2"
+  module Version
+    STRING = "1.0.2"
+  end
+
+  VERSION = Version::STRING
 end
