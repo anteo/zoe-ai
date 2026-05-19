@@ -12,6 +12,7 @@ postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR")
 service: zoe-ai
 image: anteo/zoe-ai
 minimum_version: 2.10.0
+deploy_timeout: 60
 
 servers:
   web:
@@ -22,10 +23,10 @@ servers:
       publish:
         - "127.0.0.1:3000:3000"
       health-cmd: "curl -f http://localhost:3000/up || exit 1"
-      health-interval: "10s"
+      health-interval: "5s"
       health-timeout: "5s"
-      health-retries: "5"
-      health-start-period: "40s"
+      health-retries: "10"
+      health-start-period: "20s"
     env:
       clear:
         DB_PREPARE: 1
@@ -87,6 +88,6 @@ ssh:
 
 aliases:
   console: app exec -i --reuse "bin/rails console"
-  dbconsole: accessory exec postgres -i "psql -U zoe_ai -d zoe_ai_production"
+  dbconsole: accessory exec postgres -i "sh -lc 'PGPASSWORD=\"$POSTGRES_PASSWORD\" exec psql -h zoe-ai-postgres0 -U zoe_ai -d zoe_ai_production'"
   logs: app logs -f
   migrate: app exec --primary -i "bin/rails db:migrate"
