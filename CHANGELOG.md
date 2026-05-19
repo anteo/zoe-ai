@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0](https://github.com/anteo/zoe-ai/compare/v1.0.2...v1.1.0) (2026-05-19)
+
+### Features
+
+* **rate-limit:** add Rack::Attack throttling rules and integration tests ([6393f34](https://github.com/anteo/zoe-ai/commit/6393f34e2de5e817e8e24ed7c910a226e1cfe684))
+
 ## [1.0.2](https://github.com/anteo/zoe-ai/compare/v1.0.1...v1.0.2) (2026-05-18)
 
 ## [1.0.1](https://github.com/anteo/zoe-ai/compare/v1.0.0...v1.0.1) (2026-05-18)
