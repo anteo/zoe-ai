@@ -1,27 +1,36 @@
 # examples:
-#   periodic_cleanup:
-#     class: CleanSoftDeletedRecordsJob
-#     queue: background
-#     args: [ 1000, { batch_size: 500 } ]
-#     schedule: every hour
-#   periodic_cleanup_with_command:
-#     command: "SoftDeletedRecord.due.delete_all"
-#     priority: 2
-#     schedule: at 5am every day
+#   defaults: &defaults
+#     periodic_cleanup:
+#       class: CleanSoftDeletedRecordsJob
+#       queue: background
+#       args: [ 1000, { batch_size: 500 } ]
+#       schedule: every hour
+#
+#   production:
+#     <<: *defaults
+#     periodic_cleanup_with_command:
+#       command: "SoftDeletedRecord.due.delete_all"
+#       priority: 2
+#       schedule: at 5am every day
 
-close_chats:
-  class: CloseStaleChatsJob
-  schedule: at midnight every day
+defaults: &defaults
+  aggregate_persistent_facts:
+    class: AggregatePersistentFactsJob
+    schedule: at 12:30am every day
 
-aggregate_persistent_facts:
-  class: AggregatePersistentFactsJob
-  schedule: at 12:30am every day
+  close_chats:
+    class: CloseStaleChatsJob
+    schedule: at midnight every day
 
-enqueue_fact_aggregate_summaries:
-  class: EnqueueFactAggregateSummariesJob
-  schedule: at 1am every day
+  enqueue_fact_aggregate_summaries:
+    class: EnqueueFactAggregateSummariesJob
+    schedule: at 1am every day
+
+development:
+  <<: *defaults
 
 production:
+  <<: *defaults
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
