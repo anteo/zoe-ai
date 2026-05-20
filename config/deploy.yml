@@ -1,12 +1,13 @@
 <%
-require "dotenv"
-
-Dotenv.load(".kamal/secrets-common", ".kamal/secrets")
+require "dotenv/load"
 
 server_host = ENV.fetch("KAMAL_SERVER_HOST")
 app_host = ENV.fetch("KAMAL_APP_HOST")
 app_data_dir = ENV.fetch("KAMAL_APP_DATA_DIR", "zoe_storage")
 postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR", "zoe_postgres_data")
+postgres_port = ENV["KAMAL_POSTGRES_PORT"].to_s.strip
+postgres_port = nil if postgres_port.empty?
+postgres_port = "127.0.0.1:#{postgres_port}:5432" if postgres_port && !postgres_port.include?(":")
 %>
 
 service: zoe-ai
@@ -57,8 +58,8 @@ env:
     RAILS_MAX_THREADS: 5
     RAILS_SERVE_STATIC_FILES: true
     WEB_CONCURRENCY: 0
-    ZOE_GOOGLE_CLIENT__ID: <%= ENV["ZOE_GOOGLE_CLIENT__ID"].to_s %>
-    ZOE_GOOGLE_CLIENT__SECRET: <%= ENV["ZOE_GOOGLE_CLIENT__SECRET"].to_s %>
+    ZOE_GOOGLE_CLIENT__ID: <%= ENV["ZOE_GOOGLE_CLIENT__ID"].to_s.inspect %>
+    ZOE_GOOGLE_CLIENT__SECRET: <%= ENV["ZOE_GOOGLE_CLIENT__SECRET"].to_s.inspect %>
     ZOE_APP__HOST: <%= app_host %>
     ZOE_APP__PORT: 443
     ZOE_APP__PROTOCOL: https
@@ -74,6 +75,9 @@ accessories:
     service: zoe-ai-postgres
     host: <%= server_host %>
     image: postgres:17
+<% if postgres_port %>
+    port: <%= postgres_port.inspect %>
+<% end %>
     directories:
       - <%= postgres_data_dir %>:/var/lib/postgresql/data
     env:
@@ -93,6 +97,6 @@ ssh:
 
 aliases:
   console: app exec -i --reuse "bin/rails console"
-  dbconsole: accessory exec postgres -i "psql -U zoe_ai -d zoe_ai_production"
+  dbconsole: accessory exec postgres -i "sh -lc 'PGPASSWORD=\"$POSTGRES_PASSWORD\" exec psql -h zoe-ai-postgres -U zoe_ai -d zoe_ai_production'"
   logs: app logs -f
   migrate: app exec --primary -i "bin/rails db:migrate"
