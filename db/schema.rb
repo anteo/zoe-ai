@@ -167,24 +167,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_15_090000) do
     t.index ["topic_id"], name: "index_facts_on_topic_id"
   end
 
-  create_table "facts_bak", id: :bigint, default: -> { "nextval('facts_id_seq'::regclass)" }, force: :cascade do |t|
-    t.bigint "author_id"
-    t.bigint "character_id"
-    t.bigint "chat_id"
-    t.text "content"
-    t.datetime "created_at", null: false
-    t.date "date_from"
-    t.date "date_to"
-    t.integer "importance", default: 50
-    t.string "kind"
-    t.datetime "mentioned_at", precision: nil
-    t.bigint "message_id"
-    t.boolean "persistent", default: true, null: false
-    t.string "time", default: "present", null: false
-    t.bigint "topic_id"
-    t.datetime "updated_at", null: false
-  end
-
   create_table "instructions", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.bigint "character_id"
@@ -463,9 +445,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_15_090000) do
   add_foreign_key "facts", "chats"
   add_foreign_key "facts", "messages"
   add_foreign_key "facts", "topics"
-  add_foreign_key "facts_bak", "chats"
-  add_foreign_key "facts_bak", "messages"
-  add_foreign_key "facts_bak", "topics"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
