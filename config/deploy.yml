@@ -58,14 +58,14 @@ env:
     RAILS_MAX_THREADS: 5
     RAILS_SERVE_STATIC_FILES: true
     WEB_CONCURRENCY: 0
-    ZOE_GOOGLE_CLIENT__ID: <%= ENV["ZOE_GOOGLE_CLIENT__ID"].to_s.inspect %>
-    ZOE_GOOGLE_CLIENT__SECRET: <%= ENV["ZOE_GOOGLE_CLIENT__SECRET"].to_s.inspect %>
     ZOE_APP__HOST: <%= app_host %>
     ZOE_APP__PORT: 443
     ZOE_APP__PROTOCOL: https
   secret:
     - DATABASE_URL
     - RAILS_MASTER_KEY
+    - ZOE_GOOGLE_CLIENT__ID
+    - ZOE_GOOGLE_CLIENT__SECRET
 
 volumes:
   - <%= app_data_dir %>:/rails/storage
