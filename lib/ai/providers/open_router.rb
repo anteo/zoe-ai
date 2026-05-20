@@ -41,7 +41,14 @@ module AI
         options[closest_k]
       end
 
-      def render_image_payload(prompt, model:, size:)
+      def render_image_payload(prompt, model:, size:, with: nil, mask: nil, params: {}) # rubocop:disable Lint/UnusedMethodArgument,Metrics/ParameterLists
+        prompt = if Array.wrap(with).compact.any?
+          content = RubyLLM::Content.new(prompt, with)
+          format_content(content)
+        else
+          prompt
+        end
+
         {
           model: model,
           messages: [
@@ -55,20 +62,12 @@ module AI
             aspect_ratio: size_to_aspect_ratio(size),
             image_size: size_to_image_size(size)
           }
-        }
+        }.deep_merge(params)
       end
 
-      # Extended paint that accepts optional source +images+ for image-to-image generation.
-      def paint(prompt, model:, size:, images: [])
-        prompt = if images.any?
-          content = RubyLLM::Content.new(prompt, images)
-          format_content(content)
-        else
-          prompt
-        end
-        payload = render_image_payload(prompt, model:, size:)
-        response = @connection.post(images_url, payload)
-        parse_image_response(response, model:)
+      def validate_paint_inputs!(with:, mask:)
+        super
+        raise ArgumentError, "OpenRouter does not support mask-based image editing" if mask.present?
       end
     end
   end
