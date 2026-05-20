@@ -19,6 +19,7 @@ module AI::Actors
       logger.debug ">>> #{llm_chat.instructions}"
       messages = chat.messages
                      .visible
+                     .where.not(role: "error")
                      .preload(:character, facts: [ :character, :topic ])
                      .order(:created_at)
       messages.each do |message|
