@@ -1,6 +1,7 @@
 require Rails.root.join("lib/patches").to_s
 
 Patches.register %w[
+  Faraday::Logging::Formatter
   MissionControl::Jobs::ApplicationController
   RubyLLM::MCP
   RubyLLM::MCP::Client
