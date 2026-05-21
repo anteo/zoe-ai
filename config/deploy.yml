@@ -4,10 +4,10 @@ require "dotenv/load"
 server_host = ENV.fetch("KAMAL_SERVER_HOST")
 app_host = ENV.fetch("KAMAL_APP_HOST")
 app_data_dir = ENV.fetch("KAMAL_APP_DATA_DIR", "zoe_storage")
+build_context = ENV["KAMAL_BUILD_CONTEXT"].to_s.strip
 postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR", "zoe_postgres_data")
 postgres_port = ENV["KAMAL_POSTGRES_PORT"].to_s.strip
-postgres_port = nil if postgres_port.empty?
-postgres_port = "127.0.0.1:#{postgres_port}:5432" if postgres_port && !postgres_port.include?(":")
+postgres_port = "127.0.0.1:#{postgres_port}:5432" unless postgres_port.empty? || postgres_port.include?(":")
 %>
 
 service: zoe-ai
@@ -75,7 +75,7 @@ accessories:
     service: zoe-ai-postgres
     host: <%= server_host %>
     image: postgres:17
-<% if postgres_port %>
+<% unless postgres_port.empty? %>
     port: <%= postgres_port.inspect %>
 <% end %>
     directories:
@@ -91,6 +91,9 @@ asset_path: /rails/public/assets
 
 builder:
   arch: amd64
+<% unless build_context.empty? %>
+  context: <%= build_context %>
+<% end %>
 
 ssh:
   user: deploy
