@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/anteo/zoe-ai/compare/v1.1.1...v1.1.2) (2026-05-21)
+
+### Bug Fixes
+
+* **ai:** add mask and params parameters to paint and refactor OpenRouter provider (after ruby_llm upgrade) ([d795331](https://github.com/anteo/zoe-ai/commit/d79533193a28b8ebee910b6768f306e5de8ac71d))
+* **ai:** exclude error messages when extracting facts ([60d79a2](https://github.com/anteo/zoe-ai/commit/60d79a24385a639f94f9b462df0ffa517d510a33))
+* **ai:** rename on_end_message callback to after_message ([1ffd14b](https://github.com/anteo/zoe-ai/commit/1ffd14b8ee387fe0ee9852728c9cd68479fade96))
+
 ## [1.1.1](https://github.com/anteo/zoe-ai/compare/v1.1.0...v1.1.1) (2026-05-20)
 
 ## [1.1.0](https://github.com/anteo/zoe-ai/compare/v1.0.2...v1.1.0) (2026-05-19)
