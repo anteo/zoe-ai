@@ -43,6 +43,7 @@ class Message < ApplicationRecord
 
   def replayable_for_llm?
     return false if error?
+    return true if tool_call?
     return true if content_raw.present?
     return true if content.present?
     return true if attachments.attached?
