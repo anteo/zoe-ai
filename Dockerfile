@@ -1,8 +1,12 @@
 # syntax=docker/dockerfile:1
 
 ARG RUBY_VERSION=4.0.4
+ARG UV_VERSION=0.11.15
+
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
 
 FROM ruby:${RUBY_VERSION}-slim AS base
+COPY --from=uv /uv /uvx /usr/local/bin/
 
 WORKDIR /rails
 
@@ -43,7 +47,9 @@ LABEL org.opencontainers.image.source="https://github.com/anteo/zoe-ai"
 
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
+      ca-certificates \
       curl \
+      git \
       libpq5 \
       libyaml-0-2 \
       libvips && \
