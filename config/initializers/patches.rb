@@ -8,6 +8,8 @@ Patches.register %w[
   RubyLLM::MCP::Native::Client
   RubyLLM::MCP::Native::Transport
   RubyLLM::MCP::Native::Transports::Stdio
+  RubyLLM::Model::Info
+  RubyLLM::Models
   RubyLLM::Providers::DeepSeek
   RubyLLM::Providers::DeepSeek::Capabilities
   SimpleForm::Inputs::Base

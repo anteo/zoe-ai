@@ -37,6 +37,7 @@ Rails.application.config.to_prepare do
     end
 
     RubyLLM::Provider.register :openrouter, AI::Providers::OpenRouter
+    RubyLLM::Provider.register :fake, AI::Providers::Fake if Rails.env.development?
   end
 
   Setting.on_change(:"ai.providers") { RefreshModelsRegistryJob.perform_later }
