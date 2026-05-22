@@ -35,6 +35,11 @@
       <%= f.input :email,
                   label: t(:label_email),
                   input_html: { required: true } %>
+      <%= f.input :time_zone,
+                  as: :select,
+                  collection: User.time_zone_options,
+                  include_blank: true,
+                  label: t(:label_time_zone) %>
       <%= f.input :password,
                   label: t(:label_new_password_optional) %>
       <%= f.input :password_confirmation,

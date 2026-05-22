@@ -12,9 +12,11 @@ class User < ApplicationRecord
   has_one_attached :avatar
   accepts_nested_attributes_for :avatar_attachment, allow_destroy: true
 
-  normalizes :email, with: ->(value) { value.strip.downcase }
-  normalizes :first_name, :last_name, with: ->(value) { value.strip.presence }
+  normalizes :email, with: -> { it.strip.downcase }
+  normalizes :first_name, :last_name, with: -> { it.strip.presence }
+  normalizes :time_zone, with: -> { it.to_s.strip.presence }
   validates :first_name, :email, presence: true
+  validates :time_zone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }, allow_blank: true
 
   before_create :skip_confirmation_if_first_user!
   after_create_commit :ensure_default_characters!
@@ -33,6 +35,24 @@ class User < ApplicationRecord
 
   def full_name
     [ first_name, last_name ].compact_blank.join(" ")
+  end
+
+  def resolved_time_zone
+    Time.find_zone(time_zone.presence) || Time.find_zone(Rails.application.config.time_zone) || Time.zone
+  end
+
+  def time_in_zone(time)
+    time.in_time_zone(resolved_time_zone)
+  end
+
+  def self.time_zone_options
+    zones = ActiveSupport::TimeZone.all.index_by(&:name)
+    ordered_names = zones.keys.sort_by { [ zones[it].utc_offset, it ] }
+
+    ordered_names.map do
+      zone = zones.fetch(it)
+      [ "(UTC#{zone.formatted_offset}) #{it}", it ]
+    end
   end
 
   def self.from_omniauth(auth)

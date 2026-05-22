@@ -22,7 +22,7 @@ class Message < ApplicationRecord
   scope :history_visible, -> { where(role: %w[user assistant error]).where.not(content: [ nil, "" ]) }
 
   def self.humanize_content(content)
-    content.gsub(/\n*\(files attached: \[.*?\]\)/m, "").rstrip
+    content.gsub(/\n*\((?:files attached|sent at): .*?\)/m, "").rstrip
   end
 
   def user?
@@ -86,9 +86,9 @@ class Message < ApplicationRecord
   def extract_content
     if user?
       llm_content = super
-      return llm_content unless llm_content.is_a?(RubyLLM::Content)
+      llm_content = RubyLLM::Content.new(llm_content.to_s) unless llm_content.is_a?(RubyLLM::Content)
 
-      with_attachment_ids(llm_content)
+      with_attachment_ids(with_sent_at(llm_content))
     elsif content_raw.present?
       RubyLLM::Content::Raw.new(content_raw)
     elsif content.present? || attachments.attached?
@@ -103,6 +103,14 @@ class Message < ApplicationRecord
 
     ids = attachments.map { { id: it.blob.id, filename: it.blob.filename } }
     text = "#{content.text}\n\n(files attached: #{ids.to_json})"
+    content.instance_variable_set(:@text, text)
+
+    content
+  end
+
+  def with_sent_at(content)
+    local_time = chat.user.time_in_zone(created_at || Time.current)
+    text = [ content.text.presence, "(sent at: #{local_time.strftime('%H:%M:%S')})" ].compact.join("\n\n")
     content.instance_variable_set(:@text, text)
 
     content

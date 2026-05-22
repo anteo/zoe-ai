@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    keys = %i[first_name last_name]
+    keys = %i[first_name last_name time_zone]
     devise_parameter_sanitizer.permit(:sign_up, keys:)
     devise_parameter_sanitizer.permit(:account_update, keys:)
   end

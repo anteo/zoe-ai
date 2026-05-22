@@ -40,7 +40,7 @@ module Ai
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    config.time_zone = "Asia/Novosibirsk"
+    config.time_zone = "Novosibirsk"
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Don't generate system test files.

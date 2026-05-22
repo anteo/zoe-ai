@@ -11,6 +11,11 @@
     <%= f.input :email,
                 label: t(:label_email),
                 input_html: {autofocus: true, autocomplete: "email"} %>
+    <%= f.input :time_zone,
+                as: :select,
+                collection: User.time_zone_options,
+                include_blank: true,
+                label: t(:label_time_zone) %>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
       <div class="alert alert-info text-sm mt-2">

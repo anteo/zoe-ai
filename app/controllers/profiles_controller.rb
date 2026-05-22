@@ -17,7 +17,7 @@ class ProfilesController < ApplicationController
 
   def profile_params
     params.require(:user).permit(
-      :avatar, :first_name, :last_name, :email, :password, :password_confirmation,
+      :avatar, :email, :first_name, :last_name, :password, :password_confirmation, :time_zone,
       avatar_attachment_attributes: [ :id, :_destroy ]
     )
           .tap do |attrs|

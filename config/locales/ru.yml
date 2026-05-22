@@ -26,6 +26,7 @@ ru:
         last_name: Фамилия
         password: Пароль
         password_confirmation: Подтверждение пароля
+        time_zone: Часовой пояс
     errors:
       messages:
         readonly: доступно только для чтения и не может быть изменено
@@ -188,6 +189,7 @@ ru:
   label_time_future: Будущее
   label_time_past: Прошлое
   label_time_present: Настоящее
+  label_time_zone: Часовой пояс
   label_token_usage: Токены
   label_topic: Тема
   label_unshare_character: Убрать персонажа
