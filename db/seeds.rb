@@ -142,6 +142,7 @@ zoe_images.each { |file| ensure_character_attachment!(character: zoe, name: :ima
 
 # Builtin agents
 [
+  { key: "describe_attachment",      name: "Describe Attachment" },
   { key: "zoe",                      name: "Зоя" },
   { key: "summarize_chat",           name: "Summarize Chat" },
   { key: "extract_facts",            name: "Extract Facts" },

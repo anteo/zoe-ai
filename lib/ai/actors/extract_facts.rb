@@ -20,14 +20,14 @@ module AI::Actors
       messages = chat.messages
                      .visible
                      .where.not(role: "error")
-                     .preload(:character, facts: [ :character, :topic ])
+                     .preload(:character, attachments_attachments: :blob, facts: [ :character, :topic ])
                      .order(:created_at)
       messages.each do |message|
         if message.facts_extracted
-          llm_chat.add_message(role: :user, content: message.to_direct_speech)
+          llm_chat.add_message(role: :user, content: message_content(message))
           llm_chat.add_message(role: :assistant, content: message.facts.map(&:to_h).to_json)
         elsif !message.memorize
-          llm_chat.add_message(role: :user, content: message.to_direct_speech)
+          llm_chat.add_message(role: :user, content: message_content(message))
           llm_chat.add_message(role: :assistant, content: "[]")
         else
           extract_facts(message)
@@ -40,7 +40,7 @@ module AI::Actors
     private
 
     def extract_facts(message)
-      content = message.to_direct_speech
+      content = message_content(message)
       llm_chat.add_message(role: :user, content: content)
       logger.debug ">>> #{content}"
       response = llm_chat.complete
@@ -114,6 +114,31 @@ module AI::Actors
 
     def llm_chat
       @llm_chat ||= AI::Agents::ExtractFacts.chat(chat:)
+    end
+
+    def message_content(message)
+      [
+        message.to_direct_speech,
+        attachment_context(message)
+      ].compact.join("\n\n")
+    end
+
+    def attachment_context(message)
+      return if message.attachments.empty?
+
+      items = message.attachments.map do |attachment|
+        parts = []
+        parts << "attachment_id=#{attachment.blob.id}"
+        parts << "type=#{attachment.image? ? 'image' : attachment.content_type}"
+        parts << "filename=#{attachment.filename}"
+        parts << "description=#{attachment.description.inspect}" if attachment.description.present?
+        parts << "prompt=#{attachment.metadata['prompt'].inspect}" if attachment.metadata["prompt"].present?
+        parts << "size=#{attachment.width}x#{attachment.height}" if attachment.image? && attachment.width.present? && attachment.height.present?
+        parts << "source=ai_generated" if attachment.metadata["prompt"].present?
+        parts.join(", ")
+      end
+
+      "Attachment context:\n- #{items.join("\n- ")}"
     end
   end
 end

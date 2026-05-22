@@ -4,6 +4,7 @@ class ExtractFactsJob < ApplicationJob
                      on_conflict: :discard
 
   def perform(chat)
+    AI::Actors::DescribeMessageAttachments.call(chat:, logger:)
     AI::Actors::ExtractFacts.call(chat:, logger:)
   end
 end

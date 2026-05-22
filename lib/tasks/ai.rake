@@ -16,6 +16,12 @@ namespace :ai do
     puts "Extracting facts for #{chats.count} chats..."
     chats.find_each do |chat|
       puts "  Chat ##{chat.id}"
+      describe_res = AI::Actors::DescribeMessageAttachments.result(chat:, logger:)
+      unless describe_res.success?
+        puts "  Error: #{describe_res.error}"
+        next
+      end
+
       res = AI::Actors::ExtractFacts.result(chat:, logger:)
       unless res.success?
         puts "  Error: #{res.error}"

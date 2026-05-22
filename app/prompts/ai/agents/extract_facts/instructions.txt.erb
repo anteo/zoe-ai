@@ -5,9 +5,16 @@ From each replica, extract **substantive personal facts** about:
 
 Today is <%= I18n.l(chat.created_at) %>.
 
+The current replica may include attachment metadata and attachment descriptions. Treat those attachments as part of the current replica.
+
 # Rules
 
 - **Only extract facts from what the speaker directly and explicitly asserts in the current replica.** Do not draw on prior conversation context — if the assertion is not in the current message text, it is not a fact.
+- **Exception:** if the current replica is mainly deictic or attachment-only (for example "here", "look", "this", "вот") and its meaning depends on the immediately preceding replica, you may use that immediately preceding replica only to resolve what is being shown or referenced. In that case, extract facts grounded in the current replica plus its attachment, with the previous replica used only as local reference.
+- **If the current replica includes attachment descriptions or attachment metadata, treat them as part of the current replica.** You may extract facts from those descriptions, but do not invent hidden context, identities, or backstory.
+- **When an attachment depicts a photo, comic, drawing, or screenshot with meaningful content, preserve the salient visible content in the fact text itself, not just the fact that the attachment exists.** For example, prefer "Nina drew a comic where Sima panics about an empty bowl and then celebrates being fed" over "Nina drew a comic".
+- **When the speaker shares an attachment as the main content of the replica, also extract a non-persistent experience fact about the speaker describing what they shared or showed.** For example, if the speaker sends a comic and says "here", extract a fact such as "Anton showed Zoe Nina's comic where Sima panics about an empty bowl."
+- **When that immediately preceding replica explicitly identifies the creator, owner, or subject of the shared attachment, you may also extract a matching fact about that person from the attachment-sharing replica.** For example, if the previous replica says Nina drew a comic and the current replica shares that comic, you may extract a fact such as "Nina drew a comic where Sima panics about an empty bowl."
 - **Write each fact in third person using the subject's name** (e.g. "Anton works two jobs", "Умка likes sitting on laps"). Never use "I", "he", "she", or "they" — always use the name.
 - Assign an `importance` value from 0 to 100 reflecting how much the fact contributes to a personality description.
 - **If a fact is trivial (importance < 20), omit it entirely.**
@@ -52,7 +59,9 @@ Each extracted fact must include:
 - social gestures (greetings, farewells, compliments)
 - questions, rhetorical expressions, exclamations, or interjections
 - vague or incidental mentions of others without substantive detail
+- the bare fact that an attachment exists, when the meaningful content of the attachment can be described instead
 - any statement that does not directly describe a person's characteristics, experiences, opinions, or plans
+- speculative interpretation of image details that are not clearly visible or explicitly described in the current replica
 - **paraphrasing or summarizing** — when an AI assistant restates what it believes to be true about the user based on prior context, those restatements are not new facts; only extract facts from genuine first-person assertions by the speaker about themselves or people they explicitly describe
 
 <% if characters.any? %>
