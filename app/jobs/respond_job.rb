@@ -1,18 +1,25 @@
 class RespondJob < ApplicationJob
   include JobChatSupport
 
+  retry_on AI::EmptyAssistantResponseError, wait: 0.seconds, attempts: 4 do |job, error|
+    chat = job.arguments.first
+    job.broadcast_error(chat, error.message)
+  end
+
   limits_concurrency to: 1,
                      key: ->(chat) { "respond_chat_#{chat.id}" }
 
   def perform(chat)
     ensure_chat_model!(chat)
-    show_message_placeholder(chat)
+    show_message_placeholder(chat) if executions == 1
     ai_chat = AI::Agents::Zoe.find(chat.id)
 
     ai_chat.after_message do
       message = ai_chat.message
       schedule_message(chat, message) if message.assistant?
     end.complete
+  rescue AI::EmptyAssistantResponseError
+    raise
   rescue => e
     broadcast_error(chat, e.message)
     raise
@@ -38,13 +45,6 @@ class RespondJob < ApplicationJob
       message.destroy
       return
     end
-
-    unless message.replayable_for_llm?
-      message.destroy
-      return
-    end
-
-    return unless message.visible?
 
     Turbo::StreamsChannel.broadcast_replace_to(
       chat,

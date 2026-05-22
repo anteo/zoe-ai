@@ -318,6 +318,7 @@ ru:
   text_nothing_found: Ничего не найдено
   text_no_agents: Агенты пока не настроены.
   text_no_available_models: Нет доступных моделей
+  text_empty_response_from_model: Модель вернула пустой ответ
   text_no_character_description: Пока нет описания.
   text_no_character_bio: Пока нет краткого описания.
   text_no_character_events: Пока нет событий.

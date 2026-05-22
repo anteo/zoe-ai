@@ -318,6 +318,7 @@ en:
   text_nothing_found: Nothing found
   text_no_agents: No agents configured yet.
   text_no_available_models: No available models
+  text_empty_response_from_model: Empty response from model
   text_no_character_description: No description yet.
   text_no_character_bio: No bio yet.
   text_no_character_events: No events yet.

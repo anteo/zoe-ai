@@ -41,14 +41,14 @@ class Message < ApplicationRecord
     (user? || assistant? || error?) && (content.present? || attachments.attached?)
   end
 
-  def replayable_for_llm?
-    return false if error?
-    return true if tool_call_id.present?
-    return true if content_raw.present?
-    return true if content.present?
-    return true if attachments.attached?
-
-    false
+  def valid_assistant_completion?
+    assistant? && (
+      content.present? ||
+      content_raw.present? ||
+      attachments.attached? ||
+      tool_calls.exists? ||
+      tool_call_id.present?
+    )
   end
 
   def to_direct_speech(**)

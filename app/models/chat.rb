@@ -153,4 +153,13 @@ class Chat < ApplicationRecord
     # Force attachments so persist_content is always called
     [ content_text, attachments || [], content_raw ]
   end
+
+  def persist_message_completion(message)
+    super
+
+    return unless @message&.assistant?
+    return if @message.valid_assistant_completion?
+
+    raise AI::EmptyAssistantResponseError
+  end
 end
