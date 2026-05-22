@@ -43,7 +43,7 @@ class Message < ApplicationRecord
 
   def replayable_for_llm?
     return false if error?
-    return true if tool_call?
+    return true if tool_call_id.present?
     return true if content_raw.present?
     return true if content.present?
     return true if attachments.attached?
@@ -85,14 +85,16 @@ class Message < ApplicationRecord
 
   def extract_content
     if user?
-      content = super
-      return content unless content.is_a?(RubyLLM::Content)
+      llm_content = super
+      return llm_content unless llm_content.is_a?(RubyLLM::Content)
 
-      with_attachment_ids(content)
+      with_attachment_ids(llm_content)
     elsif content_raw.present?
       RubyLLM::Content::Raw.new(content_raw)
+    elsif content.present? || attachments.attached?
+      with_attachment_ids(RubyLLM::Content.new(content.to_s))
     else
-      with_attachment_ids(RubyLLM::Content.new(self.content))
+      RubyLLM::Content.new(content)
     end
   end
 
