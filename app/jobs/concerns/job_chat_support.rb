@@ -14,13 +14,7 @@ module JobChatSupport
 
     sleep 0.3
 
-    remove_message_placeholder(chat)
-
-    Turbo::StreamsChannel.broadcast_append_to(
-      chat,
-      target: "chat-messages",
-      content: Chats::MessageComponent.new(message:, current_character: chat.character),
-    )
+    broadcast_message(message)
   end
 
   def broadcast_message(message)
