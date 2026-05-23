@@ -27,8 +27,8 @@ class MessagesController < ApplicationController
       message.update_column(:memorize, chat.memorize)
 
       stream = []
-      stream << turbo_stream.append(
-        "chat-messages",
+      stream << turbo_stream.before(
+        "message-placeholder-slot-#{chat.id}",
         Chats::MessageComponent.new(message:, current_character:)
       )
       stream << turbo_stream.replace(
@@ -42,7 +42,7 @@ class MessagesController < ApplicationController
       end
     end
 
-    RespondJob.set(wait: respond_delay).perform_later(chat)
+    RespondJob.set(wait: respond_delay).perform_later(chat, message.id)
   end
 
   def update
@@ -52,7 +52,7 @@ class MessagesController < ApplicationController
     message.update!(content: message_params[:content],
                     facts_extracted: false)
 
-    RespondJob.perform_later(chat)
+    RespondJob.perform_later(chat, message.id)
 
     render_chat
   end
@@ -68,7 +68,7 @@ class MessagesController < ApplicationController
     return head(:forbidden) unless message.user?
 
     message.destroy_later_messages
-    RespondJob.perform_later(chat)
+    RespondJob.perform_later(chat, message.id)
 
     render_chat
   end

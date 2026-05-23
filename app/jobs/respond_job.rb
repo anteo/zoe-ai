@@ -7,16 +7,18 @@ class RespondJob < ApplicationJob
   end
 
   limits_concurrency to: 1,
-                     key: ->(chat) { "respond_chat_#{chat.id}" }
+                     key: ->(chat, *) { "respond_chat_#{chat.id}" }
 
-  def perform(chat)
+  def perform(chat, trigger_message_id)
+    return if chat.stale_trigger_message?(trigger_message_id)
+
     ensure_chat_model!(chat)
     show_message_placeholder(chat) if executions == 1
     ai_chat = AI::Agents::Zoe.find(chat.id)
 
     ai_chat.after_message do
       message = ai_chat.message
-      schedule_message(chat, message) if message.assistant?
+      schedule_message(chat, message, trigger_message_id) if message.assistant?
     end.complete
   rescue AI::EmptyAssistantResponseError
     raise
@@ -40,8 +42,8 @@ class RespondJob < ApplicationJob
     nil
   end
 
-  def schedule_message(chat, message)
-    if execution.cancelled?
+  def schedule_message(chat, message, trigger_message_id)
+    if execution.cancelled? || chat.stale_trigger_message?(trigger_message_id)
       message.destroy
       return
     end
@@ -53,7 +55,7 @@ class RespondJob < ApplicationJob
     )
 
     chunks = AI::SentenceSplitter.new(message.content).chunks
-    TypeSentenceJob.perform_later(chat, message, chunks, true)
+    TypeSentenceJob.perform_later(chat, message, chunks, trigger_message_id, true)
     ExtractFactsJob.perform_later(chat)
   end
 end

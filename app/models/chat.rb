@@ -57,6 +57,14 @@ class Chat < ApplicationRecord
     messages.preload(:attachments_blobs, :tool_calls, :model)
   end
 
+  def latest_user_message_id
+    messages.where(role: "user").reorder(id: :desc).limit(1).pick(:id)
+  end
+
+  def stale_trigger_message?(trigger_message_id)
+    latest_user_message_id != trigger_message_id
+  end
+
   def yesterday_summary
     @yesterday_summary ||= begin
       character.chats

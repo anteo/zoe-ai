@@ -2,9 +2,9 @@ module JobChatSupport
   extend ActiveSupport::Concern
 
   def show_message_placeholder(chat)
-    Turbo::StreamsChannel.broadcast_append_to(
+    Turbo::StreamsChannel.broadcast_update_to(
       chat,
-      target: "chat-messages",
+      target: "message-placeholder-slot-#{chat.id}",
       content: Chats::MessagePlaceholderComponent.new(chat:, current_character: chat.character),
     )
   end
@@ -18,17 +18,20 @@ module JobChatSupport
   end
 
   def broadcast_message(message)
-    Turbo::StreamsChannel.broadcast_replace_to(
+    Turbo::StreamsChannel.broadcast_before_to(
       message.chat,
-      target: "message-placeholder-#{message.chat.id}",
+      target: "message-placeholder-slot-#{message.chat.id}",
       content: Chats::MessageComponent.new(message:, current_character: message.chat.character),
     )
+
+    remove_message_placeholder(message.chat)
   end
 
   def remove_message_placeholder(chat)
-    Turbo::StreamsChannel.broadcast_remove_to(
+    Turbo::StreamsChannel.broadcast_update_to(
       chat,
-      target: "message-placeholder-#{chat.id}",
+      target: "message-placeholder-slot-#{chat.id}",
+      content: "",
     )
   end
 end

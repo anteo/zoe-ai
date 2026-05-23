@@ -3,7 +3,7 @@ class TypeSentenceJob < ApplicationJob
 
   limits_concurrency key: ->(chat, *) { "type_sentence_#{chat.id}" }
 
-  def perform(chat, message, chunks, first = false)
+  def perform(chat, message, chunks, trigger_message_id, first = false)
     return if chunks.empty?
 
     show_message_placeholder(chat) unless first
@@ -11,7 +11,7 @@ class TypeSentenceJob < ApplicationJob
     chunk = chunks.shift
 
     sleep 1 + chunk.length / 50
-    return if execution&.cancelled?
+    return if execution&.cancelled? || chat.stale_trigger_message?(trigger_message_id)
 
     display_message = message.dup
     display_message.created_at = message.created_at
@@ -23,6 +23,6 @@ class TypeSentenceJob < ApplicationJob
 
     show_message_placeholder(chat) if RespondJob.running_for?(chat)
 
-    TypeSentenceJob.perform_later(chat, message, chunks, false) if chunks.any?
+    TypeSentenceJob.perform_later(chat, message, chunks, trigger_message_id, false) if chunks.any?
   end
 end

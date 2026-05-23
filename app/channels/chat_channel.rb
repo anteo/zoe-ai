@@ -8,7 +8,9 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def user_typing
-    StopTypingJob.perform_later(chat)
+    return unless RespondJob.running_for?(chat) || TypeSentenceJob.running_for?(chat)
+
+    StopTypingJob.perform_later(chat, chat.latest_user_message_id)
   end
 
   def update_memorize(data)

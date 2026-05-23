@@ -1,9 +1,9 @@
 class StopTypingJob < ApplicationJob
   include JobChatSupport
 
-  queue_as :default
+  def perform(chat, trigger_message_id = nil)
+    return if chat.stale_trigger_message?(trigger_message_id)
 
-  def perform(chat)
     remove_message_placeholder(chat)
 
     TypeSentenceJob.cancel(chat)
