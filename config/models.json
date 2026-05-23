@@ -14509,8 +14509,8 @@
     "provider": "bedrock",
     "family": "kimi-thinking",
     "created_at": "2025-12-02 00:00:00 UTC",
-    "context_window": 256000,
-    "max_output_tokens": 256000,
+    "context_window": 262143,
+    "max_output_tokens": 16000,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -14540,8 +14540,8 @@
         "output": 2.5
       },
       "limit": {
-        "context": 256000,
-        "output": 256000
+        "context": 262143,
+        "output": 16000
       },
       "source": "models.dev",
       "converse": {
@@ -14576,8 +14576,8 @@
     "provider": "bedrock",
     "family": "kimi",
     "created_at": "2026-02-06 00:00:00 UTC",
-    "context_window": 256000,
-    "max_output_tokens": 256000,
+    "context_window": 262143,
+    "max_output_tokens": 16000,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -14609,8 +14609,8 @@
         "output": 3
       },
       "limit": {
-        "context": 256000,
-        "output": 256000
+        "context": 262143,
+        "output": 16000
       },
       "source": "models.dev",
       "converse": {
@@ -18494,8 +18494,8 @@
         "cache_read": 0.01875
       },
       "limit": {
-        "context": 1000000,
-        "output": 8192
+        "output": 8192,
+        "context": 1000000
       },
       "source": "models.dev",
       "knowledge": "2024-04",
@@ -18546,8 +18546,8 @@
         "cache_read": 0.01
       },
       "limit": {
-        "context": 1000000,
-        "output": 8192
+        "output": 8192,
+        "context": 1000000
       },
       "source": "models.dev",
       "knowledge": "2024-04",
@@ -18598,8 +18598,8 @@
         "cache_read": 0.3125
       },
       "limit": {
-        "context": 1000000,
-        "output": 8192
+        "output": 8192,
+        "context": 1000000
       },
       "source": "models.dev",
       "knowledge": "2024-04",
@@ -18750,7 +18750,7 @@
   },
   {
     "id": "gemini-2.0-flash-lite",
-    "name": "Gemini 2.0 Flash Lite",
+    "name": "Gemini 2.0 Flash-Lite",
     "provider": "gemini",
     "family": "gemini-flash-lite",
     "created_at": "2024-12-11 00:00:00 UTC",
@@ -18988,7 +18988,7 @@
   },
   {
     "id": "gemini-2.5-flash-image",
-    "name": "Gemini 2.5 Flash Image",
+    "name": "Nano Banana",
     "provider": "gemini",
     "family": "gemini-flash",
     "created_at": "2025-08-26 00:00:00 UTC",
@@ -19085,8 +19085,8 @@
         "cache_read": 0.075
       },
       "limit": {
-        "context": 32768,
-        "output": 32768
+        "output": 32768,
+        "context": 32768
       },
       "source": "models.dev",
       "knowledge": "2025-06",
@@ -19099,7 +19099,7 @@
   },
   {
     "id": "gemini-2.5-flash-lite",
-    "name": "Gemini 2.5 Flash Lite",
+    "name": "Gemini 2.5 Flash-Lite",
     "provider": "gemini",
     "family": "gemini-flash-lite",
     "created_at": "2025-06-17 00:00:00 UTC",
@@ -19214,8 +19214,8 @@
         "input_audio": 0.3
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19269,8 +19269,8 @@
         "cache_read": 0.025
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19428,8 +19428,8 @@
         "cache_read": 0.0375
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19483,8 +19483,8 @@
         "cache_read": 0.0375
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19544,8 +19544,8 @@
         "input_audio": 1
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19562,8 +19562,8 @@
     "provider": "gemini",
     "family": "gemini-flash",
     "created_at": "2025-05-01 00:00:00 UTC",
-    "context_window": 8000,
-    "max_output_tokens": 16000,
+    "context_window": 8192,
+    "max_output_tokens": 16384,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -19592,8 +19592,8 @@
         "output": 10
       },
       "limit": {
-        "context": 8000,
-        "output": 16000
+        "context": 8192,
+        "output": 16384
       },
       "source": "models.dev",
       "version": "gemini-2.5-flash-exp-tts-2025-05-19",
@@ -19601,7 +19601,7 @@
       "attachment": false,
       "description": "Gemini 2.5 Flash Preview TTS",
       "provider_id": "google",
-      "temperature": false,
+      "temperature": true,
       "last_updated": "2025-05-01",
       "open_weights": false,
       "supported_generation_methods": [
@@ -19732,8 +19732,8 @@
         "cache_read": 0.31
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19787,8 +19787,8 @@
         "cache_read": 0.31
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -19805,8 +19805,8 @@
     "provider": "gemini",
     "family": "gemini-flash",
     "created_at": "2025-05-01 00:00:00 UTC",
-    "context_window": 8000,
-    "max_output_tokens": 16000,
+    "context_window": 8192,
+    "max_output_tokens": 16384,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -19835,8 +19835,8 @@
         "output": 20
       },
       "limit": {
-        "context": 8000,
-        "output": 16000
+        "context": 8192,
+        "output": 16384
       },
       "source": "models.dev",
       "version": "gemini-2.5-pro-preview-tts-2025-05-19",
@@ -19844,7 +19844,7 @@
       "attachment": false,
       "description": "Gemini 2.5 Pro Preview TTS",
       "provider_id": "google",
-      "temperature": false,
+      "temperature": true,
       "last_updated": "2025-05-01",
       "open_weights": false,
       "supported_generation_methods": [
@@ -19965,8 +19965,8 @@
     "provider": "gemini",
     "family": "gemini-pro",
     "created_at": "2025-11-18 00:00:00 UTC",
-    "context_window": 1000000,
-    "max_output_tokens": 64000,
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -20018,8 +20018,8 @@
         }
       },
       "limit": {
-        "context": 1000000,
-        "output": 64000
+        "context": 1048576,
+        "output": 65536
       },
       "source": "models.dev",
       "version": "3-pro-preview-11-2025",
@@ -20040,12 +20040,12 @@
   },
   {
     "id": "gemini-3.1-flash-image-preview",
-    "name": "Gemini 3.1 Flash Image (Preview)",
+    "name": "Nano Banana 2",
     "provider": "gemini",
     "family": "gemini-flash",
     "created_at": "2026-02-26 00:00:00 UTC",
-    "context_window": 131072,
-    "max_output_tokens": 32768,
+    "context_window": 65536,
+    "max_output_tokens": 65536,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -20078,8 +20078,8 @@
         "output": 60
       },
       "limit": {
-        "context": 131072,
-        "output": 32768
+        "context": 65536,
+        "output": 65536
       },
       "source": "models.dev",
       "version": "3.0",
@@ -20420,13 +20420,74 @@
     }
   },
   {
+    "id": "gemini-3.5-flash",
+    "name": "Gemini 3.5 Flash",
+    "provider": "gemini",
+    "family": "gemini-flash",
+    "created_at": "2026-05-19 00:00:00 UTC",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video",
+        "audio",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "vision"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.5,
+          "output_per_million": 9,
+          "cache_read_input_per_million": 0.15
+        }
+      },
+      "audio_tokens": {
+        "standard": {
+          "input_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "cost": {
+        "input": 1.5,
+        "output": 9,
+        "cache_read": 0.15,
+        "input_audio": 1.5
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "source": "models.dev",
+      "knowledge": "2025-01",
+      "attachment": true,
+      "provider_id": "google",
+      "temperature": true,
+      "last_updated": "2026-05-19",
+      "open_weights": false
+    }
+  },
+  {
     "id": "gemini-embedding-001",
     "name": "Gemini Embedding 001",
     "provider": "gemini",
     "family": "gemini",
     "created_at": "2025-05-20 00:00:00 UTC",
     "context_window": 2048,
-    "max_output_tokens": 3072,
+    "max_output_tokens": 1,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -20451,7 +20512,7 @@
       },
       "limit": {
         "context": 2048,
-        "output": 3072
+        "output": 1
       },
       "source": "models.dev",
       "version": "001",
@@ -20680,8 +20741,8 @@
         "output_audio": 12
       },
       "limit": {
-        "context": 128000,
-        "output": 8000
+        "output": 8000,
+        "context": 128000
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -20739,8 +20800,8 @@
         "output_audio": 12
       },
       "limit": {
-        "context": 131072,
-        "output": 65536
+        "output": 65536,
+        "context": 131072
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -20859,8 +20920,8 @@
         "output": 0
       },
       "limit": {
-        "context": 32768,
-        "output": 8192
+        "output": 8192,
+        "context": 32768
       },
       "source": "models.dev",
       "version": "001",
@@ -20945,8 +21006,8 @@
         "output": 0
       },
       "limit": {
-        "context": 131072,
-        "output": 8192
+        "output": 8192,
+        "context": 131072
       },
       "source": "models.dev",
       "version": "001",
@@ -20998,8 +21059,8 @@
         "output": 0
       },
       "limit": {
-        "context": 32768,
-        "output": 8192
+        "output": 8192,
+        "context": 32768
       },
       "source": "models.dev",
       "version": "001",
@@ -21048,8 +21109,8 @@
         "output": 0
       },
       "limit": {
-        "context": 8192,
-        "output": 2000
+        "output": 2000,
+        "context": 8192
       },
       "source": "models.dev",
       "version": "001",
@@ -21098,8 +21159,8 @@
         "output": 0
       },
       "limit": {
-        "context": 8192,
-        "output": 2000
+        "output": 2000,
+        "context": 8192
       },
       "source": "models.dev",
       "version": "001",
@@ -21118,12 +21179,12 @@
   },
   {
     "id": "gemma-4-26b-a4b-it",
-    "name": "Gemma 4 26B",
+    "name": "Gemma 4 26B A4B IT",
     "provider": "gemini",
     "family": "gemma",
     "created_at": "2026-04-02 00:00:00 UTC",
-    "context_window": 256000,
-    "max_output_tokens": 8192,
+    "context_window": 262144,
+    "max_output_tokens": 32768,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -21143,11 +21204,11 @@
     "pricing": {},
     "metadata": {
       "limit": {
-        "context": 256000,
-        "output": 8192
+        "context": 262144,
+        "output": 32768
       },
       "source": "models.dev",
-      "attachment": false,
+      "attachment": true,
       "provider_id": "google",
       "temperature": true,
       "last_updated": "2026-04-02",
@@ -21156,12 +21217,12 @@
   },
   {
     "id": "gemma-4-31b-it",
-    "name": "Gemma 4 31B",
+    "name": "Gemma 4 31B IT",
     "provider": "gemini",
     "family": "gemma",
     "created_at": "2026-04-02 00:00:00 UTC",
-    "context_window": 256000,
-    "max_output_tokens": 8192,
+    "context_window": 262144,
+    "max_output_tokens": 32768,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -21181,11 +21242,11 @@
     "pricing": {},
     "metadata": {
       "limit": {
-        "context": 256000,
-        "output": 8192
+        "context": 262144,
+        "output": 32768
       },
       "source": "models.dev",
-      "attachment": false,
+      "attachment": true,
       "provider_id": "google",
       "temperature": true,
       "last_updated": "2026-04-02",
@@ -24108,7 +24169,36 @@
     "name": "nomic-embed-text:latest",
     "provider": "ollama",
     "family": "ollama",
-    "created_at": "2026-04-20 05:31:02 UTC",
+    "created_at": "2026-05-21 12:53:49 UTC",
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "function_calling",
+      "structured_output",
+      "vision"
+    ],
+    "pricing": {},
+    "metadata": {
+      "owned_by": "library"
+    }
+  },
+  {
+    "id": "qwen3.6:35b-a3b-coding-mxfp8",
+    "name": "qwen3.6:35b-a3b-coding-mxfp8",
+    "provider": "ollama",
+    "family": "ollama",
+    "created_at": "2026-05-21 12:53:50 UTC",
     "context_window": null,
     "max_output_tokens": null,
     "knowledge_cutoff": null,
@@ -30407,8 +30497,8 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -31397,8 +31487,8 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -31626,7 +31716,7 @@
   },
   {
     "id": "anthropic/claude-haiku-4.5",
-    "name": "Claude Haiku 4.5",
+    "name": "Claude Haiku 4.5 (latest)",
     "provider": "openrouter",
     "family": "claude-haiku",
     "created_at": "2025-10-15 00:00:00 UTC",
@@ -31801,13 +31891,13 @@
   },
   {
     "id": "anthropic/claude-opus-4.1",
-    "name": "Claude Opus 4.1",
+    "name": "Claude Opus 4.1 (latest)",
     "provider": "openrouter",
     "family": "claude-opus",
     "created_at": "2025-08-05 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 32000,
-    "knowledge_cutoff": "2025-01-31",
+    "knowledge_cutoff": "2025-03-31",
     "modalities": {
       "input": [
         "image",
@@ -31885,18 +31975,18 @@
         "context": 200000,
         "output": 32000
       },
-      "knowledge": "2025-01-31"
+      "knowledge": "2025-03-31"
     }
   },
   {
     "id": "anthropic/claude-opus-4.5",
-    "name": "Claude Opus 4.5",
+    "name": "Claude Opus 4.5 (latest)",
     "provider": "openrouter",
     "family": "claude-opus",
     "created_at": "2025-11-24 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 64000,
-    "knowledge_cutoff": "2025-05-30",
+    "knowledge_cutoff": "2025-03-31",
     "modalities": {
       "input": [
         "pdf",
@@ -31974,7 +32064,7 @@
         "context": 200000,
         "output": 64000
       },
-      "knowledge": "2025-05-30"
+      "knowledge": "2025-03-31"
     }
   },
   {
@@ -31982,7 +32072,7 @@
     "name": "Claude Opus 4.6",
     "provider": "openrouter",
     "family": "claude-opus",
-    "created_at": "2026-02-04 00:00:00 UTC",
+    "created_at": "2026-02-05 00:00:00 UTC",
     "context_window": 1000000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-05-31",
@@ -32054,12 +32144,18 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-02-04",
+      "last_updated": "2026-03-13",
       "cost": {
         "input": 5,
         "output": 25,
         "cache_read": 0.5,
         "cache_write": 6.25,
+        "context_over_200k": {
+          "input": 10,
+          "output": 37.5,
+          "cache_read": 1,
+          "cache_write": 12.5
+        },
         "tiers": [
           {
             "input": 10,
@@ -32071,13 +32167,7 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 10,
-          "output": 37.5,
-          "cache_read": 1,
-          "cache_write": 12.5
-        }
+        ]
       },
       "limit": {
         "context": 1000000,
@@ -32253,6 +32343,12 @@
         "output": 25,
         "cache_read": 0.5,
         "cache_write": 6.25,
+        "context_over_200k": {
+          "input": 10,
+          "output": 37.5,
+          "cache_read": 1,
+          "cache_write": 12.5
+        },
         "tiers": [
           {
             "input": 10,
@@ -32264,13 +32360,7 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 10,
-          "output": 37.5,
-          "cache_read": 1,
-          "cache_write": 12.5
-        }
+        ]
       },
       "limit": {
         "context": 1000000,
@@ -32471,13 +32561,13 @@
   },
   {
     "id": "anthropic/claude-sonnet-4.5",
-    "name": "Claude Sonnet 4.5",
+    "name": "Claude Sonnet 4.5 (latest)",
     "provider": "openrouter",
     "family": "claude-sonnet",
     "created_at": "2025-09-29 00:00:00 UTC",
     "context_window": 1000000,
     "max_output_tokens": 64000,
-    "knowledge_cutoff": "2025-01-31",
+    "knowledge_cutoff": "2025-07-31",
     "modalities": {
       "input": [
         "text",
@@ -32550,6 +32640,12 @@
         "output": 15,
         "cache_read": 0.3,
         "cache_write": 3.75,
+        "context_over_200k": {
+          "input": 6,
+          "output": 22.5,
+          "cache_read": 0.6,
+          "cache_write": 7.5
+        },
         "tiers": [
           {
             "input": 6,
@@ -32561,19 +32657,13 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 6,
-          "output": 22.5,
-          "cache_read": 0.6,
-          "cache_write": 7.5
-        }
+        ]
       },
       "limit": {
         "context": 1000000,
         "output": 64000
       },
-      "knowledge": "2025-01-31"
+      "knowledge": "2025-07-31"
     }
   },
   {
@@ -32653,12 +32743,18 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-02-17",
+      "last_updated": "2026-03-13",
       "cost": {
         "input": 3,
         "output": 15,
         "cache_read": 0.3,
         "cache_write": 3.75,
+        "context_over_200k": {
+          "input": 6,
+          "output": 22.5,
+          "cache_read": 0.6,
+          "cache_write": 7.5
+        },
         "tiers": [
           {
             "input": 6,
@@ -32670,13 +32766,7 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 6,
-          "output": 22.5,
-          "cache_read": 0.6,
-          "cache_write": 7.5
-        }
+        ]
       },
       "limit": {
         "context": 1000000,
@@ -32917,80 +33007,6 @@
         "output": 65537
       },
       "knowledge": "2025-03-31"
-    }
-  },
-  {
-    "id": "arcee-ai/trinity-large-preview",
-    "name": "Trinity Large Preview",
-    "provider": "openrouter",
-    "family": "trinity",
-    "created_at": "2026-01-27 00:00:00 UTC",
-    "context_window": 131000,
-    "max_output_tokens": 131000,
-    "knowledge_cutoff": null,
-    "modalities": {
-      "input": [
-        "text"
-      ],
-      "output": [
-        "text"
-      ]
-    },
-    "capabilities": [
-      "function_calling",
-      "structured_output",
-      "streaming"
-    ],
-    "pricing": {
-      "text_tokens": {
-        "standard": {
-          "input_per_million": 0.15,
-          "output_per_million": 0.45
-        }
-      }
-    },
-    "metadata": {
-      "description": "Trinity-Large-Preview is a frontier-scale open-weight language model from Arcee, built as a 400B-parameter sparse Mixture-of-Experts with 13B active parameters per token using 4-of-256 expert routing. It excels in creative writing,...",
-      "architecture": {
-        "modality": "text->text",
-        "input_modalities": [
-          "text"
-        ],
-        "output_modalities": [
-          "text"
-        ],
-        "tokenizer": "Other",
-        "instruct_type": null
-      },
-      "top_provider": {
-        "context_length": 131000,
-        "max_completion_tokens": null,
-        "is_moderated": false
-      },
-      "per_request_limits": null,
-      "supported_parameters": [
-        "max_tokens",
-        "response_format",
-        "structured_outputs",
-        "temperature",
-        "tools",
-        "top_k",
-        "top_p"
-      ],
-      "source": "models.dev",
-      "provider_id": "openrouter",
-      "open_weights": true,
-      "attachment": false,
-      "temperature": true,
-      "last_updated": "2026-01-27",
-      "cost": {
-        "input": 0.15,
-        "output": 0.45
-      },
-      "limit": {
-        "context": 131000,
-        "output": 131000
-      }
     }
   },
   {
@@ -33546,8 +33562,8 @@
       ]
     },
     "capabilities": [
-      "structured_output",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -34415,13 +34431,13 @@
   },
   {
     "id": "cohere/command-r-08-2024",
-    "name": "Command R (08-2024)",
+    "name": "Command R",
     "provider": "openrouter",
     "family": "command-r",
     "created_at": "2024-08-30 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 4000,
-    "knowledge_cutoff": "2024-03-31",
+    "knowledge_cutoff": "2024-06-01",
     "modalities": {
       "input": [
         "text"
@@ -34478,7 +34494,7 @@
       ],
       "source": "models.dev",
       "provider_id": "openrouter",
-      "open_weights": false,
+      "open_weights": true,
       "attachment": false,
       "temperature": true,
       "last_updated": "2024-08-30",
@@ -34490,18 +34506,18 @@
         "context": 128000,
         "output": 4000
       },
-      "knowledge": "2024-03-31"
+      "knowledge": "2024-06-01"
     }
   },
   {
     "id": "cohere/command-r-plus-08-2024",
-    "name": "Command R+ (08-2024)",
+    "name": "Command R+",
     "provider": "openrouter",
     "family": "command-r",
     "created_at": "2024-08-30 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 4000,
-    "knowledge_cutoff": "2024-03-31",
+    "knowledge_cutoff": "2024-06-01",
     "modalities": {
       "input": [
         "text"
@@ -34558,7 +34574,7 @@
       ],
       "source": "models.dev",
       "provider_id": "openrouter",
-      "open_weights": false,
+      "open_weights": true,
       "attachment": false,
       "temperature": true,
       "last_updated": "2024-08-30",
@@ -34570,18 +34586,18 @@
         "context": 128000,
         "output": 4000
       },
-      "knowledge": "2024-03-31"
+      "knowledge": "2024-06-01"
     }
   },
   {
     "id": "cohere/command-r7b-12-2024",
-    "name": "Command R7B (12-2024)",
+    "name": "Command R7B",
     "provider": "openrouter",
     "family": "command-r",
-    "created_at": "2024-12-14 00:00:00 UTC",
+    "created_at": "2024-02-27 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 4000,
-    "knowledge_cutoff": "2024-08-31",
+    "knowledge_cutoff": "2024-06-01",
     "modalities": {
       "input": [
         "text"
@@ -34635,10 +34651,10 @@
       ],
       "source": "models.dev",
       "provider_id": "openrouter",
-      "open_weights": false,
+      "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2024-12-14",
+      "last_updated": "2024-02-27",
       "cost": {
         "input": 0.0375,
         "output": 0.15
@@ -34647,7 +34663,7 @@
         "context": 128000,
         "output": 4000
       },
-      "knowledge": "2024-08-31"
+      "knowledge": "2024-06-01"
     }
   },
   {
@@ -34734,13 +34750,13 @@
   },
   {
     "id": "deepseek/deepseek-chat",
-    "name": "DeepSeek V3",
+    "name": "DeepSeek Chat",
     "provider": "openrouter",
     "family": "deepseek",
-    "created_at": "2024-12-26 00:00:00 UTC",
+    "created_at": "2025-12-01 00:00:00 UTC",
     "context_window": 163840,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2024-07-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -34804,7 +34820,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2024-12-26",
+      "last_updated": "2026-02-28",
       "cost": {
         "input": 0.32,
         "output": 0.89
@@ -34813,7 +34829,7 @@
         "context": 163840,
         "output": 16384
       },
-      "knowledge": "2024-07-31"
+      "knowledge": "2025-09"
     }
   },
   {
@@ -35183,9 +35199,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -35685,10 +35701,10 @@
     "id": "deepseek/deepseek-v4-flash",
     "name": "DeepSeek V4 Flash",
     "provider": "openrouter",
-    "family": "deepseek",
+    "family": "deepseek-flash",
     "created_at": "2026-04-24 00:00:00 UTC",
-    "context_window": 1048575,
-    "max_output_tokens": 131072,
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -35708,9 +35724,9 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.112,
-          "output_per_million": 0.224,
-          "cache_read_input_per_million": 0.022
+          "input_per_million": 0.1,
+          "output_per_million": 0.2,
+          "cache_read_input_per_million": 0.02
         }
       }
     },
@@ -35728,8 +35744,8 @@
         "instruct_type": null
       },
       "top_provider": {
-        "context_length": 1048575,
-        "max_completion_tokens": null,
+        "context_length": 1048576,
+        "max_completion_tokens": 16384,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -35764,21 +35780,22 @@
         "field": "reasoning_content"
       },
       "cost": {
-        "input": 0.112,
-        "output": 0.224,
-        "cache_read": 0.022
+        "input": 0.1,
+        "output": 0.2,
+        "cache_read": 0.02
       },
       "limit": {
-        "context": 1048575,
-        "output": 131072
-      }
+        "context": 1048576,
+        "output": 16384
+      },
+      "knowledge": "2025-05"
     }
   },
   {
     "id": "deepseek/deepseek-v4-flash:free",
     "name": "DeepSeek V4 Flash (free)",
     "provider": "openrouter",
-    "family": "deepseek",
+    "family": "deepseek-flash",
     "created_at": "2026-04-24 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 384000,
@@ -35828,6 +35845,9 @@
       "attachment": false,
       "temperature": false,
       "last_updated": "2026-04-24",
+      "interleaved": {
+        "field": "reasoning_content"
+      },
       "cost": {
         "input": 0,
         "output": 0
@@ -35835,14 +35855,15 @@
       "limit": {
         "context": 1048576,
         "output": 384000
-      }
+      },
+      "knowledge": "2025-05"
     }
   },
   {
     "id": "deepseek/deepseek-v4-pro",
     "name": "DeepSeek V4 Pro",
     "provider": "openrouter",
-    "family": "deepseek",
+    "family": "deepseek-thinking",
     "created_at": "2026-04-24 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 384000,
@@ -35928,7 +35949,8 @@
       "limit": {
         "context": 1048576,
         "output": 384000
-      }
+      },
+      "knowledge": "2025-05"
     }
   },
   {
@@ -36019,7 +36041,7 @@
     "provider": "openrouter",
     "family": "gemini-flash",
     "created_at": "2025-02-05 00:00:00 UTC",
-    "context_window": 1048576,
+    "context_window": 1000000,
     "max_output_tokens": 8192,
     "knowledge_cutoff": "2024-08-31",
     "modalities": {
@@ -36068,7 +36090,7 @@
         "instruct_type": null
       },
       "top_provider": {
-        "context_length": 1048576,
+        "context_length": 1000000,
         "max_completion_tokens": 8192,
         "is_moderated": false
       },
@@ -36097,7 +36119,7 @@
         "cache_write": 0.083333
       },
       "limit": {
-        "context": 1048576,
+        "context": 1000000,
         "output": 8192
       },
       "knowledge": "2024-08-31"
@@ -36194,10 +36216,10 @@
     "name": "Gemini 2.5 Flash",
     "provider": "openrouter",
     "family": "gemini-flash",
-    "created_at": "2025-06-17 00:00:00 UTC",
+    "created_at": "2025-03-20 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 65535,
-    "knowledge_cutoff": "2025-01-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "pdf",
@@ -36269,7 +36291,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-06-17",
+      "last_updated": "2025-06-05",
       "cost": {
         "input": 0.3,
         "output": 2.5,
@@ -36281,18 +36303,18 @@
         "context": 1048576,
         "output": 65535
       },
-      "knowledge": "2025-01-31"
+      "knowledge": "2025-01"
     }
   },
   {
     "id": "google/gemini-2.5-flash-image",
-    "name": "Nano Banana (Gemini 2.5 Flash Image)",
+    "name": "Nano Banana",
     "provider": "openrouter",
-    "family": "gemini",
-    "created_at": "2025-10-07 00:00:00 UTC",
+    "family": "gemini-flash",
+    "created_at": "2025-08-26 00:00:00 UTC",
     "context_window": 32768,
     "max_output_tokens": 32768,
-    "knowledge_cutoff": "2025-01-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "image",
@@ -36353,7 +36375,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-10-07",
+      "last_updated": "2025-08-26",
       "cost": {
         "input": 0.3,
         "output": 2.5,
@@ -36364,18 +36386,18 @@
         "context": 32768,
         "output": 32768
       },
-      "knowledge": "2025-01-31"
+      "knowledge": "2025-06"
     }
   },
   {
     "id": "google/gemini-2.5-flash-lite",
-    "name": "Gemini 2.5 Flash Lite",
+    "name": "Gemini 2.5 Flash-Lite",
     "provider": "openrouter",
     "family": "gemini-flash-lite",
-    "created_at": "2025-07-22 00:00:00 UTC",
+    "created_at": "2025-06-17 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 65535,
-    "knowledge_cutoff": "2025-01-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -36447,7 +36469,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-07-22",
+      "last_updated": "2025-06-17",
       "cost": {
         "input": 0.1,
         "output": 0.4,
@@ -36459,7 +36481,7 @@
         "context": 1048576,
         "output": 65535
       },
-      "knowledge": "2025-01-31"
+      "knowledge": "2025-01"
     }
   },
   {
@@ -36561,11 +36583,11 @@
     "id": "google/gemini-2.5-pro",
     "name": "Gemini 2.5 Pro",
     "provider": "openrouter",
-    "family": "gemini",
-    "created_at": "2025-06-17 00:00:00 UTC",
+    "family": "gemini-pro",
+    "created_at": "2025-03-20 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 65536,
-    "knowledge_cutoff": "2025-01-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -36637,7 +36659,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-06-17",
+      "last_updated": "2025-06-05",
       "cost": {
         "input": 1.25,
         "output": 10,
@@ -36649,7 +36671,7 @@
         "context": 1048576,
         "output": 65536
       },
-      "knowledge": "2025-01-31"
+      "knowledge": "2025-01"
     }
   },
   {
@@ -37027,7 +37049,7 @@
   },
   {
     "id": "google/gemini-3.1-flash-image-preview",
-    "name": "Nano Banana 2 (Gemini 3.1 Flash Image Preview)",
+    "name": "Nano Banana 2",
     "provider": "openrouter",
     "family": "gemini-flash",
     "created_at": "2026-02-26 00:00:00 UTC",
@@ -37111,7 +37133,7 @@
     "id": "google/gemini-3.1-flash-lite",
     "name": "Gemini 3.1 Flash Lite",
     "provider": "openrouter",
-    "family": "gemini",
+    "family": "gemini-flash-lite",
     "created_at": "2026-05-07 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 65536,
@@ -37198,7 +37220,8 @@
       "limit": {
         "context": 1048576,
         "output": 65536
-      }
+      },
+      "knowledge": "2025-01"
     }
   },
   {
@@ -37292,7 +37315,8 @@
       "limit": {
         "context": 1048576,
         "output": 65536
-      }
+      },
+      "knowledge": "2025-01"
     }
   },
   {
@@ -37385,6 +37409,11 @@
         "reasoning": 12,
         "cache_read": 0.2,
         "cache_write": 0.375,
+        "context_over_200k": {
+          "input": 4,
+          "output": 18,
+          "cache_read": 0.4
+        },
         "tiers": [
           {
             "input": 4,
@@ -37395,12 +37424,7 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 4,
-          "output": 18,
-          "cache_read": 0.4
-        }
+        ]
       },
       "limit": {
         "context": 1048576,
@@ -37414,7 +37438,7 @@
     "name": "Gemini 3.1 Pro Preview Custom Tools",
     "provider": "openrouter",
     "family": "gemini-pro",
-    "created_at": "2026-02-25 00:00:00 UTC",
+    "created_at": "2026-02-19 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 65536,
     "knowledge_cutoff": null,
@@ -37489,7 +37513,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-02-25",
+      "last_updated": "2026-02-19",
       "interleaved": {
         "field": "reasoning_details"
       },
@@ -37499,6 +37523,11 @@
         "reasoning": 12,
         "cache_read": 0.2,
         "cache_write": 0.375,
+        "context_over_200k": {
+          "input": 4,
+          "output": 18,
+          "cache_read": 0.4
+        },
         "tiers": [
           {
             "input": 4,
@@ -37509,12 +37538,102 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 4,
-          "output": 18,
-          "cache_read": 0.4
+        ]
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "knowledge": "2025-01"
+    }
+  },
+  {
+    "id": "google/gemini-3.5-flash",
+    "name": "Gemini 3.5 Flash",
+    "provider": "openrouter",
+    "family": "gemini-flash",
+    "created_at": "2026-05-19 00:00:00 UTC",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video",
+        "pdf",
+        "audio"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "vision",
+      "streaming"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.5,
+          "output_per_million": 9,
+          "cache_read_input_per_million": 0.15,
+          "cache_write_input_per_million": 0.083333,
+          "reasoning_output_per_million": 9
         }
+      }
+    },
+    "metadata": {
+      "description": "Gemini 3.5 Flash is Google's high-efficiency multimodal model, bringing near-Pro level coding and reasoning at Flash-tier cost and speed. It is highly optimized for coding proficiency and parallel agentic execution...",
+      "architecture": {
+        "modality": "text+image+file+audio+video->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "video",
+          "file",
+          "audio"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Gemini",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-05-19",
+      "cost": {
+        "input": 1.5,
+        "output": 9,
+        "reasoning": 9,
+        "cache_read": 0.15,
+        "cache_write": 0.083333
       },
       "limit": {
         "context": 1048576,
@@ -37937,10 +38056,10 @@
   },
   {
     "id": "google/gemma-4-26b-a4b-it",
-    "name": "Gemma 4 26B A4B ",
+    "name": "Gemma 4 26B A4B IT",
     "provider": "openrouter",
     "family": "gemma",
-    "created_at": "2026-04-03 00:00:00 UTC",
+    "created_at": "2026-04-02 00:00:00 UTC",
     "context_window": 262144,
     "max_output_tokens": 262144,
     "knowledge_cutoff": null,
@@ -38017,7 +38136,7 @@
       "open_weights": true,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-04-03",
+      "last_updated": "2026-04-02",
       "cost": {
         "input": 0.06,
         "output": 0.33
@@ -38025,8 +38144,7 @@
       "limit": {
         "context": 262144,
         "output": 262144
-      },
-      "knowledge": "2025-01"
+      }
     }
   },
   {
@@ -38034,7 +38152,7 @@
     "name": "Gemma 4 26B A4B  (free)",
     "provider": "openrouter",
     "family": "gemma",
-    "created_at": "2026-04-03 00:00:00 UTC",
+    "created_at": "2026-04-02 00:00:00 UTC",
     "context_window": 262144,
     "max_output_tokens": 32768,
     "knowledge_cutoff": null,
@@ -38050,10 +38168,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {},
     "metadata": {
@@ -38093,7 +38211,7 @@
       "open_weights": true,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-04-03",
+      "last_updated": "2026-04-02",
       "cost": {
         "input": 0,
         "output": 0
@@ -38101,13 +38219,12 @@
       "limit": {
         "context": 262144,
         "output": 32768
-      },
-      "knowledge": "2025-01"
+      }
     }
   },
   {
     "id": "google/gemma-4-31b-it",
-    "name": "Gemma 4 31B",
+    "name": "Gemma 4 31B IT",
     "provider": "openrouter",
     "family": "gemma",
     "created_at": "2026-04-02 00:00:00 UTC",
@@ -38195,8 +38312,7 @@
       "limit": {
         "context": 262144,
         "output": 16384
-      },
-      "knowledge": "2025-01"
+      }
     }
   },
   {
@@ -38220,10 +38336,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {},
     "metadata": {
@@ -38271,8 +38387,7 @@
       "limit": {
         "context": 262144,
         "output": 32768
-      },
-      "knowledge": "2025-01"
+      }
     }
   },
   {
@@ -38295,9 +38410,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {},
     "metadata": {
@@ -38364,9 +38479,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {},
     "metadata": {
@@ -38515,7 +38630,8 @@
       ]
     },
     "capabilities": [
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -38540,16 +38656,19 @@
       },
       "top_provider": {
         "context_length": 131000,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 131000,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -38756,9 +38875,9 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.3,
-          "output_per_million": 2.5,
-          "cache_read_input_per_million": 0.06
+          "input_per_million": 0.075,
+          "output_per_million": 0.625,
+          "cache_read_input_per_million": 0.015
         }
       }
     },
@@ -38803,9 +38922,9 @@
       "temperature": true,
       "last_updated": "2026-04-23",
       "cost": {
-        "input": 0.3,
-        "output": 2.5,
-        "cache_read": 0.06
+        "input": 0.075,
+        "output": 0.625,
+        "cache_read": 0.015
       },
       "limit": {
         "context": 262144,
@@ -38914,9 +39033,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -39439,8 +39558,8 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -39599,8 +39718,8 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -39850,9 +39969,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "vision",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -39932,7 +40051,8 @@
       ]
     },
     "capabilities": [
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -39957,16 +40077,19 @@
       },
       "top_provider": {
         "context_length": 60000,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 60000,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -40006,7 +40129,8 @@
       ]
     },
     "capabilities": [
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -40031,16 +40155,19 @@
       },
       "top_provider": {
         "context_length": 80000,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 80000,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -40130,13 +40257,13 @@
   },
   {
     "id": "meta-llama/llama-3.3-70b-instruct",
-    "name": "Llama 3.3 70B Instruct",
+    "name": "Llama-3.3-70B-Instruct",
     "provider": "openrouter",
     "family": "llama",
     "created_at": "2024-12-06 00:00:00 UTC",
     "context_window": 131072,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2023-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -40209,7 +40336,7 @@
         "context": 131072,
         "output": 16384
       },
-      "knowledge": "2023-12-31"
+      "knowledge": "2023-12"
     }
   },
   {
@@ -40220,7 +40347,7 @@
     "created_at": "2024-12-06 00:00:00 UTC",
     "context_window": 65536,
     "max_output_tokens": 131072,
-    "knowledge_cutoff": "2023-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -40278,7 +40405,7 @@
         "context": 65536,
         "output": 131072
       },
-      "knowledge": "2023-12-31"
+      "knowledge": "2023-12"
     }
   },
   {
@@ -40470,7 +40597,8 @@
       ]
     },
     "capabilities": [
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -40495,16 +40623,19 @@
       },
       "top_provider": {
         "context_length": 131072,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 131072,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -40545,9 +40676,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "vision",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -40789,8 +40920,8 @@
       ]
     },
     "capabilities": [
-      "structured_output",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -41003,10 +41134,10 @@
   },
   {
     "id": "minimax/minimax-m2",
-    "name": "MiniMax M2",
+    "name": "MiniMax-M2",
     "provider": "openrouter",
     "family": "minimax",
-    "created_at": "2025-10-23 00:00:00 UTC",
+    "created_at": "2025-10-27 00:00:00 UTC",
     "context_window": 196608,
     "max_output_tokens": 196608,
     "knowledge_cutoff": null,
@@ -41077,7 +41208,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2025-10-23",
+      "last_updated": "2025-10-27",
       "interleaved": {
         "field": "reasoning_details"
       },
@@ -41164,7 +41295,7 @@
   },
   {
     "id": "minimax/minimax-m2.1",
-    "name": "MiniMax M2.1",
+    "name": "MiniMax-M2.1",
     "provider": "openrouter",
     "family": "minimax",
     "created_at": "2025-12-23 00:00:00 UTC",
@@ -41255,7 +41386,7 @@
   },
   {
     "id": "minimax/minimax-m2.5",
-    "name": "MiniMax M2.5",
+    "name": "MiniMax-M2.5",
     "provider": "openrouter",
     "family": "minimax",
     "created_at": "2026-02-12 00:00:00 UTC",
@@ -41365,9 +41496,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {},
     "metadata": {
@@ -41420,7 +41551,7 @@
   },
   {
     "id": "minimax/minimax-m2.7",
-    "name": "MiniMax M2.7",
+    "name": "MiniMax-M2.7",
     "provider": "openrouter",
     "family": "minimax",
     "created_at": "2026-03-18 00:00:00 UTC",
@@ -41592,7 +41723,7 @@
   },
   {
     "id": "mistralai/devstral-2512",
-    "name": "Devstral 2 2512",
+    "name": "Devstral 2",
     "provider": "openrouter",
     "family": "devstral",
     "created_at": "2025-12-09 00:00:00 UTC",
@@ -42118,7 +42249,8 @@
       ]
     },
     "capabilities": [
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -42143,16 +42275,19 @@
       },
       "top_provider": {
         "context_length": 2824,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 2824,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -42344,13 +42479,13 @@
   },
   {
     "id": "mistralai/mistral-large-2411",
-    "name": "Mistral Large 2411",
+    "name": "Mistral Large 2.1",
     "provider": "openrouter",
     "family": "mistral-large",
-    "created_at": "2024-11-19 00:00:00 UTC",
+    "created_at": "2024-11-01 00:00:00 UTC",
     "context_window": 131072,
     "max_output_tokens": 131072,
-    "knowledge_cutoff": "2024-07-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -42410,10 +42545,10 @@
       ],
       "source": "models.dev",
       "provider_id": "openrouter",
-      "open_weights": false,
+      "open_weights": true,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2024-11-19",
+      "last_updated": "2024-11-04",
       "cost": {
         "input": 2,
         "output": 6,
@@ -42423,15 +42558,15 @@
         "context": 131072,
         "output": 131072
       },
-      "knowledge": "2024-07-31"
+      "knowledge": "2024-11"
     }
   },
   {
     "id": "mistralai/mistral-large-2512",
-    "name": "Mistral Large 3 2512",
+    "name": "Mistral Large 3",
     "provider": "openrouter",
     "family": "mistral-large",
-    "created_at": "2025-12-01 00:00:00 UTC",
+    "created_at": "2024-11-01 00:00:00 UTC",
     "context_window": 262144,
     "max_output_tokens": 262144,
     "knowledge_cutoff": null,
@@ -42496,10 +42631,10 @@
       ],
       "source": "models.dev",
       "provider_id": "openrouter",
-      "open_weights": false,
+      "open_weights": true,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-12-01",
+      "last_updated": "2025-12-02",
       "cost": {
         "input": 0.5,
         "output": 1.5,
@@ -42508,7 +42643,8 @@
       "limit": {
         "context": 262144,
         "output": 262144
-      }
+      },
+      "knowledge": "2024-11"
     }
   },
   {
@@ -42774,10 +42910,10 @@
     "name": "Mistral Nemo",
     "provider": "openrouter",
     "family": "mistral-nemo",
-    "created_at": "2024-07-19 00:00:00 UTC",
+    "created_at": "2024-07-01 00:00:00 UTC",
     "context_window": 131072,
     "max_output_tokens": 131072,
-    "knowledge_cutoff": "2024-04-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -42841,7 +42977,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2024-07-19",
+      "last_updated": "2024-07-01",
       "cost": {
         "input": 0.02,
         "output": 0.03
@@ -42850,7 +42986,7 @@
         "context": 131072,
         "output": 131072
       },
-      "knowledge": "2024-04-30"
+      "knowledge": "2024-07"
     }
   },
   {
@@ -43113,7 +43249,7 @@
     "family": "mistral-small",
     "created_at": "2025-03-17 00:00:00 UTC",
     "context_window": 128000,
-    "max_output_tokens": 8192,
+    "max_output_tokens": 128000,
     "knowledge_cutoff": "2023-10-31",
     "modalities": {
       "input": [
@@ -43126,7 +43262,8 @@
     },
     "capabilities": [
       "vision",
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -43152,16 +43289,19 @@
       },
       "top_provider": {
         "context_length": 128000,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 128000,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -43178,7 +43318,7 @@
       },
       "limit": {
         "context": 128000,
-        "output": 8192
+        "output": 128000
       },
       "knowledge": "2023-10-31"
     }
@@ -43781,8 +43921,8 @@
     "id": "moonshotai/kimi-k2.5",
     "name": "Kimi K2.5",
     "provider": "openrouter",
-    "family": "kimi",
-    "created_at": "2026-01-27 00:00:00 UTC",
+    "family": "kimi-k2.5",
+    "created_at": "2026-01-01 00:00:00 UTC",
     "context_window": 262144,
     "max_output_tokens": 262144,
     "knowledge_cutoff": null,
@@ -43858,7 +43998,7 @@
       "open_weights": true,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-01-27",
+      "last_updated": "2026-01",
       "interleaved": {
         "field": "reasoning_details"
       },
@@ -43878,8 +44018,8 @@
     "id": "moonshotai/kimi-k2.6",
     "name": "Kimi K2.6",
     "provider": "openrouter",
-    "family": "kimi",
-    "created_at": "2026-04-20 00:00:00 UTC",
+    "family": "kimi-k2.6",
+    "created_at": "2026-04-21 00:00:00 UTC",
     "context_window": 262142,
     "max_output_tokens": 262142,
     "knowledge_cutoff": null,
@@ -43957,7 +44097,7 @@
       "open_weights": true,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-04-20",
+      "last_updated": "2026-04-21",
       "interleaved": {
         "field": "reasoning_details"
       },
@@ -43969,7 +44109,8 @@
       "limit": {
         "context": 262142,
         "output": 262142
-      }
+      },
+      "knowledge": "2025-01"
     }
   },
   {
@@ -44508,9 +44649,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -44586,9 +44727,9 @@
       ]
     },
     "capabilities": [
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -44665,9 +44806,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -44751,9 +44892,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -44980,9 +45121,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -45214,9 +45355,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -45355,13 +45496,13 @@
   },
   {
     "id": "openai/gpt-3.5-turbo",
-    "name": "GPT-3.5 Turbo",
+    "name": "GPT-3.5-turbo",
     "provider": "openrouter",
     "family": "gpt",
-    "created_at": "2023-05-28 00:00:00 UTC",
+    "created_at": "2023-03-01 00:00:00 UTC",
     "context_window": 16385,
     "max_output_tokens": 4096,
-    "knowledge_cutoff": "2021-09-30",
+    "knowledge_cutoff": "2021-09-01",
     "modalities": {
       "input": [
         "text"
@@ -45423,7 +45564,7 @@
       "open_weights": false,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2023-05-28",
+      "last_updated": "2023-11-06",
       "cost": {
         "input": 0.5,
         "output": 1.5
@@ -45432,7 +45573,7 @@
         "context": 16385,
         "output": 4096
       },
-      "knowledge": "2021-09-30"
+      "knowledge": "2021-09-01"
     }
   },
   {
@@ -45684,10 +45825,10 @@
     "name": "GPT-4",
     "provider": "openrouter",
     "family": "gpt",
-    "created_at": "2023-05-28 00:00:00 UTC",
+    "created_at": "2023-11-06 00:00:00 UTC",
     "context_window": 8191,
     "max_output_tokens": 4096,
-    "knowledge_cutoff": "2021-09-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -45750,7 +45891,7 @@
       "open_weights": false,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2023-05-28",
+      "last_updated": "2024-04-09",
       "cost": {
         "input": 30,
         "output": 60
@@ -45759,7 +45900,7 @@
         "context": 8191,
         "output": 4096
       },
-      "knowledge": "2021-09-30"
+      "knowledge": "2023-11"
     }
   },
   {
@@ -45931,10 +46072,10 @@
     "name": "GPT-4 Turbo",
     "provider": "openrouter",
     "family": "gpt",
-    "created_at": "2024-04-09 00:00:00 UTC",
+    "created_at": "2023-11-06 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 4096,
-    "knowledge_cutoff": "2023-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -46008,7 +46149,7 @@
         "context": 128000,
         "output": 4096
       },
-      "knowledge": "2023-12-31"
+      "knowledge": "2023-12"
     }
   },
   {
@@ -46101,7 +46242,7 @@
     "created_at": "2025-04-14 00:00:00 UTC",
     "context_window": 1047576,
     "max_output_tokens": 32768,
-    "knowledge_cutoff": "2024-06-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "image",
@@ -46174,18 +46315,18 @@
         "context": 1047576,
         "output": 32768
       },
-      "knowledge": "2024-06-30"
+      "knowledge": "2024-04"
     }
   },
   {
     "id": "openai/gpt-4.1-mini",
-    "name": "GPT-4.1 Mini",
+    "name": "GPT-4.1 mini",
     "provider": "openrouter",
     "family": "gpt-mini",
     "created_at": "2025-04-14 00:00:00 UTC",
     "context_window": 1047576,
     "max_output_tokens": 32768,
-    "knowledge_cutoff": "2024-06-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "image",
@@ -46258,18 +46399,18 @@
         "context": 1047576,
         "output": 32768
       },
-      "knowledge": "2024-06-30"
+      "knowledge": "2024-04"
     }
   },
   {
     "id": "openai/gpt-4.1-nano",
-    "name": "GPT-4.1 Nano",
+    "name": "GPT-4.1 nano",
     "provider": "openrouter",
-    "family": "gpt",
+    "family": "gpt-nano",
     "created_at": "2025-04-14 00:00:00 UTC",
     "context_window": 1047576,
     "max_output_tokens": 32768,
-    "knowledge_cutoff": "2024-06-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "image",
@@ -46342,7 +46483,7 @@
         "context": 1047576,
         "output": 32768
       },
-      "knowledge": "2024-06-30"
+      "knowledge": "2024-04"
     }
   },
   {
@@ -46353,7 +46494,7 @@
     "created_at": "2024-05-13 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -46422,7 +46563,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2024-05-13",
+      "last_updated": "2024-08-06",
       "cost": {
         "input": 2.5,
         "output": 10
@@ -46431,7 +46572,7 @@
         "context": 128000,
         "output": 16384
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
@@ -46442,7 +46583,7 @@
     "created_at": "2024-05-13 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 4096,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -46520,7 +46661,7 @@
         "context": 128000,
         "output": 4096
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
@@ -46531,7 +46672,7 @@
     "created_at": "2024-08-06 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -46611,7 +46752,7 @@
         "context": 128000,
         "output": 16384
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
@@ -46622,7 +46763,7 @@
     "created_at": "2024-11-20 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -46701,7 +46842,7 @@
         "context": 128000,
         "output": 16384
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
@@ -46792,13 +46933,13 @@
   },
   {
     "id": "openai/gpt-4o-mini",
-    "name": "GPT-4o-mini",
+    "name": "GPT-4o mini",
     "provider": "openrouter",
     "family": "gpt-mini",
     "created_at": "2024-07-18 00:00:00 UTC",
     "context_window": 128000,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -46878,7 +47019,7 @@
         "context": 128000,
         "output": 16384
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
@@ -47278,10 +47419,10 @@
   },
   {
     "id": "openai/gpt-5-codex",
-    "name": "GPT-5 Codex",
+    "name": "GPT-5-Codex",
     "provider": "openrouter",
     "family": "gpt-codex",
-    "created_at": "2025-09-23 00:00:00 UTC",
+    "created_at": "2025-09-15 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2024-09-30",
@@ -47345,7 +47486,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2025-09-23",
+      "last_updated": "2025-09-15",
       "cost": {
         "input": 1.25,
         "output": 10,
@@ -47547,7 +47688,7 @@
     "created_at": "2025-08-07 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
-    "knowledge_cutoff": "2024-05-31",
+    "knowledge_cutoff": "2024-05-30",
     "modalities": {
       "input": [
         "text",
@@ -47621,7 +47762,7 @@
         "context": 400000,
         "output": 128000
       },
-      "knowledge": "2024-05-31"
+      "knowledge": "2024-05-30"
     }
   },
   {
@@ -47632,7 +47773,7 @@
     "created_at": "2025-08-07 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
-    "knowledge_cutoff": "2024-05-31",
+    "knowledge_cutoff": "2024-05-30",
     "modalities": {
       "input": [
         "text",
@@ -47706,7 +47847,7 @@
         "context": 400000,
         "output": 128000
       },
-      "knowledge": "2024-05-31"
+      "knowledge": "2024-05-30"
     }
   },
   {
@@ -47960,7 +48101,7 @@
   },
   {
     "id": "openai/gpt-5.1-codex",
-    "name": "GPT-5.1-Codex",
+    "name": "GPT-5.1 Codex",
     "provider": "openrouter",
     "family": "gpt-codex",
     "created_at": "2025-11-13 00:00:00 UTC",
@@ -48043,10 +48184,10 @@
   },
   {
     "id": "openai/gpt-5.1-codex-max",
-    "name": "GPT-5.1-Codex-Max",
+    "name": "GPT-5.1 Codex Max",
     "provider": "openrouter",
     "family": "gpt-codex",
-    "created_at": "2025-12-04 00:00:00 UTC",
+    "created_at": "2025-11-13 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2024-09-30",
@@ -48111,7 +48252,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2025-12-04",
+      "last_updated": "2025-11-13",
       "cost": {
         "input": 1.25,
         "output": 10,
@@ -48126,7 +48267,7 @@
   },
   {
     "id": "openai/gpt-5.1-codex-mini",
-    "name": "GPT-5.1-Codex-Mini",
+    "name": "GPT-5.1 Codex mini",
     "provider": "openrouter",
     "family": "gpt-codex",
     "created_at": "2025-11-13 00:00:00 UTC",
@@ -48212,7 +48353,7 @@
     "name": "GPT-5.2",
     "provider": "openrouter",
     "family": "gpt",
-    "created_at": "2025-12-10 00:00:00 UTC",
+    "created_at": "2025-12-11 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-08-31",
@@ -48279,7 +48420,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2025-12-10",
+      "last_updated": "2025-12-11",
       "cost": {
         "input": 1.75,
         "output": 14,
@@ -48376,10 +48517,10 @@
   },
   {
     "id": "openai/gpt-5.2-codex",
-    "name": "GPT-5.2-Codex",
+    "name": "GPT-5.2 Codex",
     "provider": "openrouter",
     "family": "gpt-codex",
-    "created_at": "2026-01-14 00:00:00 UTC",
+    "created_at": "2025-12-11 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-08-31",
@@ -48444,7 +48585,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2026-01-14",
+      "last_updated": "2025-12-11",
       "cost": {
         "input": 1.75,
         "output": 14,
@@ -48462,7 +48603,7 @@
     "name": "GPT-5.2 Pro",
     "provider": "openrouter",
     "family": "gpt-pro",
-    "created_at": "2025-12-10 00:00:00 UTC",
+    "created_at": "2025-12-11 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-08-31",
@@ -48527,7 +48668,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2025-12-10",
+      "last_updated": "2025-12-11",
       "cost": {
         "input": 21,
         "output": 168
@@ -48622,10 +48763,10 @@
   },
   {
     "id": "openai/gpt-5.3-codex",
-    "name": "GPT-5.3-Codex",
+    "name": "GPT-5.3 Codex",
     "provider": "openrouter",
     "family": "gpt-codex",
-    "created_at": "2026-02-24 00:00:00 UTC",
+    "created_at": "2026-02-05 00:00:00 UTC",
     "context_window": 400000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-08-31",
@@ -48692,7 +48833,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2026-02-24",
+      "last_updated": "2026-02-05",
       "cost": {
         "input": 1.75,
         "output": 14,
@@ -48713,7 +48854,7 @@
     "created_at": "2026-03-05 00:00:00 UTC",
     "context_window": 1050000,
     "max_output_tokens": 128000,
-    "knowledge_cutoff": null,
+    "knowledge_cutoff": "2025-08-31",
     "modalities": {
       "input": [
         "text",
@@ -48786,7 +48927,8 @@
       "limit": {
         "context": 1050000,
         "output": 128000
-      }
+      },
+      "knowledge": "2025-08-31"
     }
   },
   {
@@ -48879,7 +49021,7 @@
   },
   {
     "id": "openai/gpt-5.4-mini",
-    "name": "GPT-5.4 Mini",
+    "name": "GPT-5.4 mini",
     "provider": "openrouter",
     "family": "gpt-mini",
     "created_at": "2026-03-17 00:00:00 UTC",
@@ -48964,7 +49106,7 @@
   },
   {
     "id": "openai/gpt-5.4-nano",
-    "name": "GPT-5.4 Nano",
+    "name": "GPT-5.4 nano",
     "provider": "openrouter",
     "family": "gpt-nano",
     "created_at": "2026-03-17 00:00:00 UTC",
@@ -49136,7 +49278,7 @@
     "name": "GPT-5.5",
     "provider": "openrouter",
     "family": "gpt",
-    "created_at": "2026-04-24 00:00:00 UTC",
+    "created_at": "2026-04-23 00:00:00 UTC",
     "context_window": 1050000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-12-01",
@@ -49203,7 +49345,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-23",
       "cost": {
         "input": 5,
         "output": 30,
@@ -49220,8 +49362,8 @@
     "id": "openai/gpt-5.5-pro",
     "name": "GPT-5.5 Pro",
     "provider": "openrouter",
-    "family": "gpt",
-    "created_at": "2026-04-24 00:00:00 UTC",
+    "family": "gpt-pro",
+    "created_at": "2026-04-23 00:00:00 UTC",
     "context_window": 1050000,
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-12-01",
@@ -49286,7 +49428,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-23",
       "cost": {
         "input": 30,
         "output": 180
@@ -49889,9 +50031,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -49955,10 +50097,10 @@
     "name": "o1",
     "provider": "openrouter",
     "family": "o",
-    "created_at": "2024-12-17 00:00:00 UTC",
+    "created_at": "2024-12-05 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -50021,7 +50163,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2024-12-17",
+      "last_updated": "2024-12-05",
       "cost": {
         "input": 15,
         "output": 60,
@@ -50031,18 +50173,18 @@
         "context": 200000,
         "output": 100000
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
     "id": "openai/o1-pro",
     "name": "o1-pro",
     "provider": "openrouter",
-    "family": "o",
+    "family": "o-pro",
     "created_at": "2025-03-19 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -50110,7 +50252,7 @@
         "context": 200000,
         "output": 100000
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2023-09"
     }
   },
   {
@@ -50121,7 +50263,7 @@
     "created_at": "2025-04-16 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
-    "knowledge_cutoff": "2024-06-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "image",
@@ -50194,15 +50336,15 @@
         "context": 200000,
         "output": 100000
       },
-      "knowledge": "2024-06-30"
+      "knowledge": "2024-05"
     }
   },
   {
     "id": "openai/o3-deep-research",
-    "name": "o3 Deep Research",
+    "name": "o3-deep-research",
     "provider": "openrouter",
     "family": "o",
-    "created_at": "2025-10-10 00:00:00 UTC",
+    "created_at": "2024-06-26 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
     "knowledge_cutoff": null,
@@ -50276,7 +50418,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-10-10",
+      "last_updated": "2024-06-26",
       "cost": {
         "input": 10,
         "output": 40,
@@ -50285,18 +50427,19 @@
       "limit": {
         "context": 200000,
         "output": 100000
-      }
+      },
+      "knowledge": "2024-05"
     }
   },
   {
     "id": "openai/o3-mini",
-    "name": "o3 Mini",
+    "name": "o3-mini",
     "provider": "openrouter",
-    "family": "o",
-    "created_at": "2025-01-31 00:00:00 UTC",
+    "family": "o-mini",
+    "created_at": "2024-12-20 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
-    "knowledge_cutoff": "2023-10-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -50357,7 +50500,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": false,
-      "last_updated": "2025-01-31",
+      "last_updated": "2025-01-29",
       "cost": {
         "input": 1.1,
         "output": 4.4,
@@ -50367,7 +50510,7 @@
         "context": 200000,
         "output": 100000
       },
-      "knowledge": "2023-10-31"
+      "knowledge": "2024-05"
     }
   },
   {
@@ -50454,13 +50597,13 @@
   },
   {
     "id": "openai/o3-pro",
-    "name": "o3 Pro",
+    "name": "o3-pro",
     "provider": "openrouter",
-    "family": "o",
+    "family": "o-pro",
     "created_at": "2025-06-10 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
-    "knowledge_cutoff": "2024-06-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -50531,18 +50674,18 @@
         "context": 200000,
         "output": 100000
       },
-      "knowledge": "2024-06-30"
+      "knowledge": "2024-05"
     }
   },
   {
     "id": "openai/o4-mini",
-    "name": "o4 Mini",
+    "name": "o4-mini",
     "provider": "openrouter",
     "family": "o-mini",
     "created_at": "2025-04-16 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
-    "knowledge_cutoff": "2024-06-30",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "image",
@@ -50615,15 +50758,15 @@
         "context": 200000,
         "output": 100000
       },
-      "knowledge": "2024-06-30"
+      "knowledge": "2024-05"
     }
   },
   {
     "id": "openai/o4-mini-deep-research",
-    "name": "o4 Mini Deep Research",
+    "name": "o4-mini-deep-research",
     "provider": "openrouter",
-    "family": "o",
-    "created_at": "2025-10-10 00:00:00 UTC",
+    "family": "o-mini",
+    "created_at": "2024-06-26 00:00:00 UTC",
     "context_window": 200000,
     "max_output_tokens": 100000,
     "knowledge_cutoff": null,
@@ -50697,7 +50840,7 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2025-10-10",
+      "last_updated": "2024-06-26",
       "cost": {
         "input": 2,
         "output": 8,
@@ -50706,7 +50849,8 @@
       "limit": {
         "context": 200000,
         "output": 100000
-      }
+      },
+      "knowledge": "2024-05"
     }
   },
   {
@@ -51934,8 +52078,8 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -52005,7 +52149,7 @@
     "family": "qwen",
     "created_at": "2024-11-11 00:00:00 UTC",
     "context_window": 32768,
-    "max_output_tokens": 8192,
+    "max_output_tokens": 32768,
     "knowledge_cutoff": "2024-06-30",
     "modalities": {
       "input": [
@@ -52016,7 +52160,8 @@
       ]
     },
     "capabilities": [
-      "streaming"
+      "streaming",
+      "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
@@ -52041,16 +52186,19 @@
       },
       "top_provider": {
         "context_length": 32768,
-        "max_completion_tokens": null,
+        "max_completion_tokens": 32768,
         "is_moderated": false
       },
       "per_request_limits": null,
       "supported_parameters": [
         "frequency_penalty",
+        "logit_bias",
         "max_tokens",
+        "min_p",
         "presence_penalty",
         "repetition_penalty",
         "seed",
+        "stop",
         "temperature",
         "top_k",
         "top_p"
@@ -52067,7 +52215,7 @@
       },
       "limit": {
         "context": 32768,
-        "output": 8192
+        "output": 32768
       },
       "knowledge": "2024-06-30"
     }
@@ -52091,8 +52239,8 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -52504,9 +52652,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -53359,8 +53507,8 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -53674,8 +53822,8 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -54166,10 +54314,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -54426,9 +54574,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -54659,7 +54807,7 @@
     "family": "qwen3.5",
     "created_at": "2026-02-25 00:00:00 UTC",
     "context_window": 262144,
-    "max_output_tokens": 65536,
+    "max_output_tokens": 262144,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -54704,7 +54852,7 @@
       },
       "top_provider": {
         "context_length": 262144,
-        "max_completion_tokens": 65536,
+        "max_completion_tokens": 262144,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -54741,7 +54889,7 @@
       },
       "limit": {
         "context": 262144,
-        "output": 65536
+        "output": 262144
       }
     }
   },
@@ -54868,9 +55016,8 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.14,
-          "output_per_million": 1,
-          "cache_read_input_per_million": 0.05
+          "input_per_million": 0.139,
+          "output_per_million": 1
         }
       }
     },
@@ -54891,7 +55038,7 @@
       },
       "top_provider": {
         "context_length": 262144,
-        "max_completion_tokens": 81920,
+        "max_completion_tokens": null,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -54923,9 +55070,8 @@
       "temperature": true,
       "last_updated": "2026-02-25",
       "cost": {
-        "input": 0.14,
-        "output": 1,
-        "cache_read": 0.05
+        "input": 0.139,
+        "output": 1
       },
       "limit": {
         "context": 262144,
@@ -54964,8 +55110,7 @@
       "text_tokens": {
         "standard": {
           "input_per_million": 0.39,
-          "output_per_million": 2.34,
-          "cache_read_input_per_million": 0.195
+          "output_per_million": 2.34
         }
       }
     },
@@ -55019,8 +55164,7 @@
       "last_updated": "2026-02-16",
       "cost": {
         "input": 0.39,
-        "output": 2.34,
-        "cache_read": 0.195
+        "output": 2.34
       },
       "limit": {
         "context": 262144,
@@ -55386,7 +55530,7 @@
     "family": "qwen3.6",
     "created_at": "2026-04-27 00:00:00 UTC",
     "context_window": 262144,
-    "max_output_tokens": 81920,
+    "max_output_tokens": 262144,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -55409,7 +55553,7 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.32,
+          "input_per_million": 0.3,
           "output_per_million": 3.2
         }
       }
@@ -55431,7 +55575,7 @@
       },
       "top_provider": {
         "context_length": 262144,
-        "max_completion_tokens": 81920,
+        "max_completion_tokens": 262144,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -55463,12 +55607,12 @@
       "temperature": true,
       "last_updated": "2026-04-27",
       "cost": {
-        "input": 0.32,
+        "input": 0.3,
         "output": 3.2
       },
       "limit": {
         "context": 262144,
-        "output": 81920
+        "output": 262144
       }
     }
   },
@@ -55478,8 +55622,8 @@
     "provider": "openrouter",
     "family": "qwen3.6",
     "created_at": "2026-04-27 00:00:00 UTC",
-    "context_window": 262144,
-    "max_output_tokens": 262144,
+    "context_window": 262140,
+    "max_output_tokens": 262140,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -55503,8 +55647,7 @@
       "text_tokens": {
         "standard": {
           "input_per_million": 0.15,
-          "output_per_million": 1,
-          "cache_read_input_per_million": 0.05
+          "output_per_million": 1
         }
       }
     },
@@ -55524,8 +55667,8 @@
         "instruct_type": null
       },
       "top_provider": {
-        "context_length": 262144,
-        "max_completion_tokens": 262144,
+        "context_length": 262140,
+        "max_completion_tokens": 262140,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -55533,6 +55676,7 @@
         "frequency_penalty",
         "include_reasoning",
         "logit_bias",
+        "logprobs",
         "max_tokens",
         "min_p",
         "presence_penalty",
@@ -55546,6 +55690,7 @@
         "tool_choice",
         "tools",
         "top_k",
+        "top_logprobs",
         "top_p"
       ],
       "source": "models.dev",
@@ -55556,12 +55701,11 @@
       "last_updated": "2026-04-27",
       "cost": {
         "input": 0.15,
-        "output": 1,
-        "cache_read": 0.05
+        "output": 1
       },
       "limit": {
-        "context": 262144,
-        "output": 262144
+        "context": 262140,
+        "output": 262140
       }
     }
   },
@@ -55819,6 +55963,89 @@
         "output": 65536
       },
       "knowledge": "2025-04"
+    }
+  },
+  {
+    "id": "qwen/qwen3.7-max",
+    "name": "Qwen3.7 Max",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2026-05-21 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "streaming"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2.5,
+          "output_per_million": 7.5,
+          "cache_write_input_per_million": 3.125
+        }
+      }
+    },
+    "metadata": {
+      "description": "Qwen3.7-Max is the flagship model in Alibaba's Qwen3.7 series. It supports text input and output and is designed for agent-centric workloads, with particular strengths in coding, office and productivity tasks,...",
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 1000000,
+        "max_completion_tokens": 65536,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p"
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": false,
+      "temperature": true,
+      "last_updated": "2026-05-21",
+      "cost": {
+        "input": 2.5,
+        "output": 7.5,
+        "cache_write": 3.125
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 65536
+      }
     }
   },
   {
@@ -56529,7 +56756,7 @@
     "family": "step",
     "created_at": "2026-01-29 00:00:00 UTC",
     "context_window": 262144,
-    "max_output_tokens": 65536,
+    "max_output_tokens": 16384,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -56541,16 +56768,17 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.1,
-          "output_per_million": 0.3
+          "input_per_million": 0.09,
+          "output_per_million": 0.3,
+          "cache_read_input_per_million": 0.02
         }
       }
     },
@@ -56569,7 +56797,7 @@
       },
       "top_provider": {
         "context_length": 262144,
-        "max_completion_tokens": 65536,
+        "max_completion_tokens": 16384,
         "is_moderated": false
       },
       "per_request_limits": null,
@@ -56598,12 +56826,13 @@
       "temperature": true,
       "last_updated": "2026-01-29",
       "cost": {
-        "input": 0.1,
-        "output": 0.3
+        "input": 0.09,
+        "output": 0.3,
+        "cache_read": 0.02
       },
       "limit": {
         "context": 262144,
-        "output": 65536
+        "output": 16384
       },
       "knowledge": "2025-01"
     }
@@ -57575,7 +57804,7 @@
     "name": "Grok 4.3",
     "provider": "openrouter",
     "family": "grok",
-    "created_at": "2026-04-30 00:00:00 UTC",
+    "created_at": "2026-04-17 00:00:00 UTC",
     "context_window": 1000000,
     "max_output_tokens": 1000000,
     "knowledge_cutoff": null,
@@ -57646,11 +57875,16 @@
       "open_weights": false,
       "attachment": true,
       "temperature": true,
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-04-17",
       "cost": {
         "input": 1.25,
         "output": 2.5,
         "cache_read": 0.2,
+        "context_over_200k": {
+          "input": 2.5,
+          "output": 5,
+          "cache_read": 0.4
+        },
         "tiers": [
           {
             "input": 2.5,
@@ -57661,12 +57895,7 @@
               "size": 200000
             }
           }
-        ],
-        "context_over_200k": {
-          "input": 2.5,
-          "output": 5,
-          "cache_read": 0.4
-        }
+        ]
       },
       "limit": {
         "context": 1000000,
@@ -57675,14 +57904,102 @@
     }
   },
   {
+    "id": "x-ai/grok-build-0.1",
+    "name": "Grok Build 0.1",
+    "provider": "openrouter",
+    "family": "grok-build",
+    "created_at": "2026-04-16 00:00:00 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 256000,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "vision",
+      "streaming"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1,
+          "output_per_million": 2,
+          "cache_read_input_per_million": 0.2
+        }
+      }
+    },
+    "metadata": {
+      "description": "Grok Build 0.1 is xAI’s fast coding model trained specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding...",
+      "architecture": {
+        "modality": "text+image->text",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Grok",
+        "instruct_type": null
+      },
+      "top_provider": {
+        "context_length": 256000,
+        "max_completion_tokens": null,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p"
+      ],
+      "source": "models.dev",
+      "provider_id": "openrouter",
+      "open_weights": false,
+      "attachment": true,
+      "temperature": true,
+      "last_updated": "2026-04-16",
+      "cost": {
+        "input": 1,
+        "output": 2,
+        "cache_read": 0.2
+      },
+      "limit": {
+        "context": 256000,
+        "output": 256000
+      }
+    }
+  },
+  {
     "id": "xiaomi/mimo-v2-flash",
     "name": "MiMo-V2-Flash",
     "provider": "openrouter",
     "family": "mimo",
-    "created_at": "2025-12-14 00:00:00 UTC",
+    "created_at": "2025-12-16 00:00:00 UTC",
     "context_window": 262144,
     "max_output_tokens": 65536,
-    "knowledge_cutoff": null,
+    "knowledge_cutoff": "2024-12-01",
     "modalities": {
       "input": [
         "text"
@@ -57693,9 +58010,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -57746,7 +58063,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2025-12-14",
+      "last_updated": "2026-02-04",
       "interleaved": {
         "field": "reasoning_details"
       },
@@ -57758,14 +58075,15 @@
       "limit": {
         "context": 262144,
         "output": 65536
-      }
+      },
+      "knowledge": "2024-12-01"
     }
   },
   {
     "id": "xiaomi/mimo-v2-omni",
     "name": "MiMo-V2-Omni",
     "provider": "openrouter",
-    "family": "mimo-v2-omni",
+    "family": "mimo",
     "created_at": "2026-03-18 00:00:00 UTC",
     "context_window": 262144,
     "max_output_tokens": 65536,
@@ -57783,10 +58101,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -57849,14 +58167,15 @@
       "limit": {
         "context": 262144,
         "output": 65536
-      }
+      },
+      "knowledge": "2024-12"
     }
   },
   {
     "id": "xiaomi/mimo-v2-pro",
     "name": "MiMo-V2-Pro",
     "provider": "openrouter",
-    "family": "mimo-v2-pro",
+    "family": "mimo",
     "created_at": "2026-03-18 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 131072,
@@ -57871,9 +58190,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -57933,14 +58252,15 @@
       "limit": {
         "context": 1048576,
         "output": 131072
-      }
+      },
+      "knowledge": "2024-12"
     }
   },
   {
     "id": "xiaomi/mimo-v2.5",
     "name": "MiMo-V2.5",
     "provider": "openrouter",
-    "family": "mimo-v2.5",
+    "family": "mimo",
     "created_at": "2026-04-22 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 131072,
@@ -57958,10 +58278,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -58024,14 +58344,15 @@
       "limit": {
         "context": 1048576,
         "output": 131072
-      }
+      },
+      "knowledge": "2024-12"
     }
   },
   {
     "id": "xiaomi/mimo-v2.5-pro",
     "name": "MiMo-V2.5-Pro",
     "provider": "openrouter",
-    "family": "mimo-v2.5-pro",
+    "family": "mimo",
     "created_at": "2026-04-22 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 16384,
@@ -58104,6 +58425,9 @@
       "attachment": false,
       "temperature": true,
       "last_updated": "2026-04-22",
+      "interleaved": {
+        "field": "reasoning_content"
+      },
       "cost": {
         "input": 1,
         "output": 3,
@@ -58112,7 +58436,8 @@
       "limit": {
         "context": 1048576,
         "output": 16384
-      }
+      },
+      "knowledge": "2024-12"
     }
   },
   {
@@ -58189,13 +58514,13 @@
   },
   {
     "id": "z-ai/glm-4.5",
-    "name": "GLM 4.5",
+    "name": "GLM-4.5",
     "provider": "openrouter",
     "family": "glm",
-    "created_at": "2025-07-25 00:00:00 UTC",
+    "created_at": "2025-07-28 00:00:00 UTC",
     "context_window": 131072,
     "max_output_tokens": 98304,
-    "knowledge_cutoff": "2024-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -58206,9 +58531,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -58259,7 +58584,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2025-07-25",
+      "last_updated": "2025-07-28",
       "cost": {
         "input": 0.6,
         "output": 2.2,
@@ -58269,18 +58594,18 @@
         "context": 131072,
         "output": 98304
       },
-      "knowledge": "2024-12-31"
+      "knowledge": "2025-04"
     }
   },
   {
     "id": "z-ai/glm-4.5-air",
-    "name": "GLM 4.5 Air",
+    "name": "GLM-4.5-Air",
     "provider": "openrouter",
     "family": "glm-air",
-    "created_at": "2025-07-25 00:00:00 UTC",
+    "created_at": "2025-07-28 00:00:00 UTC",
     "context_window": 131072,
     "max_output_tokens": 98304,
-    "knowledge_cutoff": "2024-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -58342,7 +58667,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2025-07-25",
+      "last_updated": "2025-07-28",
       "cost": {
         "input": 0.13,
         "output": 0.85,
@@ -58352,7 +58677,7 @@
         "context": 131072,
         "output": 98304
       },
-      "knowledge": "2024-12-31"
+      "knowledge": "2025-04"
     }
   },
   {
@@ -58360,10 +58685,10 @@
     "name": "GLM 4.5 Air (free)",
     "provider": "openrouter",
     "family": "glm-air",
-    "created_at": "2025-07-25 00:00:00 UTC",
+    "created_at": "2025-07-28 00:00:00 UTC",
     "context_window": 131072,
     "max_output_tokens": 96000,
-    "knowledge_cutoff": "2024-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -58411,7 +58736,7 @@
       "open_weights": true,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2025-07-25",
+      "last_updated": "2025-07-28",
       "cost": {
         "input": 0,
         "output": 0
@@ -58420,18 +58745,18 @@
         "context": 131072,
         "output": 96000
       },
-      "knowledge": "2024-12-31"
+      "knowledge": "2025-04"
     }
   },
   {
     "id": "z-ai/glm-4.5v",
-    "name": "GLM 4.5V",
+    "name": "GLM-4.5V",
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2025-08-11 00:00:00 UTC",
     "context_window": 65536,
     "max_output_tokens": 16384,
-    "knowledge_cutoff": "2024-12-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text",
@@ -58443,10 +58768,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -58508,18 +58833,18 @@
         "context": 65536,
         "output": 16384
       },
-      "knowledge": "2024-12-31"
+      "knowledge": "2025-04"
     }
   },
   {
     "id": "z-ai/glm-4.6",
-    "name": "GLM 4.6",
+    "name": "GLM-4.6",
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2025-09-30 00:00:00 UTC",
     "context_window": 202752,
     "max_output_tokens": 131072,
-    "knowledge_cutoff": "2025-03-31",
+    "knowledge_cutoff": null,
     "modalities": {
       "input": [
         "text"
@@ -58597,12 +58922,12 @@
         "context": 202752,
         "output": 131072
       },
-      "knowledge": "2025-03-31"
+      "knowledge": "2025-04"
     }
   },
   {
     "id": "z-ai/glm-4.6v",
-    "name": "GLM 4.6V",
+    "name": "GLM-4.6V",
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2025-12-08 00:00:00 UTC",
@@ -58623,7 +58948,8 @@
       "function_calling",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -58662,6 +58988,7 @@
         "presence_penalty",
         "reasoning",
         "repetition_penalty",
+        "response_format",
         "seed",
         "stop",
         "temperature",
@@ -58684,12 +59011,13 @@
       "limit": {
         "context": 131072,
         "output": 24000
-      }
+      },
+      "knowledge": "2025-04"
     }
   },
   {
     "id": "z-ai/glm-4.7",
-    "name": "GLM 4.7",
+    "name": "GLM-4.7",
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2025-12-22 00:00:00 UTC",
@@ -58783,9 +59111,9 @@
   },
   {
     "id": "z-ai/glm-4.7-flash",
-    "name": "GLM 4.7 Flash",
+    "name": "GLM-4.7-Flash",
     "provider": "openrouter",
-    "family": "glm",
+    "family": "glm-flash",
     "created_at": "2026-01-19 00:00:00 UTC",
     "context_window": 202752,
     "max_output_tokens": 16384,
@@ -58869,12 +59197,13 @@
       "limit": {
         "context": 202752,
         "output": 16384
-      }
+      },
+      "knowledge": "2025-04"
     }
   },
   {
     "id": "z-ai/glm-5",
-    "name": "GLM 5",
+    "name": "GLM-5",
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2026-02-11 00:00:00 UTC",
@@ -58965,10 +59294,10 @@
   },
   {
     "id": "z-ai/glm-5-turbo",
-    "name": "GLM 5 Turbo",
+    "name": "GLM-5-Turbo",
     "provider": "openrouter",
     "family": "glm",
-    "created_at": "2026-03-15 00:00:00 UTC",
+    "created_at": "2026-03-16 00:00:00 UTC",
     "context_window": 202752,
     "max_output_tokens": 131072,
     "knowledge_cutoff": null,
@@ -58982,9 +59311,9 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "streaming",
+      "structured_output",
       "predicted_outputs"
     ],
     "pricing": {
@@ -59038,7 +59367,7 @@
       "open_weights": false,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2026-03-15",
+      "last_updated": "2026-03-16",
       "interleaved": {
         "field": "reasoning_content"
       },
@@ -59055,12 +59384,12 @@
   },
   {
     "id": "z-ai/glm-5.1",
-    "name": "GLM 5.1",
+    "name": "GLM-5.1",
     "provider": "openrouter",
     "family": "glm",
-    "created_at": "2026-04-07 00:00:00 UTC",
+    "created_at": "2026-03-27 00:00:00 UTC",
     "context_window": 202752,
-    "max_output_tokens": 131072,
+    "max_output_tokens": 202800,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -59130,10 +59459,10 @@
       ],
       "source": "models.dev",
       "provider_id": "openrouter",
-      "open_weights": true,
+      "open_weights": false,
       "attachment": false,
       "temperature": true,
-      "last_updated": "2026-04-07",
+      "last_updated": "2026-03-27",
       "interleaved": {
         "field": "reasoning_content"
       },
@@ -59144,13 +59473,13 @@
       },
       "limit": {
         "context": 202752,
-        "output": 131072
+        "output": 202800
       }
     }
   },
   {
     "id": "z-ai/glm-5v-turbo",
-    "name": "GLM 5V Turbo",
+    "name": "GLM-5V-Turbo",
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2026-04-01 00:00:00 UTC",
@@ -59169,10 +59498,10 @@
     },
     "capabilities": [
       "function_calling",
-      "structured_output",
       "reasoning",
       "vision",
-      "streaming"
+      "streaming",
+      "structured_output"
     ],
     "pricing": {
       "text_tokens": {
@@ -59220,6 +59549,9 @@
       "attachment": true,
       "temperature": true,
       "last_updated": "2026-04-01",
+      "interleaved": {
+        "field": "reasoning_content"
+      },
       "cost": {
         "input": 1.2,
         "output": 4,
@@ -59503,14 +59835,14 @@
     "created_at": "2026-04-27 00:00:00 UTC",
     "context_window": 1048576,
     "max_output_tokens": 65536,
-    "knowledge_cutoff": null,
+    "knowledge_cutoff": "2025-01-01",
     "modalities": {
       "input": [
         "text",
         "image",
+        "video",
         "pdf",
-        "audio",
-        "video"
+        "audio"
       ],
       "output": [
         "text"
@@ -59526,11 +59858,11 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.5,
-          "output_per_million": 3,
-          "cache_read_input_per_million": 0.05,
+          "input_per_million": 1.5,
+          "output_per_million": 9,
+          "cache_read_input_per_million": 0.15,
           "cache_write_input_per_million": 0.083333,
-          "reasoning_output_per_million": 3
+          "reasoning_output_per_million": 9
         }
       }
     },
@@ -59541,9 +59873,9 @@
         "input_modalities": [
           "text",
           "image",
+          "video",
           "file",
-          "audio",
-          "video"
+          "audio"
         ],
         "output_modalities": [
           "text"
@@ -59577,16 +59909,17 @@
       "temperature": true,
       "last_updated": "2026-04-27",
       "cost": {
-        "input": 0.5,
-        "output": 3,
-        "reasoning": 3,
-        "cache_read": 0.05,
+        "input": 1.5,
+        "output": 9,
+        "reasoning": 9,
+        "cache_read": 0.15,
         "cache_write": 0.083333
       },
       "limit": {
         "context": 1048576,
         "output": 65536
-      }
+      },
+      "knowledge": "2025-01-01"
     }
   },
   {
@@ -60744,8 +61077,8 @@
     "provider": "vertexai",
     "family": "claude-sonnet",
     "created_at": "2026-02-17 00:00:00 UTC",
-    "context_window": 200000,
-    "max_output_tokens": 64000,
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
     "knowledge_cutoff": "2025-08-31",
     "modalities": {
       "input": [
@@ -60798,8 +61131,8 @@
         ]
       },
       "limit": {
-        "context": 200000,
-        "output": 64000
+        "context": 1000000,
+        "output": 128000
       },
       "source": "models.dev",
       "knowledge": "2025-08-31",
@@ -60905,8 +61238,8 @@
         "cache_read": 0.01875
       },
       "limit": {
-        "context": 1000000,
-        "output": 8192
+        "output": 8192,
+        "context": 1000000
       },
       "source": "models.dev",
       "knowledge": "2024-04",
@@ -60980,8 +61313,8 @@
         "cache_read": 0.01
       },
       "limit": {
-        "context": 1000000,
-        "output": 8192
+        "output": 8192,
+        "context": 1000000
       },
       "source": "models.dev",
       "knowledge": "2024-04",
@@ -61033,8 +61366,8 @@
         "cache_read": 0.3125
       },
       "limit": {
-        "context": 1000000,
-        "output": 8192
+        "output": 8192,
+        "context": 1000000
       },
       "source": "models.dev",
       "knowledge": "2024-04",
@@ -61305,7 +61638,7 @@
   },
   {
     "id": "gemini-2.0-flash-lite",
-    "name": "Gemini 2.0 Flash Lite",
+    "name": "Gemini 2.0 Flash-Lite",
     "provider": "vertexai",
     "family": "gemini-flash-lite",
     "created_at": "2024-12-11 00:00:00 UTC",
@@ -61444,7 +61777,7 @@
   },
   {
     "id": "gemini-2.5-flash-lite",
-    "name": "Gemini 2.5 Flash Lite",
+    "name": "Gemini 2.5 Flash-Lite",
     "provider": "vertexai",
     "family": "gemini-flash-lite",
     "created_at": "2025-06-17 00:00:00 UTC",
@@ -61604,8 +61937,8 @@
         "cache_read": 0.025
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -61659,8 +61992,8 @@
         "cache_read": 0.0375
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -61726,8 +62059,8 @@
         "cache_read": 0.0375
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -61996,8 +62329,8 @@
         "cache_read": 0.31
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -62050,8 +62383,8 @@
         "cache_read": 0.31
       },
       "limit": {
-        "context": 1048576,
-        "output": 65536
+        "output": 65536,
+        "context": 1048576
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -62228,12 +62561,12 @@
   },
   {
     "id": "gemini-3.1-flash-image-preview",
-    "name": "Gemini 3.1 Flash Image (Preview)",
+    "name": "Nano Banana 2",
     "provider": "vertexai",
     "family": "gemini-flash",
     "created_at": "2026-02-26 00:00:00 UTC",
-    "context_window": 131072,
-    "max_output_tokens": 32768,
+    "context_window": 65536,
+    "max_output_tokens": 65536,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -62266,8 +62599,8 @@
         "output": 60
       },
       "limit": {
-        "context": 131072,
-        "output": 32768
+        "context": 65536,
+        "output": 65536
       },
       "source": "models.dev",
       "knowledge": "2025-01",
@@ -62560,13 +62893,74 @@
     }
   },
   {
+    "id": "gemini-3.5-flash",
+    "name": "Gemini 3.5 Flash",
+    "provider": "vertexai",
+    "family": "gemini-flash",
+    "created_at": "2026-05-19 00:00:00 UTC",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video",
+        "audio",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "function_calling",
+      "structured_output",
+      "reasoning",
+      "vision"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.5,
+          "output_per_million": 9,
+          "cache_read_input_per_million": 0.15
+        }
+      },
+      "audio_tokens": {
+        "standard": {
+          "input_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "cost": {
+        "input": 1.5,
+        "output": 9,
+        "cache_read": 0.15,
+        "input_audio": 1.5
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "source": "models.dev",
+      "knowledge": "2025-01",
+      "attachment": true,
+      "provider_id": "google-vertex",
+      "temperature": true,
+      "last_updated": "2026-05-19",
+      "open_weights": false
+    }
+  },
+  {
     "id": "gemini-embedding-001",
     "name": "Gemini Embedding 001",
     "provider": "vertexai",
     "family": "gemini",
     "created_at": "2025-05-20 00:00:00 UTC",
     "context_window": 2048,
-    "max_output_tokens": 3072,
+    "max_output_tokens": 1,
     "knowledge_cutoff": null,
     "modalities": {
       "input": [
@@ -62594,7 +62988,7 @@
       },
       "limit": {
         "context": 2048,
-        "output": 3072
+        "output": 1
       },
       "source": "models.dev",
       "knowledge": "2025-05",
