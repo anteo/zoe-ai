@@ -21,7 +21,7 @@ class TypeSentenceJob < ApplicationJob
 
     broadcast_message(display_message)
 
-    show_message_placeholder(chat) if RespondJob.get_running_execution(chat)
+    show_message_placeholder(chat) if RespondJob.running_for?(chat)
 
     TypeSentenceJob.perform_later(chat, message, chunks, false) if chunks.any?
   end

@@ -6,12 +6,12 @@ module JobMissionControl
   end
 
   class_methods do
-    def find_execution(model, execution_class)
+    def find_executions(model, execution_class)
       execution_class
         .joins(:job)
         .includes(:job)
         .where(job: { class_name: name })
-        .find_each do |execution|
+        .filter_map do |execution|
 
         job = execution.job
         arguments = job.arguments["arguments"]
@@ -20,39 +20,43 @@ module JobMissionControl
         gid = GlobalID.parse(arguments[0]["_aj_globalid"])
         next unless gid.model_class == model.class && gid.model_id.to_i == model.id
 
-        return execution
+        execution
       rescue ActiveJob::DeserializationError
         nil
       end
-      nil
     end
 
-    def get_running_execution(model)
-      find_execution(model, SolidQueue::ClaimedExecution)
+    def get_running_executions(model)
+      find_executions(model, SolidQueue::ClaimedExecution)
     end
 
-    def get_scheduled_execution(model)
-      find_execution(model, SolidQueue::ScheduledExecution)
+    def running_for?(model)
+      get_running_executions(model).any? { !it.cancelled? }
     end
 
-    def get_ready_execution(model)
-      find_execution(model, SolidQueue::ReadyExecution)
+    def get_scheduled_executions(model)
+      find_executions(model, SolidQueue::ScheduledExecution)
     end
 
-    def get_blocked_execution(model)
-      find_execution(model, SolidQueue::BlockedExecution)
+    def get_ready_executions(model)
+      find_executions(model, SolidQueue::ReadyExecution)
     end
 
-    def get_execution(model)
-      get_ready_execution(model) || get_scheduled_execution(model) ||
-        get_running_execution(model) || get_blocked_execution(model)
+    def get_blocked_executions(model)
+      find_executions(model, SolidQueue::BlockedExecution)
+    end
+
+    def get_queued_executions(model)
+      (get_ready_executions(model) + get_scheduled_executions(model) + get_blocked_executions(model))
+        .uniq { it.job_id }
     end
 
     def cancel(model)
-      if (ex = get_running_execution(model))
-        ex.update cancelled: true
+      get_running_executions(model).each do |execution|
+        execution.update(cancelled: true) unless execution.cancelled?
       end
-      get_execution(model)&.job&.discard
+
+      get_queued_executions(model).each { it.job.discard }
     end
   end
 end
