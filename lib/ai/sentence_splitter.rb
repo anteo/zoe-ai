@@ -71,7 +71,8 @@ module AI
         if list_block?(block)
           block
         else
-          segmenter(block).segment.map(&:strip).reject(&:blank?)
+          units = segmenter(block).segment.map(&:strip).reject(&:blank?)
+          units.presence || [ block ]
         end
       end
     end
