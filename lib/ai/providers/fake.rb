@@ -19,6 +19,8 @@ module AI
       end
 
       def complete(messages, **)
+        sleep(1 + rand(5))
+
         input = last_user_input(messages)
 
         RubyLLM::Message.new(
