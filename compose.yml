@@ -15,6 +15,7 @@ services:
       JOB_THREADS: ${JOB_THREADS:-3}
       LOAD_MODELS: ${LOAD_MODELS:-1}
       RAILS_ENV: ${RAILS_ENV:-production}
+      RAILS_FORCE_SSL: ${RAILS_FORCE_SSL:-false}
       RAILS_LOG_LEVEL: ${RAILS_LOG_LEVEL:-info}
       RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-3}
       RAILS_SERVE_STATIC_FILES: ${RAILS_SERVE_STATIC_FILES:-true}
@@ -46,6 +47,7 @@ services:
       JOB_THREADS: ${JOB_THREADS:-3}
       LOAD_MODELS: ${LOAD_MODELS:-0}
       RAILS_ENV: ${RAILS_ENV:-production}
+      RAILS_FORCE_SSL: ${RAILS_FORCE_SSL:-false}
       RAILS_LOG_LEVEL: ${RAILS_LOG_LEVEL:-info}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:-local-compose-secret-key-base}
     volumes:
