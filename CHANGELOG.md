@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/anteo/zoe-ai/compare/v1.2.0...v1.2.1) (2026-05-26)
+
+### Bug Fixes
+
+* **compose:** remove exposed PostgreSQL port 5432 ([1eb8093](https://github.com/anteo/zoe-ai/commit/1eb8093d146f433f21f2fcaa5a3b3bbbd60260e1))
+* **config:** make SSL configurable via RAILS_FORCE_SSL env variable ([8ef2208](https://github.com/anteo/zoe-ai/commit/8ef2208c101d439b598102e3855d411df3a5af3a))
+
 ## [1.2.0](https://github.com/anteo/zoe-ai/compare/v1.1.2...v1.2.0) (2026-05-26)
 
 ### Features
