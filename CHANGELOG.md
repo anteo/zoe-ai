@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.2.0](https://github.com/anteo/zoe-ai/compare/v1.1.2...v1.2.0) (2026-05-26)
+
+### Features
+
+* **ai:** add fake provider and model patch for development ([2e57b51](https://github.com/anteo/zoe-ai/commit/2e57b511cd261b4fea807c830e14e45536dbf308))
+* **ai:** add random delay to fake provider for realistic simulation ([10ca9b5](https://github.com/anteo/zoe-ai/commit/10ca9b5de8f47a4fe8c0275eb70ba62f31faeda4))
+* **ai:** describe message attachments with AI agent and use in fact extraction ([54e0fa4](https://github.com/anteo/zoe-ai/commit/54e0fa452922d2406f54fb663642242c92c23ca8))
+* **ai:** handle empty assistant responses with retries and localization ([52605f0](https://github.com/anteo/zoe-ai/commit/52605f096398ba01dc119cfb3188e3f212f24593))
+* **users:** add time_zone attribute and message timestamps in user's timezone ([b666209](https://github.com/anteo/zoe-ai/commit/b6662092c2073ab497c4c640bdbc5c9bb99961da))
+
+### Bug Fixes
+
+* **ai:** do not destroy tool_call messages without content in RespondJob ([fbb9946](https://github.com/anteo/zoe-ai/commit/fbb99463dd179b3b21d7ea0ec1d2169b17b5d23e))
+* **ai:** refactor job mission control to handle multiple executions per model ([9c772a8](https://github.com/anteo/zoe-ai/commit/9c772a840526bc23f599d08d31339323855d0f98))
+* **ai:** return original message when segmentation yields empty list (fixes short messages case) ([e30205e](https://github.com/anteo/zoe-ai/commit/e30205ead9ce5a07f8801b34b32512e43791d41e))
+* **ai:** use tool_call_id.present? to avoid "Text and attachments cannot be both nil" exception in replayable_for_llm? ([2ce1719](https://github.com/anteo/zoe-ai/commit/2ce17191d186764100389953879d2d5385f80aa9))
+* **chat:** prevent stale AI replies and harden placeholder rendering ([647c51d](https://github.com/anteo/zoe-ai/commit/647c51d17c43b47e695c03f2efb026ca8886a484))
+* **logging:** handle Regexp::TimeoutError in Faraday logging formatter ([8362154](https://github.com/anteo/zoe-ai/commit/836215443ee95958f94b233e19374b3ad5fd5bb6))
+
 ## [1.1.2](https://github.com/anteo/zoe-ai/compare/v1.1.1...v1.1.2) (2026-05-21)
 
 ### Bug Fixes
