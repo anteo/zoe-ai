@@ -14,10 +14,12 @@ It is also not limited to a single user talking to a single bot. Many users can 
 - **It separates long-term identity from short-term events.** A stable preference and a one-off plan are not treated the same, which makes memory more useful and less noisy.
 - **Memory is organized by person and topic.** Facts are attached to characters and grouped into topic-based aggregates, so recall can stay specific instead of collapsing into a single summary blob.
 - **Memory evolves over time.** Zoe maintains monthly and rolling summaries of persistent facts, which lets it keep a compressed but durable picture of someone as conversations accumulate.
+- **It works with images as part of the relationship.** Zoe can understand uploaded images, use them to enrich character profiles, and generate new pictures with visual references from prior chats and saved character photos.
+- **It keeps temporal context grounded.** Zoe presents memories, follow-ups, and ongoing situations with a sense of recency and continuity, so conversations feel connected to real time instead of floating in a timeless chat loop.
 - **Conversations stay conversational.** Fact extraction and summarization run asynchronously in background jobs, so the chat flow remains responsive while memory is updated behind the scenes.
 - **It is built as a conventional Rails app.** The core is ActiveRecord models, Hotwire and Stimulus for the interactive UI, background jobs, prompt templates, and service actors rather than a black-box chatbot stack.
 
-In practice, Zoe behaves less like a stateless assistant and more like an AI relationship layer: create characters, chat, remember, refine, share, and reuse that memory in later conversations.
+In practice, Zoe behaves less like a stateless assistant and more like an AI relationship layer: create characters, chat, remember, interpret shared context across text and images, refine, share, and reuse that memory in later conversations.
 
 ## Screenshots
 
@@ -49,6 +51,7 @@ In practice, Zoe behaves less like a stateless assistant and more like an AI rel
 4. Extracted facts are stored with subject, author, topic, time, importance, and persistence metadata.
 5. Persistent facts are re-aggregated into monthly and rolling summaries.
 6. Future chats can use those summaries as long-term memory context.
+7. The assistant can stay grounded in both visual context and conversational recency, which makes follow-ups and generated media feel consistent with the relationship so far.
 
 ## Tech stack
 
