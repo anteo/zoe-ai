@@ -35,6 +35,10 @@ module Datatable
         self.configured_default_sort = value
       end
 
+      def datatable_scope(_controller)
+        configured_model_class&.all || raise(NotImplementedError, "#{name} must define .datatable_scope(controller) or .model")
+      end
+
       def empty_state_i18n_key(value = nil)
         return configured_empty_state_i18n_key || :text_nothing_found if value.nil?
 

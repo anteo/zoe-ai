@@ -3,8 +3,7 @@ class AgentsController < ApplicationController
   before_action :find_agent, only: [ :edit, :update, :destroy ]
 
   def index
-    load_datatable(datatable_class: Settings::AgentsDatatableComponent, scope: Agent.includes(:model, :mcp_servers))
-    render turbo_frame_request_id == @datatable.results_frame_id ? @datatable.results_component : @datatable, layout: false
+    render_datatable(Settings::AgentsDatatableComponent)
   end
 
   def new

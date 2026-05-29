@@ -7,6 +7,13 @@ module DatatableSupport
 
   private
 
+  def render_datatable(datatable_class, **component_options)
+    load_datatable(datatable_class:, scope: datatable_class.datatable_scope(self), **component_options)
+
+    component = turbo_frame_request_id == @datatable.results_frame_id ? @datatable.results_component : @datatable
+    render component, layout: false
+  end
+
   def load_datatable(datatable_class:, scope:, **component_options)
     filters = datatable_class.filters_model_class.from_params(ransack_params)
     search = scope.ransack(filters.to_ransack_params)
