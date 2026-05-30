@@ -16,6 +16,7 @@ class MessagesController < ApplicationController
 
       chat.memorize = memorize
       chat.save!
+      chat.deliver_pending_messages!
       message = chat.add_message(role: :user, content:)
       message.update_column(:memorize, chat.memorize)
       respond_delay = 0.5.seconds

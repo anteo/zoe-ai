@@ -9,6 +9,8 @@ class Character < ApplicationRecord
   has_many :facts, dependent: :destroy
   has_many :fact_aggregates, dependent: :delete_all
   has_many :instructions, dependent: :delete_all
+  has_many :authored_pending_messages, class_name: "PendingMessage", foreign_key: :author_id, dependent: :nullify
+  has_many :pending_messages, dependent: :destroy
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
 

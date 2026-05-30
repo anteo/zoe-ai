@@ -2,14 +2,20 @@
      id="<%= dom_id %>"
      data-controller="<%= [read_only? ? "history-chat" : "chat", "lightbox"].join(" ") %>">
   <% if new? %>
-    <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
-      <div class="animate-[float_6s_ease-in-out_infinite]">
-        <%= avatar_for_character(current_partner, css_class: "w-30 h-30") %>
+    <% if pending_messages.any? %>
+      <% pending_messages.each do |message| %>
+        <%= helpers.component :chats__message, message:, current_character:, read_only: read_only? %>
+      <% end %>
+    <% else %>
+      <div class="flex flex-col items-center justify-center h-full min-h-[300px]">
+        <div class="animate-[float_6s_ease-in-out_infinite]">
+          <%= avatar_for_character(current_partner, css_class: "w-30 h-30") %>
+        </div>
+        <p class="mt-6 text-lg text-center text-base-content">
+          <%= t(:text_greeting_html, name: current_partner.name).html_safe %>
+        </p>
       </div>
-      <p class="mt-6 text-lg text-center text-base-content">
-        <%= t(:text_greeting_html, name: current_partner.name).html_safe %>
-      </p>
-    </div>
+    <% end %>
   <% else %>
     <% messages.each do |message| %>
       <%= helpers.component :chats__message, message:, current_character:, read_only: read_only? %>

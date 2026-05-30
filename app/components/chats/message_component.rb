@@ -9,7 +9,7 @@ module Chats
     end
 
     def sender
-      message.character
+      message.author
     end
 
     def is_current_character?
@@ -35,7 +35,7 @@ module Chats
     end
 
     def read_only?
-      @read_only
+      @read_only || !message.is_a?(Message)
     end
   end
 end

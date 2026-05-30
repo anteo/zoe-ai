@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_22_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -239,6 +239,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_090000) do
     t.index ["stale"], name: "index_models_on_stale"
   end
 
+  create_table "pending_messages", force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.bigint "character_id", null: false
+    t.text "content", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_pending_messages_on_author_id"
+    t.index ["character_id", "author_id", "created_at"], name: "index_pending_messages_on_delivery_lookup"
+    t.index ["character_id"], name: "index_pending_messages_on_character_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "key", null: false
@@ -449,6 +460,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_090000) do
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
+  add_foreign_key "pending_messages", "characters"
+  add_foreign_key "pending_messages", "characters", column: "author_id"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

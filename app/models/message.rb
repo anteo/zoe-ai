@@ -37,6 +37,10 @@ class Message < ApplicationRecord
     role == "error"
   end
 
+  def author
+    character
+  end
+
   def visible?
     (user? || assistant? || error?) && (content.present? || attachments.attached?)
   end

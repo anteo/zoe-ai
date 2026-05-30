@@ -14,6 +14,14 @@ module Chats
       end
     end
 
+    def pending_messages
+      return [] unless new?
+
+      PendingMessage.for_delivery(character: current_character, author: current_partner)
+                    .with_attached_attachments
+                    .flat_map { display_messages(it) }
+    end
+
     def new?
       @chat.new_record?
     end

@@ -4,7 +4,14 @@ module AI
       agent_key :zoe
       chat_model ::Chat
       tools do
-        [ Tools::EventSearch, Tools::Draw, Tools::AddCharacterImage, Tools::SetCharacterAvatar, Tools::ManageOwnInstructions ]
+        [
+          Tools::EventSearch,
+          Tools::Draw,
+          Tools::ManagePostponedMessages,
+          Tools::AddCharacterImage,
+          Tools::SetCharacterAvatar,
+          Tools::ManageOwnInstructions
+        ]
       end
       instructions
     end

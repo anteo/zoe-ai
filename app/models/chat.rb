@@ -65,6 +65,18 @@ class Chat < ApplicationRecord
     latest_user_message_id != trigger_message_id
   end
 
+  def deliver_pending_messages!
+    PendingMessage.transaction do
+      pending_messages = PendingMessage.for_delivery(character:, author: partner).lock
+      pending_messages.each do |pending_message|
+        pending_message.deliver_to!(self)
+        pending_message.destroy!
+      end
+    end
+
+    refresh_history_message_metadata!
+  end
+
   def yesterday_summary
     @yesterday_summary ||= begin
       character.chats

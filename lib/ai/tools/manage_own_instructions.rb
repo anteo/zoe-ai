@@ -46,11 +46,15 @@ module AI
 
       def list_instructions
         instructions = scoped_instructions.to_a
-        return "No character-specific instructions are set for #{chat.partner.name}." if instructions.empty?
-
-        instructions.map do |instruction|
-          %(#{instruction.id}: #{instruction.content})
-        end.join("\n")
+        JSON.generate(
+          character_id: chat.partner.id,
+          items: instructions.map do |instruction|
+            {
+              id: instruction.id,
+              content: instruction.content
+            }
+          end
+        )
       end
 
       def add_instruction!(content)
