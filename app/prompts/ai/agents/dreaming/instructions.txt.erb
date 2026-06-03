@@ -1,0 +1,105 @@
+<%
+buffer = +""
+xml = Builder::XmlMarkup.new(target: buffer, indent: 2)
+real_chats = chat.sibling_chats.dreaming(false)
+source_chats = real_chats.closed
+                        .created_yesterday
+                        .includes(:messages)
+                        .order(:created_at, :id)
+last_real_conversation_at = chat.character.last_conversation_time(partner: chat.partner, user: chat.user)
+
+xml.context do
+  xml.text! "Today is #{I18n.l(Time.zone.now, locale: :en)}.\n"
+  xml.text! "You are in an internal dreaming session for #{chat.partner.name} reflecting on #{chat.character.name}.\n"
+  if source_chats.any?
+    xml.text! "Your source conversations for this dream are the real chats from yesterday.\n"
+  else
+    xml.text! "There were no real chats from yesterday.\n"
+    if last_real_conversation_at.present?
+      xml.text! "Your last real conversation was #{helpers.distance_of_time_in_words_to_now(last_real_conversation_at, locale: :en)} ago.\n"
+    else
+      xml.text! "There is no earlier real conversation on record.\n"
+    end
+  end
+end
+
+xml.characters do
+  chat.user.characters.order(:id).each do |character|
+    attrs = {
+      id: character.id,
+      name: character.name,
+      role: character.prompt_role(chat),
+      type: character.prompt_type
+    }
+    attrs[:bio] = character.bio if character.bio.present?
+    attrs[:relation] = character.prompt_relation(partner: chat.partner) if character != chat.partner
+    xml.character(attrs)
+  end
+end
+
+xml.identity(
+  character_id: chat.partner.id,
+  name: chat.partner.name,
+  role: "you",
+  type: chat.partner.prompt_type
+) do
+  xml.text! "You are #{chat.partner.name}.\n"
+  xml << chat.described_character(chat.partner, mode: :xml).to_s
+end
+
+xml.identity(
+  character_id: chat.character.id,
+  name: chat.character.name,
+  role: "interlocutor",
+  type: chat.character.prompt_type,
+  relation: chat.character.prompt_relation(partner: chat.partner)
+) do
+  xml.text! "#{chat.character.name} is the person you are reflecting on.\n"
+  xml << chat.described_character(chat.character, mode: :xml).to_s
+end
+
+chat.described_identities(mode: :xml).each do |character, description|
+  xml.identity(
+    character_id: character.id,
+    name: character.name,
+    role: character.prompt_role(chat),
+    type: character.prompt_type,
+    relation: character.prompt_relation(partner: chat.partner)
+  ) do
+    xml << description.to_s
+  end
+end
+
+xml.conversation_events(subject: chat.character.to_s) do
+  xml << AI::Actors::DescribeEvents.result(character: chat.character, partner: chat.partner, mode: :xml, dream: false).description.to_s
+end
+
+xml.dream_events(subject: chat.character.to_s) do
+  xml << AI::Actors::DescribeEvents.result(characters: [ chat.character, chat.partner ], partner: chat.partner, mode: :xml, dream: true).description.to_s
+end
+
+if source_chats.any?
+  xml.yesterday_conversations(day: Date.yesterday.iso8601, count: source_chats.size) do
+    source_chats.each do |source_chat|
+      transcript = source_chat.messages
+                              .visible
+                              .order(:created_at, :id)
+                              .map(&:to_timestamp_message)
+                              .join("\n\n")
+
+      xml.chat(chat_id: source_chat.id, created_at: source_chat.created_at.iso8601, closed_at: source_chat.closed_at&.iso8601) do
+        xml.text! transcript
+      end
+    end
+  end
+end
+
+xml.conversation_instructions do
+  xml.text! chat.partner_conversation_instructions.to_s
+end
+
+xml.dreaming_instructions do
+  xml.text! chat.partner_dream_instructions.to_s
+end
+%>
+<%= buffer %>

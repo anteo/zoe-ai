@@ -1,10 +1,12 @@
 module AI::Actors
   class DescribeEvents < Actor
-    input :character, type: Character
+    input :character, type: Character, default: nil
+    input :characters, default: nil
     input :partner, type: Character
     input :mode, default: :xml
     input :maximum_count, default: -> { Setting.events.maximum_count }
     input :period_limit,  default: -> { Setting.events.period_limit }
+    input :dream, default: nil
     input :today, default: -> { Date.current }
     output :description
     output :groups
@@ -67,12 +69,25 @@ module AI::Actors
     end
 
     def event_facts
-      character.facts_to_consider
-               .where(partner:)
-               .persistent(false)
-               .preload(:author, :topic)
-               .order(importance: :desc, mentioned_at: :desc, id: :desc)
-               .to_a
+      character_ids = subject_characters.map(&:id)
+      ai_character_ids = Character.ai.where(id: character_ids).select(:id)
+
+      facts = Fact.where(character_id: character_ids, partner:)
+                  .persistent(false)
+                  .preload(:character, :author, :topic)
+                  .order(importance: :desc, mentioned_at: :desc, id: :desc)
+                  .where(
+                    "facts.character_id NOT IN (:ai_character_ids) OR facts.kind <> :excluded_kind",
+                    ai_character_ids:,
+                    excluded_kind: "belief"
+                  )
+
+      facts = facts.joins(:chat).where(chats: { dream: }) unless dream.nil?
+      facts.to_a
+    end
+
+    def subject_characters
+      Array(characters.presence || character).compact.uniq
     end
 
     def event_in_period?(fact, period)

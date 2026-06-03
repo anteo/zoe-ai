@@ -1,7 +1,7 @@
 module Characters
   class InstructionsComponent < SectionComponent
     def badge_count
-      character.instructions.active.count
+      character.instructions.conversation.active.count
     end
 
     def section_icon_class
@@ -25,7 +25,7 @@ module Characters
     end
 
     def instructions
-      character.instructions.active.ordered.map { { id: it.id, content: it.content } }
+      character.conversation_instructions.active.ordered.map { { id: it.id, content: it.content } }
     end
   end
 end

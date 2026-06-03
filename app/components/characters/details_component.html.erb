@@ -1,10 +1,9 @@
-<div data-controller="character-details instructions characters-images"
+<div data-controller="character-details characters-images"
      data-action="character-facts:count-changed->character-details#updateFactsCountBadge"
      data-character-details-current-section-value="<%= default_section %>">
   <%= helpers.simple_form_for character,
-                              html: { multipart: true },
-                              data: { action: "submit->instructions#handleSubmit" } do |f| %>
-    <section class="flex flex-col md:flex-row md:items-start md:justify-between gap-5 px-5 py-7">
+                              html: { multipart: true } do |f| %>
+    <section class="flex flex-col md:flex-row md:items-start md:justify-between gap-5 px-5 pt-7 pb-2">
       <div class="flex min-w-0 grow items-start gap-4">
         <%= component :ui__avatar_input,
                       form: f,
@@ -36,6 +35,11 @@
                 <% if shared? %>
                   <span class="badge badge-sm badge-outline w-fit"><%= t(:label_shared) %></span>
                 <% end %>
+                <% if character.ai? && character.dreaming_enabled? %>
+                  <span class="badge badge-sm badge-outline badge-accent w-fit">
+                    <%= t(:label_dreaming_enabled) %>
+                  </span>
+                <% end %>
               </div>
             </div>
 
@@ -59,6 +63,13 @@
               <% end %>
             </div>
           </div>
+
+          <% if character.ai? && editable? %>
+            <label class="label w-fit cursor-pointer gap-3 px-0">
+              <%= f.check_box :dreaming_enabled, class: "toggle toggle-primary toggle-sm" %>
+              <span class="label-text"><%= t(:label_dreaming_enabled) %></span>
+            </label>
+          <% end %>
 
           <% if editable? %>
             <%= f.input :bio,

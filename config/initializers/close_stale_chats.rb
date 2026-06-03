@@ -1,3 +1,5 @@
 Rails.application.config.after_initialize do
-  CloseStaleChatsJob.perform_later if Rails.env.development? && Chat.stale.exists?
+  if Rails.env.development? && Chat.column_names.include?("dream") && Chat.stale.exists?
+    CloseStaleChatsJob.perform_later
+  end
 end

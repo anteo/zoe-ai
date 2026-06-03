@@ -7,6 +7,10 @@ Today is <%= I18n.l(chat.created_at) %>.
 
 The current replica may include attachment metadata and attachment descriptions. Treat those attachments as part of the current replica.
 
+<% if chat.dream? %>
+This conversation is an internal dreaming session. Facts may describe the AI speaker's internal conclusions, queued postponed messages, drawings, searches, instruction changes, or deliberate future follow-ups, but only when the current replica explicitly states them.
+<% end %>
+
 # Rules
 
 - **Only extract facts from what the speaker directly and explicitly asserts in the current replica.** Do not draw on prior conversation context — if the assertion is not in the current message text, it is not a fact.

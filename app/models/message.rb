@@ -3,6 +3,7 @@ class Message < ApplicationRecord
 
   has_many_attached :attachments
   has_many :facts, dependent: :destroy
+  has_many :sourced_pending_messages, class_name: "PendingMessage", foreign_key: :source_message_id, dependent: :nullify
 
   belongs_to :character, optional: true
 

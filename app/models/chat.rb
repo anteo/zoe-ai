@@ -13,15 +13,32 @@ class Chat < ApplicationRecord
   skip_callback :save, :before, :resolve_model_from_strings
   before_save :resolve_model_from_strings_safe
 
+  scope :dreaming, ->(dream = true) { where(dream:) }
+  scope :closed, ->(closed = true) { where(closed:) }
+  scope :visible_to_user, -> { dreaming(false) }
   scope :by_character, ->(character) {
     where(character:).or(where(partner: character))
   }
-  scope :stale, -> { where(closed: false).where("created_at < ?", Date.current) }
+  scope :stale, -> { dreaming(false).closed(false).where("created_at < ?", Date.current) }
+  scope :with_summary, -> { where.not(summary: [ nil, "" ]) }
 
   attr_reader :message
 
   def attachments_to_persist
     @attachments_to_persist ||= []
+  end
+
+  def staged_attachment_blobs
+    attachments_to_persist.filter_map do |attachment|
+      case attachment
+      when ActiveStorage::Blob
+        attachment
+      when ActiveStorage::Attachment, ActiveStorage::Attached::One
+        attachment.blob
+      when ActiveStorage::Attached::Many
+        attachment.blobs
+      end
+    end.flatten
   end
 
   def described_character(character, mode: :xml, period_order: :asc)
@@ -41,12 +58,20 @@ class Chat < ApplicationRecord
     end
   end
 
-  def partner_instructions
-    instructions = Instruction.arel_table
-    global_instructions = instructions[:character_id].eq(nil)
-    character_instructions = instructions[:character_id].eq(partner.id)
+  def partner_conversation_instructions
+    partner_instructions(dream: false)
+  end
+
+  def partner_dream_instructions
+    partner_instructions(dream: true)
+  end
+
+  def partner_instructions(dream: self.dream?)
+    global_instructions = Instruction[:character_id].eq(nil)
+    character_instructions = Instruction[:character_id].eq(partner.id)
 
     Instruction.active
+               .where(dream:)
                .where(global_instructions.or(character_instructions))
                .ordered
                .map { "* #{it}" }
@@ -61,13 +86,28 @@ class Chat < ApplicationRecord
     messages.where(role: "user").reorder(id: :desc).limit(1).pick(:id)
   end
 
+  def latest_assistant_message_content
+    messages
+      .visible
+      .where(role: :assistant)
+      .reorder(created_at: :desc, id: :desc)
+      .limit(1)
+      .pick(:content)
+  end
+
   def stale_trigger_message?(trigger_message_id)
     latest_user_message_id != trigger_message_id
   end
 
+  def sibling_chats
+    user.chats.where(character:, partner:)
+  end
+
   def deliver_pending_messages!
+    target_character = dream? ? partner : character
+
     PendingMessage.transaction do
-      pending_messages = PendingMessage.for_delivery(character:, author: partner).lock
+      pending_messages = PendingMessage.for_delivery(character: target_character, author: partner).lock
       pending_messages.each do |pending_message|
         pending_message.deliver_to!(self)
         pending_message.destroy!
@@ -80,12 +120,38 @@ class Chat < ApplicationRecord
   def yesterday_summary
     @yesterday_summary ||= begin
       character.chats
-               .where(partner:, closed: true)
-               .where(created_at: Date.yesterday.all_day)
-               .where.not(summary: [ nil, "" ])
+               .closed
+               .dreaming(false)
+               .created_yesterday
+               .with_summary
+               .where(partner:)
                .order(:created_at)
                .pluck(:summary)
                .join("\n\n")
+    end
+  end
+
+  def latest_dream_carryover
+    @latest_dream_carryover ||= begin
+      return if dream?
+
+      dream_chat = sibling_chats
+                       .dreaming(true)
+                       .closed
+                       .with_summary
+                       .where("closed_at <= ?", created_at || Time.current)
+                       .order(closed_at: :desc, created_at: :desc, id: :desc)
+                       .first
+      return unless dream_chat
+
+      intervening_chat_exists = sibling_chats
+                                    .dreaming(false)
+                                    .where.not(id: id)
+                                    .where("created_at > ? AND created_at < ?", dream_chat.closed_at, created_at || Time.current)
+                                    .exists?
+      return if intervening_chat_exists
+
+      dream_chat
     end
   end
 

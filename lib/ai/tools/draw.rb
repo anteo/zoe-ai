@@ -11,6 +11,7 @@ module AI
         characters_json = JSON.generate(characters)
 
         "Draw a picture by using a prompt. You can provide attachment IDs from chat history or character attachments to use as reference images.\n" +
+          "If you want to attach the generated picture to a postponed message, call draw BEFORE manage_postponed_messages and reuse the attachment_ids returned by draw.\n" +
           "IMPORTANT: For each character, pick AT MOST ONE image — the one whose description best matches the drawing prompt.\n" +
           "Do NOT attach multiple images of the same character. When describing people from reference images, specify which photo they are from to maintain consistency. For example: \"The man from the first reference image (name)\" or \"The woman from the second reference image (name)\".\n" +
           "Crucially, ensure the characters' facial features from the reference images are preserved as accurately as possible. Do not add any new physical traits, facial hair, or characteristics not present in the original images. The goal is to maximize facial resemblance to the reference photos.\n" +
@@ -65,17 +66,19 @@ module AI
 
         image = AI.paint(prompt, size:, model:, with:)
         if image.data
-          # Print the iTerm2 inline image escape sequence
-          # ESC ] 1337 ; File = [arguments] : [base64_data] ^G
-          # print "\e]1337;File=inline=1:#{image.data}\a\n"
-
-          chat.attachments_to_persist << {
+          blob = ActiveStorage::Blob.create_and_upload!(
             io: StringIO.new(image.to_blob),
             filename: "generated_image_#{Time.now.to_i}.png",
             content_type: image.mime_type,
             metadata: { prompt:, size:, aspect_ratio:, image_size:, model:, attachment_ids: }
-          }
-          "Picture has been successfully generated and displayed to the user"
+          )
+
+          chat.attachments_to_persist << blob
+
+          JSON.generate(
+            message: "Picture has been successfully generated and displayed to the user",
+            attachment_ids: [ blob.id ]
+          )
         else
           "Failed to generate picture"
         end

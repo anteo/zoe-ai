@@ -7,6 +7,9 @@ module AI
         string :query,
                description: "Optional text to search for in event content, topic, or character name",
                required: false
+        string :pattern,
+               description: "Optional case-insensitive regular expression to search in event content, topic, or character name, for example word1|word2|word3",
+               required: false
         integer :character_id,
                 description: "Optional character ID from the <characters> system prompt section to restrict the search",
                 required: false
@@ -25,12 +28,13 @@ module AI
                 required: false
       end
 
-      def execute(query: nil, character_id: nil, time: nil, date_from: nil, date_to: nil, limit: default_limit)
+      def execute(query: nil, pattern: nil, character_id: nil, time: nil, date_from: nil, date_to: nil, limit: default_limit)
         facts = scoped_event_facts
         facts = facts.where(character: find_character!(character_id)) if character_id.present?
         facts = facts.where(time:) if time.present?
         facts = apply_date_filter(facts, date_from:, date_to:)
         facts = apply_text_filter(facts, query) if query.present?
+        facts = apply_pattern_filter(facts, pattern) if pattern.present?
 
         events = facts.order(importance: :desc, mentioned_at: :desc, id: :desc)
                       .limit(normalized_limit(limit))
@@ -44,11 +48,14 @@ module AI
       private
 
       def scoped_event_facts
-        Fact.where(character: accessible_characters)
-            .where(partner: chat.partner)
-            .persistent(false)
-            .includes(:character, :author, :topic)
-            .references(:character, :author, :topic)
+        facts = Fact.where(character: accessible_characters)
+                    .where(partner: chat.partner)
+                    .persistent(false)
+                    .includes(:character, :author, :topic)
+                    .references(:character, :author, :topic)
+        return facts if chat.dream?
+
+        facts.joins(:chat).where(chats: { dream: false })
       end
 
       def accessible_characters
@@ -64,8 +71,17 @@ module AI
 
       def apply_text_filter(facts, query)
         pattern = "%#{ActiveRecord::Base.sanitize_sql_like(query)}%"
-        facts.joins(:character, :topic).where(
+        facts.joins(:character).left_outer_joins(:topic).where(
           "facts.content ILIKE :pattern OR topics.name ILIKE :pattern OR characters.name ILIKE :pattern",
+          pattern:
+        )
+      end
+
+      def apply_pattern_filter(facts, pattern)
+        validate_pattern!(pattern)
+
+        facts.joins(:character).left_outer_joins(:topic).where(
+          "facts.content ~* :pattern OR topics.name ~* :pattern OR characters.name ~* :pattern",
           pattern:
         )
       end
@@ -83,6 +99,12 @@ module AI
         Date.iso8601(value)
       rescue Date::Error
         fail! "#{name} must be in YYYY-MM-DD format"
+      end
+
+      def validate_pattern!(pattern)
+        Regexp.new(pattern)
+      rescue RegexpError
+        fail! "pattern must be a valid regular expression"
       end
 
       def normalized_limit(value)

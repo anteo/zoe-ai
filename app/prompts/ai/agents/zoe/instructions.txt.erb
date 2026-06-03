@@ -59,18 +59,31 @@ chat.described_identities(mode: :xml).each do |character, description|
 end
 
 xml.events(subject: chat.character.to_s) do
-  xml << AI::Actors::DescribeEvents.result(character: chat.character, partner: chat.partner, mode: :xml).description.to_s
+  xml << AI::Actors::DescribeEvents.result(character: chat.character, partner: chat.partner, mode: :xml, dream: false).description.to_s
 end
 
-yesterday = chat.yesterday_summary
-if yesterday.present?
+dream_carryover = chat.latest_dream_carryover
+if dream_carryover.present?
+  xml.dream_carryover(source_chat_id: dream_carryover.id, dreamed_at: dream_carryover.closed_at.iso8601) do
+    xml.text! "Internal notes from your latest dream session.\n"
+    xml.text! "Use them only when relevant to the current conversation.\n"
+    xml.text! "Do not mention the dream session itself.\n"
+    xml.text! "Do not expose internal tools, searches, instruction edits, or postponed-message mechanics.\n"
+    xml.text! "Prefer this for continuity and follow-up opportunities, not as hard facts unless confirmed elsewhere.\n\n"
+    xml.text! dream_carryover.summary.to_s
+  end
+else
+  yesterday = chat.yesterday_summary
+end
+
+if dream_carryover.blank? && yesterday.present?
   xml.yesterday_conversation(date: Date.yesterday.to_s) do
     xml.text! yesterday.to_s
   end
 end
 
 xml.instructions do
-  xml.text! chat.partner_instructions.to_s
+  xml.text! chat.partner_conversation_instructions.to_s
 end
 %>
 <%= buffer %>

@@ -37,6 +37,7 @@ class ApplicationController < ActionController::Base
 
   def default_chat
     @default_chat ||= current_user.chats
+                                  .visible_to_user
                                   .where(character: current_character, partner: current_partner,
                                          created_at: Date.current.all_day, closed: false)
                                   .order(created_at: :desc)

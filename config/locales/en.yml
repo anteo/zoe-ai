@@ -13,6 +13,8 @@ en:
         thinking_effort: Thinking effort
       character:
         bio: Bio
+        daily_dreaming_enabled: Daily dreaming enabled
+        dreaming_enabled: Dreaming enabled
         name: Name
       mcp_server:
         command: Command
@@ -84,6 +86,7 @@ en:
   label_confirm_new_password: Confirm new password
   label_console: Console
   label_console_output: Console output
+  label_conversation_instructions: Conversation instructions
   label_confirmation: Confirmation
   label_confirmation_instructions: Resend confirmation
   label_content: Content
@@ -95,6 +98,9 @@ en:
   label_date_time: Date/time
   label_delete: Delete
   label_description: Description
+  label_dreams: Dreams
+  label_dream_settings: Dream settings
+  label_dreaming_enabled: Dreaming
   label_edit: Edit
   label_edit_agent: Edit agent
   label_edit_character: Edit character
@@ -165,6 +171,8 @@ en:
   label_send_reset_instructions: Send reset instructions
   label_settings: Settings
   label_settings_ai: AI
+  label_settings_ai_dream_instructions: Dreaming
+  label_settings_ai_dream_instructions_title: Dream instructions
   label_settings_ai_instructions: Instructions
   label_settings_agents: Agents
   label_settings_ai_models: Models
@@ -329,6 +337,7 @@ en:
   text_no_character_instructions: No instructions yet.
   text_no_chat_history: No previous chats yet.
   text_no_chat_history_match: No chats match your search.
+  text_no_dream_instructions: No dream instructions yet.
   text_no_mcp_servers: No MCP servers configured yet.
   text_password_minimum: "%{count} characters minimum"
   text_pending_confirmation: 'Waiting confirmation for: %{email}'

@@ -4,8 +4,9 @@ module AI
       description -> {
         partner_name = chat.partner.name
         <<~TEXT.squish
-          View and manage #{partner_name}'s own character instructions for the current chat.
-          This tool is limited to the current AI character only.
+          View and manage #{partner_name}'s own conversation or dreaming instructions.
+          This tool is limited to the current AI character only. When dream=true it works with dreaming instructions,
+          otherwise it works with conversation instructions. If dream is omitted, it defaults to the current chat mode.
         TEXT
       }
 
@@ -19,24 +20,28 @@ module AI
                 description: "Existing instruction ID to update or remove. Use IDs returned by list.",
                 required: false
 
+        boolean :dream,
+                description: "Whether to target dreaming instructions. Defaults to the current chat mode.",
+                required: false
+
         string :content,
                description: "Instruction text to add or replace. Required for add and update.",
                required: false
       end
 
-      def execute(action:, instruction_id: nil, content: nil)
+      def execute(action:, instruction_id: nil, dream: nil, content: nil)
         case action
         when "list"
-          list_instructions
+          list_instructions(dream:)
         when "add"
           require_writable_character!
-          add_instruction!(content)
+          add_instruction!(content, dream:)
         when "update"
           require_writable_character!
-          update_instruction!(instruction_id, content)
+          update_instruction!(instruction_id, content, dream:)
         when "remove"
           require_writable_character!
-          remove_instruction!(instruction_id)
+          remove_instruction!(instruction_id, dream:)
         else
           fail! "Unsupported action: #{action}"
         end
@@ -44,10 +49,11 @@ module AI
 
       private
 
-      def list_instructions
-        instructions = scoped_instructions.to_a
+      def list_instructions(dream:)
+        instructions = scoped_instructions(dream:).to_a
         JSON.generate(
           character_id: chat.partner.id,
+          dream: dream_mode?(dream),
           items: instructions.map do |instruction|
             {
               id: instruction.id,
@@ -57,42 +63,52 @@ module AI
         )
       end
 
-      def add_instruction!(content)
-        instruction = scoped_instructions.create!(
+      def add_instruction!(content, dream:)
+        instruction = scoped_instructions(dream:).create!(
           active: true,
           content: normalized_content!(content)
         )
 
-        %(Added instruction #{instruction.id} for #{chat.partner.name}: #{instruction.content})
+        %(Added #{instruction_mode_name(dream)} instruction #{instruction.id} for #{chat.partner.name}: #{instruction.content})
       end
 
-      def update_instruction!(instruction_id, content)
-        instruction = find_instruction!(instruction_id)
+      def update_instruction!(instruction_id, content, dream:)
+        instruction = find_instruction!(instruction_id, dream:)
         instruction.update!(
           active: true,
           content: normalized_content!(content)
         )
 
-        %(Updated instruction #{instruction.id} for #{chat.partner.name}: #{instruction.content})
+        %(Updated #{instruction_mode_name(dream)} instruction #{instruction.id} for #{chat.partner.name}: #{instruction.content})
       end
 
-      def remove_instruction!(instruction_id)
-        instruction = find_instruction!(instruction_id)
+      def remove_instruction!(instruction_id, dream:)
+        instruction = find_instruction!(instruction_id, dream:)
         instruction.destroy!
 
-        %(Removed instruction #{instruction.id} for #{chat.partner.name})
+        %(Removed #{instruction_mode_name(dream)} instruction #{instruction.id} for #{chat.partner.name})
       end
 
-      def scoped_instructions
-        chat.partner.instructions.active.ordered
+      def scoped_instructions(dream:)
+        chat.partner.instructions.where(dream: dream_mode?(dream)).active.ordered
       end
 
-      def find_instruction!(instruction_id)
+      def find_instruction!(instruction_id, dream:)
         fail! "instruction_id is required for this action" if instruction_id.blank?
 
-        scoped_instructions.find_by(id: instruction_id).tap do |instruction|
+        scoped_instructions(dream:).find_by(id: instruction_id).tap do |instruction|
           fail! "Instruction not found: #{instruction_id}" unless instruction
         end
+      end
+
+      def dream_mode?(dream)
+        return chat.dream? if dream.nil?
+
+        ActiveModel::Type::Boolean.new.cast(dream)
+      end
+
+      def instruction_mode_name(dream)
+        dream_mode?(dream) ? "dreaming" : "conversation"
       end
 
       def normalized_content!(content)

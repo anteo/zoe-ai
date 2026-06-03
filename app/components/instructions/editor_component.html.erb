@@ -38,7 +38,10 @@
 <% elsif instructions.any? %>
   <ul class="space-y-3">
     <% instructions.each do |instruction| %>
-      <li class="text-sm leading-6"><%= instruction[:content] %></li>
+      <li class="text-sm leading-6">
+        <span class="icon-[lucide--check] h-4 w-4"></span>
+        <%= instruction[:content] %>
+      </li>
     <% end %>
   </ul>
 <% else %>

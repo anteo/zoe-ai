@@ -170,6 +170,6 @@ Rack::Attack.throttle("admin/search", limit: 50, period: 1.minute) do |request|
   Ai::RackAttack.admin_key(request) if Ai::RackAttack.admin_search?(request)
 end
 
-Rack::Attack.throttle("admin/write", limit: 10, period: 5.minutes) do |request|
+Rack::Attack.throttle("admin/write", limit: 30, period: 5.minutes) do |request|
   Ai::RackAttack.admin_key(request) if Ai::RackAttack.admin_write?(request)
 end

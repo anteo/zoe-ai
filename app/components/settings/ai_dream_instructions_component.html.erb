@@ -2,7 +2,7 @@
      data-existing-instructions-json="<%= existing_instructions_json %>">
   <%= component :instructions__editor,
                 instructions: instructions,
-                field_name_prefix: "#{f.object.model_name.param_key}[conversation_instructions_attributes]",
+                field_name_prefix: "#{f.object.model_name.param_key}[dreaming_instructions_attributes]",
                 editable: true,
-                empty_text: t(:text_no_character_instructions) %>
+                empty_text: t(:text_no_dream_instructions) %>
 </div>

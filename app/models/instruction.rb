@@ -6,6 +6,8 @@ class Instruction < ApplicationRecord
   validates :content, presence: true
 
   scope :active, -> { where(active: true) }
+  scope :conversation, -> { where(dream: false) }
+  scope :dreaming, -> { where(dream: true) }
   scope :global, -> { where(character_id: nil) }
   scope :for_character, ->(character) { where(character:) }
   scope :ordered, -> { order(:created_at, :id) }

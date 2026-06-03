@@ -1,6 +1,6 @@
 module Characters
   class DetailsComponent < ApplicationComponent
-    SECTIONS = %i[memory_profile events instructions facts images].freeze
+    SECTIONS = %i[memory_profile dreams events instructions facts images].freeze
 
     attr_reader :character, :partner
 

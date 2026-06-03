@@ -13,6 +13,8 @@ ru:
         thinking_effort: Уровень рассуждений
       character:
         bio: Краткое описание
+        daily_dreaming_enabled: Ежедневные сны
+        dreaming_enabled: Сны включены
         name: Имя персонажа
       mcp_server:
         command: Команда
@@ -84,6 +86,7 @@ ru:
   label_confirm_new_password: Подтвердите новый пароль
   label_console: Консоль
   label_console_output: Вывод консоли
+  label_conversation_instructions: Инструкции для диалога
   label_confirmation: Подтверждение
   label_confirmation_instructions: Повторить подтверждение
   label_content: Содержание
@@ -95,6 +98,9 @@ ru:
   label_date_time: Дата/время
   label_delete: Удалить
   label_description: Описание
+  label_dreams: Сны
+  label_dream_settings: Настройки снов
+  label_dreaming_enabled: Сны
   label_edit: Редактировать
   label_edit_agent: Редактировать агента
   label_edit_character: Редактировать персонажа
@@ -165,6 +171,8 @@ ru:
   label_send_reset_instructions: Отправить инструкцию по сбросу
   label_settings: Настройки
   label_settings_ai: ИИ
+  label_settings_ai_dream_instructions: Сны
+  label_settings_ai_dream_instructions_title: Инструкции для снов
   label_settings_ai_instructions: Инструкции
   label_settings_agents: Агенты
   label_settings_ai_models: Модели
@@ -329,6 +337,7 @@ ru:
   text_no_character_instructions: Пока нет инструкций.
   text_no_chat_history: Пока нет предыдущих разговоров.
   text_no_chat_history_match: По вашему запросу ничего не найдено.
+  text_no_dream_instructions: Пока нет инструкций для сновидений.
   text_no_mcp_servers: MCP серверы пока не настроены.
   text_password_minimum: Минимум %{count} символов
   text_pending_confirmation: 'Ожидает подтверждения: %{email}'

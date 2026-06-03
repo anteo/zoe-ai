@@ -9,18 +9,23 @@ class Character < ApplicationRecord
   has_many :facts, dependent: :destroy
   has_many :fact_aggregates, dependent: :delete_all
   has_many :instructions, dependent: :delete_all
+  has_many :conversation_instructions, -> { where(dream: false) }, class_name: "Instruction"
+  has_many :dreaming_instructions, -> { where(dream: true) }, class_name: "Instruction"
   has_many :authored_pending_messages, class_name: "PendingMessage", foreign_key: :author_id, dependent: :nullify
   has_many :pending_messages, dependent: :destroy
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
 
-  accepts_nested_attributes_for :instructions,
-    allow_destroy: true,
-    reject_if: ->(item) { item[:content].blank? }
+  accepts_nested_attributes_for :conversation_instructions,
+                                allow_destroy: true,
+                                reject_if: ->(item) { item[:content].blank? }
+  accepts_nested_attributes_for :dreaming_instructions,
+                                allow_destroy: true,
+                                reject_if: ->(item) { item[:content].blank? }
   accepts_nested_attributes_for :facts,
-    allow_destroy: true
+                                allow_destroy: true
   accepts_nested_attributes_for :images_attachments,
-    allow_destroy: true
+                                allow_destroy: true
 
   normalizes :bio, with: ->(value) { value.to_s.strip }
   normalizes :name, with: ->(value) { value.to_s.strip.presence }
@@ -31,6 +36,8 @@ class Character < ApplicationRecord
   scope :third_party, ->(third_party = true) { where(third_party:) }
   scope :human, -> { third_party(false).where(ai: false) }
   scope :ai, -> { third_party(false).where(ai: true) }
+  scope :daily_dreaming_enabled, ->(enabled = true) { where(daily_dreaming_enabled: enabled) }
+  scope :dreaming_enabled, ->(enabled = true) { where(dreaming_enabled: enabled) }
 
   def self.ransackable_associations(_auth_object = nil)
     []
@@ -94,9 +101,14 @@ class Character < ApplicationRecord
     "human"
   end
 
-  def last_conversation_time(partner: nil, except: nil)
-    scope = chats
+  def human?
+    !ai? && !third_party?
+  end
+
+  def last_conversation_time(partner: nil, except: nil, user: nil)
+    scope = chats.dreaming(false)
     scope = scope.where(partner:) if partner
+    scope = scope.where(user:) if user
     scope = scope.where.not(id: except) if except
     last = scope.order(:created_at).last
     return unless last

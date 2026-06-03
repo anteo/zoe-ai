@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_02_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -71,8 +71,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
     t.bigint "author_id"
     t.string "bio", default: "", null: false
     t.datetime "created_at", null: false
+    t.boolean "daily_dreaming_enabled", default: false, null: false
     t.text "description", default: "", null: false
     t.boolean "description_up_to_date", default: false, null: false
+    t.boolean "dreaming_enabled", default: false, null: false
     t.boolean "is_default", default: false, null: false
     t.string "name", limit: 50, null: false
     t.boolean "third_party", default: false, null: false
@@ -92,7 +94,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
   create_table "chats", force: :cascade do |t|
     t.bigint "character_id"
     t.boolean "closed", default: false, null: false
+    t.datetime "closed_at"
     t.datetime "created_at", null: false
+    t.boolean "dream", default: false, null: false
     t.boolean "facts_extracted", default: false, null: false
     t.datetime "first_visible_message_at"
     t.bigint "first_visible_message_id"
@@ -105,6 +109,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.index ["character_id"], name: "index_chats_on_character_id"
+    t.index ["closed_at"], name: "index_chats_on_closed_at"
+    t.index ["dream"], name: "index_chats_on_dream"
     t.index ["first_visible_message_at"], name: "index_chats_on_first_visible_message_at"
     t.index ["first_visible_message_id"], name: "index_chats_on_first_visible_message_id"
     t.index ["last_visible_message_at"], name: "index_chats_on_last_visible_message_at"
@@ -172,9 +178,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
     t.bigint "character_id"
     t.text "content"
     t.datetime "created_at", null: false
+    t.boolean "dream", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["character_id", "active"], name: "index_instructions_on_character_id_and_active"
+    t.index ["character_id", "dream", "active"], name: "index_instructions_on_character_id_and_dream_and_active"
     t.index ["character_id"], name: "index_instructions_on_character_id"
+    t.index ["dream"], name: "index_instructions_on_dream"
   end
 
   create_table "mcp_servers", force: :cascade do |t|
@@ -240,14 +249,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
   end
 
   create_table "pending_messages", force: :cascade do |t|
-    t.bigint "author_id", null: false
+    t.bigint "author_id"
     t.bigint "character_id", null: false
     t.text "content", default: "", null: false
     t.datetime "created_at", null: false
+    t.bigint "source_message_id"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_pending_messages_on_author_id"
     t.index ["character_id", "author_id", "created_at"], name: "index_pending_messages_on_delivery_lookup"
     t.index ["character_id"], name: "index_pending_messages_on_character_id"
+    t.index ["source_message_id"], name: "index_pending_messages_on_source_message_id"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -462,6 +473,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_120000) do
   add_foreign_key "messages", "tool_calls"
   add_foreign_key "pending_messages", "characters"
   add_foreign_key "pending_messages", "characters", column: "author_id"
+  add_foreign_key "pending_messages", "messages", column: "source_message_id"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

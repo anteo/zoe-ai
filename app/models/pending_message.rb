@@ -1,6 +1,7 @@
 class PendingMessage < ApplicationRecord
   belongs_to :author, class_name: "Character"
   belongs_to :character
+  belongs_to :source_message, class_name: "Message", optional: true
 
   has_many_attached :attachments
 
@@ -31,7 +32,12 @@ class PendingMessage < ApplicationRecord
   end
 
   def deliver_to!(chat)
-    message = chat.messages.create!(role: :assistant, content:)
+    message = chat.messages.create!(
+      role: :assistant,
+      content:,
+      created_at:,
+      updated_at: created_at
+    )
     message.attachments.attach(attachments.blobs) if attachments.attached?
     message
   end

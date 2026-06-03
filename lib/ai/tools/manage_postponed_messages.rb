@@ -7,7 +7,7 @@ module AI
         array :attachment_ids,
               of: :integer,
               required: false,
-              description: "Blob IDs of current-chat attachments to include in this postponed message."
+              description: "Blob IDs to include in this postponed message. They may come from current-chat attachments or from attachment_ids returned by draw earlier in the same turn."
       end
 
       description -> {
@@ -21,7 +21,7 @@ module AI
           - list: show postponed messages already queued for the selected character
           - add: queue one or more postponed messages for the selected character's next new chat
           - remove: delete postponed messages by IDs from the selected character's queue
-          Attachment IDs must come from the current chat, the same way draw references chat attachments.
+          Attachment IDs may come from the current chat or from draw results generated earlier in the same turn.
         TEXT
       }
 
@@ -77,7 +77,8 @@ module AI
               id: record.id,
               created_at: record.created_at.iso8601,
               content: record.content,
-              attachment_ids: record.attachments.blobs.map(&:id)
+              attachment_ids: record.attachments.blobs.map(&:id),
+              source_message_id: record.source_message_id
             }
           end
         )
@@ -96,7 +97,8 @@ module AI
             pending_message = PendingMessage.new(
               author: chat.partner,
               character: character,
-              content:
+              content:,
+              source_message: source_message
             )
             pending_message.attachments.attach(blobs_by_message[index]) if blobs_by_message[index].any?
             pending_message.save!
@@ -135,9 +137,11 @@ module AI
         ids = Array(attachment_ids).compact
         return [] if ids.empty?
 
-        blobs = chat.attachments_blobs.where(id: ids).index_by(&:id)
+        chat_blobs = chat.attachments_blobs.where(id: ids).index_by(&:id)
+        staged_blobs = chat.staged_attachment_blobs.index_by(&:id)
+        blobs = staged_blobs.merge(chat_blobs)
         missing_ids = ids - blobs.keys
-        fail! "Attachment IDs not found in current chat: #{missing_ids.join(', ')}" if missing_ids.any?
+        fail! "Attachment IDs not found in current chat or staged draw results: #{missing_ids.join(', ')}" if missing_ids.any?
 
         blobs.values_at(*ids)
       end
@@ -154,6 +158,11 @@ module AI
             type: character.ai? ? "ai" : "human"
           }
         end
+      end
+
+      def source_message
+        message = chat.message if chat.respond_to?(:message)
+        message if message&.persisted?
       end
     end
   end

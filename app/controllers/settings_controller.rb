@@ -14,10 +14,13 @@ class SettingsController < ApplicationController
   def update
     @section = params[:section]
     settings_attributes = normalized_settings_params
-    global_instruction_attributes = extract_global_instruction_attributes!(settings_attributes)
+    conversation_instruction_attributes = extract_global_instruction_attributes!(settings_attributes, :conversation_instructions_attributes)
+    dreaming_instruction_attributes = extract_global_instruction_attributes!(settings_attributes, :dreaming_instructions_attributes)
 
     if @section_proxy.update(**settings_attributes, context: { user: current_user }) &&
-       update_global_instructions(global_instruction_attributes)
+       update_global_instructions(conversation_instruction_attributes, dream: false) &&
+       update_global_instructions(dreaming_instruction_attributes, dream: true)
+
       return handle_test_smtp if params[:test_smtp]
 
       if params[:save]
@@ -62,7 +65,10 @@ class SettingsController < ApplicationController
 
   def permitted_settings_attributes
     attrs = @section_proxy.class.permitted_attributes.dup
-    attrs << { instructions_attributes: [ :id, :content, :_destroy ] } if instructions_section?
+    if instructions_section?
+      attrs << { conversation_instructions_attributes: [ :id, :content, :dream, :_destroy ] }
+      attrs << { dreaming_instructions_attributes: [ :id, :content, :dream, :_destroy ] }
+    end
     attrs + autocomplete_attributes
   end
 
@@ -72,9 +78,9 @@ class SettingsController < ApplicationController
       .grep(/_autocomplete\z/)
       .map(&:to_sym)
       .select do |key|
-        base_key = key.to_s.delete_suffix("_autocomplete").to_sym
-        @section_proxy.class.permitted_attributes.include?(base_key)
-      end
+      base_key = key.to_s.delete_suffix("_autocomplete").to_sym
+      @section_proxy.class.permitted_attributes.include?(base_key)
+    end
   end
 
   def settings_raw_input
@@ -90,16 +96,16 @@ class SettingsController < ApplicationController
     attributes
   end
 
-  def extract_global_instruction_attributes!(attributes)
+  def extract_global_instruction_attributes!(attributes, attribute_name)
     return [] unless instructions_section?
 
-    raw_items = attributes.delete(:instructions_attributes)
+    raw_items = attributes.delete(attribute_name)
     return [] unless raw_items.respond_to?(:values)
 
     raw_items.values
   end
 
-  def update_global_instructions(items)
+  def update_global_instructions(items, dream:)
     return true unless instructions_section?
 
     Instruction.transaction do
@@ -116,7 +122,7 @@ class SettingsController < ApplicationController
           next
         end
 
-        instruction.update!(character: nil, active: true, content:)
+        instruction.update!(character: nil, active: true, content:, dream:)
       end
     end
 
@@ -126,7 +132,7 @@ class SettingsController < ApplicationController
   end
 
   def instructions_section?
-    @section == "ai_instructions"
+    @section.in?(%w[ai_instructions ai_dream_instructions])
   end
 
   def handle_test_smtp

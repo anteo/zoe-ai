@@ -1,0 +1,24 @@
+<div data-controller="instructions"
+     data-existing-instructions-json="<%= existing_instructions_json %>">
+  <% if editable %>
+    <section class="mb-6 space-y-3">
+      <div class="flex w-full flex-col">
+        <div class="divider divider-start uppercase text-sm font-semibold"><%= t(:label_dream_settings) %></div>
+      </div>
+      <%= helpers.simple_fields_for character do |f| %>
+        <%= f.input :daily_dreaming_enabled, as: :boolean %>
+      <% end %>
+    </section>
+  <% end %>
+
+  <section class="space-y-3">
+    <div class="flex w-full flex-col">
+      <div class="divider divider-start uppercase text-sm font-semibold"><%= t(:label_instructions) %></div>
+    </div>
+    <%= component :instructions__editor,
+                  instructions: instructions,
+                  field_name_prefix: "character[dreaming_instructions_attributes]",
+                  editable: editable,
+                  empty_text: t(:text_no_dream_instructions) %>
+  </section>
+</div>

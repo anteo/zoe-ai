@@ -26,6 +26,10 @@ defaults: &defaults
     class: EnqueueFactAggregateSummariesJob
     schedule: at 1am every day
 
+  enqueue_dreaming_sessions:
+    class: EnqueueDreamingSessionsJob
+    schedule: at 2am every day
+
 development:
   <<: *defaults
 

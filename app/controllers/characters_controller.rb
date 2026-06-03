@@ -120,8 +120,11 @@ class CharactersController < ApplicationController
   def character_create_params
     params.require(:character).permit(
       :bio, :name, :avatar,
+      :daily_dreaming_enabled,
+      :dreaming_enabled,
       avatar_attachment_attributes: [ :id, :_destroy ],
-      instructions_attributes: [ :id, :content, :_destroy ]
+      conversation_instructions_attributes: [ :id, :content, :dream, :_destroy ],
+      dreaming_instructions_attributes: [ :id, :content, :dream, :_destroy ]
     )
   end
 
@@ -129,12 +132,15 @@ class CharactersController < ApplicationController
     update_params = params.fetch(:character, {}).permit(
       :name,
       :bio,
+      :daily_dreaming_enabled,
+      :dreaming_enabled,
       :avatar,
       avatar_attachment_attributes: [ :id, :_destroy ],
       images: [],
       new_images_descriptions: {},
       facts_attributes: [ :id, :content, :_destroy ],
-      instructions_attributes: [ :id, :content, :_destroy ],
+      conversation_instructions_attributes: [ :id, :content, :dream, :_destroy ],
+      dreaming_instructions_attributes: [ :id, :content, :dream, :_destroy ],
       images_attachments_attributes: [ :id, :description, :_destroy ]
     )
 
@@ -190,6 +196,7 @@ class CharactersController < ApplicationController
   def permitted_section
     allowed = %w[memory_profile events facts images]
     allowed << "instructions" if @character.ai?
+    allowed << "dreams" if @character.ai? && @character.dreaming_enabled?
 
     params[:section].to_s.in?(allowed) ? params[:section].to_s : allowed.first
   end

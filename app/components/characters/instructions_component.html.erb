@@ -1,5 +1,8 @@
-<%= component :instructions__editor,
-              instructions:,
-              field_name_prefix: "character[instructions_attributes]",
-              editable: editable,
-              empty_text: t(:text_no_character_instructions) %>
+<div data-controller="instructions"
+     data-existing-instructions-json="<%= existing_instructions_json %>">
+  <%= component :instructions__editor,
+                instructions: instructions,
+                field_name_prefix: "character[conversation_instructions_attributes]",
+                editable: editable,
+                empty_text: t(:text_no_character_instructions) %>
+</div>

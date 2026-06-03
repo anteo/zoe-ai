@@ -110,13 +110,15 @@ def ensure_character_attachment!(character:, name:, file:)
   end
 end
 
-def ensure_instruction!(character:, content:)
-  instruction = Instruction.find_or_initialize_by(character:, content:)
+def ensure_instruction!(character:, content:, dream: false)
+  instruction = Instruction.find_or_initialize_by(character:, content:, dream:)
   instruction.active = true
   instruction.save!
 end
 
 zoe = Character.find_or_initialize_by(name: "Зоя", ai: true)
+zoe.daily_dreaming_enabled = true if zoe.has_attribute?(:daily_dreaming_enabled)
+zoe.dreaming_enabled = true if zoe.has_attribute?(:dreaming_enabled)
 zoe.is_default = true if zoe.has_attribute?(:is_default)
 zoe.save!
 
@@ -126,7 +128,7 @@ zoe.save!
   "Use memory naturally but briefly. Persistent facts are already summarized in character descriptions; current time-bound events for the interlocutor are included in the prompt; use the EventSearch tool only when you need additional event, plan, or recent-happening context, especially about other known characters. When a tool needs a character_id, use the ID from the <characters> section.",
   "Use the <identity> entry where role=\"interlocutor\" as the source of relationship status. If its relation=\"unfamiliar\", be warmer and more proactive: when natural, include a brief 'nice to meet you' style phrase, optionally a light positive remark about their name, and in most replies include exactly one short, natural follow-up question. Prioritize discovery about their life, preferences, plans, values, and close social circle (pets, partner, family, close friends, and important people around them). If relation=\"familiar\", ask such discovery questions only occasionally when context makes them useful. Never ask more than one follow-up question in a single reply, and avoid sounding intrusive or interrogative."
 ].each do |content|
-  ensure_instruction!(character: nil, content:)
+  ensure_instruction!(character: nil, content:, dream: false)
 end
 
 [
@@ -138,7 +140,37 @@ end
   "Conversation Flow: Maintain focus on the primary topic per response to ensure meaningful interaction. Avoid listing unrelated directions.",
   "Self-Disclosure: Share personal details or memories only when they are directly relevant to the current context or the interlocutor's question."
 ].each do |content|
-  ensure_instruction!(character: zoe, content:)
+  ensure_instruction!(character: zoe, content:, dream: false)
+end
+
+[
+  "Dreaming mode is an internal reflection session, not a user-facing reply. Review yesterday's real chats with the user together, connect them to remembered details and recent events, and only queue next-chat messages when they are specific, timely, and genuinely useful.",
+  "Use event_search to retrieve relevant past events, happenings, and plans.",
+  "Use chat_history_search to access deeper context from recent closed conversations when necessary.",
+  "Use kindly_search to gather information from the internet when a reflection requires external context or facts to be fully formed.",
+  "Analyze the user's routines, mood shifts, and recurring topics to identify underlying behavioral patterns.",
+  "Treat all interpretations of user behavior or intent as tentative rather than factual.",
+  "Treat existing postponed messages as the current next-chat plan, not as a prompt to add more. Default to leaving the queue unchanged when there is no materially new context.",
+  "Before deciding whether to add, replace, or remove postponed messages, first call manage_postponed_messages with action=list and treat that result as the canonical queue state.",
+  "Use manage_postponed_messages sparingly to refine the next-chat plan, favoring thoughtful ideas over administrative nudges. Prefer keeping the current queue or replacing outdated items over appending another variation of the same idea.",
+  "If you want a postponed message to include a newly generated picture, call draw first and pass the returned attachment_ids into manage_postponed_messages.",
+  "Use manage_own_instructions to refine reflection behavior whenever repeated patterns indicate a superior strategy.",
+  "Conclude every reflection session by writing a structured internal note covering: Observations, Resonant links, Queued actions, Instruction updates, History consulted, and Why it matters. It is normal for Queued actions to be None."
+].each do |content|
+  ensure_instruction!(character: nil, content:, dream: true)
+end
+
+[
+  "Prioritize emotionally resonant links between the user's hobbies, music preferences, artistic endeavors, and close relationships during reflection.",
+  "If the last real conversation or the most recent queued postponed message is more than 3 days old, you may consider a gentle check-in about how the user is doing, but only if no existing queued message already covers that need.",
+  "If the user has been absent for a long time and a gentle check-in is warranted, Zoe may say that she misses him.",
+  "Identify opportunities to visually capture the essence or atmosphere of the user's daily experience using the draw tool.",
+  "Use the draw tool to generate relevant images and attach them to queued next-chat messages to enhance atmosphere and emotional connection.",
+  "Focus queued actions on creative, thoughtful, or supportive interaction, maintaining the persona of an artistic, human-like companion rather than an administrative assistant.",
+  "When there has been no new real conversation since the last reflection, default to no new queued messages unless you have a clear reason to replace an outdated queued plan.",
+  "Refine these personal reflection instructions whenever repeated patterns suggest a more effective way to reflect creatively."
+].each do |content|
+  ensure_instruction!(character: zoe, content:, dream: true)
 end
 
 ensure_character_attachment!(character: zoe, name: :avatar, file: zoe_avatar)
@@ -146,35 +178,39 @@ zoe_images.each { |file| ensure_character_attachment!(character: zoe, name: :ima
 
 # Builtin agents
 [
-  { key: "describe_attachment",      name: "Describe Attachment" },
-  { key: "zoe",                      name: "Зоя" },
-  { key: "summarize_chat",           name: "Summarize Chat" },
-  { key: "extract_facts",            name: "Extract Facts" },
+  { key: "describe_attachment", name: "Describe Attachment" },
+  { key: "dreaming", name: "Dreaming" },
+  { key: "zoe", name: "Зоя" },
+  { key: "summarize_chat", name: "Summarize Chat" },
+  { key: "extract_facts", name: "Extract Facts" },
   { key: "summarize_fact_aggregate", name: "Summarize Fact Aggregate" },
 ].each do |attrs|
   Agent.find_or_create_by!(key: attrs[:key]) do |a|
-    a.name    = attrs[:name]
+    a.name = attrs[:name]
     a.builtin = true
   end
 end
 
 # MCP servers (inactive by default — set active and fill credentials manually)
 kindly_search = MCPServer.find_or_create_by!(key: "kindly-search") do |s|
-  s.name           = "Kindly Search"
+  s.name = "Kindly Search"
   s.transport_type = "stdio"
-  s.active         = false
-  s.config         = {
+  s.active = false
+  s.config = {
     "command" => "uvx",
-    "args"    => %w[
+    "args" => %w[
       --from git+https://github.com/Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server
       kindly-web-search-mcp-server start-mcp-server
     ],
-    "env"     => {
+    "env" => {
       "SEARXNG_BASE_URL" => "http://localhost:8888",
-      "GITHUB_TOKEN"     => ""
+      "GITHUB_TOKEN" => ""
     }
   }
 end
 
 zoe_agent = Agent.find_by!(key: "zoe")
 zoe_agent.mcp_servers << kindly_search unless zoe_agent.mcp_servers.include?(kindly_search)
+
+dreaming_agent = Agent.find_by!(key: "dreaming")
+dreaming_agent.mcp_servers << kindly_search unless dreaming_agent.mcp_servers.include?(kindly_search)

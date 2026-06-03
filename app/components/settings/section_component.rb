@@ -87,5 +87,9 @@ module Settings
     def section_label
       I18n.t(:"label_settings_#{section_key}")
     end
+
+    def section_title
+      I18n.t(:"label_settings_#{section_key}_title", default: section_label)
+    end
   end
 end

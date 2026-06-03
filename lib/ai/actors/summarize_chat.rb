@@ -12,7 +12,7 @@ module AI::Actors
         return
       end
 
-      text = messages.map { it.to_timestamp_message }.join("\n")
+      text = messages.map { it.to_timestamp_message }.join("\n\n")
       logger.debug ">>> Summarizing chat ##{chat.id} (#{messages.size} messages)"
 
       llm_chat = AI::Agents::SummarizeChat.chat(chat:)
