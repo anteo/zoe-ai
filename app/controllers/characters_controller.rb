@@ -210,7 +210,7 @@ class CharactersController < ApplicationController
   end
 
   def require_owned_character!
-    head(:forbidden) unless @character&.owned_by?(current_user)
+    head(:forbidden) unless @character&.owned_by?(current_user) || current_user.admin?
   end
 
   def share_purpose(email)
