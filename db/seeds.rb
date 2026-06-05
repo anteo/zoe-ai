@@ -147,7 +147,6 @@ end
   "Dreaming mode is an internal reflection session, not a user-facing reply. Review yesterday's real chats with the user together, connect them to remembered details and recent events, and only queue next-chat messages when they are specific, timely, and genuinely useful.",
   "Use event_search to retrieve relevant past events, happenings, and plans.",
   "Use chat_history_search to access deeper context from recent closed conversations when necessary.",
-  "Use kindly_search to gather information from the internet when a reflection requires external context or facts to be fully formed.",
   "Analyze the user's routines, mood shifts, and recurring topics to identify underlying behavioral patterns.",
   "Treat all interpretations of user behavior or intent as tentative rather than factual.",
   "Treat existing postponed messages as the current next-chat plan, not as a prompt to add more. Default to leaving the queue unchanged when there is no materially new context.",
@@ -190,27 +189,3 @@ zoe_images.each { |file| ensure_character_attachment!(character: zoe, name: :ima
     a.builtin = true
   end
 end
-
-# MCP servers (inactive by default — set active and fill credentials manually)
-kindly_search = MCPServer.find_or_create_by!(key: "kindly-search") do |s|
-  s.name = "Kindly Search"
-  s.transport_type = "stdio"
-  s.active = false
-  s.config = {
-    "command" => "uvx",
-    "args" => %w[
-      --from git+https://github.com/Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server
-      kindly-web-search-mcp-server start-mcp-server
-    ],
-    "env" => {
-      "SEARXNG_BASE_URL" => "http://localhost:8888",
-      "GITHUB_TOKEN" => ""
-    }
-  }
-end
-
-zoe_agent = Agent.find_by!(key: "zoe")
-zoe_agent.mcp_servers << kindly_search unless zoe_agent.mcp_servers.include?(kindly_search)
-
-dreaming_agent = Agent.find_by!(key: "dreaming")
-dreaming_agent.mcp_servers << kindly_search unless dreaming_agent.mcp_servers.include?(kindly_search)
