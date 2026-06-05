@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/anteo/zoe-ai/compare/v1.3.0...v1.3.1) (2026-06-05)
+
+### Bug Fixes
+
+* **characters:** admin can't update not own characters ([917821f](https://github.com/anteo/zoe-ai/commit/917821fe2e7138987e6fb6afe6fd2476d0f85613))
+
 ## [1.3.0](https://github.com/anteo/zoe-ai/compare/v1.2.1...v1.3.0) (2026-06-05)
 
 ### Features
