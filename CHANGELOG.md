@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0](https://github.com/anteo/zoe-ai/compare/v1.2.1...v1.3.0) (2026-06-05)
+
+### Features
+
+* **ai:** add dreaming sessions for AI characters ([88460be](https://github.com/anteo/zoe-ai/commit/88460be93d9dfc107cc88da2dbe65828ff6b361c))
+* **ai:** add ManageOwnInstructions tool to Zoe agent ([6f4730e](https://github.com/anteo/zoe-ai/commit/6f4730e1bebeed38456452d2597739d46e2a67a6))
+* **ai:** add postponed message queue and delivery for Zoe agent ([3524e96](https://github.com/anteo/zoe-ai/commit/3524e96864c7a851b222c3cfe3f974d9e9e9cb7b))
+* **ai:** implement proactive message delivery with postponed flag and initiator tracking ([836a9e8](https://github.com/anteo/zoe-ai/commit/836a9e8a7803d9c0d75bded0c8c89f32671382b9))
+* **ai:** rewrite Zoe's core personality instructions for more natural dialogue ([240363c](https://github.com/anteo/zoe-ai/commit/240363c2cd131e73f71c6c513e4ada20c68ac8d0))
+* **docker:** add chromium and host.docker.internal for Kindly Web Search MCP server ([c75c6a9](https://github.com/anteo/zoe-ai/commit/c75c6a9f75e462cbfc566ceab6ce94bfa1525318))
+
 ## [1.2.1](https://github.com/anteo/zoe-ai/compare/v1.2.0...v1.2.1) (2026-05-26)
 
 ### Bug Fixes
