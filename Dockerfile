@@ -48,6 +48,7 @@ LABEL org.opencontainers.image.source="https://github.com/anteo/zoe-ai"
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       ca-certificates \
+      chromium \
       curl \
       git \
       libpq5 \

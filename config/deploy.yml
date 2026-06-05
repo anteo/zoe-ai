@@ -16,6 +16,9 @@ minimum_version: 2.10.0
 deploy_timeout: 60
 retain_containers: 2
 
+x-host-docker-internal: &host_docker_internal
+  add-host: "host.docker.internal:host-gateway"
+
 proxy:
   app_port: 3000
   host: <%= app_host %>
@@ -30,6 +33,7 @@ servers:
   web:
     hosts:
       - <%= server_host %>
+    options: *host_docker_internal
     env:
       clear:
         DB_PREPARE: 1
@@ -38,6 +42,7 @@ servers:
     hosts:
       - <%= server_host %>
     cmd: bin/docker-entrypoint jobs
+    options: *host_docker_internal
 
 registry:
   server: ghcr.io
