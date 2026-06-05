@@ -1,13 +1,13 @@
 <div id="message-<%= message.id || SecureRandom.uuid %>" class="group chat-message-enter" data-controller="message">
   <div class="<%= bubble_class %>">
-    <%= render "chats/message_component/header", message:, is_current_character: is_current_character?, sender:, read_only: read_only? %>
+    <%= render "chats/message_component/header", component: self %>
 
     <% if message.content.present? %>
       <div class="chat-bubble prose prose-sm <%= bubble_color %>" data-message-target="view">
         <%= markdown(message.content) %>
       </div>
 
-      <% if !read_only? && is_current_character? && message.persisted? %>
+      <% if editable_message? %>
         <%= render "chats/message_component/edit_form", message:, bubble_color: %>
       <% end %>
     <% end %>

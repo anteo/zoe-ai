@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_02_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_200033) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -207,10 +207,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_120000) do
     t.json "content_raw"
     t.datetime "created_at", null: false
     t.boolean "facts_extracted", default: false, null: false
+    t.bigint "initiator_id"
     t.integer "input_tokens"
     t.boolean "memorize", default: true, null: false
     t.bigint "model_id"
     t.integer "output_tokens"
+    t.boolean "postponed", default: false, null: false
     t.string "role", null: false
     t.text "thinking_signature"
     t.text "thinking_text"
@@ -219,7 +221,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_120000) do
     t.datetime "updated_at", null: false
     t.index ["character_id"], name: "index_messages_on_character_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["initiator_id"], name: "index_messages_on_initiator_id"
     t.index ["model_id"], name: "index_messages_on_model_id"
+    t.index ["postponed"], name: "index_messages_on_postponed"
     t.index ["role"], name: "index_messages_on_role"
     t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
   end
@@ -253,12 +257,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_120000) do
     t.bigint "character_id", null: false
     t.text "content", default: "", null: false
     t.datetime "created_at", null: false
+    t.bigint "partner_id", null: false
     t.bigint "source_message_id"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["author_id"], name: "index_pending_messages_on_author_id"
-    t.index ["character_id", "author_id", "created_at"], name: "index_pending_messages_on_delivery_lookup"
     t.index ["character_id"], name: "index_pending_messages_on_character_id"
+    t.index ["partner_id"], name: "index_pending_messages_on_partner_id"
     t.index ["source_message_id"], name: "index_pending_messages_on_source_message_id"
+    t.index ["user_id", "character_id", "partner_id", "created_at"], name: "index_pending_messages_on_delivery_lookup"
+    t.index ["user_id"], name: "index_pending_messages_on_user_id"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -468,12 +476,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_120000) do
   add_foreign_key "facts", "chats"
   add_foreign_key "facts", "messages"
   add_foreign_key "facts", "topics"
+  add_foreign_key "messages", "characters", column: "initiator_id"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
   add_foreign_key "pending_messages", "characters"
   add_foreign_key "pending_messages", "characters", column: "author_id"
+  add_foreign_key "pending_messages", "characters", column: "partner_id"
   add_foreign_key "pending_messages", "messages", column: "source_message_id"
+  add_foreign_key "pending_messages", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

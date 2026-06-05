@@ -341,6 +341,7 @@ en:
   text_no_mcp_servers: No MCP servers configured yet.
   text_password_minimum: "%{count} characters minimum"
   text_pending_confirmation: 'Waiting confirmation for: %{email}'
+  text_proactive_message_hint: This message was sent proactively, outside the normal reply flow.
   text_profile_updated: Profile updated.
   text_self_registration_disabled: Self-registration is disabled.
   text_select_chat_history: Select a chat from the list.

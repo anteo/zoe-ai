@@ -43,5 +43,6 @@
 
   <%= component :chats__chat_input, current_character:, chat: %>
 
+  <%= turbo_stream_from [current_user, current_character, current_partner, :pending_messages], class: "hidden" if chat.new_record? %>
   <%= turbo_stream_from chat, class: "hidden" if chat.persisted? %>
 </div>

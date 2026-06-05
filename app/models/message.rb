@@ -6,6 +6,7 @@ class Message < ApplicationRecord
   has_many :sourced_pending_messages, class_name: "PendingMessage", foreign_key: :source_message_id, dependent: :nullify
 
   belongs_to :character, optional: true
+  belongs_to :initiator, class_name: "Character", optional: true
 
   before_save :set_character
   before_create :inherit_memorize
@@ -68,11 +69,47 @@ class Message < ApplicationRecord
     chat.messages.where("id > ?", id).destroy_all
   end
 
+  def to_llm
+    llm_message = super
+    return llm_message unless postponed_for_llm?
+
+    RubyLLM::Message.new(
+      role: :system,
+      content: proactive_llm_content(llm_message.content),
+      model_id: llm_message.model_id
+    )
+  end
+
   def human_content
     self.class.humanize_content(content)
   end
 
+  def postponed_for_llm?
+    assistant? && postponed?
+  end
+
   private
+
+  def proactive_llm_content(content)
+    prefix = if initiator.present?
+      "Proactive message previously sent by #{initiator.name} before the user replied:"
+    else
+      "Proactive message previously sent before the user replied:"
+    end
+    text = [ prefix, llm_content_text(content).presence ].compact.join("\n\n")
+
+    return text unless content.is_a?(RubyLLM::Content)
+
+    RubyLLM::Content.new(text).tap do |prefixed_content|
+      content.attachments.each do |attachment|
+        prefixed_content.add_attachment(attachment.source, filename: attachment.filename)
+      end
+    end
+  end
+
+  def llm_content_text(content)
+    content.is_a?(RubyLLM::Content) ? content.text.to_s : content.to_s
+  end
 
   def inherit_memorize
     return if user? || error?

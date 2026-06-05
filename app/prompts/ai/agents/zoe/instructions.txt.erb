@@ -84,6 +84,12 @@ end
 
 xml.instructions do
   xml.text! chat.partner_conversation_instructions.to_s
+  if Rails.env.development?
+    extra_instructions = ENV["ZOE_EXTRA_INSTRUCTIONS"].to_s.strip
+    if extra_instructions.present?
+      xml.text! "\n#{extra_instructions}"
+    end
+  end
 end
 %>
 <%= buffer %>

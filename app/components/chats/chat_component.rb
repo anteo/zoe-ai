@@ -10,16 +10,16 @@ module Chats
 
     def messages
       @chat.messages_association.visible.order(:created_at).flat_map do |message|
-        display_messages(message)
+        self.class.display_messages(message)
       end
     end
 
     def pending_messages
       return [] unless new?
 
-      PendingMessage.for_delivery(character: current_character, author: current_partner)
+      PendingMessage.for_delivery(user: chat.user, recipient: current_character, partner: current_partner)
                     .with_attached_attachments
-                    .flat_map { display_messages(it) }
+                    .flat_map { self.class.display_messages(it) }
     end
 
     def new?
@@ -38,9 +38,15 @@ module Chats
       @chat.partner
     end
 
-    private
+    def draft_empty_state_id
+      "draft-chat-empty-state"
+    end
 
-    def display_messages(message)
+    def draft_messages_id
+      "draft-chat-pending-messages"
+    end
+
+    def self.display_messages(message)
       return [ message ] unless message.assistant? && message.content.present?
 
       chunks = AI::SentenceSplitter.new(message.content).chunks

@@ -15,7 +15,6 @@ class Chat < ApplicationRecord
 
   scope :dreaming, ->(dream = true) { where(dream:) }
   scope :closed, ->(closed = true) { where(closed:) }
-  scope :visible_to_user, -> { dreaming(false) }
   scope :by_character, ->(character) {
     where(character:).or(where(partner: character))
   }
@@ -82,6 +81,10 @@ class Chat < ApplicationRecord
     messages.preload(:attachments_blobs, :tool_calls, :model)
   end
 
+  def instructions
+    to_llm.messages.detect { it.role == :system }&.content
+  end
+
   def latest_user_message_id
     messages.where(role: "user").reorder(id: :desc).limit(1).pick(:id)
   end
@@ -107,7 +110,7 @@ class Chat < ApplicationRecord
     target_character = dream? ? partner : character
 
     PendingMessage.transaction do
-      pending_messages = PendingMessage.for_delivery(character: target_character, author: partner).lock
+      pending_messages = PendingMessage.for_delivery(user:, recipient: target_character, partner: partner).lock
       pending_messages.each do |pending_message|
         pending_message.deliver_to!(self)
         pending_message.destroy!
@@ -212,7 +215,9 @@ class Chat < ApplicationRecord
   end
 
   def order_messages_for_llm(messages)
-    super(messages.reject(&:error?))
+    messages = messages.reject(&:error?)
+    system_messages, conversation_messages = messages.partition { |message| message.role.to_s == "system" }
+    system_messages + conversation_messages
   end
 
   def token_usage_message

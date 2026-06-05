@@ -12,6 +12,8 @@ class Character < ApplicationRecord
   has_many :conversation_instructions, -> { where(dream: false) }, class_name: "Instruction"
   has_many :dreaming_instructions, -> { where(dream: true) }, class_name: "Instruction"
   has_many :authored_pending_messages, class_name: "PendingMessage", foreign_key: :author_id, dependent: :nullify
+  has_many :partner_pending_messages, class_name: "PendingMessage", foreign_key: :partner_id, dependent: :nullify
+  has_many :initiated_messages, class_name: "Message", foreign_key: :initiator_id, dependent: :nullify
   has_many :pending_messages, dependent: :destroy
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy

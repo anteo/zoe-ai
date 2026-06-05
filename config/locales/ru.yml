@@ -341,6 +341,7 @@ ru:
   text_no_mcp_servers: MCP серверы пока не настроены.
   text_password_minimum: Минимум %{count} символов
   text_pending_confirmation: 'Ожидает подтверждения: %{email}'
+  text_proactive_message_hint: Это сообщение было отправлено по инициативе ассистента, вне обычного ответа.
   text_profile_updated: Профиль успешно обновлен.
   text_self_registration_disabled: Самостоятельная регистрация отключена.
   text_select_chat_history: Выберите разговор из списка.

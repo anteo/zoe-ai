@@ -31,9 +31,10 @@ module AI
         end
 
         def build_chat(**kwargs)
-          _, chat_options = partition_inputs(kwargs)
+          input_values, chat_options = partition_inputs(kwargs)
           resolved_chat_model.new(**kwargs, **chat_kwargs, **chat_options).tap do |chat|
             chat.send(:resolve_model_from_strings)
+            apply_configuration(chat, input_values:, persist_instructions: false)
           rescue ModelNotConfiguredError
             nil
           end
@@ -43,6 +44,7 @@ module AI
 
         def apply_instructions(chat_object, runtime, inputs:, persist:)
           return super unless chat_object.respond_to?(:messages_association)
+          return super if !persist && !chat_object.persisted?
           return if chat_object.messages_association.where(role: :system).exists?
 
           # First call: render and always persist for LLM cache stability

@@ -131,6 +131,14 @@
     max-width: 70%;
 }
 
+.chat-bubble-postponed {
+    filter:
+        drop-shadow(1px 0 0 var(--color-warning))
+        drop-shadow(-1px 0 0 var(--color-warning))
+        drop-shadow(0 1px 0 var(--color-warning))
+        drop-shadow(0 -1px 0 var(--color-warning));
+}
+
 .dialog-start + .dialog-start .dialog-header {
     display: none;
 }

@@ -9,6 +9,8 @@ module Chats
     end
 
     def sender
+      return message.partner if message.is_a?(PendingMessage)
+
       message.author
     end
 
@@ -22,8 +24,21 @@ module Chats
 
     def bubble_color
       return "chat-bubble-error" if message.error?
+      return "bg-base-100 text-base-content chat-bubble-postponed" if postponed_message?
 
       is_current_character? ? "bg-primary text-primary-content" : "bg-base-300"
+    end
+
+    def postponed_message?
+      message.postponed?
+    end
+
+    def editable_message?
+      message.persisted? && is_current_character? && !read_only? && !postponed_message?
+    end
+
+    def deletable_message?
+      message.persisted? && !read_only? && !postponed_message?
     end
 
     def image_attachments

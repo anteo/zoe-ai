@@ -37,7 +37,7 @@ class ChatsController < ApplicationController
 
   def find_chat
     return unless params[:id].present?
-    @chat = current_user.chats.visible_to_user.find_by(id: params[:id])
+    @chat = current_user.chats.dreaming(false).find_by(id: params[:id])
     redirect_to(root_path) unless @chat && @chat.partner == current_partner && !@chat.closed?
   end
 
@@ -47,7 +47,7 @@ class ChatsController < ApplicationController
   end
 
   def history_chats_scope
-    current_user.chats.visible_to_user.where(character: current_character, partner: current_partner)
+    current_user.chats.dreaming(false).where(character: current_character, partner: current_partner)
   end
 
   def load_history_chats

@@ -19,7 +19,7 @@ module AI
           Available target characters JSON: #{characters_json}
           Actions:
           - list: show postponed messages already queued for the selected character
-          - add: queue one or more postponed messages for the selected character's next new chat
+          - add: queue one or more postponed messages for the selected character (delivered immediately if the chat is active).  CRITICAL: Queue exactly the number of messages specified by the user. Do not add extra, duplicate, or supplementary messages.
           - remove: delete postponed messages by IDs from the selected character's queue
           Attachment IDs may come from the current chat or from draw results generated earlier in the same turn.
         TEXT
@@ -64,16 +64,17 @@ module AI
       private
 
       def queue_scope(character)
-        PendingMessage.for_delivery(character:, author: chat.partner).with_attached_attachments
+        PendingMessage.for_delivery(user: queue_user_for(character), recipient: character, partner: chat.partner).with_attached_attachments
       end
 
       def list_messages(character)
         records = queue_scope(character).to_a
         JSON.generate(
           character_id: character.id,
-          author_id: chat.partner.id,
+          partner_id: chat.partner.id,
           items: records.map do |record|
             {
+              author_id: record.author_id,
               id: record.id,
               created_at: record.created_at.iso8601,
               content: record.content,
@@ -95,9 +96,11 @@ module AI
           items.each_with_index do |message_params, index|
             content = message_params[:content] || message_params["content"]
             pending_message = PendingMessage.new(
-              author: chat.partner,
-              character: character,
+              author: source_message&.author || chat.character,
+              recipient: character,
               content:,
+              partner: chat.partner,
+              user: queue_user_for(character),
               source_message: source_message
             )
             pending_message.attachments.attach(blobs_by_message[index]) if blobs_by_message[index].any?
@@ -147,7 +150,11 @@ module AI
       end
 
       def available_characters_scope
-        current_user.characters.where(third_party: false).order(:id)
+        current_user.characters.third_party(false).order(:id)
+      end
+
+      def queue_user_for(character)
+        character.author
       end
 
       def available_characters

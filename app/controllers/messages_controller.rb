@@ -79,7 +79,7 @@ class MessagesController < ApplicationController
   def find_chat
     return unless params[:chat_id].present?
 
-    @chat ||= current_user.chats.visible_to_user.find_by(id: params[:chat_id])
+    @chat ||= current_user.chats.dreaming(false).find_by(id: params[:chat_id])
     head(:not_found) unless @chat
     head(:forbidden) if @chat && @chat.character != current_character
     head(:not_found) if @chat&.closed?
