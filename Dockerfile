@@ -4,9 +4,14 @@ ARG RUBY_VERSION=4.0.4
 ARG UV_VERSION=0.11.15
 
 FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
+FROM node:22-slim AS node
 
 FROM ruby:${RUBY_VERSION}-slim AS base
 COPY --from=uv /uv /uvx /usr/local/bin/
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
+    ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
 WORKDIR /rails
 
