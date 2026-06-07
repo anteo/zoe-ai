@@ -104,4 +104,8 @@ module ApplicationHelper
 
     safe_join(rendered)
   end
+
+  def pwa_manifest_href
+    pwa_manifest_path(format: :json, v: AI::VERSION)
+  end
 end

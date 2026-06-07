@@ -15,3 +15,9 @@ Turbo.StreamActions.close_modal = function () {
 TC.start({
   animationDuration: 200
 })
+
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker.register("/service-worker")
+//   })
+// }
