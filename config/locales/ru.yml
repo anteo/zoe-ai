@@ -137,8 +137,8 @@ ru:
   label_log_level_warn: Warn
   label_login: Вход
   label_logout: Выйти
-  label_memory_mode_off: Память выключена
-  label_memory_mode_on: Память включена
+  label_memory_mode_off: Память выкл.
+  label_memory_mode_on: Память вкл.ю
   label_memory_profile: Профиль памяти
   label_mcp_servers: MCP серверы
   label_mission_control: Mission Control

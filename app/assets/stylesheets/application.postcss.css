@@ -10,6 +10,19 @@
 @plugin "@iconify/tailwind4";
 
 @layer {
+    html,
+    body {
+        height: 100%;
+        overscroll-behavior-y: none;
+    }
+
+    :root {
+        --app-safe-top: max(env(safe-area-inset-top), 1rem);
+        --app-safe-right: max(env(safe-area-inset-right), 1rem);
+        --app-safe-bottom: max(env(safe-area-inset-bottom), 1rem);
+        --app-safe-left: max(env(safe-area-inset-left), 1rem);
+    }
+
     .input-ghost:hover, .textarea-ghost:hover {
         outline: color-mix(in oklab, var(--color-base-content) 40%, transparent) 1px dashed;
     }
@@ -27,6 +40,28 @@
 
     .has-error .validator-hint {
         visibility: visible;
+    }
+
+    .app-shell {
+        min-height: 100dvh;
+        overscroll-behavior: none;
+        padding: var(--app-safe-top) var(--app-safe-right) var(--app-safe-bottom) var(--app-safe-left);
+    }
+
+    .app-shell-fixed {
+        height: 100dvh;
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+
+    .app-shell-fill {
+        min-height: calc(100dvh - var(--app-safe-top) - var(--app-safe-bottom));
+        overscroll-behavior: none;
+    }
+
+    .app-scroll-region {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
     }
 }
 

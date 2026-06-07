@@ -1,11 +1,11 @@
-<div class="grid grid-rows-[auto_1fr_auto] h-screen gap-4 p-4 relative min-h-screen bg-base-200">
-  <header class="flex items-center gap-0.5 sm:gap-1 relative z-10">
+<div class="app-shell app-shell-fixed relative grid min-h-0 grid-rows-[auto_1fr_auto] gap-4 bg-base-200">
+  <header class="flex items-center relative z-10">
     <div class="flex-1 pl-2 shrink-0 min-w-fit">
       <%= image_tag "top_logo_dark.png", class: "logo-dark h-10 w-auto max-w-none", id: "logo-dark", alt: "" %>
       <%= image_tag "top_logo_light.png", class: "logo-light h-10 w-auto max-w-none", id: "logo-light", alt: "" %>
     </div>
 
-    <%= link_to new_chat_path, class: "btn btn-ghost", title: t(:label_new_conversation), aria: { label: t(:label_new_conversation) } do %>
+    <%= link_to new_chat_path, class: "btn btn-ghost btn-circle md:w-auto md:px-4", title: t(:label_new_conversation), aria: { label: t(:label_new_conversation) } do %>
       <span class="icon-[lucide--message-circle-plus]"></span>
       <span class="hidden md:inline"><%= t(:label_new_conversation) %></span>
     <% end %>
@@ -13,7 +13,7 @@
     <%= component :chats__history_drawer, current_chat_id: chat&.id %>
 
     <%= link_to characters_path,
-                class: "btn btn-ghost",
+                class: "btn btn-ghost btn-circle md:w-auto md:px-4",
                 title: t(:label_characters),
                 aria: { label: t(:label_characters) },
                 data: { turbo_stream: true } do %>
@@ -21,7 +21,7 @@
       <span class="hidden md:inline"><%= t(:label_characters) %></span>
     <% end %>
 
-    <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
+    <label class="swap swap-rotate btn btn-ghost btn-circle md:w-auto md:px-4">
       <input type="checkbox"
              class="theme-mode-controller"
              data-action="change->theme#toggle"

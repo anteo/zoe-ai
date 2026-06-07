@@ -4,19 +4,19 @@
       <h3 class="text-xl font-semibold tracking-tight"><%= group[:description] %></h3>
 
       <div class="overflow-x-auto rounded-box border border-base-300">
-        <table class="table table-zebra table-sm w-full table-fixed">
+        <table class="table table-zebra table-sm">
           <thead>
           <tr>
             <th><%= t(:label_content) %></th>
-            <th class="w-56"><%= t(:label_topic) %></th>
-            <th class="w-36"><%= t(:label_date_time) %></th>
+            <th><%= t(:label_topic) %></th>
+            <th><%= t(:label_date_time) %></th>
           </tr>
           </thead>
           <tbody>
           <% group[:facts].each do |fact| %>
             <tr>
               <td class="align-top leading-6"><%= fact.content %></td>
-              <td class="align-top font-medium break-words"><%= fact.topic %></td>
+              <td class="align-top font-medium"><%= fact.topic %></td>
               <td class="align-top">
                 <span class="inline-flex flex-col leading-tight">
                   <% if event_date(fact).present? %>
