@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/anteo/zoe-ai/compare/v1.3.1...v1.4.0) (2026-06-15)
+
+### Features
+
+* **docker:** add Node.js runtime for JavaScript execution ([2a07988](https://github.com/anteo/zoe-ai/commit/2a079889e9c9b4c5c3e9d06b7dbe41a6543e3db0))
+* **pwa:** enable PWA support with manifest, improve mobile layout ([271a86c](https://github.com/anteo/zoe-ai/commit/271a86c896915d0e587529a68e178df851078d67))
+
+### Bug Fixes
+
+* **ai:** add Gemini schema sanitization for OpenRouter provider ([6e58564](https://github.com/anteo/zoe-ai/commit/6e5856409365f3f94b16ae423434f8982983c2c7))
+* **ru:** correct typo ([85af074](https://github.com/anteo/zoe-ai/commit/85af07485bb927ff28ebed221f40d58d42bc667e))
+
 ## [1.3.1](https://github.com/anteo/zoe-ai/compare/v1.3.0...v1.3.1) (2026-06-05)
 
 ### Bug Fixes

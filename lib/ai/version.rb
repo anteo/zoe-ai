@@ -1,6 +1,6 @@
 module AI
   module Version
-    STRING = "1.3.1"
+    STRING = "1.4.0"
   end
 
   VERSION = Version::STRING
