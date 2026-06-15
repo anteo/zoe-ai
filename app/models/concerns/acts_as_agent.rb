@@ -5,7 +5,7 @@ module ActsAsAgent
   # Use this for agents that live entirely in the database (non-builtin).
   def chat(**kwargs)
     llm_chat = build_agent_chat(**kwargs)
-    configure_agent_chat(llm_chat)
+    configure_agent_chat(llm_chat, chat: kwargs[:chat])
     llm_chat
   end
 
@@ -17,17 +17,20 @@ module ActsAsAgent
     AI.chat(**opts.merge(kwargs))
   end
 
-  def configure_agent_chat(llm_chat)
+  def configure_agent_chat(llm_chat, chat: nil)
     llm_chat.with_instructions(instructions) if instructions.present?
     llm_chat.with_temperature(temperature) if temperature.present?
     if thinking_effort.present?
       llm_chat.with_thinking(effort: thinking_effort, budget: thinking_budget)
     end
-    tools = active_mcp_tools
+    tools = active_mcp_tools(chat:)
     llm_chat.with_tools(*tools) unless tools.empty?
   end
 
-  def active_mcp_tools
-    mcp_servers.active.flat_map(&:mcp_tools)
+  def active_mcp_tools(chat: nil)
+    tools = mcp_servers.active.flat_map(&:mcp_tools)
+    return tools unless chat.present?
+
+    AI.wrap_mcp_tools(chat, tools)
   end
 end

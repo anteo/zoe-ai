@@ -15,6 +15,10 @@ module AI
     []
   end
 
+  def wrap_mcp_tools(chat, tools)
+    Array.wrap(tools).map { |tool| AI::Tools::MCPProxy.new(chat, tool) }
+  end
+
   def reset_mcp_clients!
     return unless RubyLLM::MCP.instance_variable_defined?(:@clients)
 

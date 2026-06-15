@@ -60,7 +60,7 @@ module AI
 
           config = agent_config
           if config
-            mcp = config.mcp_servers.active.flat_map(&:mcp_tools)
+            mcp = AI.wrap_mcp_tools(runtime.chat, config.mcp_servers.active.flat_map(&:mcp_tools))
             tools_to_apply += mcp
           end
 
