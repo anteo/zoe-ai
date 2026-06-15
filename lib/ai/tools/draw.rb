@@ -54,6 +54,15 @@ module AI
         "#{width}x#{height}"
       end
 
+      def progress_payload(prompt: nil, **)
+        return if prompt.blank?
+
+        {
+          text: %(Drawing "#{prompt.to_s.truncate(120)}"),
+          icon: "icon-[lucide--image]"
+        }
+      end
+
       def execute(prompt:, aspect_ratio: "1:1", image_size: "2K", model: nil, attachment_ids: [])
         size = make_image_size(aspect_ratio, image_size)
 

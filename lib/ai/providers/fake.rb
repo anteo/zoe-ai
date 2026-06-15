@@ -1,4 +1,5 @@
 require "digest"
+require "securerandom"
 require "set"
 
 module AI
@@ -18,10 +19,35 @@ module AI
         "fake://local"
       end
 
-      def complete(messages, **)
-        sleep(1 + rand(5))
-
+      def complete(messages, tools: {}, **)
         input = last_user_input(messages)
+        request = fake_tool_request(input)
+        fake_tool_name = registered_fake_tool_name(tools)
+
+        if request && fake_tool_completed?(messages)
+          return RubyLLM::Message.new(
+            role: :assistant,
+            content: "Fake tool completed."
+          )
+        end
+
+        if request && fake_tool_name.present?
+          arguments = {}
+          arguments[:instructions] = request if request.present?
+          tool_call = RubyLLM::ToolCall.new(
+            id: SecureRandom.uuid,
+            name: fake_tool_name,
+            arguments:
+          )
+
+          return RubyLLM::Message.new(
+            role: :assistant,
+            content: nil,
+            tool_calls: { tool_call.id => tool_call }
+          )
+        end
+
+        sleep(1 + rand(5))
 
         RubyLLM::Message.new(
           role: :assistant,
@@ -48,7 +74,8 @@ module AI
       private
 
       def last_user_input(messages)
-        messages.reverse.find { it.role == :user }&.content.to_s
+        raw_input = messages.reverse.find { it.role == :user }&.content.to_s
+        Message.humanize_content(raw_input)
       end
 
       def response_text(messages, input)
@@ -71,6 +98,30 @@ module AI
 
         self.class.empty_once_keys << key
         ""
+      end
+
+      def fake_tool_request(input)
+        match = input.match(/\Afake_tool(?:\s+)?(.*)\z/m)
+        return unless match
+
+        match[1].to_s.strip
+      end
+
+      def fake_tool_completed?(messages)
+        trailing_messages(messages).any? do |message|
+          message.role == :tool && message.tool_call_id.present?
+        end
+      end
+
+      def registered_fake_tool_name(tools)
+        tools.find { |_, tool| tool.is_a?(AI::Tools::FakeTool) }&.first&.to_s
+      end
+
+      def trailing_messages(messages)
+        index = messages.rindex { it.role == :user }
+        return messages if index.nil?
+
+        messages[(index + 1)..] || []
       end
     end
   end

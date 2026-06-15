@@ -16,6 +16,16 @@ module AI
       chat.user
     end
 
+    def call(args)
+      normalized_args = normalize_args(args)
+      payload = progress_payload(**normalized_args)
+      broadcast_progress(payload) if payload.present?
+
+      super
+    ensure
+      clear_progress if payload.present?
+    end
+
     def execute(...)
       super
     rescue Failure => e
@@ -40,6 +50,32 @@ module AI
       else
         desc
       end
+    end
+
+    def progress_payload(**)
+      nil
+    end
+
+    private
+
+    def broadcast_progress(payload)
+      content = payload.is_a?(Hash) ? payload[:text].to_s : payload.to_s
+      icon = payload.is_a?(Hash) ? payload[:icon].to_s.presence : nil
+      return if content.blank?
+
+      Turbo::StreamsChannel.broadcast_update_to(
+        chat,
+        target: "tool-progress-slot-#{chat.id}",
+        content: Chats::ToolProgressComponent.new(chat:, text: content, icon:),
+      )
+    end
+
+    def clear_progress
+      Turbo::StreamsChannel.broadcast_update_to(
+        chat,
+        target: "tool-progress-slot-#{chat.id}",
+        content: "",
+      )
     end
   end
 end

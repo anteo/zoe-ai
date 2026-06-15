@@ -4,7 +4,7 @@ module AI
       agent_key :zoe
       chat_model ::Chat
       tools do
-        [
+        items = [
           Tools::EventSearch,
           Tools::Draw,
           Tools::ManagePostponedMessages,
@@ -12,6 +12,9 @@ module AI
           Tools::SetCharacterAvatar,
           Tools::ManageOwnInstructions
         ]
+
+        items << Tools::FakeTool if Rails.env.development?
+        items
       end
       instructions
     end
