@@ -37,7 +37,7 @@ gem "neighbor"
 gem "solid_queue"
 
 # AI and model tooling
-gem "ruby_llm"
+gem "ruby_llm", "~> 1.16.0"
 gem "ruby_llm-mcp", "~> 1.0"
 
 # Security and request middleware
