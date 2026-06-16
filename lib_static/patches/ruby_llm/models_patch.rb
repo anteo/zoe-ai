@@ -21,6 +21,10 @@ module Patches
           models + development_models(models)
         end
 
+        def fake_dev_model?(model)
+          model.id == FAKE_DEV_MODEL_ID && model.provider == FAKE_DEV_PROVIDER
+        end
+
         private
 
         def development_models(existing_models)
@@ -29,10 +33,6 @@ module Patches
 
           ::AI::Providers::Fake.new(::RubyLLM.config).list_models
         end
-
-        def fake_dev_model?(model)
-          model.id == FAKE_DEV_MODEL_ID && model.provider == FAKE_DEV_PROVIDER
-        end
       end
 
       def save_to_json(file = ::RubyLLM.config.model_registry_file)
@@ -40,9 +40,7 @@ module Patches
         File.write(file, JSON.pretty_generate(filtered_models.map(&:to_h)))
       end
 
-      private
-
-      delegate :fake_dev_model?, to: :class, private: true
+      delegate :fake_dev_model?, to: :class
     end
   end
 end
