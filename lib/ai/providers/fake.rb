@@ -101,7 +101,7 @@ module AI
       end
 
       def fake_tool_request(input)
-        match = input.match(/\Afake_tool(?:\s+)?(.*)\z/m)
+        match = input.match(/\Afake_tool(?:\s+(.*))?\z/m)
         return unless match
 
         match[1].to_s.strip
