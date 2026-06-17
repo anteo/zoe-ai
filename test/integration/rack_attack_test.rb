@@ -98,7 +98,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     get models_search_path, params: { q: "blocked" }
     assert_response :too_many_requests
 
-    10.times do
+    30.times do
       patch start_mcp_server_path(id: "999999")
       assert_not_equal 429, response.status
     end
@@ -131,7 +131,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     get mission_control_jobs_path
     assert_not_equal 429, response.status
 
-    10.times do
+    30.times do
       post "/admin/mission_control/app/applications/1/jobs/1/retry"
       assert_not_equal 429, response.status
     end
