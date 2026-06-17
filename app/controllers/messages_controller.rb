@@ -9,6 +9,7 @@ class MessagesController < ApplicationController
   def create
     content = RubyLLM::Content.new(message_params[:content], message_params[:attachments])
     memorize = message_params[:memorize] != "false"
+    tts_enabled = message_params[:tts_enabled] != "false"
     respond_delay = nil
 
     if chat.new_record?
@@ -18,14 +19,14 @@ class MessagesController < ApplicationController
       chat.save!
       chat.deliver_pending_messages!
       message = chat.add_message(role: :user, content:)
-      message.update_column(:memorize, chat.memorize)
+      message.update_columns(memorize: chat.memorize, tts_enabled:)
       respond_delay = 0.5.seconds
 
       redirect_to chat_path(chat)
     else
       chat.update_column(:memorize, memorize) if chat.memorize != memorize
       message = chat.add_message(role: :user, content:)
-      message.update_column(:memorize, chat.memorize)
+      message.update_columns(memorize: chat.memorize, tts_enabled:)
 
       stream = []
       stream << turbo_stream.before(
@@ -51,6 +52,7 @@ class MessagesController < ApplicationController
 
     message.destroy_later_messages
     message.update!(content: message_params[:content],
+                    tts_enabled: message_params[:tts_enabled] != "false",
                     facts_extracted: false)
 
     RespondJob.perform_later(chat, message.id)
@@ -69,6 +71,7 @@ class MessagesController < ApplicationController
     return head(:forbidden) unless message.user?
 
     message.destroy_later_messages
+    message.update_column(:tts_enabled, message_params[:tts_enabled] != "false") if message_params.key?(:tts_enabled)
     RespondJob.perform_later(chat, message.id)
 
     render_chat
@@ -99,6 +102,6 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:content, :memorize, attachments: [])
+    params.require(:message).permit(:content, :memorize, :tts_enabled, attachments: [])
   end
 end

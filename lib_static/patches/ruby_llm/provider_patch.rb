@@ -6,7 +6,7 @@ module Patches
       def speak(input, model:, voice: nil, **options)
         payload = render_speech_payload(input, model:, voice:, **options)
         response = @connection.post(speech_url(model:), payload)
-        parse_speech_response(response, model:)
+        parse_speech_response(response, model:).with_response_format(payload[:response_format]).normalized
       end
 
       private

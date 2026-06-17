@@ -2,7 +2,9 @@ module JobMissionControl
   extend ActiveSupport::Concern
 
   def execution
-    @execution ||= SolidQueue::ClaimedExecution.find_by(job_id: provider_job_id)
+    SolidQueue::ClaimedExecution.uncached do
+      SolidQueue::ClaimedExecution.find_by(job_id: provider_job_id)
+    end
   end
 
   class_methods do
@@ -56,7 +58,7 @@ module JobMissionControl
         execution.update(cancelled: true) unless execution.cancelled?
       end
 
-      get_queued_executions(model).each { it.job.discard }
+      get_queued_executions(model).each(&:discard)
     end
   end
 end

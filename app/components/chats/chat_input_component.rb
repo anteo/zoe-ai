@@ -6,5 +6,9 @@ module Chats
       @chat = chat
       @current_character = current_character
     end
+
+    def tts_available?
+      AI.tts_enabled?
+    end
   end
 end

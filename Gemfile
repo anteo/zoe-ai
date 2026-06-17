@@ -35,6 +35,7 @@ gem "omniauth-rails_csrf_protection"
 gem "mission_control-jobs"
 gem "neighbor"
 gem "solid_queue"
+gem "solid_cache"
 
 # AI and model tooling
 gem "ruby_llm", "~> 1.16.0"

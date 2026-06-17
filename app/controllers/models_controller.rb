@@ -27,6 +27,8 @@ class ModelsController < ApplicationController
       with_output(scope, "embeddings")
     when "image"
       with_output(scope, "image")
+    when "speech"
+      with_any_output(scope)
     else
       with_output(scope, "text")
     end
@@ -34,5 +36,9 @@ class ModelsController < ApplicationController
 
   def with_output(scope, output_kind)
     scope.where("modalities -> 'output' ? :output_kind", output_kind:)
+  end
+
+  def with_any_output(scope)
+    scope.where("modalities -> 'output' ? 'audio' OR modalities -> 'output' ? 'speech'")
   end
 end

@@ -86,7 +86,9 @@ class Chat < ApplicationRecord
   end
 
   def latest_user_message_id
-    messages.where(role: "user").reorder(id: :desc).limit(1).pick(:id)
+    self.class.uncached do
+      messages.where(role: "user").reorder(id: :desc).limit(1).pick(:id)
+    end
   end
 
   def latest_assistant_message_content
@@ -139,19 +141,19 @@ class Chat < ApplicationRecord
       return if dream?
 
       dream_chat = sibling_chats
-                       .dreaming(true)
-                       .closed
-                       .with_summary
-                       .where("closed_at <= ?", created_at || Time.current)
-                       .order(closed_at: :desc, created_at: :desc, id: :desc)
-                       .first
+        .dreaming(true)
+        .closed
+        .with_summary
+        .where("closed_at <= ?", created_at || Time.current)
+        .order(closed_at: :desc, created_at: :desc, id: :desc)
+        .first
       return unless dream_chat
 
       intervening_chat_exists = sibling_chats
-                                    .dreaming(false)
-                                    .where.not(id: id)
-                                    .where("created_at > ? AND created_at < ?", dream_chat.closed_at, created_at || Time.current)
-                                    .exists?
+        .dreaming(false)
+        .where.not(id: id)
+        .where("created_at > ? AND created_at < ?", dream_chat.closed_at, created_at || Time.current)
+        .exists?
       return if intervening_chat_exists
 
       dream_chat
@@ -240,6 +242,9 @@ class Chat < ApplicationRecord
 
   def prepare_content_for_storage(content)
     content_text, attachments, content_raw = super
+    if content_text.is_a?(String) && @message&.assistant?
+      @pending_tts_style = Message.extract_tts_style(content_text)
+    end
     content_text = Message.humanize_content(content_text) if content_text.is_a?(String)
     # Force attachments so persist_content is always called
     [ content_text, attachments || [], content_raw ]
@@ -249,8 +254,13 @@ class Chat < ApplicationRecord
     super
 
     return unless @message&.assistant?
+
+    @message.update_column(:tts_style, @pending_tts_style)
+
     return if @message.valid_assistant_completion?
 
     raise AI::EmptyAssistantResponseError
+  ensure
+    @pending_tts_style = nil
   end
 end

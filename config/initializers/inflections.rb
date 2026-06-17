@@ -21,4 +21,5 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym "MCP"
   inflect.acronym "ERB"
   inflect.acronym "UI"
+  inflect.acronym "TTS"
 end

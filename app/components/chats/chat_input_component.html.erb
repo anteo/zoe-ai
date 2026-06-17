@@ -1,7 +1,9 @@
 <div id="chat-input"
-     data-controller="chat-input"
+     data-controller="chat-input tts-state"
+     data-action="tts-state:disabled->chat-input#handleTtsDisabled"
      data-chat-input-chat-id-value="<%= chat.id %>"
-     data-chat-input-memorize-mode-value="<%= chat.memorize %>">
+     data-chat-input-memorize-mode-value="<%= chat.memorize %>"
+     data-tts-state-mode-value="false">
   <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "w-full", multipart: true,
                data: { action: "submit->chat-input#handleSubmit turbo:submit-end->chat-input#handleSubmitEnd" } do |f| %>
     <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 bg-base-100 border-base-200 shadow-sm">
@@ -24,6 +26,17 @@
             <%= content_tag :span, '', class: "icon-[lucide--paperclip] w-4 h-4" %>
             <%= f.file_field :attachments, multiple: true, class: "hidden",
                 data: { action: "change->chat-input#displayAttachments", chat_input_target: "fileInput" } %>
+          <% end %>
+          <%= f.hidden_field :tts_enabled, value: "false", data: { tts_state_target: "field" } %>
+          <% if tts_available? %>
+            <button type="button"
+                    class="<%= helpers.class_names('btn btn-circle btn-sm',
+                                                   'btn-ghost opacity-50') %>"
+                    data-tts-state-target="button"
+                    data-action="click->tts-state#toggle"
+                    aria-label="<%= t(:label_tts) %>">
+              <span class="icon-[lucide--volume-x] w-4 h-4" data-tts-state-target="icon"></span>
+            </button>
           <% end %>
           <button type="button"
                   class="btn btn-ghost btn-sm gap-2"

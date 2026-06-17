@@ -28,6 +28,7 @@ import AutocompleteController from "./autocomplete_controller"
 import MissionControlLinkController from "./mission_control_link_controller"
 import DatatableController from "./datatable_controller"
 import DatatableFiltersController from "./datatable_filters_controller"
+import TtsStateController from "./tts_state_controller"
 
 application.register("hello", HelloController)
 application.register("chat", ChatController)
@@ -54,3 +55,4 @@ application.register("autocomplete", AutocompleteController)
 application.register("mission-control-link", MissionControlLinkController)
 application.register("datatable", DatatableController)
 application.register("datatable-filters", DatatableFiltersController)
+application.register("tts-state", TtsStateController)

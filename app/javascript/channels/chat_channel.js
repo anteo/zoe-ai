@@ -18,6 +18,10 @@ function createChatSubscription(chatId, callbacks = {}) {
         window.location.href = "/"
       } else if (data.type === "memorize_updated" && callbacks.onMemorizeUpdated) {
         callbacks.onMemorizeUpdated(Boolean(data.memorize))
+      } else if (data.type === "tts_audio" && callbacks.onTtsAudio) {
+        callbacks.onTtsAudio(data)
+      } else if (data.type === "tts_stop" && callbacks.onTtsStop) {
+        callbacks.onTtsStop()
       }
     },
 
@@ -27,6 +31,10 @@ function createChatSubscription(chatId, callbacks = {}) {
 
     updateMemorize: function (memorize) {
       this.perform('update_memorize', {memorize})
+    },
+
+    stopTts: function () {
+      this.perform('stop_tts')
     }
   });
 }

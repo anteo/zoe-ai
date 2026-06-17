@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   end
 
   get "models/search", to: "models#search", as: :models_search
+  get "tts_audio/:token", to: "tts_audio#show", as: :tts_audio
 
   resources :chats, only: [:show, :new, :destroy] do
     collection do

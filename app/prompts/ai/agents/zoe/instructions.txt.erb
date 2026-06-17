@@ -84,6 +84,9 @@ end
 
 xml.instructions do
   xml.text! chat.partner_conversation_instructions.to_s
+  if AI.tts_allowed_styles.any?
+    xml.text! "\nIf you want this reply to be spoken in a style, start the message with exactly one allowed tag at the very beginning, such as #{AI.tts_style_examples.join(', ')}. Leave the rest of the reply as normal text.\n"
+  end
   if Rails.env.development?
     extra_instructions = ENV["ZOE_EXTRA_INSTRUCTIONS"].to_s.strip
     if extra_instructions.present?

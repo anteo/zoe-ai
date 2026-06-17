@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_200033) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_17_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -218,6 +218,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_200033) do
     t.text "thinking_text"
     t.integer "thinking_tokens"
     t.bigint "tool_call_id"
+    t.boolean "tts_enabled", default: false, null: false
+    t.string "tts_style"
     t.datetime "updated_at", null: false
     t.index ["character_id"], name: "index_messages_on_character_id"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
@@ -276,6 +278,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_200033) do
     t.datetime "updated_at", null: false
     t.string "value"
     t.index ["scope", "key"], name: "index_settings_on_scope_and_key", unique: true
+  end
+
+  create_table "solid_cache_entries", force: :cascade do |t|
+    t.integer "byte_size", null: false
+    t.datetime "created_at", null: false
+    t.binary "key", null: false
+    t.bigint "key_hash", null: false
+    t.binary "value", null: false
+    t.index ["byte_size"], name: "index_solid_cache_entries_on_byte_size"
+    t.index ["key_hash", "byte_size"], name: "index_solid_cache_entries_on_key_hash_and_byte_size"
+    t.index ["key_hash"], name: "index_solid_cache_entries_on_key_hash", unique: true
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|

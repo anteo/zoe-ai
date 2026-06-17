@@ -34,6 +34,23 @@ module AI
     RubyLLM::Embedding.embed(...)
   end
 
+  def speak(...)
+    AI::Speech.speak(...)
+  end
+
+  def tts_enabled?
+    Setting.ai.models.default_tts_model.present? &&
+      Setting.ai.tts.voice.present?
+  end
+
+  def tts_allowed_styles
+    Setting.ai.tts.allowed_styles.to_s.split(",").map { it.strip.downcase }.reject(&:blank?)
+  end
+
+  def tts_style_examples
+    tts_allowed_styles.map { "[[#{it}]]" }
+  end
+
   def paint(prompt, with: nil, mask: nil, params: {}, model: nil,
             provider: nil,
             assume_model_exists: false,

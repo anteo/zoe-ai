@@ -26,8 +26,9 @@ Rails.application.configure do
     config.action_controller.perform_caching = false
   end
 
-  # Change to :null_store to avoid any caching.
-  config.cache_store = :memory_store
+  # Use Solid Cache in the primary database so background jobs and web
+  # requests can exchange transient TTS payloads during local development.
+  config.cache_store = :solid_cache_store
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

@@ -1,9 +1,7 @@
-class TypeSentenceJob < ApplicationJob
-  include JobChatSupport
-
+class TypeSentenceJob < ChatTriggeredJob
   limits_concurrency key: ->(chat, *) { "type_sentence_#{chat.id}" }
 
-  def perform(chat, message, chunks, trigger_message_id, first = false)
+  def run(message, chunks, first = false)
     return if chunks.empty?
 
     show_message_placeholder(chat) unless first
@@ -11,7 +9,7 @@ class TypeSentenceJob < ApplicationJob
     chunk = chunks.shift
 
     sleep 1 + chunk.length / 50
-    return if execution&.cancelled? || chat.stale_trigger_message?(trigger_message_id)
+    return if cancelled?
 
     display_message = message.dup
     display_message.created_at = message.created_at
@@ -23,6 +21,7 @@ class TypeSentenceJob < ApplicationJob
 
     show_message_placeholder(chat) if RespondJob.running_for?(chat)
 
-    TypeSentenceJob.perform_later(chat, message, chunks, trigger_message_id, false) if chunks.any?
+    SpeakMessageJob.perform_later(chat, trigger_message_id, message, chunk.to_s) if AI.tts_enabled? && message.tts_enabled?
+    TypeSentenceJob.perform_later(chat, trigger_message_id, message, chunks, false) if chunks.any?
   end
 end

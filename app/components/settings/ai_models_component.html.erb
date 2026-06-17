@@ -9,4 +9,7 @@
   <%= f.input :default_image_model,
               as: :autocomplete,
               url: helpers.models_search_path(kind: "image") %>
+  <%= f.input :default_tts_model,
+              as: :autocomplete,
+              url: helpers.models_search_path(kind: "speech") %>
 </div>

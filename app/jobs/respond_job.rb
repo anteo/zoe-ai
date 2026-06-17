@@ -1,6 +1,4 @@
-class RespondJob < ApplicationJob
-  include JobChatSupport
-
+class RespondJob < ChatTriggeredJob
   retry_on AI::EmptyAssistantResponseError, wait: 0.seconds, attempts: 4 do |job, error|
     chat = job.arguments.first
     job.broadcast_error(chat, error.message)
@@ -9,8 +7,8 @@ class RespondJob < ApplicationJob
   limits_concurrency to: 1,
                      key: ->(chat, *) { "respond_chat_#{chat.id}" }
 
-  def perform(chat, trigger_message_id)
-    return if chat.stale_trigger_message?(trigger_message_id)
+  def run
+    return if cancelled?
 
     ensure_chat_model!(chat)
     show_message_placeholder(chat) if executions == 1
@@ -18,7 +16,7 @@ class RespondJob < ApplicationJob
 
     ai_chat.after_message do
       message = ai_chat.message
-      schedule_message(chat, message, trigger_message_id) if message.assistant?
+      schedule_message(message) if message.assistant?
     end.complete
   rescue AI::EmptyAssistantResponseError
     raise
@@ -42,8 +40,8 @@ class RespondJob < ApplicationJob
     nil
   end
 
-  def schedule_message(chat, message, trigger_message_id)
-    if execution.cancelled? || chat.stale_trigger_message?(trigger_message_id)
+  def schedule_message(message)
+    if cancelled?
       message.destroy
       return
     end
@@ -55,7 +53,7 @@ class RespondJob < ApplicationJob
     )
 
     chunks = AI::SentenceSplitter.new(message.content).chunks
-    TypeSentenceJob.perform_later(chat, message, chunks, trigger_message_id, true)
+    TypeSentenceJob.perform_later(chat, trigger_message_id, message, chunks, true)
     ExtractFactsJob.perform_later(chat)
   end
 end

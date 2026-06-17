@@ -36,6 +36,7 @@ SimpleForm.setup do |config|
       ba.use :label, class: "label p-0 m-0"
       ba.use :hint, wrap_with: hint_wrap.dup
     end
+    b.use :description, wrap_with: description_wrap.dup
     b.use :input, class: "textarea validator w-full", error_class: "textarea-error"
     b.use :error, wrap_with: error_wrap.dup
   end

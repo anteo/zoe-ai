@@ -1,12 +1,12 @@
-class StopTypingJob < ApplicationJob
-  include JobChatSupport
-
-  def perform(chat, trigger_message_id = nil)
-    return if chat.stale_trigger_message?(trigger_message_id)
+class StopTypingJob < ChatTriggeredJob
+  def run
+    return if cancelled?
 
     remove_message_placeholder(chat)
+    broadcast_tts_stop(chat)
 
     TypeSentenceJob.cancel(chat)
+    SpeakMessageJob.cancel(chat)
     RespondJob.cancel(chat)
   end
 end

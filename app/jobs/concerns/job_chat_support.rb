@@ -27,6 +27,14 @@ module JobChatSupport
     remove_message_placeholder(message.chat)
   end
 
+  def broadcast_tts_audio(chat, payload)
+    ChatChannel.broadcast_to(chat, payload.merge(type: "tts_audio"))
+  end
+
+  def broadcast_tts_stop(chat)
+    ChatChannel.broadcast_to(chat, type: "tts_stop")
+  end
+
   def remove_message_placeholder(chat)
     Turbo::StreamsChannel.broadcast_update_to(
       chat,

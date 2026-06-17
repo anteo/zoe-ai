@@ -4,6 +4,7 @@ class AutocompleteInput < SimpleForm::Inputs::Base
     input_html_options[:data] ||= {}
     input_html_options[:data][:autocomplete_target] = "input"
     input_html_options[:value] ||= @builder.object.public_send(attribute_name)
+    placeholder
 
     opts = wrapper_options || {}
 

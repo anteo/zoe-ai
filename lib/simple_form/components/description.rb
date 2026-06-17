@@ -19,13 +19,11 @@ module SimpleForm
       end
 
       def translated_description
-        translated = if object.class.respond_to?(:scope_path) && object.class.scope_path.present?
-          I18n.t("simple_form.descriptions.#{object.class.scope_path}.#{attribute_name}", default: "")
+        if object.class.respond_to?(:scope_path) && object.class.scope_path.present?
+          I18n.t("simple_form.descriptions.#{object.class.scope_path}.#{attribute_name}", default: nil)
         elsif respond_to?(:translate_from_namespace, true)
           translate_from_namespace(:descriptions)
         end
-
-        translated.presence
       end
     end
   end

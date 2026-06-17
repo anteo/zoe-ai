@@ -177,6 +177,7 @@ en:
   label_settings_agents: Agents
   label_settings_ai_models: Models
   label_settings_ai_providers: Providers
+  label_settings_ai_tts: Voice
   label_settings_app: System
   label_settings_events: Memory & Events
   label_settings_mailer: Email
@@ -199,6 +200,7 @@ en:
   label_time_present: Present
   label_time_zone: Time zone
   label_token_usage: Tokens
+  label_tts: Voice
   label_topic: Topic
   label_unshare_character: Unshare character
   label_unlock_instructions: Resend unlock instructions
@@ -220,6 +222,10 @@ en:
         default_embedding_model: Default embedding model
         default_image_model: Default image model
         default_model: Default model
+        default_tts_model: Default TTS model
+      tts:
+        allowed_styles: Allowed voice styles
+        voice: Voice
       providers:
         anthropic:
           api_key: Anthropic API Key

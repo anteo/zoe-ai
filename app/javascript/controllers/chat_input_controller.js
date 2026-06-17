@@ -12,6 +12,7 @@ export default class extends Controller {
 
   connect() {
     this.submitting = false
+    this.ttsRunId = 0
 
     if (this.textInputTarget) {
       this.textInputTarget.focus()
@@ -39,6 +40,7 @@ export default class extends Controller {
     if (this.subscription) {
       this.subscription.unsubscribe()
     }
+    this.stopTtsPlayback()
   }
 
   toggleMemorize() {
@@ -62,7 +64,9 @@ export default class extends Controller {
     if (!this.chatIdValue) return
 
     this.subscription = createChatSubscription(this.chatIdValue, {
-      onMemorizeUpdated: (memorize) => this.setMemorizeMode(memorize, false)
+      onMemorizeUpdated: (memorize) => this.setMemorizeMode(memorize, false),
+      onTtsAudio: (data) => this.queueTtsAudio(data),
+      onTtsStop: () => this.stopTtsPlayback()
     })
   }
 
@@ -76,6 +80,8 @@ export default class extends Controller {
   }
 
   handleTyping() {
+    this.stopTtsPlayback()
+
     if (!this.subscription) {
       return
     }
@@ -141,6 +147,126 @@ export default class extends Controller {
     const active = this.hasContent()
     this.sendButtonTarget.classList.toggle("btn-default", !active)
     this.sendButtonTarget.classList.toggle("btn-success", active)
+  }
+
+  handleTtsDisabled() {
+    this.stopTtsPlayback()
+
+    if (this.subscription) {
+      this.subscription.stopTts()
+    }
+  }
+
+  ttsEnabled() {
+    const field = this.element.querySelector('input[name="message[tts_enabled]"]')
+    return field?.value === "true"
+  }
+
+  queueTtsAudio(data) {
+    if (!this.ttsEnabled() || !data?.token || !data?.mime_type) return
+
+    this.ttsQueue = this.ttsQueue || []
+    this.ttsQueue.push({
+      token: data.token,
+      mimeType: data.mime_type,
+      messageId: data.message_id
+    })
+
+    if (!this.ttsPlaying && !this.ttsLoading) {
+      this.playNextTtsAudio()
+    }
+  }
+
+  playNextTtsAudio() {
+    this.ttsQueue = this.ttsQueue || []
+    if (this.ttsPlaying || this.ttsLoading || this.ttsQueue.length === 0) return
+
+    const item = this.ttsQueue.shift()
+    const runId = this.ttsRunId
+
+    this.loadTtsAudio(item, runId)
+  }
+
+  async loadTtsAudio(item, runId) {
+    this.ttsLoading = true
+    try {
+      const response = await fetch(`/tts_audio/${encodeURIComponent(item.token)}?mime_type=${encodeURIComponent(item.mimeType)}`, {
+        credentials: "same-origin"
+      }).catch(() => null)
+
+      if (!response || !response.ok || runId !== this.ttsRunId) {
+        return
+      }
+
+      const blob = await response.blob()
+      const mimeType = blob.type || item.mimeType
+      const probe = document.createElement("audio")
+      if (probe.canPlayType(mimeType) === "") {
+        return
+      }
+
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+
+      if (runId !== this.ttsRunId) {
+        URL.revokeObjectURL(url)
+        return
+      }
+
+      this.ttsPlaying = audio
+      this.ttsObjectUrl = url
+
+      audio.addEventListener("ended", () => this.finishTtsAudio(audio, url, runId), {once: true})
+      audio.addEventListener("error", () => this.finishTtsAudio(audio, url, runId), {once: true})
+
+      const playback = audio.play()
+      if (playback?.catch) {
+        playback.catch(() => this.finishTtsAudio(audio, url, runId))
+      }
+    } catch (_error) {
+      // Ignore playback fetch/decoding errors and continue with the queue.
+    } finally {
+      this.ttsLoading = false
+      this.playNextTtsAudio()
+    }
+  }
+
+  finishTtsAudio(audio, url, runId) {
+    if (runId !== this.ttsRunId) {
+      URL.revokeObjectURL(url)
+      return
+    }
+
+    this.ttsLoading = false
+
+    if (this.ttsPlaying === audio) {
+      this.ttsPlaying = null
+    }
+
+    if (this.ttsObjectUrl === url) {
+      this.ttsObjectUrl = null
+    }
+
+    URL.revokeObjectURL(url)
+    this.playNextTtsAudio()
+  }
+
+  stopTtsPlayback() {
+    this.ttsRunId = (this.ttsRunId || 0) + 1
+    this.ttsLoading = false
+    this.ttsQueue = this.ttsQueue || []
+    this.ttsQueue.length = 0
+
+    if (this.ttsPlaying) {
+      this.ttsPlaying.pause()
+      this.ttsPlaying.src = ""
+      this.ttsPlaying = null
+    }
+
+    if (this.ttsObjectUrl) {
+      URL.revokeObjectURL(this.ttsObjectUrl)
+      this.ttsObjectUrl = null
+    }
   }
 
   async displayAttachments(event) {

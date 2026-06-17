@@ -1,5 +1,12 @@
 <div class="chat-bubble <%= bubble_color %> flex flex-col gap-2 p-2 hidden" data-message-target="edit">
-  <%= simple_form_for message, html: { class: "contents" } do |f| %>
+  <%= simple_form_for message,
+        html: {
+          class: "contents",
+          data: {
+            controller: "tts-state",
+            action: "submit->tts-state#sync"
+          }
+        } do |f| %>
     <%= f.input :content,
           as: :text,
           label: false,
@@ -9,6 +16,7 @@
             rows: 3,
             data: { message_target: "textarea" }
           } %>
+    <%= f.hidden_field :tts_enabled, value: "false", data: { tts_state_target: "field" } %>
     <div class="flex gap-2 justify-end">
       <button type="button" class="btn btn-sm btn-outline outline-none"
               data-action="click->message#cancelEdit"><%= t(:label_cancel) %></button>

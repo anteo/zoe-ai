@@ -9,7 +9,7 @@ class Message < ApplicationRecord
   belongs_to :initiator, class_name: "Character", optional: true
 
   before_save :set_character
-  before_create :inherit_memorize
+  before_create :inherit_user_message_settings
   after_commit :append_chat_history_message_metadata, on: [ :create, :update ]
   after_destroy_commit :refresh_chat_history_message_metadata
 
@@ -24,7 +24,22 @@ class Message < ApplicationRecord
   scope :history_visible, -> { where(role: %w[user assistant error]).where.not(content: [ nil, "" ]) }
 
   def self.humanize_content(content)
-    content.gsub(/\n*\((?:files attached|sent at): .*?\)/m, "").rstrip
+    text = content.to_s.gsub(/\n*\((?:files attached|sent at): .*?\)/m, "")
+    if (styles = AI.tts_allowed_styles).any?
+      text = text.gsub(/\[\[(?:#{Regexp.union(styles).source})\]\]\s*/i, "")
+    end
+    text.rstrip
+  end
+
+  def self.extract_tts_style(content)
+    styles = AI.tts_allowed_styles
+    return if styles.blank?
+
+    pattern = /\A\[\[(?<style>#{Regexp.union(styles).source})\]\]\s*/i
+    match = content.to_s.match(pattern)
+    return unless match
+
+    match[:style]
   end
 
   def user?
@@ -111,10 +126,11 @@ class Message < ApplicationRecord
     content.is_a?(RubyLLM::Content) ? content.text.to_s : content.to_s
   end
 
-  def inherit_memorize
+  def inherit_user_message_settings
     return if user? || error?
     last_user_message = chat.messages.where(role: "user").last
     self.memorize = last_user_message.nil? || last_user_message.memorize
+    self.tts_enabled = last_user_message.present? && last_user_message.tts_enabled?
   end
 
   def set_character

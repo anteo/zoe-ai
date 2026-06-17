@@ -177,6 +177,7 @@ ru:
   label_settings_agents: Агенты
   label_settings_ai_models: Модели
   label_settings_ai_providers: Провайдеры
+  label_settings_ai_tts: Голос
   label_settings_app: Система
   label_settings_events: Память и события
   label_settings_mailer: Почта
@@ -199,6 +200,7 @@ ru:
   label_time_present: Настоящее
   label_time_zone: Часовой пояс
   label_token_usage: Токены
+  label_tts: Голос
   label_topic: Тема
   label_unshare_character: Убрать персонажа
   label_unlock_instructions: Повторить разблокировку
@@ -220,6 +222,10 @@ ru:
         default_embedding_model: Модель эмбеддингов по умолчанию
         default_image_model: Модель изображений по умолчанию
         default_model: Модель по умолчанию
+        default_tts_model: Модель TTS по умолчанию
+      tts:
+        allowed_styles: Разрешённые стили голоса
+        voice: Голос
       providers:
         anthropic:
           api_key: API-ключ Anthropic

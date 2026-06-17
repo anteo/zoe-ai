@@ -22,6 +22,7 @@ class Setting < ApplicationRecord
       setting :default_model, :string
       setting :default_embedding_model, :string
       setting :default_image_model, :string
+      setting :default_tts_model, :string
 
       validates :default_model, presence: true
     end
@@ -75,6 +76,11 @@ class Setting < ApplicationRecord
         setting :region, :string
         setting :session_token, :string
       end
+    end
+
+    scope :tts do
+      setting :allowed_styles, :string
+      setting :voice, :string
     end
   end
 

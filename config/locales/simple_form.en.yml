@@ -4,6 +4,9 @@ en:
       ai:
         debug: Enables verbose RubyLLM and system logging for AI requests and tool activity.
         request_timeout: Maximum number of seconds to wait for an AI provider response before the request is treated as failed.
+        tts:
+          allowed_styles: "Comma-separated voice styles Zoe may tag in replies with leading brackets like: shy, friendly, excited."
+          voice: Voice name used when generating Zoe audio.
       events:
         maximum_count: Maximum number of remembered events Zoe includes when summarizing a character's time-bound memories across all periods.
         period_limit: Maximum number of events shown inside a single period group, such as Today, Last 3 months, or Later.
@@ -13,6 +16,7 @@ en:
         daily_dreaming_enabled: Run a dream every day for this character's existing chat pairs, even if no real conversation happened yesterday.
       models:
         default_model: Default chat model used by Zoe and agents unless a more specific model is configured for that agent.
+        default_tts_model: Default text-to-speech model used for Zoe audio playback.
       ui:
         admin_console_lines: How many recent log lines to load in the admin console window.
         datatable_per_page: How many rows each datatable page should render by default.
@@ -34,6 +38,7 @@ en:
         default_embedding_model: Choose model...
         default_image_model: Choose model...
         default_model: Choose model...
+        default_tts_model: Choose model...
     required:
       mark: "*"
       text: required
