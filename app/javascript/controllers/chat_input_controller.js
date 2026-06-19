@@ -2,7 +2,7 @@ import {Controller} from "@hotwired/stimulus"
 import {createChatSubscription} from "../channels/chat_channel"
 
 export default class extends Controller {
-  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton", "memorizeButton", "memorizeField", "memorizeIcon", "memorizeLabel"]
+  static targets = ["attachmentsPreview", "attachmentTemplate", "textInput", "fileInput", "sendButton", "memorizeButton", "memorizeField", "memorizeIcon", "memorizeTooltip"]
   static values = {
     chatId: Number,
     memorizeMode: {type: Boolean, default: true}
@@ -13,6 +13,7 @@ export default class extends Controller {
   connect() {
     this.submitting = false
     this.ttsRunId = 0
+    this.ttsPlaybackActive = false
 
     if (this.textInputTarget) {
       this.textInputTarget.focus()
@@ -49,15 +50,28 @@ export default class extends Controller {
 
   applyMemorizeState() {
     if (!this.hasMemorizeButtonTarget || !this.hasMemorizeFieldTarget) return
+    const label = this.memorizeModeValue
+      ? "labelMemoryModeOn"
+      : "labelMemoryModeOff"
+    const tooltipText = this.memorizeModeValue
+      ? this.memorizeButtonTarget.dataset.labelMemoryModeOn
+      : this.memorizeButtonTarget.dataset.labelMemoryModeOff
+
     this.memorizeFieldTarget.value = this.memorizeModeValue ? "true" : "false"
     this.memorizeButtonTarget.classList.toggle("opacity-40", !this.memorizeModeValue)
     this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark]", this.memorizeModeValue)
     this.memorizeIconTarget.classList.toggle("icon-[lucide--bookmark-off]", !this.memorizeModeValue)
-    if (this.hasMemorizeLabelTarget) {
-      this.memorizeLabelTarget.textContent = this.memorizeModeValue
-        ? this.memorizeLabelTarget.dataset.labelOn
-        : this.memorizeLabelTarget.dataset.labelOff
+    if (this.hasMemorizeTooltipTarget) {
+      this.memorizeTooltipTarget.dataset.floatingTooltipContentValue = tooltipText
+      this.memorizeTooltipTarget.dispatchEvent(new CustomEvent("floating-tooltip:update", {
+        bubbles: false,
+        detail: {
+          text: tooltipText
+        }
+      }))
     }
+
+    this.memorizeButtonTarget.setAttribute("aria-label", this.memorizeButtonTarget.dataset[label])
   }
 
   subscribeToChatChannel() {
@@ -157,6 +171,28 @@ export default class extends Controller {
     }
   }
 
+  handleVoiceSpeech() {
+    this.stopTtsPlayback()
+
+    if (this.subscription) {
+      this.subscription.userTyping()
+      this.subscription.stopTts()
+    }
+  }
+
+  handleVoiceTranscript(event) {
+    const transcript = event.detail?.text?.trim()
+    if (!transcript) return
+
+    const current = this.textInputTarget.value.trim()
+    this.textInputTarget.value = current ? `${current} ${transcript}` : transcript
+    this.textInputTarget.dispatchEvent(new Event("input", { bubbles: true }))
+
+    if (!this.submitting && this.hasContent()) {
+      this.textInputTarget.closest("form")?.requestSubmit(this.sendButtonTarget)
+    }
+  }
+
   ttsEnabled() {
     const field = this.element.querySelector('input[name="message[tts_enabled]"]')
     return field?.value === "true"
@@ -223,6 +259,8 @@ export default class extends Controller {
       if (playback?.catch) {
         playback.catch(() => this.finishTtsAudio(audio, url, runId))
       }
+
+      this.setTtsPlaybackActive(true)
     } catch (_error) {
       // Ignore playback fetch/decoding errors and continue with the queue.
     } finally {
@@ -248,6 +286,7 @@ export default class extends Controller {
     }
 
     URL.revokeObjectURL(url)
+    this.setTtsPlaybackActive(false)
     this.playNextTtsAudio()
   }
 
@@ -267,6 +306,16 @@ export default class extends Controller {
       URL.revokeObjectURL(this.ttsObjectUrl)
       this.ttsObjectUrl = null
     }
+
+    this.setTtsPlaybackActive(false)
+  }
+
+  setTtsPlaybackActive(active) {
+    const nextValue = Boolean(active)
+    if (this.ttsPlaybackActive === nextValue) return
+
+    this.ttsPlaybackActive = nextValue
+    this.element.dispatchEvent(new CustomEvent(`tts-playback:${nextValue ? "started" : "stopped"}`, { bubbles: true }))
   }
 
   async displayAttachments(event) {

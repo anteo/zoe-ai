@@ -5,6 +5,7 @@
   "version": "1.4.0",
   "dependencies": {
     "@codemirror/commands": "^6.10.3",
+    "@floating-ui/dom": "^1.7.4",
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/language": "^6.12.3",
     "@codemirror/state": "^6.6.0",

@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
   get "models/search", to: "models#search", as: :models_search
   get "tts_audio/:token", to: "tts_audio#show", as: :tts_audio
+  post "transcription", to: "chat_transcriptions#create", as: :voice_transcription
 
   resources :chats, only: [:show, :new, :destroy] do
     collection do

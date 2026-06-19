@@ -78,6 +78,26 @@ module AI
         }.deep_merge(params)
       end
 
+      def transcribe(audio_file, model:, language:, **options)
+        attachment = RubyLLM::Attachment.new(audio_file)
+
+        raise RubyLLM::UnsupportedAttachmentError, attachment.mime_type unless transcription_attachment?(attachment)
+
+        payload = {
+          model: model,
+          input_audio: {
+            data: attachment.encoded,
+            format: attachment.format
+          },
+          language: language,
+          provider: options[:provider],
+          temperature: options[:temperature]
+        }.compact
+
+        response = @connection.post("audio/transcriptions", payload)
+        parse_transcription_response(response, model:)
+      end
+
       def render_payload(messages, tools:, temperature:, model:, stream: false, schema: nil,
                          thinking: nil, tool_prefs: nil)
         payload = super
@@ -97,6 +117,14 @@ module AI
 
       def gemini_model?(model)
         model.id.to_s.start_with?("google/")
+      end
+
+      def transcription_attachment?(attachment)
+        return true if attachment.audio?
+
+        # Browser MediaRecorder commonly stores audio-only recordings in a WebM
+        # container that Marcel reports as video/webm.
+        %w[webm mp4 m4a ogg wav mp3 mpeg].include?(attachment.format)
       end
 
       def sanitize_tool_schema(tool)

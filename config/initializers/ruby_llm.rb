@@ -27,6 +27,7 @@ Rails.application.config.to_prepare do
       config.default_model = cfg.models.default_model
       config.default_embedding_model = cfg.models.default_embedding_model
       config.default_image_model = cfg.models.default_image_model
+      config.default_transcription_model = cfg.models.default_transcription_model
       config.default_tts_model = cfg.models.default_tts_model
       config.request_timeout = cfg.request_timeout
 

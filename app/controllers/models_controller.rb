@@ -27,6 +27,8 @@ class ModelsController < ApplicationController
       with_output(scope, "embeddings")
     when "image"
       with_output(scope, "image")
+    when "transcription"
+      with_output(scope, "transcription")
     when "speech"
       with_any_output(scope)
     else

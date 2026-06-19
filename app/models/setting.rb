@@ -22,6 +22,7 @@ class Setting < ApplicationRecord
       setting :default_model, :string
       setting :default_embedding_model, :string
       setting :default_image_model, :string
+      setting :default_transcription_model, :string
       setting :default_tts_model, :string
 
       validates :default_model, presence: true
@@ -78,9 +79,18 @@ class Setting < ApplicationRecord
       end
     end
 
-    scope :tts do
+    scope :voice do
+      setting :analyser_fft_size, :integer, default: 2048
       setting :allowed_styles, :string
+      setting :recorder_timeslice_ms, :integer, default: 250
+      setting :silence_delay_ms, :integer, default: 1500
+      setting :silence_rms_threshold, :float, default: 0.05
       setting :voice, :string
+
+      validates :analyser_fft_size, numericality: { greater_than: 0 }, allow_nil: true
+      validates :recorder_timeslice_ms, numericality: { greater_than: 0 }, allow_nil: true
+      validates :silence_delay_ms, numericality: { greater_than: 0 }, allow_nil: true
+      validates :silence_rms_threshold, numericality: { greater_than: 0 }, allow_nil: true
     end
   end
 

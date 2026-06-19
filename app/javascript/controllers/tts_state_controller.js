@@ -1,8 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["button", "field", "icon"]
+  static targets = ["button", "field", "icon", "tooltip"]
   static values = {
+    disabledTooltip: String,
+    enabledTooltip: String,
     mode: { type: Boolean, default: false },
     storageKey: { type: String, default: "zoe:tts-enabled" }
   }
@@ -25,7 +27,6 @@ export default class extends Controller {
   }
 
   sync() {
-    this.loadPersistedMode()
     const value = this.modeValue ? "true" : "false"
     this.fieldTargets.forEach((field) => {
       if ("value" in field) {
@@ -50,11 +51,12 @@ export default class extends Controller {
     this.buttonTarget.classList.toggle("opacity-50", !this.modeValue)
     this.iconTarget.classList.toggle("icon-[lucide--volume-2]", this.modeValue)
     this.iconTarget.classList.toggle("icon-[lucide--volume-x]", !this.modeValue)
+    this.applyTooltip()
   }
 
   loadPersistedMode() {
     try {
-      const persisted = window.localStorage.getItem(this.ttsStorageKeyValue)
+      const persisted = window.localStorage.getItem(this.storageKeyValue)
       if (persisted === "true" || persisted === "false") {
         this.modeValue = persisted === "true"
       }
@@ -65,9 +67,23 @@ export default class extends Controller {
 
   persistMode() {
     try {
-      window.localStorage.setItem(this.ttsStorageKeyValue, this.modeValue ? "true" : "false")
+      window.localStorage.setItem(this.storageKeyValue, this.modeValue ? "true" : "false")
     } catch (_error) {
       // Ignore storage access errors.
     }
+  }
+
+  applyTooltip() {
+    if (!this.hasTooltipTarget) return
+
+    const text = this.modeValue ? this.enabledTooltipValue : this.disabledTooltipValue
+    this.tooltipTarget.dataset.floatingTooltipContentValue = text
+
+    this.tooltipTarget.dispatchEvent(new CustomEvent("floating-tooltip:update", {
+      bubbles: false,
+      detail: {
+        text: text
+      }
+    }))
   }
 }

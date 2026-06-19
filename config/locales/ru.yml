@@ -137,8 +137,8 @@ ru:
   label_log_level_warn: Warn
   label_login: Вход
   label_logout: Выйти
-  label_memory_mode_off: Память выкл.
-  label_memory_mode_on: Память вкл.
+  label_memory_mode_off: Память выключена. Сообщение останется в чате, но не будет сохранено в памяти.
+  label_memory_mode_on: Память включена. Факты из этого сообщения могут быть сохранены в долговременную память.
   label_memory_profile: Профиль памяти
   label_mcp_servers: MCP серверы
   label_mission_control: Mission Control
@@ -177,7 +177,9 @@ ru:
   label_settings_agents: Агенты
   label_settings_ai_models: Модели
   label_settings_ai_providers: Провайдеры
-  label_settings_ai_tts: Голос
+  label_settings_ai_voice: Речь
+  label_settings_ai_voice_generation: Генерация речи
+  label_settings_ai_voice_recognition: Распознавание речи
   label_settings_app: Система
   label_settings_events: Память и события
   label_settings_mailer: Почта
@@ -200,8 +202,9 @@ ru:
   label_time_present: Настоящее
   label_time_zone: Часовой пояс
   label_token_usage: Токены
-  label_tts: Голос
   label_topic: Тема
+  label_transcription: Распознавание речи
+  label_tts: Голос
   label_unshare_character: Убрать персонажа
   label_unlock_instructions: Повторить разблокировку
   label_upload_images: Загрузить изображения
@@ -210,6 +213,11 @@ ru:
   placeholder_chat_input: Введите сообщение...
   placeholder_image_description: Добавьте описание изображения
   placeholder_search_chat_history: Поиск по истории
+  text_transcription_continuous_tooltip: Микрофон в непрерывном режиме. Слушает автоматически. Нажмите, чтобы выключить микрофон.
+  text_transcription_manual_tooltip: Микрофон в ручном режиме. Удерживайте Alt или ⌥ для записи и отпустите для распознавания. Нажмите, чтобы переключиться в непрерывный режим.
+  text_transcription_off_tooltip: Микрофон выключен. Нажмите, чтобы перейти в ручной режим.
+  text_tts_disabled_tooltip: Озвучка ответов выключена. Нажмите, чтобы включить голосовые ответы.
+  text_tts_enabled_tooltip: Озвучка ответов включена. Нажмите, чтобы выключить голосовые ответы.
   settings:
     app:
       host: Имя хоста приложения
@@ -222,9 +230,12 @@ ru:
         default_embedding_model: Модель эмбеддингов по умолчанию
         default_image_model: Модель изображений по умолчанию
         default_model: Модель по умолчанию
+        default_transcription_model: Модель распознавания речи по умолчанию
         default_tts_model: Модель TTS по умолчанию
-      tts:
+      voice:
         allowed_styles: Разрешённые стили голоса
+        silence_delay_ms: Задержка тишины (мс)
+        silence_rms_threshold: Порог RMS тишины
         voice: Голос
       providers:
         anthropic:

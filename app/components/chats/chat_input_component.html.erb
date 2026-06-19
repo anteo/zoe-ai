@@ -1,12 +1,22 @@
 <div id="chat-input"
-     data-controller="chat-input tts-state"
-     data-action="tts-state:disabled->chat-input#handleTtsDisabled"
+     data-controller="chat-input tts-state transcription"
+     data-action="tts-playback:started->transcription#handleTtsPlaybackStarted tts-playback:stopped->transcription#handleTtsPlaybackStopped tts-state:disabled->chat-input#handleTtsDisabled transcription:speech->chat-input#handleVoiceSpeech transcription:transcribed->chat-input#handleVoiceTranscript"
      data-chat-input-chat-id-value="<%= chat.id %>"
      data-chat-input-memorize-mode-value="<%= chat.memorize %>"
-     data-tts-state-mode-value="false">
+     data-transcription-analyser-fft-size-value="<%= Setting.ai.voice.analyser_fft_size %>"
+     data-transcription-continuous-tooltip-value="<%= t(:text_transcription_continuous_tooltip) %>"
+     data-transcription-manual-tooltip-value="<%= t(:text_transcription_manual_tooltip) %>"
+     data-transcription-off-tooltip-value="<%= t(:text_transcription_off_tooltip) %>"
+     data-transcription-silence-delay-ms-value="<%= Setting.ai.voice.silence_delay_ms %>"
+     data-transcription-silence-rms-threshold-value="<%= Setting.ai.voice.silence_rms_threshold %>"
+     data-transcription-transcription-url-value="<%= voice_transcription_path %>"
+     data-transcription-mode-value="<%= transcription_mode %>"
+     data-tts-state-mode-value="<%= tts_enabled %>"
+     data-tts-state-disabled-tooltip-value="<%= t(:text_tts_disabled_tooltip) %>"
+     data-tts-state-enabled-tooltip-value="<%= t(:text_tts_enabled_tooltip) %>">
   <%= form_with model: Message.new, url: messages_path(chat_id: chat), class: "w-full", multipart: true,
                data: { action: "submit->chat-input#handleSubmit turbo:submit-end->chat-input#handleSubmitEnd" } do |f| %>
-    <div class="input h-auto w-full flex-col items-stretch whitespace-normal p-0 bg-base-100 border-base-200 shadow-sm">
+    <div class="input h-auto w-full flex-col items-stretch whitespace-normal overflow-visible p-0 bg-base-100 border-base-200 shadow-sm">
       <div id="attachments-preview" class="hidden flex flex-wrap gap-2 p-2 border-b border-base-200" data-chat-input-target="attachmentsPreview"></div>
       <div class="flex items-end px-3 pt-3">
         <%= f.text_area :content,
@@ -29,25 +39,45 @@
           <% end %>
           <%= f.hidden_field :tts_enabled, value: "false", data: { tts_state_target: "field" } %>
           <% if tts_available? %>
-            <button type="button"
-                    class="<%= helpers.class_names('btn btn-circle btn-sm',
-                                                   'btn-ghost opacity-50') %>"
-                    data-tts-state-target="button"
-                    data-action="click->tts-state#toggle"
-                    aria-label="<%= t(:label_tts) %>">
-              <span class="icon-[lucide--volume-x] w-4 h-4" data-tts-state-target="icon"></span>
-            </button>
+            <div data-controller="floating-tooltip"
+                 data-tts-state-target="tooltip">
+              <button type="button"
+                      class="btn btn-circle btn-sm btn-ghost opacity-50 transition-colors"
+                      data-floating-tooltip-target="anchor"
+                      data-tts-state-target="button"
+                      data-action="click->tts-state#toggle"
+                      aria-label="<%= t(:label_tts) %>">
+                <span class="icon-[lucide--volume-x] w-4 h-4" data-tts-state-target="icon"></span>
+              </button>
+            </div>
           <% end %>
-          <button type="button"
-                  class="btn btn-ghost btn-sm gap-2"
-                  data-chat-input-target="memorizeButton"
-                  data-action="click->chat-input#toggleMemorize">
-            <%= content_tag :span, '', class: "icon-[lucide--bookmark] w-4 h-4", data: { chat_input_target: "memorizeIcon" } %>
-            <span class="leading-none"
-                  data-chat-input-target="memorizeLabel"
-                  data-label-on="<%= t(:label_memory_mode_on) %>"
-                  data-label-off="<%= t(:label_memory_mode_off) %>"><%= t(:label_memory_mode_on) %></span>
-          </button>
+          <% if transcription_available? %>
+            <%= hidden_field_tag :transcription_mode, transcription_mode, data: { transcription_target: "modeField" } %>
+            <div data-controller="floating-tooltip"
+                 data-transcription-target="tooltip">
+              <button type="button"
+                      class="btn btn-circle btn-sm btn-ghost opacity-50 transition-colors"
+                      data-floating-tooltip-target="anchor"
+                      data-transcription-target="button"
+                      data-action="click->transcription#cycleMode"
+                      aria-label="<%= t(:label_transcription) %>">
+                <span class="icon-[lucide--mic-off] w-4 h-4" data-transcription-target="icon"></span>
+              </button>
+            </div>
+          <% end %>
+          <div data-controller="floating-tooltip"
+               data-chat-input-target="memorizeTooltip">
+            <button type="button"
+                    class="btn btn-ghost btn-circle btn-sm"
+                    data-floating-tooltip-target="anchor"
+                    data-chat-input-target="memorizeButton"
+                    data-action="click->chat-input#toggleMemorize"
+                    data-label-memory-mode-on="<%= t(:label_memory_mode_on) %>"
+                    data-label-memory-mode-off="<%= t(:label_memory_mode_off) %>"
+                    aria-label="<%= t(:label_memory_mode_on) %>">
+              <%= content_tag :span, '', class: "icon-[lucide--bookmark] w-4 h-4", data: { chat_input_target: "memorizeIcon" } %>
+            </button>
+          </div>
           <%= f.hidden_field :memorize, value: chat.memorize.to_s, data: { chat_input_target: "memorizeField" } %>
         </div>
         <div class="flex items-center gap-2">

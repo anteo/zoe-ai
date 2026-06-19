@@ -35,7 +35,12 @@ class MessagesController < ApplicationController
       )
       stream << turbo_stream.replace(
         "chat-input",
-        Chats::ChatInputComponent.new(chat: chat, current_character:)
+        Chats::ChatInputComponent.new(
+          chat: chat,
+          current_character:,
+          transcription_mode: params[:transcription_mode],
+          tts_enabled: message_params[:tts_enabled]
+        )
       )
 
       respond_to do |format|

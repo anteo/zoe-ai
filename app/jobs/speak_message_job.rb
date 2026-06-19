@@ -10,7 +10,7 @@ class SpeakMessageJob < ChatTriggeredJob
     speech = AI.speak(
       text,
       model: Setting.ai.models.default_tts_model,
-      voice: Setting.ai.tts.voice,
+      voice: Setting.ai.voice.voice,
       style:
     )
 

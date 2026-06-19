@@ -63,4 +63,5 @@ group :development, :test do
   gem "foreman"
   gem "kamal", require: false
   gem "rubocop-rails-omakase", require: false
+  gem "minitest-mock"
 end

@@ -63,6 +63,36 @@
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
     }
+
+    .floating-tooltip.tooltip-top[data-tip]::after {
+        left: 50%;
+        right: auto;
+        transform: translateX(calc(-50% + var(--ft-anchor-dx, 0px))) translateY(var(--tt-pos, 0.25rem));
+    }
+
+    .floating-tooltip.tooltip-bottom[data-tip]::after {
+        left: 50%;
+        right: auto;
+        transform: translateX(calc(-50% + var(--ft-anchor-dx, 0px))) translateY(var(--tt-pos, -0.25rem)) rotate(180deg);
+    }
+
+    .floating-tooltip.tooltip-left[data-tip]::after {
+        top: 50%;
+        bottom: auto;
+        transform: translateX(var(--tt-pos, 0.25rem)) translateY(calc(-50% + var(--ft-anchor-dy, 0px))) rotate(-90deg);
+    }
+
+    .floating-tooltip.tooltip-right[data-tip]::after {
+        top: 50%;
+        bottom: auto;
+        transform: translateX(var(--tt-pos, -0.25rem)) translateY(calc(-50% + var(--ft-anchor-dy, 0px))) rotate(90deg);
+    }
+
+    .floating-tooltip[data-tip]::before,
+    .floating-tooltip[data-tip]::after {
+        --tt-pos: 0rem;
+        transition-property: opacity;
+    }
 }
 
 /* Theme-based logo visibility */

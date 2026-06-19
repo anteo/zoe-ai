@@ -137,8 +137,8 @@ en:
   label_log_level_warn: Warn
   label_login: Login
   label_logout: Logout
-  label_memory_mode_off: Memory off
-  label_memory_mode_on: Memory on
+  label_memory_mode_off: Memory off. This message will stay in the chat, but it will not be stored in memory.
+  label_memory_mode_on: Memory on. Facts from this message may be stored in long-term memory.
   label_memory_profile: Memory profile
   label_mcp_servers: MCP servers
   label_mission_control: Mission Control
@@ -177,7 +177,9 @@ en:
   label_settings_agents: Agents
   label_settings_ai_models: Models
   label_settings_ai_providers: Providers
-  label_settings_ai_tts: Voice
+  label_settings_ai_voice: Speech
+  label_settings_ai_voice_generation: Speech generation
+  label_settings_ai_voice_recognition: Speech recognition
   label_settings_app: System
   label_settings_events: Memory & Events
   label_settings_mailer: Email
@@ -200,8 +202,9 @@ en:
   label_time_present: Present
   label_time_zone: Time zone
   label_token_usage: Tokens
-  label_tts: Voice
   label_topic: Topic
+  label_transcription: Transcription
+  label_tts: Voice
   label_unshare_character: Unshare character
   label_unlock_instructions: Resend unlock instructions
   label_upload_images: Upload images
@@ -210,6 +213,11 @@ en:
   placeholder_chat_input: Type your message...
   placeholder_image_description: Add image description
   placeholder_search_chat_history: Search history
+  text_transcription_continuous_tooltip: Microphone continuous. Listens automatically. Click to turn the microphone off.
+  text_transcription_manual_tooltip: Microphone manual. Hold Alt or ⌥ to record, then release to transcribe. Click to switch to continuous mode.
+  text_transcription_off_tooltip: Microphone off. Click to switch to manual mode.
+  text_tts_disabled_tooltip: Voice replies off. Click to enable spoken replies.
+  text_tts_enabled_tooltip: Voice replies on. Click to disable spoken replies.
   settings:
     app:
       host: App host name
@@ -222,9 +230,12 @@ en:
         default_embedding_model: Default embedding model
         default_image_model: Default image model
         default_model: Default model
+        default_transcription_model: Default transcription model
         default_tts_model: Default TTS model
-      tts:
+      voice:
         allowed_styles: Allowed voice styles
+        silence_delay_ms: Silence delay (ms)
+        silence_rms_threshold: Silence RMS threshold
         voice: Voice
       providers:
         anthropic:

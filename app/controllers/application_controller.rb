@@ -103,6 +103,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def system_logger
+    @system_logger ||= SystemLogger.instance.with_payload(
+      source: "action_controller",
+      controller: self.class.name,
+      action: action_name,
+      request_id: request.request_id,
+      user_id: current_user&.id,
+      character_id: current_character&.id,
+      partner_id: current_partner&.id
+    )
+  end
+
   def turbo_referrer_frame_id
     request.headers["X-Turbo-Referrer-Frame-Id"]
   end
