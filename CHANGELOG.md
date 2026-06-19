@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/anteo/zoe-ai/compare/v1.5.0...v1.5.1) (2026-06-19)
+
+### Bug Fixes
+
+* **ai:** avoid redundant playNextTtsAudio when playback starts ([af6c99a](https://github.com/anteo/zoe-ai/commit/af6c99a43bea30589698534e1adb3922649316f3))
+* **ai:** move TTS speech trigger to respond job to speak entire message ([5dd153a](https://github.com/anteo/zoe-ai/commit/5dd153ae75d230209271ed1e2c2bfb8eccb70d76))
+
 ## [1.5.0](https://github.com/anteo/zoe-ai/compare/v1.4.0...v1.5.0) (2026-06-19)
 
 ### Features
