@@ -21,7 +21,6 @@ class TypeSentenceJob < ChatTriggeredJob
 
     show_message_placeholder(chat) if RespondJob.running_for?(chat)
 
-    SpeakMessageJob.perform_later(chat, trigger_message_id, message, chunk.to_s) if AI.tts_enabled? && message.tts_enabled?
     TypeSentenceJob.perform_later(chat, trigger_message_id, message, chunks, false) if chunks.any?
   end
 end

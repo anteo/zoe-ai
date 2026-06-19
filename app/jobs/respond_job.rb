@@ -53,6 +53,9 @@ class RespondJob < ChatTriggeredJob
     )
 
     chunks = AI::SentenceSplitter.new(message.content).chunks
+
+    # Speak the entire message for now instead of speaking in chunks.
+    SpeakMessageJob.perform_later(chat, trigger_message_id, message, message.content) if AI.tts_enabled? && message.tts_enabled?
     TypeSentenceJob.perform_later(chat, trigger_message_id, message, chunks, true)
     ExtractFactsJob.perform_later(chat)
   end
