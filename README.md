@@ -99,6 +99,32 @@ When there was no recent real chat, dreaming falls back to broader memory and ev
 - Dreaming behavior can be configured separately from normal conversation behavior.
 - Both global dream instructions and per-character dream instructions can be used to shape how reflection works.
 
+## AI tools and MCP
+
+Zoe is not limited to pure text generation. AI characters can use tools when a response or an internal reflection session calls for something more than recalling context from the prompt alone.
+
+### Available built-in tools
+
+- **`event_search`**: search recent happenings, plans, and other time-bound remembered context.
+- **`chat_history_search`**: re-open prior closed conversations when deeper context is needed.
+- **`draw`**: generate new images that fit the current relationship, mood, or follow-up idea.
+- **`manage_postponed_messages`**: prepare future follow-ups or next-chat messages.
+- **`manage_own_instructions`**: update character-specific behavior rules over time, including dream-specific reflection rules.
+- **`set_character_avatar`**: set a character’s avatar from an image shared in chat.
+- **`add_character_image`**: add a reference image or photo to a character profile.
+
+These tools are used selectively. The model can stay purely conversational when memory and prompt context are enough, or switch into tool use when it needs retrieval, planning, or media creation.
+
+### MCP support
+
+Zoe also supports MCP (Model Context Protocol) servers.
+
+- MCP lets the app expose additional external tools to AI characters without hard-coding every capability into the core application.
+- This makes the tool layer extensible: search, retrieval, workflow, or other custom capabilities can be plugged into the system as MCP servers.
+- From the AI’s point of view, MCP tools become part of the same general tool-using workflow as the built-in capabilities.
+
+In practice, this means Zoe can combine persistent memory, normal prompt context, built-in tools, and MCP-provided tools into one conversational system.
+
 ## Voice features
 
 Zoe supports both spoken replies and speech recognition in the main chat UI.
