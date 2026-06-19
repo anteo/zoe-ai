@@ -225,6 +225,7 @@ export default class extends Controller {
 
   async loadTtsAudio(item, runId) {
     this.ttsLoading = true
+    let started = false
     try {
       const response = await fetch(`/tts_audio/${encodeURIComponent(item.token)}?mime_type=${encodeURIComponent(item.mimeType)}`, {
         credentials: "same-origin"
@@ -260,12 +261,15 @@ export default class extends Controller {
         playback.catch(() => this.finishTtsAudio(audio, url, runId))
       }
 
+      started = true
       this.setTtsPlaybackActive(true)
     } catch (_error) {
       // Ignore playback fetch/decoding errors and continue with the queue.
     } finally {
       this.ttsLoading = false
-      this.playNextTtsAudio()
+      if (!started) {
+        this.playNextTtsAudio()
+      }
     }
   }
 
