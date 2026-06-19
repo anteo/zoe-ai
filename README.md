@@ -15,6 +15,7 @@ It is also not limited to a single user talking to a single bot. Many users can 
 - **Memory is organized by person and topic.** Facts are attached to characters and grouped into topic-based aggregates, so recall can stay specific instead of collapsing into a single summary blob.
 - **Memory evolves over time.** Zoe maintains monthly and rolling summaries of persistent facts, which lets it keep a compressed but durable picture of someone as conversations accumulate.
 - **It works with images as part of the relationship.** Zoe can understand uploaded images, use them to enrich character profiles, and generate new pictures with visual references from prior chats and saved character photos.
+- **It supports two-way voice interaction.** Zoe can speak replies aloud and accept spoken input, including continuous listening that turns short speech pauses into sent messages.
 - **It keeps temporal context grounded.** Zoe presents memories, follow-ups, and ongoing situations with a sense of recency and continuity, so conversations feel connected to real time instead of floating in a timeless chat loop.
 - **Conversations stay conversational.** Fact extraction and summarization run asynchronously in background jobs, so the chat flow remains responsive while memory is updated behind the scenes.
 - **It is built as a conventional Rails app.** The core is ActiveRecord models, Hotwire and Stimulus for the interactive UI, background jobs, prompt templates, and service actors rather than a black-box chatbot stack.
@@ -52,6 +53,38 @@ In practice, Zoe behaves less like a stateless assistant and more like an AI rel
 5. Persistent facts are re-aggregated into monthly and rolling summaries.
 6. Future chats can use those summaries as long-term memory context.
 7. The assistant can stay grounded in both visual context and conversational recency, which makes follow-ups and generated media feel consistent with the relationship so far.
+
+## Voice features
+
+Zoe supports both spoken replies and speech recognition in the main chat UI.
+
+### Voice replies
+
+- The speaker button toggles text-to-speech for outgoing assistant replies.
+- TTS stays enabled across page reloads for the current browser.
+- Spoken replies require both a default TTS model and a configured voice name.
+- If your provider supports expressive speech styles, Zoe can prepend allowed style tags to responses and the TTS layer will render them.
+
+### Voice input
+
+- The microphone button cycles through `off`, `manual`, and `continuous`.
+- `manual` mode is push-to-talk: hold `Alt` or `⌥` to record, release to transcribe, then the transcript is sent as a normal chat message.
+- `continuous` mode listens automatically, starts recording when speech is detected, and sends the current utterance after enough silence is observed.
+- When voice capture starts, Zoe stops any current typed/speaking response so the conversation can hand over cleanly to the user.
+
+### Continuous mode tuning
+
+Continuous listening uses silence detection in the browser before sending audio for transcription.
+
+- `silence_delay_ms` controls how long speech must stay quiet before the current utterance is finalized and sent.
+- `silence_rms_threshold` controls how loud input must be before it counts as speech.
+
+In practice:
+
+- increase `silence_delay_ms` if phrases are getting cut too early
+- decrease `silence_delay_ms` if messages wait too long before sending
+- increase `silence_rms_threshold` if background noise triggers recordings
+- decrease `silence_rms_threshold` if quieter voices are not being picked up
 
 ## Tech stack
 
@@ -124,6 +157,15 @@ Optional values such as Google OAuth, mailer settings, host overrides, and defau
 - `ZOE_AI__MODELS__DEFAULT_MODEL`
 - `ZOE_AI__MODELS__DEFAULT_EMBEDDING_MODEL`
 - `ZOE_AI__MODELS__DEFAULT_IMAGE_MODEL`
+- `ZOE_AI__MODELS__DEFAULT_TRANSCRIPTION_MODEL`
+- `ZOE_AI__MODELS__DEFAULT_TTS_MODEL`
+
+#### AI voice
+
+- `ZOE_AI__VOICE__VOICE`
+- `ZOE_AI__VOICE__ALLOWED_STYLES`
+- `ZOE_AI__VOICE__SILENCE_DELAY_MS`
+- `ZOE_AI__VOICE__SILENCE_RMS_THRESHOLD`
 
 #### AI providers
 
