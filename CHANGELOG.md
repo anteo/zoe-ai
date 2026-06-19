@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.5.0](https://github.com/anteo/zoe-ai/compare/v1.4.0...v1.5.0) (2026-06-19)
+
+### Features
+
+* **ai:** add AI tools and MCP support to README ([e25c0ec](https://github.com/anteo/zoe-ai/commit/e25c0ecaab558ad7d75da91bf25e851dc5439c9f))
+* **ai:** add dreaming session support to README ([9b20346](https://github.com/anteo/zoe-ai/commit/9b203467af1289b2ba280e7013e8333c75d109f9))
+* **ai:** add speech generation support with Gemini, OpenAI, OpenRouter patches and Speech class ([cf7536f](https://github.com/anteo/zoe-ai/commit/cf7536f8cfcc433617d51cfdae68c034a6bad934))
+* **ai:** add speech generation to UI ([6f887aa](https://github.com/anteo/zoe-ai/commit/6f887aaf5641912dff216a89bbe4f91d449f0e52))
+* **ai:** add tool progress UI with streaming updates and development test tool ([6f4a9c3](https://github.com/anteo/zoe-ai/commit/6f4a9c3ff4b9329bac77151c8cfc6fea61b35679))
+* **ai:** add two-way voice interaction support to README ([13e67fe](https://github.com/anteo/zoe-ai/commit/13e67febf276635bdb93bb68d32bcfbe3bcc3ecd))
+* **ai:** add voice transcription support ([84b90e0](https://github.com/anteo/zoe-ai/commit/84b90e04bae8ae9e8a56921eabca009cd9c8c29f))
+* **ai:** wrap MCP tools with proxy for progress tracking and streaming updates ([1f4b1aa](https://github.com/anteo/zoe-ai/commit/1f4b1aa3b17af722856d8814a116c6374615c7a3))
+
+### Bug Fixes
+
+* **ai:** fix fake_tool regex to allow empty arguments ([22801ae](https://github.com/anteo/zoe-ai/commit/22801aef607ed010a16d2263282aea17bacf01a7))
+* **rack_attack:** increase test iterations to avoid false rate limit triggers ([b5db995](https://github.com/anteo/zoe-ai/commit/b5db995800575323f08ee2dce0f3aad498a55aaa))
+
 ## [1.4.0](https://github.com/anteo/zoe-ai/compare/v1.3.1...v1.4.0) (2026-06-15)
 
 ### Features
