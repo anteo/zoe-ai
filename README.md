@@ -14,6 +14,7 @@ It is also not limited to a single user talking to a single bot. Many users can 
 - **It separates long-term identity from short-term events.** A stable preference and a one-off plan are not treated the same, which makes memory more useful and less noisy.
 - **Memory is organized by person and topic.** Facts are attached to characters and grouped into topic-based aggregates, so recall can stay specific instead of collapsing into a single summary blob.
 - **Memory evolves over time.** Zoe maintains monthly and rolling summaries of persistent facts, which lets it keep a compressed but durable picture of someone as conversations accumulate.
+- **AI characters can “dream” between chats.** Hidden internal dream sessions let an AI character reflect on yesterday’s conversations, refine follow-up ideas, update dream-only instructions, and prepare better continuity for the next real dialog.
 - **It works with images as part of the relationship.** Zoe can understand uploaded images, use them to enrich character profiles, and generate new pictures with visual references from prior chats and saved character photos.
 - **It supports two-way voice interaction.** Zoe can speak replies aloud and accept spoken input, including continuous listening that turns short speech pauses into sent messages.
 - **It keeps temporal context grounded.** Zoe presents memories, follow-ups, and ongoing situations with a sense of recency and continuity, so conversations feel connected to real time instead of floating in a timeless chat loop.
@@ -53,6 +54,50 @@ In practice, Zoe behaves less like a stateless assistant and more like an AI rel
 5. Persistent facts are re-aggregated into monthly and rolling summaries.
 6. Future chats can use those summaries as long-term memory context.
 7. The assistant can stay grounded in both visual context and conversational recency, which makes follow-ups and generated media feel consistent with the relationship so far.
+
+## Dreaming sessions
+
+Zoe supports internal “dreaming” sessions for AI characters with dreaming enabled.
+
+### What a dream session is
+
+- A dream session is an internal reflection phase that runs separately from the normal user-facing conversation.
+- Dreaming happens per relationship, so the same AI character can reflect differently on different people.
+- These sessions are hidden from normal chat history and exist to improve continuity rather than to create another visible conversation thread.
+
+### When dreams run
+
+- Dreaming runs on a schedule after normal chats have been closed for the day.
+- In general, dreams are triggered by recent real conversations, and they can also be configured to run daily even when there was no new chat.
+
+### What the dreaming agent sees
+
+- The same core relationship context as a normal chat: who the people are, what is already known about them, and what has been happening recently.
+- The recent real conversations for that relationship, typically grouped by the previous day rather than a single latest message.
+- Separate dream-specific instructions in addition to normal conversation instructions.
+- Prior internal dream traces and time-bound events, so the AI can notice patterns across memory, recent chats, and unfinished threads.
+
+When there was no recent real chat, dreaming falls back to broader memory and event context instead of inventing momentum.
+
+### What the dreaming agent can do
+
+- Re-read relationship context and look for non-obvious but grounded connections.
+- Search past conversation context when the immediate dream input is not enough.
+- Prepare or refine possible next-chat follow-ups.
+- Update its own dream-specific reflection rules when repeated patterns suggest a better strategy.
+- Generate supporting creative artifacts, such as images, when that meaningfully helps a future follow-up.
+
+### How dream output is used
+
+- Dream sessions can leave internal notes, queue future follow-up ideas, and refine private continuity for the next real conversation.
+- Their output is meant to shape future chat quality, not to surface itself directly to the user.
+- Information produced during dreaming can still become part of the AI’s internal memory when it is treated as useful and grounded.
+
+### Settings
+
+- Dreaming can be enabled or disabled per AI character.
+- Dreaming behavior can be configured separately from normal conversation behavior.
+- Both global dream instructions and per-character dream instructions can be used to shape how reflection works.
 
 ## Voice features
 
