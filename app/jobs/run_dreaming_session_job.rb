@@ -18,6 +18,7 @@ class RunDreamingSessionJob < ApplicationJob
     summary = dream_chat.latest_assistant_message_content
     dream_chat.update!(closed: true, closed_at: Time.current, summary:)
 
-    ExtractFactsJob.perform_later(dream_chat)
+    # Do not extract facts from dreaming sessions for now -> they mostly duplicate conversation facts
+    # ExtractFactsJob.perform_later(dream_chat)
   end
 end

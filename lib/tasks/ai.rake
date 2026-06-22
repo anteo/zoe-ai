@@ -12,7 +12,7 @@ namespace :ai do
 
   desc "Collect facts"
   task extract_facts: :environment do
-    chats = Chat.where(facts_extracted: false).order(created_at: :asc)
+    chats = Chat.dreaming(false).where(facts_extracted: false).order(created_at: :asc)
     puts "Extracting facts for #{chats.count} chats..."
     chats.find_each do |chat|
       puts "  Chat ##{chat.id}"
