@@ -10,7 +10,8 @@ module AI
           Tools::ManagePostponedMessages,
           Tools::AddCharacterImage,
           Tools::SetCharacterAvatar,
-          Tools::ManageOwnInstructions
+          Tools::ManageOwnInstructions,
+          Tools::GetChatHistory
         ]
 
         items << Tools::FakeTool if Rails.env.development?
