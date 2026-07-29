@@ -245,6 +245,10 @@ en:
           region: Bedrock Region
           secret_key: Bedrock Secret Key
           session_token: Bedrock Session Token
+        chatgpt:
+          api_base: ChatGPT OAuth API Base URL
+          enabled: Enable ChatGPT subscription
+          request_timeout: ChatGPT image timeout (seconds)
         deepseek:
           api_key: DeepSeek API Key
         gemini:
@@ -309,6 +313,7 @@ en:
   text_character_share_sent: Share link sent to %{email}.
   text_character_share_subject: "%{sender} shared %{character} with you"
   text_character_share_wrong_account: Sign in as %{email} to accept this shared character.
+  text_chatgpt_oauth_hint: Runs image generation and reference-image editing through the local openai-oauth proxy using your ChatGPT subscription.
   text_console_new_messages: New messages
   text_console_no_logs: No system logs yet.
   text_console_waiting_logs: Waiting for RubyLLM logs...

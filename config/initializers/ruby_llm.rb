@@ -3,6 +3,7 @@ rubyllm_logger = RubyLLM.logger
 Rails.application.config.to_prepare do
   system_logger = SystemLogger.instance.with_payload(source: "ruby_llm")
 
+  RubyLLM::Provider.register :chatgpt, AI::Providers::ChatGPT
   RubyLLM::Provider.register :openrouter, AI::Providers::OpenRouter
   RubyLLM::Provider.register :ollama_cloud, AI::Providers::OllamaCloud
   RubyLLM::Provider.register :fake, AI::Providers::Fake if Rails.env.development?
@@ -29,6 +30,9 @@ Rails.application.config.to_prepare do
       config.bedrock_secret_key = providers.bedrock.secret_key
       config.bedrock_region = providers.bedrock.region
       config.bedrock_session_token = providers.bedrock.session_token
+      config.chatgpt_api_base = providers.chatgpt.api_base
+      config.chatgpt_enabled = providers.chatgpt.enabled
+      config.chatgpt_request_timeout = providers.chatgpt.request_timeout
 
       config.default_model = cfg.models.default_model
       config.default_embedding_model = cfg.models.default_embedding_model

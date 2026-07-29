@@ -1,4 +1,25 @@
 <div class="space-y-4">
+  <fieldset class="fieldset border border-base-300 rounded-lg p-4">
+    <legend class="fieldset-legend px-1">ChatGPT</legend>
+    <%= f.simple_fields_for :chatgpt do |cf| %>
+      <div class="space-y-4">
+        <label class="label w-fit cursor-pointer gap-3 p-0">
+          <%= cf.check_box :enabled, class: "toggle toggle-primary" %>
+          <span class="label-text"><%= cf.object.class.human_attribute_name(:enabled) %></span>
+        </label>
+
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <%= cf.input :api_base, wrapper_html: { class: "min-w-0 space-y-1" } %>
+          <%= cf.input :request_timeout, wrapper_html: { class: "min-w-0 space-y-1" } %>
+        </div>
+
+        <p class="fieldset-label block whitespace-normal p-0 text-sm text-base-content/70">
+          <%= t(:text_chatgpt_oauth_hint) %>
+        </p>
+      </div>
+    <% end %>
+  </fieldset>
+
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     <%= f.simple_fields_for :openai do |of| %>
       <%= of.input :api_key, input_html: { autocomplete: "off" } %>

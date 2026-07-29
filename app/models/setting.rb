@@ -83,6 +83,15 @@ class Setting < ApplicationRecord
         setting :region, :string
         setting :session_token, :string
       end
+
+      scope :chatgpt do
+        setting :api_base, :string, default: "http://127.0.0.1:10531/v1"
+        setting :enabled, :boolean, default: false
+        setting :request_timeout, :integer, default: 300
+
+        validates :api_base, url: true, allow_blank: true
+        validates :request_timeout, numericality: { greater_than: 0 }, allow_nil: true
+      end
     end
 
     scope :voice do

@@ -17,6 +17,7 @@
 
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym "AI"
+  inflect.acronym "GPT"
   inflect.acronym "LLM"
   inflect.acronym "MCP"
   inflect.acronym "ERB"

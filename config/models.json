@@ -21085,6 +21085,31 @@
     }
   },
   {
+    "id": "chatgpt/gpt-image-2",
+    "name": "GPT Image 2 (ChatGPT subscription)",
+    "provider": "chatgpt",
+    "family": "gpt-image-2",
+    "created_at": null,
+    "context_window": null,
+    "max_output_tokens": null,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "image"
+      ]
+    },
+    "capabilities": [],
+    "pricing": {},
+    "metadata": {
+      "source": "chatgpt_oauth",
+      "upstream_model_id": "gpt-image-2"
+    }
+  },
+  {
     "id": "deepseek-chat",
     "name": "DeepSeek Chat",
     "provider": "deepseek",

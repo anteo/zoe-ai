@@ -217,6 +217,7 @@ class SettingTest < ActiveSupport::TestCase
 
   test "nested provider scopes are accessible" do
     providers = Setting.ai.providers
+    assert_respond_to providers, :chatgpt
     assert_respond_to providers, :openrouter
     assert_respond_to providers, :deepseek
     assert_respond_to providers, :ollama

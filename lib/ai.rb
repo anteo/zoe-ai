@@ -60,21 +60,17 @@ module AI
             assume_model_exists: false,
             size: "1024x1024",
             context: nil)
-    if with.present? || mask.present?
-      config = context&.config || RubyLLM.config
-      model ||= config.default_image_model
-      model, provider_instance = RubyLLM::Models.resolve(model, provider: provider, assume_exists: assume_model_exists,
-                                                config: config)
-      model_id = model.id
-
-      if provider_instance.is_a?(RubyLLM::Providers::OpenRouter)
-        provider_instance.paint(prompt, model: model_id, size:, with: Array.wrap(with), mask:, params:)
-      else
-        raise RubyLLM::Error, "Only OpenRouter provider is currently supported for image edits"
-      end
-    else
-      RubyLLM::Image.paint(prompt, model:, provider:, assume_model_exists:, size:, context:, params:)
-    end
+    RubyLLM::Image.paint(
+      prompt,
+      model:,
+      provider:,
+      assume_model_exists:,
+      size:,
+      context:,
+      with:,
+      mask:,
+      params:
+    )
   end
 
   def console

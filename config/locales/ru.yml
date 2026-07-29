@@ -245,6 +245,10 @@ ru:
           region: Регион Bedrock
           secret_key: Секретный ключ Bedrock
           session_token: Сессионный токен Bedrock
+        chatgpt:
+          api_base: Базовый URL OAuth API ChatGPT
+          enabled: Включить подписку ChatGPT
+          request_timeout: Таймаут изображения ChatGPT (секунды)
         deepseek:
           api_key: API-ключ DeepSeek
         gemini:
@@ -309,6 +313,7 @@ ru:
   text_character_share_sent: Ссылка отправлена на %{email}.
   text_character_share_subject: "%{sender} поделился(ась) персонажем %{character}"
   text_character_share_wrong_account: Чтобы принять персонажа, войдите как %{email}.
+  text_chatgpt_oauth_hint: Генерация и редактирование по референсам выполняются через локальный прокси openai-oauth с использованием подписки ChatGPT.
   text_console_new_messages: Новые сообщения
   text_console_no_logs: Системных логов пока нет.
   text_console_waiting_logs: Ожидание логов RubyLLM...
