@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.6.0](https://github.com/anteo/zoe-ai/compare/v1.5.1...v1.6.0) (2026-07-29)
+
+### Features
+
+* **ai,settings:** add Ollama Cloud provider and configuration ([541c827](https://github.com/anteo/zoe-ai/commit/541c8279a3df6c8edf9e838b5aeef8418915cd8e))
+* **zoe:** add GetChatHistory tool to agent ([7737d24](https://github.com/anteo/zoe-ai/commit/7737d240d36eb6cd5ac7dfaa94fa4c46b80061f4))
+
+### Bug Fixes
+
+* **ai:** skip fact extraction for dreaming sessions ([d9e32a1](https://github.com/anteo/zoe-ai/commit/d9e32a10d8d8d3ff9a442d5738b1c0d71b96222d))
+
 ## [1.5.1](https://github.com/anteo/zoe-ai/compare/v1.5.0...v1.5.1) (2026-06-19)
 
 ### Bug Fixes
