@@ -253,6 +253,9 @@ ru:
           api_key: API-ключ Mistral
         ollama:
           api_base: Базовый URL API Ollama
+        ollama_cloud:
+          api_base: Базовый URL API Ollama Cloud
+          api_key: API-ключ Ollama Cloud
         openai:
           api_key: API-ключ OpenAI
         openrouter:

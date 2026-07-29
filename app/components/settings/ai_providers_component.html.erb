@@ -37,6 +37,10 @@
     <%= of.input :api_base %>
   <% end %>
 
+  <%= f.simple_fields_for :ollama_cloud do |of| %>
+    <%= of.input :api_key, input_html: { autocomplete: "off" } %>
+  <% end %>
+
   <fieldset class="border border-base-300 rounded-lg p-4">
     <legend class="px-1 font-semibold text-sm">Vertex AI</legend>
     <div class="space-y-3">

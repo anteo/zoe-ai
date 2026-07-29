@@ -14,6 +14,7 @@ Patches.register %w[
   RubyLLM::Models
   RubyLLM::Provider
   RubyLLM::Providers::Gemini
+  RubyLLM::Providers::Ollama
   RubyLLM::Providers::OpenAI
   RubyLLM::Providers::OpenRouter
   RubyLLM::Providers::OpenRouter::Models

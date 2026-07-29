@@ -253,6 +253,9 @@ en:
           api_key: Mistral API Key
         ollama:
           api_base: Ollama API Base URL
+        ollama_cloud:
+          api_base: Ollama Cloud API Base URL
+          api_key: Ollama Cloud API Key
         openai:
           api_key: OpenAI API Key
         openrouter:

@@ -6,9 +6,21 @@ module Patches
       FAKE_DEV_MODEL_ID = "fake-dev"
       FAKE_DEV_PROVIDER = "fake"
 
+      OLLAMA_CLOUD_MODELS_DEV_KEY = "ollama-cloud"
+      OLLAMA_CLOUD_PROVIDER = "ollama_cloud"
+      OLLAMA_LOCAL_PROVIDER = "ollama"
+      CLOUD_ONLY_MODEL_TAG = "cloud"
+
       class_methods do
-        def read_from_json(file = ::RubyLLM.config.model_registry_file)
+        def load_models(file = ::RubyLLM.config.model_registry_file)
           models = super
+          reject_cloud_tagged_from_local_ollama(models)
+        end
+
+          def read_from_json(file = ::RubyLLM.config.model_registry_file)
+          models = super
+          models = map_models_dev_ollama_cloud(models)
+          models = reject_cloud_tagged_from_local_ollama(models)
           return models unless Rails.env.development?
 
           models + development_models(models)
@@ -16,6 +28,8 @@ module Patches
 
         def load_existing_models
           models = super
+          models = map_models_dev_ollama_cloud(models)
+          models = reject_cloud_tagged_from_local_ollama(models)
           return models unless Rails.env.development?
 
           models + development_models(models)
@@ -23,6 +37,20 @@ module Patches
 
         def fake_dev_model?(model)
           model.id == FAKE_DEV_MODEL_ID && model.provider == FAKE_DEV_PROVIDER
+        end
+
+        def map_models_dev_ollama_cloud(models)
+          models.map do |model|
+            next model unless model.provider == OLLAMA_CLOUD_MODELS_DEV_KEY
+
+            ::RubyLLM::Model::Info.new(model.to_h.merge(provider: OLLAMA_CLOUD_PROVIDER))
+          end
+        end
+
+        def reject_cloud_tagged_from_local_ollama(models)
+          models.reject do |model|
+            model.provider == OLLAMA_LOCAL_PROVIDER && model.id.to_s.split(":").last == CLOUD_ONLY_MODEL_TAG
+          end
         end
 
         private

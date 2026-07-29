@@ -3,6 +3,10 @@ rubyllm_logger = RubyLLM.logger
 Rails.application.config.to_prepare do
   system_logger = SystemLogger.instance.with_payload(source: "ruby_llm")
 
+  RubyLLM::Provider.register :openrouter, AI::Providers::OpenRouter
+  RubyLLM::Provider.register :ollama_cloud, AI::Providers::OllamaCloud
+  RubyLLM::Provider.register :fake, AI::Providers::Fake if Rails.env.development?
+
   Setting.watch(:ai) do |_context|
     RubyLLM.configure do |config|
       cfg = Setting.ai
@@ -17,6 +21,8 @@ Rails.application.config.to_prepare do
       config.openrouter_api_key = providers.openrouter.api_key
       config.deepseek_api_key = providers.deepseek.api_key
       config.ollama_api_base = providers.ollama.api_base
+      config.ollama_cloud_api_key = providers.ollama_cloud.api_key
+      config.ollama_cloud_api_base = providers.ollama_cloud.api_base
       config.vertexai_project_id = providers.vertexai.project_id
       config.vertexai_location = providers.vertexai.location
       config.bedrock_api_key = providers.bedrock.api_key
@@ -37,9 +43,6 @@ Rails.application.config.to_prepare do
       RubyLLM.instance_variable_set(:@logger, nil)
       config.logger = ActiveSupport::BroadcastLogger.new(rubyllm_logger, system_logger)
     end
-
-    RubyLLM::Provider.register :openrouter, AI::Providers::OpenRouter
-    RubyLLM::Provider.register :fake, AI::Providers::Fake if Rails.env.development?
   end
 
   Setting.on_change(:"ai.providers") { RefreshModelsRegistryJob.perform_later }

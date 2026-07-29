@@ -220,6 +220,7 @@ class SettingTest < ActiveSupport::TestCase
     assert_respond_to providers, :openrouter
     assert_respond_to providers, :deepseek
     assert_respond_to providers, :ollama
+    assert_respond_to providers, :ollama_cloud
   end
 
   test "deeply nested scope reads and writes" do

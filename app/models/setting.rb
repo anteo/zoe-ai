@@ -66,6 +66,12 @@ class Setting < ApplicationRecord
         validates :api_base, url: true, allow_blank: true
       end
 
+      scope :ollama_cloud do
+        setting :api_key, :string
+        setting :api_base, :string, default: "https://ollama.com/v1"
+        validates :api_base, url: true, allow_blank: true
+      end
+
       scope :vertexai do
         setting :project_id, :string
         setting :location, :string
