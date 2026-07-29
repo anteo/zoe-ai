@@ -8,6 +8,7 @@ build_context = ENV["KAMAL_BUILD_CONTEXT"].to_s.strip
 postgres_data_dir = ENV.fetch("KAMAL_POSTGRES_DATA_DIR", "zoe_postgres_data")
 postgres_port = ENV["KAMAL_POSTGRES_PORT"].to_s.strip
 postgres_port = "127.0.0.1:#{postgres_port}:5432" unless postgres_port.empty? || postgres_port.include?(":")
+ssh_port = ENV.fetch("KAMAL_SSH_PORT", "22")
 %>
 
 service: zoe-ai
@@ -102,6 +103,7 @@ builder:
 
 ssh:
   user: deploy
+  port: <%= ssh_port %>
 
 aliases:
   console: app exec -i --reuse "bin/rails console"
