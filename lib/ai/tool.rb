@@ -22,14 +22,17 @@ module AI
       broadcast_progress(payload) if payload.present?
 
       super
-    ensure
-      clear_progress if payload.present?
-    end
-
-    def execute(...)
-      super
     rescue Failure => e
       { error: e.message }
+    rescue RubyLLM::Error => e
+      { error: e.message }
+    rescue StandardError => e
+      RubyLLM.logger.error do
+        "[AI::Tool] #{self.class.name} failed: #{e.class}: #{e.message}\n#{e.backtrace&.first(15)&.join("\n")}"
+      end
+      { error: "Tool failed: #{e.message}" }
+    ensure
+      clear_progress if payload.present?
     end
 
     def fail!(error)
