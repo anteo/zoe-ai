@@ -31,8 +31,8 @@ module AI
           "21:9" => 21.0 / 9.0
         }
 
-        w, h = size.split("x").map(&:to_f)
-        current_ratio = w / h
+        w, h = parse_size(size)
+        current_ratio = h.zero? ? 1.0 : w / h
 
         ratios.min_by { |_, value| (value - current_ratio).abs }.first
       end
@@ -46,12 +46,21 @@ module AI
           4 => "4K"
         }
 
-        dims = size.split("x").map(&:to_f)
+        dims = parse_size(size)
         k_value = dims.max / 1024
 
         closest_k = options.keys.min_by { (it - k_value).abs }
 
         options[closest_k]
+      end
+
+      def parse_size(size)
+        return [ 1024.0, 1024.0 ] if size.blank?
+
+        dims = size.to_s.split("x").map(&:to_f)
+        dims = [ 1024.0, 1024.0 ] if dims.any? { |d| d.zero? || d.to_f.nan? }
+
+        dims
       end
 
       def render_image_payload(prompt, model:, size:, with: nil, mask: nil, params: {}) # rubocop:disable Lint/UnusedMethodArgument,Metrics/ParameterLists
