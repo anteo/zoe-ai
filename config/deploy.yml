@@ -98,11 +98,7 @@ accessories:
           echo "Waiting for ChatGPT authorization. Run bundle exec kamal chatgpt_login.";
           sleep 10;
         done;
-        npx --yes openai-oauth@<%= openai_oauth_version %>
-          --host 0.0.0.0
-          --port 10531
-          --oauth-file /data/auth.json
-          --codex-version <%= codex_version %>;
+        npx --yes openai-oauth@<%= openai_oauth_version %> --host 0.0.0.0 --port 10531 --oauth-file /data/auth.json --codex-version <%= codex_version %>;
         echo "ChatGPT OAuth proxy stopped; retrying in 10 seconds. Re-run login if authorization expired.";
         sleep 10;
       done'
