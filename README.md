@@ -211,6 +211,40 @@ ZOE_AI__PROVIDERS__OPENAI__API_KEY=...
 
 Optional values such as Google OAuth, mailer settings, host overrides, and default model selection can also be configured in the same file.
 
+#### ChatGPT subscription image generation
+
+Image generation and reference-image editing can use a ChatGPT subscription through the local, third-party `openai-oauth` proxy:
+
+```bash
+npx openai-oauth@latest --detach
+```
+
+In **Settings → AI providers**, enable ChatGPT and keep the API base set to `http://127.0.0.1:10531/v1`. After saving, select `chatgpt/gpt-image-2` as the image model in **Settings → AI models**.
+
+The proxy owns the ChatGPT OAuth session and does not require an API key. Keep it local or on a private application network; do not expose its unauthenticated endpoint publicly. For containerized Zoe deployments, run the proxy as a private sidecar/service and set the API base to its internal network address.
+
+For a Kamal deployment, `openai-oauth` is configured as the private `chatgpt_oauth` accessory. Boot it once:
+
+```bash
+bash -lc "rvm 4.0.4@zoe-ai do bundle exec kamal accessory boot chatgpt_oauth"
+```
+
+The accessory waits for authorization instead of exiting. Start the device-code login through Kamal:
+
+```bash
+bash -lc "rvm 4.0.4@zoe-ai do bundle exec kamal chatgpt_login"
+```
+
+Open the printed URL on your computer and enter the one-time code. The resulting `auth.json` is stored in the persistent `zoe_chatgpt_oauth` directory, and the waiting proxy starts automatically. Check the session with:
+
+```bash
+bash -lc "rvm 4.0.4@zoe-ai do bundle exec kamal chatgpt_auth_status"
+```
+
+Device-code login must be enabled in the ChatGPT security settings for the account, or in workspace permissions for a managed account.
+
+Production containers use `http://zoe-ai-chatgpt-oauth:10531/v1` through Kamal's private Docker network. The accessory has no published port and is managed separately from regular application deploys.
+
 ### 3. Available environment variables
 
 #### App
@@ -240,6 +274,9 @@ Optional values such as Google OAuth, mailer settings, host overrides, and defau
 
 #### AI providers
 
+- `ZOE_AI__PROVIDERS__CHATGPT__API_BASE`
+- `ZOE_AI__PROVIDERS__CHATGPT__ENABLED`
+- `ZOE_AI__PROVIDERS__CHATGPT__REQUEST_TIMEOUT`
 - `ZOE_AI__PROVIDERS__OPENAI__API_KEY`
 - `ZOE_AI__PROVIDERS__ANTHROPIC__API_KEY`
 - `ZOE_AI__PROVIDERS__GEMINI__API_KEY`
