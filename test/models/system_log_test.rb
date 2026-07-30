@@ -18,4 +18,21 @@ class SystemLogTest < ActiveSupport::TestCase
 
     assert_equal "info", log.severity
   end
+
+  test "includes bounded error details in console payload" do
+    log = SystemLog.create!(
+      severity: "error",
+      message: "ExtractFactsJob failed: Malformed response",
+      payload: {
+        error_class: "ServiceActor::Failure",
+        error_message: "Malformed response",
+        error_backtrace: Array.new(100) { |index| "/rails/app/example.rb:#{index}:in `call'" }
+      }
+    )
+
+    console_payload = log.to_console_payload
+
+    assert_match "ServiceActor::Failure: Malformed response", console_payload[:details]
+    assert_operator console_payload.to_json.bytesize, :<=, SystemLog::CONSOLE_PAYLOAD_MAX_BYTES
+  end
 end

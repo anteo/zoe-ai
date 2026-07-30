@@ -1,4 +1,6 @@
 class SystemLog < ApplicationRecord
+  CONSOLE_PAYLOAD_MAX_BYTES = 6_000
+  CONSOLE_TRUNCATION_SUFFIX = "... [truncated]".freeze
   DEFAULT_LEVEL = "info"
   SEVERITY_LEVELS = %w[debug info warn error fatal].freeze
   SEVERITY_RANKS = SEVERITY_LEVELS.each_with_index.to_h.freeze
@@ -40,15 +42,54 @@ class SystemLog < ApplicationRecord
   end
 
   def to_console_payload
-    {
+    console_payload = {
       id: id,
       logged_at: logged_at.iso8601(3),
-      message: message,
-      severity: severity,
+      message: "",
+      severity: severity
     }
+    console_payload[:message] = fit_console_value(console_payload, :message, message)
+
+    if (details = console_error_details)
+      fitted_details = fit_console_value(console_payload, :details, details)
+      console_payload[:details] = fitted_details if fitted_details.present?
+    end
+
+    console_payload
   end
 
   private
+
+  def console_error_details
+    backtrace = Array(payload["error_backtrace"]).filter_map(&:presence)
+    return if backtrace.empty?
+
+    heading = [ payload["error_class"], payload["error_message"] ].filter_map(&:presence).join(": ")
+    [ heading.presence, *backtrace ].compact.join("\n")
+  end
+
+  def fit_console_value(console_payload, key, value)
+    value = value.to_s
+    return value if console_payload.merge(key => value).to_json.bytesize <= CONSOLE_PAYLOAD_MAX_BYTES
+
+    low = 0
+    high = value.length
+    fitted = nil
+
+    while low <= high
+      length = (low + high) / 2
+      candidate = "#{value[0, length]}#{CONSOLE_TRUNCATION_SUFFIX}"
+
+      if console_payload.merge(key => candidate).to_json.bytesize <= CONSOLE_PAYLOAD_MAX_BYTES
+        fitted = candidate
+        low = length + 1
+      else
+        high = length - 1
+      end
+    end
+
+    fitted
+  end
 
   def normalize_payload!
     self.payload = (payload || {}).deep_stringify_keys

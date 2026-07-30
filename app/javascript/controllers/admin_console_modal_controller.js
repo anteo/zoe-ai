@@ -116,7 +116,26 @@ export default class extends Controller {
   buildRow(payload) {
     const row = document.createElement("div")
     row.className = `console-log-row ${this.severityClass(payload.severity)}`
-    row.textContent = this.formatLine(payload)
+    const line = document.createElement("div")
+    line.textContent = this.formatLine(payload)
+    row.appendChild(line)
+
+    if (payload.details) {
+      const details = document.createElement("details")
+      details.className = "ml-4 text-neutral-content/70"
+
+      const summary = document.createElement("summary")
+      summary.className = "cursor-pointer select-none"
+      summary.textContent = this.outputTarget.dataset.errorDetailsLabel
+
+      const content = document.createElement("pre")
+      content.className = "mt-1 whitespace-pre-wrap break-words"
+      content.textContent = payload.details
+
+      details.append(summary, content)
+      row.appendChild(details)
+    }
+
     return row
   }
 

@@ -107,6 +107,7 @@ ru:
   label_edit_mcp_server: Редактировать MCP сервер
   label_edit_profile: Редактировать профиль
   label_email: Email
+  label_error_details: Подробности ошибки
   label_event: Событие
   label_events: События
   label_fact_kind_attribute: Атрибут

@@ -107,6 +107,7 @@ en:
   label_edit_mcp_server: Edit MCP server
   label_edit_profile: Edit profile
   label_email: Email
+  label_error_details: Error details
   label_event: Event
   label_events: Events
   label_fact_kind_attribute: Attribute

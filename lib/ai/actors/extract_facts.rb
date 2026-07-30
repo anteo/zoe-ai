@@ -49,7 +49,7 @@ module AI::Actors
       elsif response.content.is_a?(Hash) && response.content.key?("facts")
         response.content["facts"]
       else
-        fail! message: "Malformed response", response: response.content
+        fail! error: "Malformed response", response: response.content
       end
       logger.debug "<<< #{facts.inspect}"
       facts.each do |fact_data|

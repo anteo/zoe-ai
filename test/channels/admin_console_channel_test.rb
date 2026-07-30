@@ -54,4 +54,24 @@ class AdminConsoleChannelTest < ActionCable::Channel::TestCase
     assert_equal "append", payload[:type]
     assert_equal error_log.id, payload[:log].deep_symbolize_keys[:id]
   end
+
+  test "limits snapshot payload size while keeping the latest logs" do
+    Setting.ui.update(admin_console_lines: 100)
+    20.times do |index|
+      SystemLog.create!(
+        severity: "error",
+        message: "error #{index}",
+        logged_at: index.seconds.ago,
+        payload: { error_backtrace: Array.new(20, "x" * 500) }
+      )
+    end
+    latest_log = SystemLog.newest_first.first
+
+    stub_connection current_user: @admin
+    subscribe(level: "error")
+
+    payload = transmissions.last.deep_symbolize_keys
+    assert_operator payload.to_json.bytesize, :<=, AdminConsoleChannel::SNAPSHOT_MAX_BYTES
+    assert_equal latest_log.id, payload[:logs].last[:id]
+  end
 end
