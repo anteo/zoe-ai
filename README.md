@@ -344,7 +344,7 @@ bash -lc "rvm 4.0.4@zoe-ai do bin/dev"
 
 That starts:
 
-- the Rails web server on `http://localhost:3000`
+- the Rails web server on `http://localhost:3010`
 - the CSS watcher
 - the JavaScript watcher
 
@@ -374,7 +374,7 @@ docker compose up --build
 This starts:
 
 - `postgres` using PostgreSQL 17
-- `web` on `http://localhost:3000`
+- `web` on `http://localhost:3010`
 - `jobs` for background processing
 
 On container startup, the web service can automatically:

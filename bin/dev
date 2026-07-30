@@ -5,7 +5,7 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
-# Default to port 3000 if not specified
-export PORT="${PORT:-3000}"
+# Keep Zoe clear of other local applications that commonly use port 3000.
+export PORT="${PORT:-3010}"
 
 exec foreman start -f Procfile.dev --env /dev/null "$@"
