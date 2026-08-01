@@ -14,7 +14,7 @@ class RunDreamingSessionJob < ApplicationJob
 
     dream_chat = AI::Agents::Dreaming.create!(character:, partner:, user:, dream: true)
     dream_chat.deliver_pending_messages!
-    dream_chat.complete
+    dream_chat.ask("Begin the internal dreaming session now.")
     summary = dream_chat.latest_assistant_message_content
     dream_chat.update!(closed: true, closed_at: Time.current, summary:)
 
