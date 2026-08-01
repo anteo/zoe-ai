@@ -259,8 +259,51 @@ class Chat < ApplicationRecord
 
     return if @message.valid_assistant_completion?
 
+    log_empty_assistant_response(message)
     raise AI::EmptyAssistantResponseError
   ensure
     @pending_tts_style = nil
+  end
+
+  def log_empty_assistant_response(message)
+    raw_response = message&.raw
+    response_body = raw_response&.body
+    choice = response_body.is_a?(Hash) ? response_body.dig("choices", 0) : nil
+    response_message = choice.is_a?(Hash) ? choice["message"] : nil
+    response_content = response_message.is_a?(Hash) ? response_message["content"] : nil
+    response_thinking = if response_message.is_a?(Hash)
+      response_message.values_at("reasoning_content", "reasoning", "thinking").compact.join
+    end
+
+    Rails.logger.warn(
+      "Empty assistant response: #{JSON.generate(
+        chat_id: id,
+        provider: resolved_model&.provider,
+        configured_model_id: resolved_model&.model_id,
+        response_model_id: message&.model_id,
+        response_class: raw_response&.class&.name,
+        response_status: raw_response&.respond_to?(:status) ? raw_response.status : nil,
+        response_body_class: response_body&.class&.name,
+        response_body_bytes: response_body.to_json.bytesize,
+        response_body_keys: response_body.is_a?(Hash) ? response_body.keys : nil,
+        response_error_present: response_body.is_a?(Hash) && response_body["error"].present?,
+        choices_count: response_body.is_a?(Hash) ? Array(response_body["choices"]).size : nil,
+        finish_reason: choice.is_a?(Hash) ? choice["finish_reason"] : nil,
+        response_message_keys: response_message.is_a?(Hash) ? response_message.keys : nil,
+        response_content_class: response_content&.class&.name,
+        response_content_length: response_content.to_s.length,
+        response_thinking_length: response_thinking&.length,
+        response_tool_calls_count: response_message.is_a?(Hash) ? Array(response_message["tool_calls"]).size : nil,
+        parsed_content_class: message&.content&.class&.name,
+        parsed_content_length: message&.content.to_s.length,
+        parsed_thinking_length: message&.thinking&.text.to_s.length,
+        parsed_tool_calls_count: message&.tool_calls.to_h.size,
+        input_tokens: message&.input_tokens,
+        output_tokens: message&.output_tokens,
+        thinking_tokens: message&.thinking_tokens
+      )}"
+    )
+  rescue => e
+    Rails.logger.warn("Failed to log empty assistant response diagnostics: #{e.class}: #{e.message}")
   end
 end
