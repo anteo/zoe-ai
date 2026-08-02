@@ -324,7 +324,24 @@ export default class extends Controller {
 
   async displayAttachments(event) {
     const newFiles = Array.from(event.target.files)
-    this.selectedFiles = [...this.selectedFiles, ...newFiles]
+    await this.addAttachments(newFiles)
+  }
+
+  async handlePaste(event) {
+    const imageFiles = Array.from(event.clipboardData?.items || [])
+      .filter(item => item.kind === "file" && item.type.startsWith("image/"))
+      .map(item => item.getAsFile())
+      .filter(Boolean)
+
+    if (imageFiles.length === 0) return
+
+    event.preventDefault()
+    this.handleTyping()
+    await this.addAttachments(imageFiles)
+  }
+
+  async addAttachments(files) {
+    this.selectedFiles = [...this.selectedFiles, ...files]
     this.syncFileInput()
     await this.renderAttachments()
     this.updateSendButton()
