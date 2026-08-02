@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "securerandom"
+
 module AI
   module Providers
     # Ollama Cloud API integration.
@@ -11,6 +13,10 @@ module AI
 
       def headers
         { "Authorization" => "Bearer #{@config.ollama_cloud_api_key}" }
+      end
+
+      def complete(...)
+        namespace_tool_call_ids(super)
       end
 
       # Ollama Cloud supports JSON mode, but not schema-constrained responses.
@@ -53,6 +59,38 @@ module AI
       end
 
       private
+
+      def namespace_tool_call_ids(message)
+        return message if message&.tool_calls.blank?
+
+        response_body = message.raw&.body
+        namespace = response_body["id"] if response_body.is_a?(Hash)
+        namespace = SecureRandom.uuid if namespace.blank?
+
+        tool_calls = message.tool_calls.values.to_h do |tool_call|
+          id = "#{namespace}:#{tool_call.id}"
+          [
+            id,
+            RubyLLM::ToolCall.new(
+              id:,
+              name: tool_call.name,
+              arguments: tool_call.arguments,
+              thought_signature: tool_call.thought_signature
+            )
+          ]
+        end
+
+        RubyLLM::Message.new(
+          role: message.role,
+          content: message.content,
+          model_id: message.model_id,
+          tool_calls:,
+          tool_call_id: message.tool_call_id,
+          raw: message.raw,
+          thinking: message.thinking,
+          tokens: message.tokens
+        )
+      end
 
       def add_schema_instruction(messages, schema)
         instruction = <<~PROMPT.strip
