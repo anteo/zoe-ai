@@ -50,6 +50,7 @@ Rails.application.config.to_prepare do
   end
 
   Setting.on_change(:"ai.providers") { RefreshModelsRegistryJob.perform_later }
+  Setting.sync_hooks_if_stale!
 end
 
 RubyLLM.configure do |config|
