@@ -18,6 +18,15 @@ module Patches
 
         private
 
+        def format_content(content)
+          ::RubyLLM::Providers::OpenAI::Media.format_content(
+            content,
+            document_attachments: :none,
+            image_attachments: true,
+            audio_attachments: false
+          )
+        end
+
         def messages_with_schema_instruction(messages, schema)
           updated_messages = messages.map(&:dup)
           instruction = structured_output_instruction(schema)
