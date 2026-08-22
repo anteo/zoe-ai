@@ -24,6 +24,7 @@ class Setting < ApplicationRecord
       setting :default_image_model, :string
       setting :default_transcription_model, :string
       setting :default_tts_model, :string
+      setting :registry_version, :integer, default: 0, readonly: true
 
       validates :default_model, presence: true
     end

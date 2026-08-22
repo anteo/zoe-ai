@@ -201,6 +201,7 @@ class Chat < ApplicationRecord
   private
 
   def resolve_model_from_strings
+    AI::ModelRegistry.sync!
     super
   rescue RubyLLM::ConfigurationError
     raise AI::ModelNotConfiguredError

@@ -23,6 +23,7 @@ module AI::Actors
       before_count = Model.count
       Model.save_to_database
       after_count = Model.count
+      AI::ModelRegistry.bump_version!
 
       self.stats = build_stats(
         existing_models_count: existing_models.size,
