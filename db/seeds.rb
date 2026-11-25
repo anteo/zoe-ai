@@ -200,7 +200,7 @@ Agent.transaction do
 
   Agent.find_or_create_by!(key: "workspace_assistant") do |agent|
     agent.name = "Workspace Assistant"
-    agent.description = "Lists and searches local projects, reads, creates, edits, moves and deletes files, creates directories, and runs shell commands and tests in an isolated project environment."
+    agent.description = "Lists and searches local projects, reads, creates, edits, moves and deletes files, creates directories, reads Git commit history from the original repositories, and runs shell commands and tests in an isolated project environment."
     agent.mcp_servers = [workspace_runner]
     agent.instructions = <<~TEXT.strip
       Complete the task provided by Zoe and report your findings so Zoe can respond to the user.

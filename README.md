@@ -157,6 +157,8 @@ To share a project already on the workstation, put a directory symlink directly 
 
 For a coding task, ask Zoe to edit a file in a named project and run a specific test. The specialist's file tools save changes to the workstation. Its terminal gets a private working copy of each project when first opened in an agent dialog. The same dialog keeps its working tree, Git index, branches and commits across commands, delegated runs and runner restarts. For example, ask Zoe to create a branch and commit a change in the terminal, then ask her to show the commit in the same dialog. A new dialog starts from the files currently on the workstation. Within an existing dialog the agent can import selected workstation files for comparison or testing. Progress remains visible in Zoe's chat.
 
+Ask Zoe to show recent commits from the original workstation repository for a project such as `zoe-ai`. The runner reads hashes, dates and commit subjects from the repository's current `HEAD`. Git commands inside the terminal use the dialog's own Git history.
+
 The workstation stores its own detailed run history. Selected file excerpts are sent to the runner’s configured model provider. Zoe receives progress and the task result, which can include quoted text from files.
 
 ## Voice features

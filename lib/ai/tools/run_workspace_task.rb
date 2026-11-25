@@ -6,7 +6,7 @@ module AI
       STATUSES = %w[queued running completed failed].freeze
       EVENT_KINDS = %w[status tool_call tool_result result error].freeze
 
-      description "Carry out the delegated task in the connected workspace. The runner can inspect and change project files and run commands in an isolated project environment."
+      description "Carry out the delegated task in the connected workspace. The runner can inspect and change project files, read the original Git commit history, and run commands in an isolated project environment."
 
       def initialize(chat, run)
         super(chat)
