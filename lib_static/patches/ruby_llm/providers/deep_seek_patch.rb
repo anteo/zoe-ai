@@ -18,6 +18,10 @@ module Patches
 
         private
 
+        def supports_image_tool_results?
+          true
+        end
+
         def format_content(content)
           ::RubyLLM::Providers::OpenAI::Media.format_content(
             content,

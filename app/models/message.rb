@@ -149,11 +149,18 @@ class Message < ApplicationRecord
       with_attachment_ids(with_sent_at(llm_content))
     elsif content_raw.present?
       RubyLLM::Content::Raw.new(content_raw)
+    elsif draw_result_with_image?
+      AI::DrawResult.new(content, attachments_blobs.to_a)
     elsif content.present? || attachments.attached?
       with_attachment_ids(RubyLLM::Content.new(content.to_s))
     else
       RubyLLM::Content.new(content)
     end
+  end
+
+  def draw_result_with_image?
+    role == "tool" && attachments_blobs.any? && chat.model&.supports_vision? &&
+      parent_tool_call&.name == AI::Tools::Draw.new(chat).name
   end
 
   def with_attachment_ids(content)

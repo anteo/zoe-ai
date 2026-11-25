@@ -84,10 +84,13 @@ module AI
 
           chat.attachments_to_persist << blob
 
-          JSON.generate(
+          result = JSON.generate(
             message: "Picture has been successfully generated and displayed to the user",
             attachment_ids: [ blob.id ]
           )
+          return result unless chat.model&.supports_vision?
+
+          DrawResult.new(result, [ blob ])
         else
           "Failed to generate picture"
         end
