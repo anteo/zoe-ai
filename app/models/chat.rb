@@ -80,7 +80,7 @@ class Chat < ApplicationRecord
   end
 
   def messages_association
-    messages.preload(:attachments_blobs, :tool_calls, :model)
+    messages.preload(:attachments_blobs, :tool_calls, :parent_tool_call, :model)
   end
 
   def instructions
@@ -220,7 +220,9 @@ class Chat < ApplicationRecord
   end
 
   def order_messages_for_llm(messages)
-    messages = messages.reject(&:error?)
+    messages = messages.reject do |message|
+      message.error? || (message.role == "tool" && message.parent_tool_call&.tool_call_id.blank?)
+    end
     system_messages, conversation_messages = messages.partition { |message| message.role.to_s == "system" }
     system_messages + conversation_messages
   end

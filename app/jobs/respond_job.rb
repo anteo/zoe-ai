@@ -17,10 +17,12 @@ class RespondJob < ChatTriggeredJob
     ai_chat.agent_run_trigger_message_id = trigger_message_id
     ai_chat.agent_run_job_owner = { respond_job_id: job_id, respond_job_execution_id: execution&.id }
 
-    ai_chat.after_message do
-      message = ai_chat.message
-      schedule_message(message) if message.assistant?
-    end.complete
+    catch(:cancelled_response) do
+      ai_chat.after_message do
+        message = ai_chat.message
+        schedule_message(message) if message.assistant?
+      end.complete
+    end
   rescue AI::EmptyAssistantResponseError
     raise
   rescue => e
@@ -46,7 +48,7 @@ class RespondJob < ChatTriggeredJob
   def schedule_message(message)
     if cancelled?
       message.destroy
-      return
+      throw :cancelled_response
     end
 
     Turbo::StreamsChannel.broadcast_replace_to(
