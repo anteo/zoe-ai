@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_17_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_25_124000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,10 +42,64 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_170000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "agent_conversations", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.string "agent_name", null: false
+    t.bigint "character_id", null: false
+    t.datetime "created_at", null: false
+    t.boolean "local_workspace", default: false, null: false
+    t.bigint "partner_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.string "workspace_conversation_id"
+    t.string "workspace_runner_id"
+    t.index ["agent_id"], name: "index_agent_conversations_on_agent_id"
+    t.index ["character_id"], name: "index_agent_conversations_on_character_id"
+    t.index ["partner_id"], name: "index_agent_conversations_on_partner_id"
+    t.index ["user_id", "character_id", "partner_id"], name: "idx_on_user_id_character_id_partner_id_4d1c3aafa6"
+    t.index ["user_id"], name: "index_agent_conversations_on_user_id"
+  end
+
+  create_table "agent_run_events", force: :cascade do |t|
+    t.bigint "agent_run_id", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "data", default: {}, null: false
+    t.string "kind", null: false
+    t.text "message"
+    t.index ["agent_run_id"], name: "index_agent_run_events_on_agent_run_id"
+  end
+
+  create_table "agent_runs", force: :cascade do |t|
+    t.bigint "agent_conversation_id", null: false
+    t.bigint "agent_id"
+    t.string "agent_name", null: false
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.text "error"
+    t.datetime "finished_at"
+    t.boolean "local_workspace", default: false, null: false
+    t.bigint "respond_job_execution_id"
+    t.string "respond_job_id"
+    t.text "result"
+    t.string "status", default: "running", null: false
+    t.text "task", null: false
+    t.bigint "trigger_message_id"
+    t.datetime "updated_at", null: false
+    t.string "workspace_run_id"
+    t.integer "workspace_sequence", default: 0, null: false
+    t.string "workspace_status"
+    t.index ["agent_conversation_id"], name: "index_agent_runs_on_agent_conversation_id"
+    t.index ["agent_conversation_id"], name: "index_agent_runs_on_running_conversation", unique: true, where: "((status)::text = 'running'::text)"
+    t.index ["agent_id"], name: "index_agent_runs_on_agent_id"
+    t.index ["chat_id"], name: "index_agent_runs_on_chat_id"
+    t.index ["trigger_message_id"], name: "index_agent_runs_on_trigger_message_id"
+  end
+
   create_table "agents", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "builtin", default: false, null: false
     t.datetime "created_at", null: false
+    t.text "description"
     t.text "instructions"
     t.string "key"
     t.bigint "model_id"
@@ -471,6 +525,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_170000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "agent_conversations", "agents", on_delete: :nullify
+  add_foreign_key "agent_conversations", "characters"
+  add_foreign_key "agent_conversations", "characters", column: "partner_id"
+  add_foreign_key "agent_conversations", "users"
+  add_foreign_key "agent_run_events", "agent_runs"
+  add_foreign_key "agent_runs", "agent_conversations"
+  add_foreign_key "agent_runs", "agents", on_delete: :nullify
+  add_foreign_key "agent_runs", "chats"
+  add_foreign_key "agent_runs", "messages", column: "trigger_message_id", on_delete: :nullify
   add_foreign_key "agents", "models"
   add_foreign_key "agents_mcp_servers", "agents"
   add_foreign_key "agents_mcp_servers", "mcp_servers"

@@ -45,6 +45,8 @@ Rails.application.routes.draw do
     end
 
     member do
+      get "agent_conversations/:conversation_id", action: :agent_conversation, as: :agent_conversation
+      get :agent_runs
       get :history_detail
     end
   end

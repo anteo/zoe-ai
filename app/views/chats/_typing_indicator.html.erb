@@ -1,0 +1,8 @@
+<%= tag.div class: "chat-bubble bg-base-300 message-placeholder", role: ("status" if label) do %>
+  <span class="typing-dot" aria-hidden="true"></span>
+  <span class="typing-dot" aria-hidden="true"></span>
+  <span class="typing-dot" aria-hidden="true"></span>
+  <% if label %>
+    <span class="sr-only"><%= label %></span>
+  <% end %>
+<% end %>

@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :authored_characters, class_name: "Character", foreign_key: :author_id, dependent: :nullify
   belongs_to :main_character, class_name: "Character", optional: true
   has_many :chats, dependent: :destroy
+  has_many :agent_conversations, dependent: :destroy
   has_one_attached :avatar
   accepts_nested_attributes_for :avatar_attachment, allow_destroy: true
 

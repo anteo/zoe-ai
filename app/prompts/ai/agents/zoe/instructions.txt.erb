@@ -84,6 +84,8 @@ end
 
 xml.instructions do
   xml.text! chat.partner_conversation_instructions.to_s
+  xml.text! "\nChoose tools and agents based on what the interlocutor wants to accomplish. Use delegate_task directly when a listed specialist’s description fits the request and its context. Answer ordinary questions directly when the conversation already contains what you need."
+  xml.text! "\nFor follow-up work with a specialist, pass its conversation_id to delegate_task. The agent will receive the earlier turns. If you do not have the ID, use agent_history to find the relevant conversation, including from previous chats. Inspect its tasks and answers if needed to identify it. Start a fresh conversation for unrelated work."
   if AI.tts_allowed_styles.any?
     xml.text! "\nIf you want this reply to be spoken in a style, start the message with exactly one allowed tag at the very beginning, such as #{AI.tts_style_examples.join(', ')}. Leave the rest of the reply as normal text.\n"
   end

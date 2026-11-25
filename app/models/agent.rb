@@ -4,6 +4,7 @@ class Agent < ApplicationRecord
   THINKING_EFFORTS = %w[low medium high].freeze
 
   belongs_to :model, optional: true
+  has_many :agent_runs, dependent: :nullify
   has_and_belongs_to_many :mcp_servers, join_table: :agents_mcp_servers
 
   validates :name, presence: true
@@ -18,6 +19,15 @@ class Agent < ApplicationRecord
   scope :active,   -> { where(active: true) }
   scope :builtin,  -> { where(builtin: true) }
   scope :custom,   -> { where(builtin: false) }
+  scope :delegatable, ->(user) do
+    profiles = active.custom
+    if user&.admin?
+      profiles
+    else
+      runner_profiles = joins(:mcp_servers).merge(MCPServer.workspace_runner).select(:id)
+      profiles.where.not(id: runner_profiles)
+    end
+  end
 
   def self.ransackable_associations(_auth_object = nil)
     %w[model mcp_servers]

@@ -189,3 +189,23 @@ zoe_images.each { |file| ensure_character_attachment!(character: zoe, name: :ima
     a.builtin = true
   end
 end
+
+Agent.transaction do
+  workspace_runner = MCPServer.find_or_create_by!(key: MCPServer::WORKSPACE_RUNNER_KEY) do |server|
+    server.name = "Workspace Runner"
+    server.active = false
+    server.transport_type = "streamable_http"
+    server.config = { url: ENV.fetch("WORKSPACE_RUNNER_URL", "http://127.0.0.1:7331/mcp") }
+  end
+
+  Agent.find_or_create_by!(key: "workspace_assistant") do |agent|
+    agent.name = "Workspace Assistant"
+    agent.description = "Lists and searches local projects, reads, creates, edits, moves and deletes files, creates directories, and runs shell commands and tests in an isolated project environment."
+    agent.mcp_servers = [workspace_runner]
+    agent.instructions = <<~TEXT.strip
+      Complete the task provided by Zoe and report your findings so Zoe can respond to the user.
+      Use the local workspace tool to carry out the requested work and report its actual outcome.
+      If a task requires local access and no local workspace tool is available, say the local workspace is disconnected.
+    TEXT
+  end
+end

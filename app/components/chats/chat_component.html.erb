@@ -1,6 +1,7 @@
 <div class="app-scroll-region min-h-0 overflow-y-auto p-4 rounded-field shadow-sm bg-base-100"
      id="<%= dom_id %>"
-     data-controller="<%= [read_only? ? "history-chat" : "chat", "lightbox"].join(" ") %>">
+     data-controller="<%= [read_only? ? "history-chat" : "chat", "lightbox"].join(" ") %>"
+     <% unless read_only? %>data-action="turbo:frame-render->chat#scrollAfterAgentRunsRender"<% end %>>
   <% if new? %>
     <% if pending_messages.empty? %>
       <div id="<%= draft_empty_state_id %>" class="flex flex-col items-center justify-center h-full min-h-[300px]">
@@ -20,8 +21,10 @@
     </div>
   <% else %>
     <% messages.each do |message| %>
-      <%= helpers.component :chats__message, message:, current_character:, read_only: read_only? %>
+      <%= helpers.component :chats__message, message:, current_character:, read_only: read_only?, agent_runs: agent_runs_by_message.fetch(message.id, []) %>
     <% end %>
+
+    <%= render Chats::AgentRunsComponent.new(chat:, runs: agent_runs_by_message.fetch(nil, []), read_only: read_only?) %>
 
     <% unless read_only? %>
       <div id="message-placeholder-slot-<%= chat.id %>">

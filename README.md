@@ -107,6 +107,8 @@ Zoe is not limited to pure text generation. AI characters can use tools when a r
 
 - **`event_search`**: search recent happenings, plans, and other time-bound remembered context.
 - **`chat_history_search`**: re-open prior closed conversations when deeper context is needed.
+- **`delegate_task`**: give a specialist a task and return its answer to the current conversation.
+- **`agent_history`**: find previous specialist conversations and read their tasks and answers.
 - **`draw`**: generate new images that fit the current relationship, mood, or follow-up idea.
 - **`manage_postponed_messages`**: prepare future follow-ups or next-chat messages.
 - **`manage_own_instructions`**: update character-specific behavior rules over time, including dream-specific reflection rules.
@@ -124,6 +126,38 @@ Zoe also supports MCP (Model Context Protocol) servers.
 - From the AI’s point of view, MCP tools become part of the same general tool-using workflow as the built-in capabilities.
 
 In practice, this means Zoe can combine persistent memory, normal prompt context, built-in tools, and MCP-provided tools into one conversational system.
+
+### Delegate a task
+
+Run `bin/rails db:migrate db:seed` to create the **Workspace Assistant** profile and its **Workspace Runner** connector. Under **Settings → Agents**, give each specialist a description of the work it can do. Zoe sees the names, selectors, and descriptions of active custom agents available to the current user and chooses one based on the request and earlier messages. Internal instructions configure the specialist itself. You can also name the agent you want. Each run shows its progress in the conversation. Expand it to see tool activity and completion or failure.
+
+Each specialist conversation has a permanent `conversation_id`. Every task in it creates an `AgentRun` with its own progress, result, and link to the initiating message. Open the agent dialog from its run’s progress card in the current chat or in chat history. The drawer shows the agent’s tasks and answers in order. PostgreSQL keeps the specialist’s messages and tool activity with each run. Fact extraction reads the ordinary Zoe chat.
+
+For example, after delegating a project listing, ask “Go back to the agent that listed my projects and ask it which names it saw.” Zoe can find that conversation using `agent_history` even in a later chat with the same user and characters, then pass its ID to `delegate_task`. Local workspace conversations also resume on the same workstation. Each run saved before the introduction of conversations starts its own conversation.
+
+The stored transcript can outgrow the model’s context. Server-side specialists replay up to 30 recent turns within the model budget, including tool calls and results when they fit. The local runner replays up to eight completed turns. Earlier tasks and answers remain available through the conversation history.
+
+### Connect a workstation
+
+**Workspace Runner** is a separate Ruby service in the `zoe-workspace-runner` repository. It runs ActiveHarness on the computer that owns the files. Its README covers installation and the workspace directory, DeepSeek key and runner token. Start it there with `bin/server`. The default address is `http://127.0.0.1:7331/mcp`.
+
+1. Set `WORKSPACE_RUNNER_ROOT` to the directory containing the projects you want to share. The runner needs write access for file changes. Configure the runner's Docker image on the workstation to enable its isolated project terminal. Keep the service reachable from the Zoe worker. Loopback works when both processes share a host and network namespace. For a remote deployment, use the workstation’s private network hostname or an authenticated tunnel. If using a reverse proxy, add its hostname to `WORKSPACE_RUNNER_ALLOWED_HOSTS` on the workstation.
+2. Open **Settings → MCP servers → Workspace Runner**. Choose `streamable_http`, enter the reachable URL in the JSON configuration and enable the connector. You can also open the connector editor beside its name in **Settings → Agents**. Set `WORKSPACE_RUNNER_TOKEN` in the environment of Zoe’s web and worker processes to match the runner token, or put the bearer header in the connector JSON.
+
+   ```json
+   {
+     "url": "https://workstation.example.internal/mcp",
+     "headers": { "Authorization": "Bearer YOUR_RUNNER_TOKEN" }
+   }
+   ```
+
+3. As a Zoe administrator, ask “Read the README in zoe-ai and tell me how to start the project.” Zoe calls `delegate_task` with the selected agent and the task. Attaching the Workspace Runner connector to a custom agent routes new conversations for that profile to the workstation and makes the profile available to administrators. Profiles without this connector use their configured model and tools. The runner reports tool activity as it works and returns its answer directly to Zoe. The workstation must be awake and connected. The browser can be on another device.
+
+To share a project already on the workstation, put a directory symlink directly in the workspace root. For example, if the workspace is `~/ZoeWorkspace`, run `ln -s ~/Projects/zoe-ai ~/ZoeWorkspace/zoe-ai` and restart the runner. Then ask Zoe to read `zoe-ai/README.md`. The runner uses the link name for workspace-relative paths and keeps its usual file restrictions inside the project.
+
+For a coding task, ask Zoe to edit a file in a named project and run a specific test. The specialist's file tools save changes to the workstation. Its terminal gets a private working copy of each project when first opened in an agent dialog. The same dialog keeps its working tree, Git index, branches and commits across commands, delegated runs and runner restarts. For example, ask Zoe to create a branch and commit a change in the terminal, then ask her to show the commit in the same dialog. A new dialog starts from the files currently on the workstation. Within an existing dialog the agent can import selected workstation files for comparison or testing. Progress remains visible in Zoe's chat.
+
+The workstation stores its own detailed run history. Selected file excerpts are sent to the runner’s configured model provider. Zoe receives progress and the task result, which can include quoted text from files.
 
 ## Voice features
 

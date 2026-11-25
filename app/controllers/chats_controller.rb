@@ -1,6 +1,6 @@
 class ChatsController < ApplicationController
   before_action :find_chat, only: [ :show ]
-  before_action :find_history_chat, only: [ :history_detail, :destroy ]
+  before_action :find_history_chat, only: [ :agent_conversation, :agent_runs, :history_detail, :destroy ]
   before_action :find_default_chat, only: [ :show ]
   before_action :build_default_chat, only: [ :new, :show ]
   before_action :load_history_chats, only: [ :history_list, :destroy ]
@@ -14,6 +14,29 @@ class ChatsController < ApplicationController
   end
 
   def show
+  end
+
+  def agent_conversation
+    @agent_conversation = AgentConversation.for_chat_identity(@history_chat).find_by(id: params[:conversation_id])
+    return head(:not_found) unless @agent_conversation
+
+    runs = @agent_conversation.runs
+    runs.reconcile_interrupted!
+    @conversation_runs = runs.select(:id, :agent_name, :task, :status, :result, :created_at, :finished_at)
+                             .order(:id).preload(:progress_events)
+  end
+
+  def agent_runs
+    if params[:message_id].present?
+      trigger_message_id = Integer(params[:message_id], exception: false)
+      return head(:bad_request) unless trigger_message_id
+    end
+    runs = @history_chat.agent_runs.where(trigger_message_id:)
+    runs.reconcile_interrupted!
+
+    render Chats::AgentRunsComponent.new(
+      chat: @history_chat, trigger_message_id:, runs: runs.order(:id).preload(:progress_events)
+    ), layout: false
   end
 
   def destroy

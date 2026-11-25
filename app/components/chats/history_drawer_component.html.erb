@@ -1,8 +1,4 @@
-<div class="drawer drawer-end w-auto shrink-0"
-     data-controller="history-drawer"
-     data-action="keydown@window->history-drawer#handleKeydown"
-     data-history-drawer-list-title-value="<%= t(:label_chat_history) %>"
-     data-history-drawer-list-url-value="<%= history_list_chats_path(current_chat_id:) %>">
+<div class="drawer drawer-end w-auto shrink-0">
   <input id="history-drawer-toggle"
          type="checkbox"
          tabindex="-1"
@@ -26,25 +22,40 @@
            aria-label="<%= t(:label_close) %>"
            class="drawer-overlay"></label>
 
-    <aside class="history-drawer-panel ml-auto h-full w-full max-w-[26rem] bg-base-100 shadow-xl transition-[max-width] duration-200 flex flex-col"
+    <aside class="history-drawer-panel group/panel ml-auto h-full w-full max-w-[26rem] data-[agents=detail]:max-w-3xl bg-base-100 shadow-xl transition-[max-width] duration-200 flex flex-col"
            data-history-drawer-target="panel">
       <header class="border-b border-base-300 px-4 py-3 flex items-center gap-2">
         <button type="button"
-                class="btn btn-ghost btn-sm hidden lg:hidden"
+                class="btn btn-ghost btn-sm hidden lg:hidden group-data-[agents]/panel:hidden"
                 data-history-drawer-target="backButton"
                 data-action="history-drawer#showList"
                 title="<%= t(:label_back) %>">
           <span class="icon-[lucide--arrow-left] w-4 h-4"></span>
         </button>
+        <button type="button" class="btn btn-ghost btn-sm hidden group-data-[agents=detail]/panel:inline-flex"
+                data-history-drawer-target="agentBack" data-action="history-drawer#backFromAgent"
+                aria-label="<%= t(:label_back) %>">
+          <span class="icon-[lucide--arrow-left] w-4 h-4"></span>
+        </button>
         <div class="flex-1 min-w-0">
-          <h2 class="font-semibold text-base truncate" data-history-drawer-target="title"><%= t(:label_chat_history) %></h2>
+          <h2 class="font-semibold text-base truncate">
+            <span class="group-data-[agents]/panel:hidden"><%= t(:label_chat_history) %></span>
+            <span class="hidden group-data-[agents]/panel:inline"><%= t("agent_conversations.label_dialog") %></span>
+          </h2>
         </div>
-        <button type="button" class="btn btn-ghost btn-sm" data-action="history-drawer#close" title="<%= t(:label_close) %>">
+        <button type="button" class="btn btn-ghost btn-sm"
+                data-action="history-drawer#close" title="<%= t(:label_close) %>">
           <span class="icon-[lucide--x] w-4 h-4"></span>
         </button>
       </header>
 
-      <div class="flex-1 min-h-0 flex justify-end">
+      <turbo-frame id="agent-conversation-detail"
+                   refresh="morph"
+                   data-history-drawer-target="agentFrame"
+                   data-action="turbo:frame-load->history-drawer#scrollAgentToBottom"
+                   class="hidden group-data-[agents=detail]/panel:block flex-1 min-h-0 overflow-y-auto"></turbo-frame>
+
+      <div class="flex-1 min-h-0 flex justify-end group-data-[agents]/panel:hidden">
         <div class="hidden min-h-0 border-r border-base-300 bg-base-100 lg:flex-1 w-full"
              data-history-drawer-target="detailView">
           <turbo-frame id="history-chat-detail"

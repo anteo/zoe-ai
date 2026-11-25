@@ -24,6 +24,16 @@ export default class extends Controller {
     this.scrollToLastMessage("smooth")
   }
 
+  scrollAfterAgentRunsRender(event) {
+    if (event.target.matches("turbo-frame[data-agent-runs-url]")) this.scrollAfterRender()
+  }
+
+  preserveRunDetails(event) {
+    if (event.target === event.currentTarget && event.detail.attributeName === "open") {
+      event.preventDefault()
+    }
+  }
+
   scrollOnRefresh = () => {
     this.scrollToLastMessage()
   }

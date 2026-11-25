@@ -9,6 +9,7 @@
 
   <%= f.input :config_json,
               as: :text,
+              hint: (t(:text_workspace_runner_config_hint) if @mcp_server.key == "workspace_runner"),
               input_html: {
                 rows: 12,
                 class: "font-mono text-xs",

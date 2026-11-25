@@ -8,6 +8,7 @@ class Chat < ApplicationRecord
   belongs_to :last_visible_message, class_name: "Message", optional: true
 
   has_many :facts, dependent: :destroy
+  has_many :agent_runs, dependent: :destroy
   has_many :attachments_blobs, through: :messages
 
   skip_callback :save, :before, :resolve_model_from_strings
@@ -22,6 +23,7 @@ class Chat < ApplicationRecord
   scope :with_summary, -> { where.not(summary: [ nil, "" ]) }
 
   attr_reader :message
+  attr_accessor :agent_run_trigger_message_id, :agent_run_job_owner
 
   def attachments_to_persist
     @attachments_to_persist ||= []

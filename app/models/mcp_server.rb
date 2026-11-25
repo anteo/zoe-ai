@@ -1,5 +1,8 @@
 class MCPServer < ApplicationRecord
   TRANSPORT_TYPES = %w[stdio sse streamable_http streamable http].freeze
+  WORKSPACE_RUNNER_KEY = "workspace_runner".freeze
+
+  self.filter_attributes += [:config]
 
   has_and_belongs_to_many :agents, join_table: :agents_mcp_servers
 
@@ -8,6 +11,7 @@ class MCPServer < ApplicationRecord
   validates :transport_type, inclusion: { in: TRANSPORT_TYPES }
   validate :key_must_not_change, on: :update
 
+  around_save :silence_config_sql, if: :will_save_change_to_config?
   before_validation :parse_config_json
   before_save :reactivate_after_connection_change
   before_save :clear_last_error, if: :sync_job_needed_before_save?
@@ -15,6 +19,8 @@ class MCPServer < ApplicationRecord
   after_destroy_commit :broadcast_remove_settings_row!
 
   scope :active, -> { where(active: true) }
+  scope :workspace_runner, -> { where(key: WORKSPACE_RUNNER_KEY) }
+  scope :for_agent_tools, -> { active.where.not(key: WORKSPACE_RUNNER_KEY) }
 
   def self.ransackable_associations(_auth_object = nil)
     []
@@ -38,7 +44,11 @@ class MCPServer < ApplicationRecord
 
   def to_mcp_config
     cfg = config.symbolize_keys
-    cfg[:env] = cfg[:env]&.stringify_keys
+    cfg[:env] = cfg[:env].stringify_keys if cfg[:env]
+    if key == WORKSPACE_RUNNER_KEY && (token = ENV["WORKSPACE_RUNNER_TOKEN"].presence)
+      headers = cfg.fetch(:headers, {}).reject { |name, _value| name.to_s.casecmp?("Authorization") }
+      cfg[:headers] = headers.merge("Authorization" => "Bearer #{token}")
+    end
     {
       name: key,
       transport_type: transport_type.to_sym,
@@ -110,6 +120,11 @@ class MCPServer < ApplicationRecord
   end
 
   private
+
+  # Query log tags cause the adapter to inline JSON credentials in SQL.
+  def silence_config_sql(&block)
+    ActiveRecord::Base.logger.silence(&block)
+  end
 
   def parse_config_json
     return if @config_json.blank?

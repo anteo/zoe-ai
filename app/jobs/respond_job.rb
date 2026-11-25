@@ -10,9 +10,12 @@ class RespondJob < ChatTriggeredJob
   def run
     return if cancelled?
 
+    chat.agent_runs.where(respond_job_id: job_id).reconcile_interrupted!
     ensure_chat_model!(chat)
     show_message_placeholder(chat) if executions == 1
     ai_chat = AI::Agents::Zoe.find(chat.id)
+    ai_chat.agent_run_trigger_message_id = trigger_message_id
+    ai_chat.agent_run_job_owner = { respond_job_id: job_id, respond_job_execution_id: execution&.id }
 
     ai_chat.after_message do
       message = ai_chat.message

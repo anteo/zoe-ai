@@ -34,6 +34,7 @@ module Ai
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
     config.paths.add "lib_static", autoload_once: true, load_path: true
+    Rails.autoloaders.once.inflector.inflect("streamable_http_patch" => "StreamableHTTPPatch")
 
     # Configuration for the application, engines, and railties goes here.
     #

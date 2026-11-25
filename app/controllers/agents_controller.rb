@@ -64,7 +64,7 @@ class AgentsController < ApplicationController
       mcp_server_ids: []
     ]
 
-    allowed.unshift(:active) unless @agent&.builtin?
+    allowed.unshift(:active, :description) unless @agent&.builtin?
 
     params.require(:agent).permit(*allowed)
   end

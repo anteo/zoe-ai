@@ -11,6 +11,7 @@ Patches.register %w[
   RubyLLM::MCP::Native::Client
   RubyLLM::MCP::Native::Transport
   RubyLLM::MCP::Native::Transports::Stdio
+  RubyLLM::MCP::Native::Transports::StreamableHTTP
   RubyLLM::Models
   RubyLLM::Provider
   RubyLLM::Providers::Gemini

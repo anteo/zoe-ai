@@ -1,6 +1,9 @@
 <%= simple_form_for @agent, html: { class: "space-y-5" } do |f| %>
   <div class="grid grid-cols-1 gap-4">
     <%= f.input :name, input_html: { autofocus: true } %>
+    <% unless @agent.builtin? %>
+      <%= f.input :description, hint: t(:text_agent_description_hint), input_html: { rows: 3 } %>
+    <% end %>
   </div>
 
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -33,10 +36,18 @@
     <% if mcp_servers.exists? %>
       <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
         <%= f.collection_check_boxes :mcp_server_ids, mcp_servers, :id, :name do |b| %>
-          <label class="flex cursor-pointer items-center gap-3 rounded-box border border-base-300 bg-base-100 px-4 py-3 transition-colors hover:border-base-content/20 hover:bg-base-100/80">
-            <%= b.check_box class: "checkbox checkbox-sm mt-0.5 shrink-0" %>
-            <span class="text-sm leading-5"><%= b.text %></span>
-          </label>
+          <div class="flex items-center gap-2 rounded-box border border-base-300 bg-base-100 px-4 py-3">
+            <label class="flex flex-1 cursor-pointer items-center gap-3">
+              <%= b.check_box class: "checkbox checkbox-sm shrink-0" %>
+              <span class="text-sm leading-5"><%= b.text %></span>
+            </label>
+            <%= link_to edit_mcp_server_path(b.object),
+                        aria: { label: "#{t(:label_edit_mcp_server)} (#{b.text})" },
+                        class: "btn btn-ghost btn-xs btn-square",
+                        data: { turbo_stream: true } do %>
+              <span class="icon-[lucide--square-pen]" aria-hidden="true"></span>
+            <% end %>
+          </div>
         <% end %>
       </div>
       <p class="label"><%= t(:text_agent_mcp_servers_hint) %></p>

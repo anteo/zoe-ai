@@ -13,10 +13,6 @@ module Chats
       "chat chat-start"
     end
 
-    def bubble_color
-      "bg-base-300"
-    end
-
     def sender
       chat.partner
     end

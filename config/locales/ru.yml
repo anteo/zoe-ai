@@ -3,6 +3,7 @@ ru:
     attributes:
       agent:
         active: Активен
+        description: Возможности
         instructions: Инструкции
         key: Ключ
         mcp_servers: MCP серверы
@@ -54,6 +55,29 @@ ru:
       user:
         one: Пользователь
         other: Пользователи
+  agent_conversations:
+    label_dialog: Диалог агента
+    label_open: Открыть диалог агента
+    text_empty: В этом диалоге пока нет заданий.
+  agent_runs:
+    events:
+      error: Не удалось выполнить задачу
+      result: Агент вернул результат
+      tool_call: Вызов инструмента
+      tool_call_named: "Вызов %{tool}"
+      tool_failed: Ошибка инструмента
+      tool_failed_named: "Ошибка инструмента %{tool}"
+      tool_result: Инструмент завершил работу
+      tool_result_named: "%{tool} завершил работу"
+      workspace_error: Локальный исполнитель сообщил об ошибке
+      workspace_result: Локальный исполнитель вернул результат
+    label_activity: Показать ход выполнения
+    status:
+      completed: Завершено
+      failed: Ошибка
+      preparing_result: Подготовка результата
+      queued: В очереди
+      running: Выполняется
   confirm_delete_agent: Удалить этого агента?
   confirm_delete_character: Удалить этого персонажа?
   confirm_delete_chat: Удалить этот чат?
@@ -298,6 +322,7 @@ ru:
       max_message_bubbles: Максимум пузырей ответа ассистента
   text_access_denied: Доступ запрещён.
   text_agent_key_optional: Оставьте поле пустым, чтобы агент остался без ключа.
+  text_agent_description_hint: По этому описанию Зоя решает, какие задачи поручать агенту.
   text_agent_mcp_servers_hint: Выбранные серверы будут доступны этому агенту.
   text_character_create_failed: Не удалось создать персонажа.
   text_character_images_hint: Загрузите одно или несколько референсов. Описания можно редактировать под каждым изображением.
@@ -384,6 +409,7 @@ ru:
   text_successful_save: "%{name} успешно сохранен(а)."
   text_successful_delete: "%{name} успешно удален(а)."
   text_token_usage_hint: "%{used} / %{context} токенов использовано"
+  text_workspace_runner_config_hint: В url укажите адрес /mcp, доступный с сервера Зои. В headers.Authorization укажите Bearer и токен исполнителя через пробел.
   time:
     formats:
       default: "%d %B %Y, %H:%M"

@@ -1,9 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["toggle", "panel", "title", "backButton", "listView", "detailView", "detailFrame", "listFrame", "resultsFrame", "searchForm", "searchInput"]
+  static targets = ["toggle", "panel", "backButton", "listView", "detailView", "detailFrame", "listFrame", "resultsFrame", "searchForm", "searchInput", "agentBack", "agentFrame"]
   static values = {
-    listTitle: String,
     listUrl: String
   }
 
@@ -15,18 +14,62 @@ export default class extends Controller {
   }
 
   open() {
+    this.opener = document.activeElement
+    delete this.panelTarget.dataset.agents
     this.loadList()
     this.toggleTarget.checked = true
   }
 
   close() {
     this.toggleTarget.checked = false
+    delete this.panelTarget.dataset.agents
+    this.historyLink = null
     this.showList()
     this.clearSelection()
+    this.opener?.focus({ preventScroll: true })
+    this.opener = null
   }
 
   handleToggleChange() {
     if (this.toggleTarget.checked) this.loadList()
+    else this.close()
+  }
+
+  openAgentDetail(event) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    event.preventDefault()
+    const link = event.currentTarget
+    if (this.toggleTarget.checked) this.historyLink = link
+    else this.opener = link
+
+    const frame = this.agentFrameTarget
+    frame.dataset.agentConversationId = link.dataset.agentConversationId
+    this.panelTarget.dataset.agents = "detail"
+    this.toggleTarget.checked = true
+    this.agentBackTarget.focus({ preventScroll: true })
+    if (frame.src === link.href) {
+      this.scrollAgentToBottom()
+      frame.reload()
+    } else {
+      frame.src = link.href
+    }
+  }
+
+  scrollAgentToBottom() {
+    if (this.panelTarget.dataset.agents !== "detail") return
+
+    const frame = this.agentFrameTarget
+    frame.scrollTop = frame.scrollHeight
+  }
+
+  backFromAgent() {
+    if (this.historyLink) {
+      delete this.panelTarget.dataset.agents
+      this.historyLink.focus({ preventScroll: true })
+      this.historyLink = null
+    } else {
+      this.close()
+    }
   }
 
   openChat(event) {
@@ -122,6 +165,10 @@ export default class extends Controller {
 
   handleKeydown(event) {
     if (!this.toggleTarget.checked) return
+    if (this.panelTarget.dataset.agents) {
+      if (event.key === "Escape") this.close()
+      return
+    }
     if (this.isTypingTarget(event.target)) return
 
     switch (event.key) {

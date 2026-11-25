@@ -1,11 +1,12 @@
 module Chats
   class MessageComponent < ApplicationComponent
-    attr_reader :message, :current_character
+    attr_reader :message, :current_character, :agent_runs
 
-    def initialize(message:, current_character:, read_only: false)
+    def initialize(message:, current_character:, read_only: false, agent_runs: nil)
       @message = message
       @current_character = current_character
       @read_only = read_only
+      @agent_runs = agent_runs
     end
 
     def sender

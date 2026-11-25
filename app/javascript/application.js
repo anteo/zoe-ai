@@ -4,6 +4,18 @@ import "./controllers"
 import TC from "@rolemodel/turbo-confirm"
 import "./channels"
 
+Turbo.StreamActions.reload_agent_runs = function () {
+  for (const frame of this.targetElements) {
+    if (frame.src) frame.reload()
+    else frame.src = frame.dataset.agentRunsUrl
+  }
+  const conversationId = this.dataset.agentConversationId
+  const dialog = document.querySelector('[data-agents="detail"] #agent-conversation-detail[src]')
+  if (conversationId && dialog?.dataset.agentConversationId === conversationId) {
+    dialog.reload()
+  }
+}
+
 Turbo.StreamActions.close_modal = function () {
   const id = this.getAttribute("id")
   const modal = id ? document.getElementById(id) : document.querySelector("dialog[data-controller~='app-modal']:last-of-type")

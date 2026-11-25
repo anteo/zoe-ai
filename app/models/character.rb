@@ -17,6 +17,8 @@ class Character < ApplicationRecord
   has_many :pending_messages, dependent: :destroy
   has_many :chats, class_name: "Chat", foreign_key: :character_id, dependent: :destroy
   has_many :partner_chats, class_name: "Chat", foreign_key: :partner_id, dependent: :destroy
+  has_many :agent_conversations, dependent: :destroy
+  has_many :partner_agent_conversations, class_name: "AgentConversation", foreign_key: :partner_id, dependent: :destroy
 
   accepts_nested_attributes_for :conversation_instructions,
                                 allow_destroy: true,

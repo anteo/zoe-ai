@@ -1,0 +1,9 @@
+<% if run.progress_events.any? %>
+  <ol class="<%= class_names("mt-2 list-inside list-disc space-y-1 wrap-anywhere text-xs opacity-70", local_assigns[:list_class]) %>">
+    <% run.progress_events.each do |event| %>
+      <% if (description = agent_run_event_text(event)) %>
+        <li id="<%= id_prefix %>-event-<%= event.id %>"><%= description %></li>
+      <% end %>
+    <% end %>
+  </ol>
+<% end %>

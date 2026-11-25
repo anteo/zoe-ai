@@ -1,0 +1,36 @@
+<% if runs.any? %>
+  <ol id="agent-conversation-turns" class="space-y-2 wrap-anywhere">
+    <% runs.each do |run| %>
+      <% run_dom_id = "agent-dialog-run-#{run.id}" %>
+      <li id="<%= run_dom_id %>">
+        <div class="chat chat-end grid-cols-[minmax(0,1fr)_auto]">
+          <div class="chat-header px-3 flex items-center gap-1 mb-1">
+            <span class="font-medium"><%= sender.name %></span>
+            <time class="text-xs opacity-50 ml-2" datetime="<%= run.created_at.iso8601 %>"><%= run.created_at.strftime("%H:%M") %></time>
+          </div>
+          <div class="chat-bubble prose prose-sm bg-primary text-primary-content"><%= markdown(run.task, escape_html: true) %></div>
+        </div>
+        <%= render "chats/agent_run_progress", run:, id_prefix: run_dom_id, list_class: "px-3" %>
+        <div class="chat chat-start grid-cols-[auto_minmax(0,1fr)]">
+          <div class="chat-header px-3 flex items-center gap-1 mb-1">
+            <span class="font-medium"><%= run.agent_name %></span>
+            <% if run.finished_at %>
+              <time class="text-xs opacity-50 ml-2" datetime="<%= run.finished_at.iso8601 %>"><%= run.finished_at.strftime("%H:%M") %></time>
+            <% end %>
+          </div>
+          <% if run.completed? %>
+            <div class="chat-bubble prose prose-sm bg-base-300"><%= markdown(run.result, escape_html: true) %></div>
+          <% elsif run.running? %>
+            <%= render "typing_indicator", label: t("agent_runs.status.running") %>
+          <% elsif run.failed? %>
+            <div class="chat-bubble chat-bubble-error" role="status">
+              <%= t("agent_runs.status.failed") %>
+            </div>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <p class="text-sm opacity-70"><%= t("agent_conversations.text_empty") %></p>
+<% end %>

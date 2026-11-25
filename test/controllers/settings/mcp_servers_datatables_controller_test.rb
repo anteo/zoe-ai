@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Settings::MCPServersDatatablesControllerTest < ActionDispatch::IntegrationTest
-  fixtures :users
+  fixtures :users, :characters
 
   setup do
     @user = users(:anton)
@@ -60,6 +60,25 @@ class Settings::MCPServersDatatablesControllerTest < ActionDispatch::Integration
     assert_includes response.body, %(turbo-frame id="#{datatable_frame_id}")
     assert_includes response.body, %(turbo-frame id="#{datatable_results_frame_id}")
     assert_includes response.body, mcp_servers_path
+  end
+
+  test "opens the runner configuration from the agent profile and saves its address" do
+    runner = create_mcp_server(name: "Workspace Runner", key: MCPServer::WORKSPACE_RUNNER_KEY,
+      transport_type: "streamable_http")
+    agent = Agent.create!(name: "Workspace Assistant", mcp_servers: [runner])
+    turbo_headers = { "Accept" => "text/vnd.turbo-stream.html" }
+    get edit_agent_path(agent), headers: turbo_headers
+    assert_response :success
+    assert_select "a[href=?][data-turbo-stream]", edit_mcp_server_path(runner)
+
+    get edit_mcp_server_path(runner), headers: turbo_headers
+    assert_response :success
+    assert_select "textarea[name='mcp_server[config_json]']"
+    config = { "url" => "https://workstation.example.test/mcp", "headers" => { "Authorization" => "Bearer sample-credential" } }
+    patch mcp_server_path(runner), params: { mcp_server: { config_json: config.to_json } },
+      headers: turbo_headers
+    assert_response :success
+    assert_equal config, runner.reload.config
   end
 
   private

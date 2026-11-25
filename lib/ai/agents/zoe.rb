@@ -11,7 +11,9 @@ module AI
           Tools::AddCharacterImage,
           Tools::SetCharacterAvatar,
           Tools::ManageOwnInstructions,
-          Tools::GetChatHistory
+          Tools::GetChatHistory,
+          Tools::AgentHistory,
+          Tools::DelegateTask
         ]
 
         items << Tools::FakeTool if Rails.env.development?
