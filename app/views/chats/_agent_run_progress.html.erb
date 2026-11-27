@@ -1,9 +1,73 @@
-<% if run.progress_events.any? %>
-  <ol class="<%= class_names("mt-2 list-inside list-disc space-y-1 wrap-anywhere text-xs opacity-70", local_assigns[:list_class]) %>">
-    <% run.progress_events.each do |event| %>
-      <% if (description = agent_run_event_text(event)) %>
-        <li id="<%= id_prefix %>-event-<%= event.id %>"><%= description %></li>
+<% if (calls = agent_run_tool_call_groups(run)).any? %>
+  <div class="<%= class_names("my-2 min-w-0 text-xs leading-5", local_assigns[:list_class]) %>">
+    <ol aria-label="<%= t("agent_runs.label_calls") %>" role="list">
+      <% calls.each do |group| %>
+        <% event, result_event = group.first.values_at(:event, :result) %>
+        <% result = result_event&.data || {} %>
+        <% arguments = show_arguments && event.data["arguments"].is_a?(Hash) ? event.data["arguments"] : {} %>
+        <% compact, expanded = arguments.transform_values { |value| agent_run_argument_text(value) }
+                                        .partition { |_name, text| text.length <= 100 && !text.match?(/[\r\n]/) } %>
+        <% failure = if result["success"] == false
+                       if result["timed_out"]
+                         t("agent_runs.events.timed_out")
+                       elsif result["exit_status"].is_a?(Integer)
+                         t("agent_runs.events.exit_status", status: result["exit_status"])
+                       else
+                         t("agent_runs.status.failed")
+                       end
+                     end %>
+        <% argument_previews = capture do %>
+          <% compact.each do |name, text| %>
+            <span class="inline-flex min-w-0 max-w-full items-center gap-1 rounded-sm bg-base-200 px-1" title="<%= "#{name} = #{text}" %>">
+              <span class="shrink-0 text-base-content/70"><%= name %> =</span>
+              <code class="min-w-0 truncate"><%= text %></code>
+            </span>
+          <% end %>
+        <% end %>
+        <li id="<%= id_prefix %>-event-<%= event.id %>" class="flex min-w-0 items-start gap-2 py-1">
+          <div class="flex w-28 shrink-0 items-start gap-1">
+            <%= tag.span class: class_names("min-w-0 font-mono font-medium wrap-anywhere", "text-error" => failure.present?),
+                         title: failure, data: ( { tool_error: true } if failure ) do %>
+              <%= event.data["tool"].to_s.truncate(80).presence || t("agent_runs.events.tool_call") %>
+              <% if failure %><span class="sr-only">(<%= failure %>)</span><% end %>
+            <% end %>
+            <% if group.size > 1 %>
+              <span class="shrink-0 text-base-content/70 tabular-nums">×<%= group.size %></span>
+            <% end %>
+          </div>
+          <% if expanded.any? %>
+            <details id="<%= id_prefix %>-arguments-<%= event.id %>" class="group/arguments min-w-0 flex-1"
+                     data-action="turbo:before-morph-attribute->chat#preserveRunDetails">
+              <summary class="flex cursor-pointer list-none items-center gap-1 font-mono [&::-webkit-details-marker]:hidden">
+                <%= argument_previews %>
+                <span class="flex min-w-0 flex-1">
+                  <span class="flex min-w-0 max-w-full items-center gap-1 rounded-sm bg-base-200 px-1">
+                    <span class="icon-[lucide--chevron-down] size-3 shrink-0 group-open/arguments:rotate-180" aria-hidden="true"></span>
+                    <% if (command = expanded.assoc("command")) %>
+                      <span class="min-w-0 truncate">
+                        <span class="text-base-content/70">command =</span>
+                        <code><%= command.last.lines.find { |line| line.strip.present? }.to_s.strip.truncate(100) %></code>
+                      </span>
+                    <% else %>
+                      <span class="min-w-0 truncate"><%= t("agent_runs.label_arguments") %></span>
+                    <% end %>
+                  </span>
+                </span>
+              </summary>
+              <dl class="mt-1 min-w-0 space-y-1">
+                <% expanded.each do |name, text| %>
+                  <div>
+                    <dt class="text-base-content/70 wrap-anywhere"><%= name == "command" ? t("agent_runs.label_command") : name %></dt>
+                    <dd><pre tabindex="0" class="max-h-48 max-w-full overflow-auto rounded-field bg-base-200 px-2 py-1.5"><code><%= text %></code></pre></dd>
+                  </div>
+                <% end %>
+              </dl>
+            </details>
+          <% elsif compact.any? %>
+            <div class="flex min-w-0 flex-1 flex-wrap gap-1 font-mono"><%= argument_previews %></div>
+          <% end %>
+        </li>
       <% end %>
-    <% end %>
-  </ol>
+    </ol>
+  </div>
 <% end %>

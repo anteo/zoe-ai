@@ -196,6 +196,13 @@
     max-width: 70%;
 }
 
+.chat-bubble.bg-primary code:not(pre code) {
+    background-color: var(--color-base-200);
+    color: var(--color-base-content);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
 .chat-bubble-postponed {
     filter:
         drop-shadow(1px 0 0 var(--color-warning))

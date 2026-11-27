@@ -17,14 +17,18 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     sign_in users(:anton)
   end
 
-  test "shows active delegated stages under their triggering message on reload" do
+  test "shows latest delegated activity and tool arguments under the triggering message" do
+    task = "Review the project.\n#{'Check each directory. ' * 20}Include the final summary."
+    @run.update!(task:)
     @run.append_event!("status", data: { status: "running" })
     @run.record_workspace_update!(
       workspace_run_id: "workspace-run",
       workspace_status: "running",
       workspace_events: [
         { "sequence" => 1, "type" => "status", "details" => { "status" => "queued" } },
-        { "sequence" => 2, "type" => "tool_call", "details" => { "tool" => "read_file" } }
+        { "sequence" => 2, "type" => "tool_call", "details" => {
+          "tool" => "run_command", "tool_call_id" => "call-1", "arguments" => { "project" => "app", "command" => "git status" }
+        } }
       ]
     )
 
@@ -32,31 +36,74 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#message-#{@message.id} turbo-frame##{@frame_id} details##{@run_id} summary" do
-      assert_select "[role=status]", text: "Running"
-      assert_select "span", text: "Calling read_file", count: 0
+      assert_select "[role=status] > span", text: "Calling run_command"
       assert_select "span", text: "Dialog ##{@conversation.id}", count: 0
     end
     assert_select "details##{@run_id} > summary a.btn[href='#{agent_conversation_chat_path(@chat, @conversation)}'][data-turbo-frame='agent-conversation-detail']"
     assert_select ".drawer-end turbo-frame#agent-conversation-detail"
     assert_select ".drawer-content a[data-turbo-frame^='agent-conversation']", count: 0
-    assert_select "details##{@run_id} > div ol > li", text: "Queued"
-    assert_select "details##{@run_id} > div ol > li", text: "Calling read_file"
+    assert_select "details##{@run_id} > div > p", text: /Include the final summary\./
+    assert_select "details##{@run_id} > div ol > li", count: 1 do
+      assert_select "span", text: "run_command"
+      assert_select "span[title='command = git status'] > span", text: "command ="
+      assert_select "span[title='command = git status'] > code", text: "git status"
+      assert_select "pre", count: 0
+      assert_select "span[title='project = app'] > code", text: "app"
+    end
 
     get agent_conversation_chat_path(@chat, @conversation),
       headers: { "Turbo-Frame" => "agent-conversation-detail", "Accept-Language" => "en" }
 
     assert_response :success
-    assert_select "#agent-dialog-run-#{@run.id} > ol > li", text: "Calling read_file"
+    assert_select "#agent-dialog-run-#{@run.id} ol > li code", text: "git status"
+    assert_select "#agent-dialog-run-#{@run.id} .message-placeholder", count: 0
+  end
+
+  test "puts multiline tool arguments in a closed disclosure" do
+    command = "python3 - <<'PY'\nprint('hello')\nPY"
+    @run.append_event!("tool_call", data: { tool: "run_command", arguments: { project: "app", command: } })
+
+    get agent_conversation_chat_path(@chat, @conversation),
+      headers: { "Turbo-Frame" => "agent-conversation-detail", "Accept-Language" => "en" }
+
+    assert_response :success
+    assert_select "#agent-dialog-run-#{@run.id} ol > li details:not([open])" do
+      assert_select "summary" do
+        assert_select "code", text: "app"
+        assert_select "code", text: "python3 - <<'PY'"
+      end
+      assert_select "pre code", text: /print\('hello'\)/
+    end
+  end
+
+  test "groups adjacent successful calls from runs without saved arguments" do
+    %w[list_files list_files read_file list_files].each do |tool|
+      @run.append_event!("tool_call", data: { tool: })
+      @run.append_event!("tool_result", data: { tool:, success: true })
+    end
+    @run.finish!(result: "Done")
+
+    get agent_conversation_chat_path(@chat, @conversation),
+      headers: { "Turbo-Frame" => "agent-conversation-detail", "Accept-Language" => "en" }
+
+    assert_response :success
+    assert_select "#agent-dialog-run-#{@run.id} ol > li", count: 3 do |calls|
+      assert_select calls.first, "span", text: "×2"
+      assert_select calls.last, "span", text: "×2", count: 0
+    end
   end
 
   test "broadcasts a compact turn update and serves the completed public activity in the frame" do
     updates = capture_broadcasts(@chat.to_gid_param) do
-      @run.append_event!("tool_result", data: { tool: "read_file", success: false })
+      @run.append_event!("tool_call", data: { tool: "read_file", tool_call_id: "call-1", arguments: { path: "missing.md" } })
+      @run.append_event!("tool_result", data: { tool: "read_file", tool_call_id: "call-1", success: false })
+      @run.append_event!("tool_call", data: { tool: "read_file", tool_call_id: "call-2", arguments: { path: "README.md" } })
+      @run.append_event!("tool_result", data: { tool: "read_file", tool_call_id: "call-2", success: true })
       @run.append_event!("assistant", message: "internal agent transcript")
       @run.finish!(result: "completed payload " * 2_000)
     end
 
-    assert_equal 2, updates.size
+    assert_equal 5, updates.size
     updates.each do |update|
       assert_includes update, 'action="reload_agent_runs"'
       assert_includes update, "target=\"#{@frame_id}\""
@@ -71,8 +118,11 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "turbo-frame##{@frame_id} details##{@run_id} summary [role=status]", text: "Завершено"
-    assert_select "details##{@run_id} li", text: "Ошибка инструмента read_file"
-    assert_select "details##{@run_id} li", text: "Агент вернул результат"
+    assert_select "details##{@run_id} li", count: 2 do |calls|
+      assert_select calls.first, "[data-tool-error].text-error[title='Ошибка']", text: /read_file/
+      assert_select calls.last, "[data-tool-error]", count: 0
+    end
+    assert_not_includes response.body, "завершил работу"
     assert_not_includes response.body, "internal agent transcript"
     assert_not_includes response.body, "completed payload"
   end

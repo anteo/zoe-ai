@@ -61,17 +61,16 @@ en:
     text_empty: This dialog has no tasks yet.
   agent_runs:
     events:
-      error: The task failed
-      result: The agent returned a result
+      exit_status: "Exit code %{status}"
+      last_tool_named: "Last call to %{tool}"
+      timed_out: Timed out
       tool_call: Calling a tool
       tool_call_named: "Calling %{tool}"
-      tool_failed: Tool failed
       tool_failed_named: "%{tool} failed"
-      tool_result: Tool finished
-      tool_result_named: "%{tool} finished"
-      workspace_error: The workspace runner reported an error
-      workspace_result: The workspace runner returned its findings
     label_activity: Show agent activity
+    label_arguments: Details
+    label_calls: Agent tool calls
+    label_command: Command
     status:
       completed: Completed
       failed: Failed

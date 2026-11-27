@@ -5,12 +5,14 @@
         <details id="<%= card_id(run) %>"
                  class="group/run min-w-0"
                  data-action="turbo:before-morph-attribute->chat#preserveRunDetails">
-          <summary class="flex w-fit max-w-full cursor-pointer list-none flex-wrap items-center gap-x-2 gap-y-1 py-1 text-sm [&::-webkit-details-marker]:hidden">
+          <% path = conversation_path(run) %>
+          <% latest_activity = phase(run) == "running" && helpers.agent_run_latest_activity(run) %>
+          <summary class="flex w-fit max-w-full cursor-pointer list-none flex-col items-start gap-1 py-1 text-sm [&::-webkit-details-marker]:hidden">
             <span class="flex min-w-0 max-w-full items-center gap-2">
               <span class="icon-[lucide--workflow] size-4 shrink-0" aria-hidden="true"></span>
               <span class="min-w-0 font-medium wrap-anywhere"><%= run.agent_name %></span>
               <span class="sr-only"><%= t("agent_runs.label_activity") %></span>
-              <% if (path = conversation_path(run)) %>
+              <% if path %>
                 <%= link_to path, class: "btn btn-ghost btn-square btn-sm shrink-0",
                             title: t("agent_conversations.label_open"), aria: { label: t("agent_conversations.label_open"), controls: "agent-conversation-detail" },
                             data: { action: "click->history-drawer#openAgentDetail", turbo_frame: "agent-conversation-detail", turbo_prefetch: false, agent_conversation_id: run.agent_conversation_id } do %>
@@ -24,16 +26,21 @@
               <% end %>
               <span class="icon-[lucide--chevron-down] size-4 shrink-0 group-open/run:rotate-180" aria-hidden="true"></span>
             </span>
-            <span class="badge badge-soft badge-sm <%= status_class(run) %>" role="status">
+            <span class="badge badge-soft badge-sm ms-6 h-auto min-h-5 max-w-[calc(100%_-_1.5rem)] wrap-anywhere <%= status_class(run) %>" role="status">
               <% if run.running? %>
-                <span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+                <span class="loading loading-spinner loading-xs shrink-0" aria-hidden="true"></span>
               <% end %>
-              <%= t("agent_runs.status.#{phase(run)}") %>
+              <% if latest_activity %>
+                <span class="group-open/run:hidden"><%= latest_activity %></span>
+                <span class="hidden group-open/run:inline"><%= t("agent_runs.status.#{phase(run)}") %></span>
+              <% else %>
+                <%= t("agent_runs.status.#{phase(run)}") %>
+              <% end %>
             </span>
           </summary>
           <div class="pt-1 text-sm">
-            <p class="break-words"><%= truncate(run.task, length: 300) %></p>
-            <%= render "chats/agent_run_progress", run:, id_prefix: card_id(run) %>
+            <p class="whitespace-pre-wrap wrap-anywhere"><%= run.task %></p>
+            <%= render "chats/agent_run_progress", run:, id_prefix: card_id(run), show_arguments: path.present? %>
           </div>
         </details>
       <% end %>

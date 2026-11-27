@@ -61,17 +61,16 @@ ru:
     text_empty: В этом диалоге пока нет заданий.
   agent_runs:
     events:
-      error: Не удалось выполнить задачу
-      result: Агент вернул результат
+      exit_status: "Код выхода %{status}"
+      last_tool_named: "Последний вызов %{tool}"
+      timed_out: Время вышло
       tool_call: Вызов инструмента
       tool_call_named: "Вызов %{tool}"
-      tool_failed: Ошибка инструмента
       tool_failed_named: "Ошибка инструмента %{tool}"
-      tool_result: Инструмент завершил работу
-      tool_result_named: "%{tool} завершил работу"
-      workspace_error: Локальный исполнитель сообщил об ошибке
-      workspace_result: Локальный исполнитель вернул результат
     label_activity: Показать ход выполнения
+    label_arguments: Подробности
+    label_calls: Вызовы инструментов агента
+    label_command: Команда
     status:
       completed: Завершено
       failed: Ошибка
