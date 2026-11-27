@@ -8,9 +8,6 @@ module AI
 
     def dispatch(task:, profile:, conversation: nil)
       trigger_message_id = chat.agent_run_trigger_message_id || chat.latest_user_message_id
-      if trigger_message_id && chat.stale_trigger_message?(trigger_message_id)
-        raise Error, "The message that requested this task is no longer current."
-      end
 
       conversation ||= ::AgentConversation.new(
         user: chat.user, character: chat.character, partner: chat.partner,
@@ -30,7 +27,17 @@ module AI
 
     def create_run(conversation, task:, trigger_message_id:)
       conversation.runs.reconcile_interrupted! if conversation.persisted?
-      ::AgentConversation.transaction do
+      chat.with_lock do
+        owner = chat.agent_run_job_owner || {}
+        response_stopped = if (execution_id = owner[:respond_job_execution_id])
+          SolidQueue::ClaimedExecution.uncached do
+            !SolidQueue::ClaimedExecution.exists?(id: execution_id, cancelled: false)
+          end
+        end
+        if response_stopped || (trigger_message_id && chat.stale_trigger_message?(trigger_message_id))
+          raise Error, "The message that requested this task is no longer current."
+        end
+
         conversation.save! if conversation.new_record?
         conversation.with_lock do
           if conversation.runs.running.exists?
@@ -40,7 +47,7 @@ module AI
           conversation.runs.create!(
             chat:, agent: conversation.agent, agent_name: conversation.agent.name, task:,
             local_workspace: conversation.local_workspace?, trigger_message_id:,
-            **(chat.agent_run_job_owner || {})
+            **owner
           )
         end
       end

@@ -77,6 +77,7 @@ en:
       preparing_result: Preparing the result
       queued: Queued
       running: Running
+    text_wait_before_changing_chat: Wait for the agent to finish before changing this conversation.
   confirm_delete_agent: Delete this agent?
   confirm_delete_character: Delete this character?
   confirm_delete_chat: Delete this chat?

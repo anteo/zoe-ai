@@ -31,7 +31,7 @@ class ChatsController < ApplicationController
       trigger_message_id = Integer(params[:message_id], exception: false)
       return head(:bad_request) unless trigger_message_id
     end
-    runs = @history_chat.agent_runs.where(trigger_message_id:)
+    runs = @history_chat.agent_runs.shown_in_chat.where(trigger_message_id:)
     runs.reconcile_interrupted!
 
     render Chats::AgentRunsComponent.new(

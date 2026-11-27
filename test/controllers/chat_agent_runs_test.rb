@@ -137,6 +137,62 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "keeps messages and cards when resend or delete is attempted during an agent run" do
+    later = @chat.messages.create!(role: "assistant", content: "An interim update")
+    headers = { "Accept" => "text/vnd.turbo-stream.html", "Accept-Language" => "en" }
+
+    post resend_message_path(@message), params: { message: { tts_enabled: false } }, headers:
+    assert_response :success
+    assert_includes response.body, "Wait for the agent to finish"
+    assert Message.exists?(later.id)
+
+    delete message_path(@message), headers:
+    assert_response :success
+    assert_includes response.body, "Wait for the agent to finish"
+    assert Message.exists?(@message.id)
+    assert Message.exists?(later.id)
+    assert_not @run.reload.hidden_from_chat?
+  end
+
+  test "resend hides old cards and keeps the agent history" do
+    @run.finish!(result: "Response before restart")
+    later = @chat.messages.create!(role: "user", content: "A follow-up")
+    later_run = @chat.agent_runs.create!(agent_conversation: @conversation, trigger_message: later,
+                                        agent_name: @conversation.agent_name, task: "A follow-up")
+    later_run.finish!(result: "Response to follow-up")
+
+    post resend_message_path(@message), params: { message: { tts_enabled: false } },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_response :success
+    assert_select "details##{@run_id}", count: 0
+    assert_not Message.exists?(later.id)
+    assert @run.reload.hidden_from_chat?
+    assert later_run.reload.hidden_from_chat?
+    assert_equal @message.id, @run.trigger_message_id
+
+    get agent_runs_chat_path(@chat, message_id: @message.id), headers: { "Turbo-Frame" => @frame_id }
+    assert_response :success
+    assert_select "details##{@run_id}", count: 0
+
+    get agent_conversation_chat_path(@chat, @conversation)
+    assert_response :success
+    assert_select "#agent-dialog-run-#{@run.id} .chat-start .chat-bubble", text: "Response before restart"
+    assert_select "#agent-dialog-run-#{later_run.id} .chat-start .chat-bubble", text: "Response to follow-up"
+  end
+
+  test "deleting a message does not turn its agent card into an unanchored card" do
+    @run.finish!(result: "Saved agent history")
+
+    delete message_path(@message), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_response :success
+    assert_not Message.exists?(@message.id)
+    assert_nil @run.reload.trigger_message_id
+    assert @run.hidden_from_chat?
+    assert_select "details##{@run_id}", count: 0
+  end
+
   test "opens the same dialog across chats for the current identity and renders public turns" do
     @run.append_event!("system", message: "hidden setup instructions")
     @run.append_event!("assistant", message: "hidden internal response")

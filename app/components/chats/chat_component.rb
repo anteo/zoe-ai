@@ -25,7 +25,7 @@ module Chats
     def agent_runs_by_message
       @agent_runs_by_message ||= begin
         chat.agent_runs.reconcile_interrupted!
-        chat.agent_runs.order(:id).preload(:progress_events).group_by(&:trigger_message_id)
+        chat.agent_runs.shown_in_chat.order(:id).preload(:progress_events).group_by(&:trigger_message_id)
       end
     end
 

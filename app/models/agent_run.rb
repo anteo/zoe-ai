@@ -7,6 +7,8 @@ class AgentRun < ApplicationRecord
   has_many :progress_events, -> { where(kind: %w[status tool_call tool_result result error]).order(:id) },
            class_name: "AgentRunEvent"
 
+  scope :shown_in_chat, -> { where(hidden_from_chat: false) }
+
   enum :status, %w[running completed failed].index_by(&:itself), validate: true
   validate :matches_conversation, on: :create
 
