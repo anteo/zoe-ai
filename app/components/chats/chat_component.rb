@@ -33,6 +33,10 @@ module Chats
       @chat.new_record?
     end
 
+    def show_typing_indicator?
+      agent_runs_by_message.values.none? { |runs| runs.any?(&:running?) } && TypeSentenceJob.running_for?(chat)
+    end
+
     def read_only?
       @read_only
     end

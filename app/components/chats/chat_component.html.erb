@@ -28,7 +28,7 @@
 
     <% unless read_only? %>
       <div id="message-placeholder-slot-<%= chat.id %>">
-        <% if RespondJob.running_for?(chat) %>
+        <% if show_typing_indicator? %>
           <%= helpers.component :chats__message_placeholder, chat:, current_character: %>
         <% end %>
       </div>
