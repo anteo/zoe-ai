@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.7.0](https://github.com/anteo/zoe-ai/compare/v1.6.0...v1.7.0) (2026-11-27)
+
+### Features
+
+* **agent-ui:** render compact tool activity ([4ad82f1](https://github.com/anteo/zoe-ai/commit/4ad82f1ede80902ddb9836e6e70c96e2f4c467cf))
+* **agents:** delegate tasks with persistent dialogs ([6a8c10c](https://github.com/anteo/zoe-ai/commit/6a8c10c01c1c43d11b944dc20259ee71ad8e1de9))
+* **ai:** add ChatGPT subscription image provider ([2f1c63f](https://github.com/anteo/zoe-ai/commit/2f1c63fe2ca2d165827da5712e59d78a37848bec))
+* **chat:** support pasting images into composer ([0065b75](https://github.com/anteo/zoe-ai/commit/0065b757060bbfb034c8bf2eaa5322aabea7781e))
+* **deploy:** add ChatGPT OAuth Kamal accessory ([16bc93f](https://github.com/anteo/zoe-ai/commit/16bc93fb320bf954e18d5d6b83eeb819d4c2aa39))
+* **draw:** expose generated images to vision models ([2a1a858](https://github.com/anteo/zoe-ai/commit/2a1a85813d07d1696f7382b8e903874f301243d7))
+* **workspace:** advertise workstation Git history ([f798226](https://github.com/anteo/zoe-ai/commit/f7982262db7bca064ac9d88aeeb823d5cf135065))
+
+### Bug Fixes
+
+* **ai:** emulate structured outputs for Ollama Cloud ([2d89750](https://github.com/anteo/zoe-ai/commit/2d897503145fa80d7b2d9bbfb1a2191ef371b22d))
+* **ai:** enable DeepSeek vision attachments ([a6d2099](https://github.com/anteo/zoe-ai/commit/a6d20990bf36c18d4f79bb16145eb45df50eacfa))
+* **ai:** handle malformed image sizes in OpenRouter provider ([1984023](https://github.com/anteo/zoe-ai/commit/19840234493117afe5b4b44a4a6eb492afcbcbe4))
+* **ai:** namespace Ollama Cloud tool call IDs ([010b7bd](https://github.com/anteo/zoe-ai/commit/010b7bdd3a76397ddc95e28de028f519c6a6be40))
+* **ai:** rescue tool execution errors and return them to the LLM ([8afd95d](https://github.com/anteo/zoe-ai/commit/8afd95d84d1156dcba8c086f4c47e03cd1f55c71))
+* **ai:** synchronize model registry across processes ([79c2625](https://github.com/anteo/zoe-ai/commit/79c26258546f65129b5e9aebf678a5f23a8cf018))
+* **chat:** clear obsolete agent cards on message changes ([d4df5f0](https://github.com/anteo/zoe-ai/commit/d4df5f0034f406ab3d7077a910c805e2cfb7c4b7))
+* **chat:** prevent orphaned tool results after cancellation ([492174a](https://github.com/anteo/zoe-ai/commit/492174a677f8eb987beee33e89726da1d4cb298a))
+* **chat:** show typing when delivering the reply ([c81b6b0](https://github.com/anteo/zoe-ai/commit/c81b6b0667da326184dd8dc11672efe9782e4db5))
+* **chat:** show waiting indicator on message submission ([65ff1c3](https://github.com/anteo/zoe-ai/commit/65ff1c30f9dc90de7a16d60250796c70fb372304))
+* **deploy:** pass ChatGPT OAuth proxy options correctly ([bbfa89f](https://github.com/anteo/zoe-ai/commit/bbfa89fb082b9c865b22387d8269afdfec3b3267))
+* **dreaming:** trigger sessions with a user message ([faf598f](https://github.com/anteo/zoe-ai/commit/faf598f31fe39964ca9793f98453bf8396b5a353))
+* **logging:** record empty assistant response metadata ([889bbb3](https://github.com/anteo/zoe-ai/commit/889bbb36f01cef323bedb2b3842f9c72a628eb91))
+* **logging:** show bounded job error details ([8d78f23](https://github.com/anteo/zoe-ai/commit/8d78f23f305c698c2e4749e297f1a496f0ebab81))
+* **settings:** establish process sync baseline at boot ([de0c42e](https://github.com/anteo/zoe-ai/commit/de0c42e7ba920ab292a8f2684797fe462e5bf17c))
+
 ## [1.6.0](https://github.com/anteo/zoe-ai/compare/v1.5.1...v1.6.0) (2026-07-29)
 
 ### Features
