@@ -141,12 +141,12 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     later = @chat.messages.create!(role: "assistant", content: "An interim update")
     headers = { "Accept" => "text/vnd.turbo-stream.html", "Accept-Language" => "en" }
 
-    post resend_message_path(@message), params: { message: { tts_enabled: false } }, headers:
+    post resend_message_path(@message), params: { message: { tts_enabled: false } }, headers: headers
     assert_response :success
     assert_includes response.body, "Wait for the agent to finish"
     assert Message.exists?(later.id)
 
-    delete message_path(@message), headers:
+    delete message_path(@message), headers: headers
     assert_response :success
     assert_includes response.body, "Wait for the agent to finish"
     assert Message.exists?(@message.id)
