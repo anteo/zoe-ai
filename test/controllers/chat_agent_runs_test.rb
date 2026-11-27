@@ -17,6 +17,16 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     sign_in users(:anton)
   end
 
+  test "shows the waiting indicator with the submitted message" do
+    @run.finish!(result: "Done")
+
+    post messages_path(chat_id: @chat.id), params: { message: { content: "One more question" } },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_response :success
+    assert_select "turbo-stream[action='update'][target='message-placeholder-slot-#{@chat.id}'] .message-placeholder"
+  end
+
   test "shows latest delegated activity and tool arguments under the triggering message" do
     task = "Review the project.\n#{'Check each directory. ' * 20}Include the final summary."
     @run.update!(task:)
@@ -35,6 +45,7 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     get chat_path(@chat), headers: { "Accept-Language" => "en" }
 
     assert_response :success
+    assert_select "#message-placeholder-slot-#{@chat.id} .message-placeholder", count: 0
     assert_select "#message-#{@message.id} turbo-frame##{@frame_id} details##{@run_id} summary" do
       assert_select "[role=status] > span", text: "Calling run_command"
       assert_select "span", text: "Dialog ##{@conversation.id}", count: 0

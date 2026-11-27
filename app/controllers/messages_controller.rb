@@ -33,6 +33,10 @@ class MessagesController < ApplicationController
         "message-placeholder-slot-#{chat.id}",
         Chats::MessageComponent.new(message:, current_character:)
       )
+      stream << turbo_stream.update(
+        "message-placeholder-slot-#{chat.id}",
+        Chats::MessagePlaceholderComponent.new(chat:, current_character:)
+      )
       stream << turbo_stream.replace(
         "chat-input",
         Chats::ChatInputComponent.new(

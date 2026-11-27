@@ -7,16 +7,31 @@ class RespondJob < ChatTriggeredJob
   limits_concurrency to: 1,
                      key: ->(chat, *) { "respond_chat_#{chat.id}" }
 
+  def self.waiting_for_reply?(chat, delegated_job_ids:)
+    trigger_message_id = chat.latest_user_message_id
+    return false unless trigger_message_id
+
+    executions = get_running_executions(chat).reject(&:cancelled?)
+    (executions + get_queued_executions(chat)).any? do |execution|
+      job = execution.job
+      job.arguments.fetch("arguments")[1] == trigger_message_id && !delegated_job_ids.include?(job.active_job_id)
+    end
+  end
+
   def run
     return if cancelled?
 
     chat.agent_runs.where(respond_job_id: job_id).reconcile_interrupted!
+    show_message_placeholder(chat) if executions == 1
     ensure_chat_model!(chat)
     ai_chat = AI::Agents::Zoe.find(chat.id)
     ai_chat.agent_run_trigger_message_id = trigger_message_id
     ai_chat.agent_run_job_owner = { respond_job_id: job_id, respond_job_execution_id: execution&.id }
 
     catch(:cancelled_response) do
+      ai_chat.before_tool_call do |call|
+        remove_message_placeholder(chat) if call.name == "delegate_task" && !cancelled?
+      end
       ai_chat.after_message do
         message = ai_chat.message
         schedule_message(message) if message.assistant?

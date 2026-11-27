@@ -34,7 +34,10 @@ module Chats
     end
 
     def show_typing_indicator?
-      agent_runs_by_message.values.none? { |runs| runs.any?(&:running?) } && TypeSentenceJob.running_for?(chat)
+      runs = agent_runs_by_message.values.flatten
+      return false if runs.any?(&:running?)
+
+      TypeSentenceJob.running_for?(chat) || RespondJob.waiting_for_reply?(chat, delegated_job_ids: runs.map(&:respond_job_id))
     end
 
     def read_only?
