@@ -4,7 +4,6 @@
       <% runs.each do |run| %>
         <details id="<%= card_id(run) %>"
                  class="group/run min-w-0"
-                 <% if run.running? %>data-agent-run-active<% end %>
                  data-action="turbo:before-morph-attribute->chat#preserveRunDetails">
           <% path = conversation_path(run) %>
           <% latest_activity = phase(run) == "running" && helpers.agent_run_latest_activity(run) %>

@@ -160,10 +160,6 @@
     padding: 8px 12px;
 }
 
-#chat-messages:has([data-agent-run-active]) > [id^="message-placeholder-slot-"] {
-    display: none;
-}
-
 .typing-dot {
     width: 6px;
     height: 6px;

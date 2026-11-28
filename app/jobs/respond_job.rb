@@ -30,8 +30,8 @@ class RespondJob < ChatTriggeredJob
     add_active_agent_runs(ai_chat)
 
     catch(:cancelled_response) do
-      ai_chat.before_tool_call do |call|
-        remove_message_placeholder(chat) if call.name == "delegate_task" && !cancelled?
+      ai_chat.after_tool_result do |result|
+        remove_message_placeholder(chat) if result.is_a?(RubyLLM::Tool::Halt) && !cancelled?
       end
       ai_chat.after_message do
         message = ai_chat.message
