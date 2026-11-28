@@ -7,10 +7,11 @@ module AI
 
       description "Carry out the delegated task in the connected workspace. The runner can inspect and change project files, read the original Git commit history, and run commands in an isolated project environment."
 
-      def initialize(chat, run, project: nil)
+      def initialize(chat, run, project: nil, wait: true)
         super(chat)
         @run = run
         @project = project
+        @wait = wait
       end
 
       def name
@@ -18,7 +19,9 @@ module AI
       end
 
       def execute
-        snapshot = WorkspaceRunnerConnection.new(chat, @run.agent).open { |client| await_workspace_result(client) }
+        snapshot = WorkspaceRunnerConnection.new(chat, @run.agent).open { |client| workspace_result(client) }
+        return { status: snapshot["status"] } if %w[queued running].include?(snapshot["status"])
+
         fail! (snapshot["error"].presence || "The local workspace task failed.") if snapshot["status"] == "failed"
 
         result = snapshot["result"].presence || fail!("The local workspace runner returned an empty result.")
@@ -29,13 +32,27 @@ module AI
 
       private
 
-      def await_workspace_result(client)
-        start_task = client.tool("start_task")
+      def workspace_result(client)
+        start_tool = client.tool("start_task")
         get_task = client.tool("get_task")
-        fail! "The local workspace runner does not provide the required task tools." unless start_task && get_task
+        fail! "The local workspace runner does not provide the required task tools." unless start_tool && get_task
+
+        snapshot = @run.workspace_run_id ? poll_task(get_task) : start_task(start_tool, get_task)
+        return snapshot unless @wait
 
         timeout = ENV.fetch("WORKSPACE_RUNNER_POLL_TIMEOUT", "180").to_i.clamp(1, 1_800)
         deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+        until snapshot["status"].in?(%w[completed failed])
+          remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          fail! "Timed out waiting for the local workspace runner." unless remaining.positive?
+
+          sleep([ POLL_INTERVAL, remaining ].min)
+          snapshot = poll_task(get_task)
+        end
+        snapshot
+      end
+
+      def start_task(start_tool, get_task)
         request_id = "zoe-#{@run.id}-#{@run.created_at.to_f}"
         conversation_id = verify_workspace_conversation(get_task)
         arguments = { task: @run.task, request_id:, conversation_id: }.compact
@@ -43,15 +60,11 @@ module AI
           arguments[:backend] = backend
           arguments[:project] = @project if @project
         end
-        snapshot = record_snapshot(fetch_snapshot(start_task, **arguments))
-        until snapshot["status"].in?(%w[completed failed])
-          remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          fail! "Timed out waiting for the local workspace runner." unless remaining.positive?
+        record_snapshot(fetch_snapshot(start_tool, **arguments))
+      end
 
-          sleep([ POLL_INTERVAL, remaining ].min)
-          snapshot = record_snapshot(fetch_snapshot(get_task, run_id: @run.workspace_run_id, after: @run.workspace_sequence))
-        end
-        snapshot
+      def poll_task(get_task)
+        record_snapshot(fetch_snapshot(get_task, run_id: @run.workspace_run_id, after: @run.workspace_sequence))
       end
 
       def verify_workspace_conversation(get_task)

@@ -17,4 +17,16 @@ class ChatToolHistoryTest < ActiveSupport::TestCase
     assert_equal "agent-call", result.to_llm.tool_call_id
     assert Message.exists?(orphan.id)
   end
+
+  test "replays a delegated tool result before a user message sent during the call" do
+    chat = chats(:anton_with_zoe)
+    assistant = chat.messages.create!(role: "assistant", content: "")
+    call = assistant.tool_calls.create!(tool_call_id: "background-call", name: "delegate_task", arguments: {})
+    user = chat.messages.create!(role: "user", content: "In the meantime, answer this.")
+    result = chat.messages.create!(role: "tool", content: '{"status":"queued"}', parent_tool_call: call)
+
+    history = chat.send(:order_messages_for_llm, chat.messages_association.order(:id).to_a)
+
+    assert_equal [ assistant.id, result.id, user.id ], history.map(&:id)
+  end
 end

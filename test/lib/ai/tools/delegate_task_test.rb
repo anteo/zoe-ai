@@ -1,6 +1,8 @@
 require "test_helper"
 
 class DelegateTaskTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   fixtures :characters, :characters_users, :chats, :users
 
   StubModel = Struct.new(:id)
@@ -34,6 +36,62 @@ class DelegateTaskTest < ActiveSupport::TestCase
     @chat = chats(:anton_with_zoe)
     @profile = Agent.create!(name: "Project researcher", description: "Inspects project documents.",
                              instructions: "Carry out the specific job requested.")
+  end
+
+  test "queues a workspace delegation and polls it after a newer chat message" do
+    @chat.user.update!(admin: true)
+    connect_workspace_runner
+    trigger = @chat.messages.create!(role: "user", content: "Run a long task")
+    @chat.agent_run_trigger_message_id = trigger.id
+    @chat.agent_run_job_owner = { respond_job_id: SecureRandom.uuid }
+    calls = []
+    client = stub_runner_client(
+      start_task: StubTool.new(lambda do |**arguments|
+        calls << [:start, arguments]
+        runner_content("queued", [runner_event(1, "status", "Queued", status: "queued")])
+      end),
+      get_task: StubTool.new(lambda do |**arguments|
+        calls << [:poll, arguments]
+        runner_content("completed", [], result: "The deployment finished.")
+      end)
+    )
+
+    AI::AgentRunProgress.stub(:broadcast, nil) do
+      RubyLLM::MCP::Client.stub(:new, client) do
+        queued = tool.call(agent: @profile.name, task: "Perform deployment")
+        assert_instance_of RubyLLM::Tool::Halt, queued
+        detail = JSON.parse(queued.content)
+        run = @chat.agent_runs.find(detail.fetch("run_id"))
+        assert_equal "queued", detail.fetch("status")
+        assert_empty calls
+        assert_equal trigger.id, run.trigger_message_id
+
+        perform_enqueued_jobs(only: AgentRunJob, at: Time.current)
+        assert_equal "runner-1", run.reload.workspace_run_id
+        assert_predicate run, :running?
+        assert_equal [:start], calls.map(&:first)
+
+        newer = @chat.messages.create!(role: "user", content: "Answer a different question")
+        travel 3.seconds do
+          perform_enqueued_jobs(only: AgentRunJob, at: Time.current)
+          assert_predicate run.reload, :completed?
+          assert_equal "The deployment finished.", run.result
+          assert_equal [:poll, { run_id: "runner-1", after: 1 }], calls.last
+          assert_equal [:start, :poll], calls.map(&:first)
+
+          assert_difference -> { @chat.messages.where(role: "assistant").count }, 1 do
+            perform_enqueued_jobs(only: ReportAgentRunJob)
+          end
+          reply = @chat.messages.where(role: "assistant").order(:id).last
+          assert_operator reply.id, :>, newer.id
+          refute reply.memorize?
+          assert run.reload.reported_at
+          assert_no_difference -> { @chat.messages.count } do
+            ReportAgentRunJob.perform_now(run.id)
+          end
+        end
+      end
+    end
   end
 
   test "stores a separate delegation transcript and does not append to the conversation" do
@@ -352,6 +410,10 @@ class DelegateTaskTest < ActiveSupport::TestCase
   end
 
   private
+
+  def queue_adapter_for_test
+    ActiveJob::QueueAdapters::TestAdapter.new
+  end
 
   def tool(chat = @chat)
     AI::Tools::DelegateTask.new(chat)

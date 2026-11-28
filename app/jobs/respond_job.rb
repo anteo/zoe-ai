@@ -21,12 +21,13 @@ class RespondJob < ChatTriggeredJob
   def run
     return if cancelled?
 
-    chat.agent_runs.where(respond_job_id: job_id).reconcile_interrupted!
+    chat.agent_runs.reconcile_interrupted!
     show_message_placeholder(chat) if executions == 1
     ensure_chat_model!(chat)
     ai_chat = AI::Agents::Zoe.find(chat.id)
     ai_chat.agent_run_trigger_message_id = trigger_message_id
     ai_chat.agent_run_job_owner = { respond_job_id: job_id, respond_job_execution_id: execution&.id }
+    add_active_agent_runs(ai_chat)
 
     catch(:cancelled_response) do
       ai_chat.before_tool_call do |call|
@@ -45,6 +46,24 @@ class RespondJob < ChatTriggeredJob
   end
 
   private
+
+  def add_active_agent_runs(ai_chat)
+    runs = chat.agent_runs.shown_in_chat.running
+    runs = runs.where(local_workspace: false) unless chat.user.admin?
+    active = runs.order(id: :desc).limit(10).map do |run|
+      {
+        conversation_id: run.agent_conversation_id, run_id: run.id, agent: run.agent_name,
+        task: run.task.truncate(300), status: run.workspace_status || run.status
+      }
+    end
+    return if active.empty?
+
+    ai_chat.with_runtime_instructions(<<~INSTRUCTIONS, append: true)
+      These specialist runs are active in this chat. Their results will be posted automatically.
+      Use agent_history for current status. Answer any new request in the meantime.
+      Active runs: #{active.to_json}
+    INSTRUCTIONS
+  end
 
   def ensure_chat_model!(chat)
     return if chat.model_id.present?

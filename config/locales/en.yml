@@ -81,6 +81,8 @@ en:
       preparing_result: Preparing the result
       queued: Queued
       running: Running
+    text_report_failed: "%{agent} could not complete the delegated task. %{error}"
+    text_report_ready: "%{agent} completed the delegated task. The result is in the agent dialog."
     text_wait_before_changing_chat: Wait for the agent to finish before changing this conversation.
   confirm_delete_agent: Delete this agent?
   confirm_delete_character: Delete this character?

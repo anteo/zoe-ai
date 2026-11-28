@@ -21,6 +21,33 @@ class AgentRun < ApplicationRecord
 
       run.finish!(error: "The response job stopped before the delegated task finished.")
     end
+
+    return unless AgentRunJob.queue_adapter.is_a?(ActiveJob::QueueAdapters::SolidQueueAdapter)
+
+    running.where.not(background_job_id: nil).find_each do |run|
+      run.with_lock do
+        next unless run.running?
+
+        job = SolidQueue::Job.find_by(active_job_id: run.background_job_id, finished_at: nil)
+        failure = SolidQueue::FailedExecution.find_by(job_id: job.id) if job
+        next if job && !failure
+
+        if run.workspace_run_id.present? && failure&.error&.fetch("exception_class", nil).in?(%w[
+          SolidQueue::Processes::ProcessPrunedError SolidQueue::Processes::ProcessMissingError
+        ])
+          run.enqueue_background!(project: nil)
+          next
+        end
+
+        run.finish!(error: "The background job stopped before the delegated task finished.")
+      end
+    end
+  end
+
+  def enqueue_background!(project:, wait: nil)
+    job = AgentRunJob.new(id, project:)
+    update!(background_job_id: job.job_id)
+    job.enqueue(wait:) || raise(ActiveJob::EnqueueError, "Could not enqueue the delegated task")
   end
 
   def append_event!(kind, message: nil, data: {})
@@ -66,6 +93,9 @@ class AgentRun < ApplicationRecord
         message: error || result,
         data: { status: final_status }
       )
+      if background_job_id.present? && !hidden_from_chat?
+        ReportAgentRunJob.perform_later(id) || raise(ActiveJob::EnqueueError, "Could not enqueue the delegated result")
+      end
       true
     end
     broadcast_progress if updated

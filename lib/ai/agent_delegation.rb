@@ -6,7 +6,7 @@ module AI
       @chat = chat
     end
 
-    def dispatch(task:, profile:, conversation: nil, project: nil)
+    def dispatch(task:, profile:, conversation: nil, project: nil, background: false)
       trigger_message_id = chat.agent_run_trigger_message_id || chat.latest_user_message_id
 
       conversation ||= ::AgentConversation.new(
@@ -14,19 +14,27 @@ module AI
         agent: profile, agent_name: profile.name,
         local_workspace: profile.workspace_backend.present? || profile.mcp_servers.workspace_runner.exists?
       )
-      run = create_run(conversation, task:, trigger_message_id:)
-      perform_run(run, profile, project:)
+      run = create_run(conversation, task:, trigger_message_id:, project:, background:)
+      if background
+        AgentRunProgress.broadcast(run)
+      else
+        perform_run(run, profile, project:)
+      end
       {
         conversation_id: conversation.id, run_id: run.id, agent: run.agent_name,
-        status: run.status, result: run.result, error: run.error
+        status: background ? "queued" : run.status, result: run.result, error: run.error
       }.compact
+    end
+
+    def advance(run, project:)
+      perform_run(run, run.agent, project:, wait: false)
     end
 
     private
 
     attr_reader :chat
 
-    def create_run(conversation, task:, trigger_message_id:)
+    def create_run(conversation, task:, trigger_message_id:, project:, background:)
       conversation.runs.reconcile_interrupted! if conversation.persisted?
       chat.with_lock do
         owner = chat.agent_run_job_owner || {}
@@ -45,20 +53,30 @@ module AI
             raise Error, "The agent is still handling a request in this conversation. Retry after it finishes."
           end
 
-          conversation.runs.create!(
+          run = conversation.runs.create!(
             chat:, agent: conversation.agent, agent_name: conversation.agent.name, task:,
             local_workspace: conversation.local_workspace?, trigger_message_id:,
-            **owner
+            **(background ? owner.except(:respond_job_execution_id) : owner)
           )
+          if background
+            run.events.create!(kind: "status", data: { status: "queued" })
+            run.enqueue_background!(project:)
+          end
+          run
         end
       end
     end
 
-    def perform_run(run, profile, project:)
-      run.append_event!("status", data: { status: "running" })
-      run.append_event!("user", message: run.task)
+    def perform_run(run, profile, project:, wait: true)
+      raise Error, "Delegation profile is unavailable." unless profile&.active?
+
+      unless run.events.exists?(kind: "user")
+        run.append_event!("status", data: { status: "running" })
+        run.append_event!("user", message: run.task)
+      end
       if run.local_workspace?
-        run.finish!(result: run_workspace_task(run, project:))
+        result = run_workspace_task(run, project:, wait:)
+        run.finish!(result:) if result
         return
       end
 
@@ -81,11 +99,15 @@ module AI
       run.finish!(error: "The delegated agent could not complete the task.")
     end
 
-    def run_workspace_task(run, project:)
-      tool = Tools::RunWorkspaceTask.new(chat, run, project:)
+    def run_workspace_task(run, project:, wait:)
+      tool = Tools::RunWorkspaceTask.new(chat, run, project:, wait:)
       details = { tool: tool.name, tool_call_id: "workspace-#{run.id}" }
-      run.append_event!("tool_call", message: tool.name, data: details)
+      unless run.events.exists?(kind: "tool_call", data: details)
+        run.append_event!("tool_call", message: tool.name, data: details)
+      end
       result = tool.call({})
+      return if %w[queued running].include?(result[:status])
+
       run.append_event!("tool_result", message: result.to_json, data: details.merge(success: result[:error].blank?))
       raise Error, result[:error] if result[:error].present?
 

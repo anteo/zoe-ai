@@ -26,7 +26,7 @@ module AI
           fail! "Agent conversation unavailable." unless conversation
           turns, cursor = page(conversation.runs, before_run_id)
           history = turns.reverse.map do |run|
-            run.slice(:id, :agent_name, :task, :result, :error, :status, :created_at)
+            run.slice(:id, :agent_name, :task, :result, :error, :status, :workspace_status, :created_at)
           end
           return JSON.generate(conversation_id: conversation.id, turns: history, next_before_run_id: cursor)
         end

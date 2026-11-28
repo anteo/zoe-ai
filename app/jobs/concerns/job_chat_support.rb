@@ -17,14 +17,14 @@ module JobChatSupport
     broadcast_message(message)
   end
 
-  def broadcast_message(message)
+  def broadcast_message(message, clear_placeholder: true)
     Turbo::StreamsChannel.broadcast_before_to(
       message.chat,
       target: "message-placeholder-slot-#{message.chat.id}",
       content: Chats::MessageComponent.new(message:, current_character: message.chat.character),
     )
 
-    remove_message_placeholder(message.chat)
+    remove_message_placeholder(message.chat) if clear_placeholder
   end
 
   def broadcast_tts_audio(chat, payload)

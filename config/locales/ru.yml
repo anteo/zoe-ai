@@ -81,6 +81,8 @@ ru:
       preparing_result: Подготовка результата
       queued: В очереди
       running: Выполняется
+    text_report_failed: "%{agent} не смог выполнить задачу. %{error}"
+    text_report_ready: "%{agent} завершил задачу. Результат доступен в диалоге агента."
     text_wait_before_changing_chat: Дождитесь завершения работы агента, прежде чем менять сообщения.
   confirm_delete_agent: Удалить этого агента?
   confirm_delete_character: Удалить этого персонажа?

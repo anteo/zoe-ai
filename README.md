@@ -135,6 +135,8 @@ Each specialist conversation has a permanent `conversation_id`. Every task in it
 
 Expand a run to see the full task and its tool calls. Short arguments appear beside each call. Expand a long command to see its script. Failed calls are highlighted, with the recorded error status available on hover. The typing indicator appears when you submit a message and gives way to the agent's progress during delegation. While an agent is running, Zoe asks you to wait before editing, resending, or deleting messages. After it finishes, those actions clear the affected cards from the chat and keep the runs in agent history.
 
+Delegated tasks run in the background. You can send another message while an agent works, and Zoe can see the active runs and look up their latest status. The worker checks the workspace runner periodically and posts the outcome in the originating chat. The runner's execution timeout is configured separately on the workstation.
+
 For example, after delegating a project listing, ask “Go back to the agent that listed my projects and ask it which names it saw.” Zoe can find that conversation using `agent_history` even in a later chat with the same user and characters, then pass its ID to `delegate_task`. Local workspace conversations also resume on the same workstation. Each run saved before the introduction of conversations starts its own conversation.
 
 The stored transcript can outgrow the model’s context. Server-side specialists replay up to 30 recent turns within the model budget, including tool calls and results when they fit. The local runner replays up to eight completed turns. Earlier tasks and answers remain available through the conversation history.

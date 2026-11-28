@@ -224,7 +224,9 @@ class Chat < ApplicationRecord
       message.error? || (message.role == "tool" && message.parent_tool_call&.tool_call_id.blank?)
     end
     system_messages, conversation_messages = messages.partition { |message| message.role.to_s == "system" }
-    system_messages + conversation_messages
+    tool_results, turns = conversation_messages.partition { |message| message.role == "tool" }
+    results_by_turn = tool_results.group_by { |message| message.parent_tool_call.message_id }
+    system_messages + turns.flat_map { |message| [ message, *results_by_turn[message.id] ] }
   end
 
   def token_usage_message

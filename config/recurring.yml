@@ -30,6 +30,10 @@ defaults: &defaults
     class: EnqueueDreamingSessionsJob
     schedule: at 2am every day
 
+  reconcile_agent_runs:
+    command: "AgentRun.reconcile_interrupted!"
+    schedule: every minute
+
 development:
   <<: *defaults
 

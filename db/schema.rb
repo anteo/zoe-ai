@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_28_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_28_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,12 +73,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_28_120001) do
     t.bigint "agent_conversation_id", null: false
     t.bigint "agent_id"
     t.string "agent_name", null: false
+    t.string "background_job_id"
     t.bigint "chat_id", null: false
     t.datetime "created_at", null: false
     t.text "error"
     t.datetime "finished_at"
     t.boolean "hidden_from_chat", default: false, null: false
     t.boolean "local_workspace", default: false, null: false
+    t.datetime "reported_at"
     t.bigint "respond_job_execution_id"
     t.string "respond_job_id"
     t.text "result"

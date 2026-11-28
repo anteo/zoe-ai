@@ -48,7 +48,8 @@ module Chats
     def phase(run)
       return run.status unless run.running?
 
-      case run.workspace_status
+      last_status = run.progress_events.reverse_each.find { |event| event.kind == "status" }&.data&.[]("status")
+      case run.workspace_status || last_status
       when "queued" then "queued"
       when "completed" then "preparing_result"
       else run.status

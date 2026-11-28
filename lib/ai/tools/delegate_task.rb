@@ -4,7 +4,8 @@ module AI
       description <<~TEXT.squish
         Choose an available specialist when the user's goal or the conversation context calls for
         its capabilities, even when the user does not mention an agent. Give it the context needed
-        for the task and answer with its findings. Provide the agent for a new conversation or
+        for the task. In live chats the task runs in the background and its result is delivered automatically.
+        Use agent_history to check an existing dialog's status or findings. Provide the agent for a new conversation or
         conversation_id to continue a related task. If a project is required and its name is unknown,
         omit it to discover available projects. Retry with the matching name or ask the user if ambiguous.
         If delegation fails, explain the returned error.
@@ -50,7 +51,9 @@ module AI
           return workspace_projects(profile)
         end
 
-        JSON.generate(AgentDelegation.new(chat).dispatch(task:, profile:, conversation:, project:))
+        background = chat.agent_run_job_owner.present?
+        result = JSON.generate(AgentDelegation.new(chat).dispatch(task:, profile:, conversation:, project:, background:))
+        background ? halt(result) : result
       end
 
       private
