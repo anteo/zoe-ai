@@ -3,8 +3,11 @@ module AI
     class DelegateTask < Tool
       description <<~TEXT.squish
         Choose an available specialist when the user's goal or the conversation context calls for
-        its capabilities, even when the user does not mention an agent. Give it the context needed
-        for the task. In live chats the task runs in the background and its result is delivered automatically.
+        its capabilities, even when the user does not mention an agent. State the goal at a high level,
+        include relevant context and the user's constraints, and describe what counts as done.
+        The agent chooses the commands and steps using the project instructions. Preserve exact commands the user supplied.
+        Ask for a verified final outcome for long-running actions. Zoe already runs the delegation in the background
+        and posts its result automatically while the chat remains available.
         Use agent_history to check an existing dialog's status or findings. Provide the agent for a new conversation or
         conversation_id to continue a related task. If a project is required and its name is unknown,
         omit it to discover available projects. Retry with the matching name or ask the user if ambiguous.
@@ -12,7 +15,7 @@ module AI
       TEXT
 
       params do
-        string :task, description: "The complete task and context for the agent", required: true
+        string :task, description: "The high-level goal, relevant context, user constraints, and expected outcome", required: true
         string :agent, description: "Agent key, id:NUMBER, or exact name from the available profiles. Required for a new conversation.", required: false
         integer :conversation_id, description: "Agent conversation ID for a follow-up. Omit when selecting an agent for a new conversation.", required: false
         string :project, description: "Workspace project name, if required by the selected agent. Existing workspace conversations can reuse their project.", required: false
