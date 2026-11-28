@@ -95,6 +95,9 @@ ru:
     formats:
       default: "%d %B %Y"
   development:
+    label_finish_agent: Завершить %{agent}
+    label_preview_controls: Симуляция
+    label_reset_preview: Сбросить предпросмотр
     label_ui_preview: Предпросмотр интерфейса
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_active: Активен

@@ -4,6 +4,18 @@
      data-controller="history-drawer" data-action="keydown@window->history-drawer#handleKeydown">
   <header class="relative z-10 flex items-center">
     <h1 class="grow font-semibold"><%= t("development.label_ui_preview") %></h1>
+    <details class="dropdown dropdown-end">
+      <summary class="btn btn-ghost btn-sm"><%= t("development.label_preview_controls") %></summary>
+      <ul class="menu dropdown-content rounded-box bg-base-100 shadow-sm w-max">
+        <% @runs.select(&:running?).each do |run| %>
+          <li id="preview-finish-<%= run.agent_conversation_id %>">
+            <%= button_to t("development.label_finish_agent", agent: run.agent_name),
+                          development_finish_agent_activity_run_path(run.agent_conversation_id) %>
+          </li>
+        <% end %>
+        <li><%= button_to t("development.label_reset_preview"), development_reset_agent_activity_path %></li>
+      </ul>
+    </details>
     <%= component :chats__history_drawer, show_trigger: false %>
     <%= render "shared/theme_toggle" %>
     <%= turbo_frame_tag :profile_menu do %>

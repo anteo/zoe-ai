@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     namespace :development do
       get "agent-activity", to: "agent_activity#show", as: :agent_activity
       get "agent-activity/dialogs/:id", to: "agent_activity#dialog", as: :agent_activity_dialog
+      get "agent-activity/runs/:id", to: "agent_activity#run", as: :agent_activity_run
+      post "agent-activity/runs/:id/finish", to: "agent_activity#finish", as: :finish_agent_activity_run
+      post "agent-activity/reset", to: "agent_activity#reset", as: :reset_agent_activity
     end
   end
 

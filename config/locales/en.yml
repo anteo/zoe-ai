@@ -95,6 +95,9 @@ en:
     formats:
       default: "%Y-%m-%d"
   development:
+    label_finish_agent: Finish %{agent}
+    label_preview_controls: Simulation
+    label_reset_preview: Reset preview
     label_ui_preview: Interface preview
   direct_speech: '%{character} said: "%{text}"'
   label_active: Active
