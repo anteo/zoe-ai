@@ -4,11 +4,12 @@ module Chats
 
     def self.frame_id(run_id) = "agent-run-frame-#{run_id}"
 
-    def initialize(chat:, run:, read_only: false, path_for_conversation: nil)
+    def initialize(chat:, run:, read_only: false, path_for_conversation: nil, frame_response: false)
       @chat = chat
       @run = run
       @read_only = read_only
       @path_for_conversation = path_for_conversation
+      @frame_response = frame_response
     end
 
     def live?
@@ -18,7 +19,7 @@ module Chats
     def frame_options
       {
         class: "block",
-        src: (helpers.agent_run_chat_path(@chat, run_id: run.id) if @chat.persisted?),
+        src: (helpers.agent_run_chat_path(@chat, run_id: run.id) if @chat.persisted? && !@frame_response),
         complete: true,
         refresh: "morph",
         data: { agent_run_frame: true, chat_order: timeline_order }

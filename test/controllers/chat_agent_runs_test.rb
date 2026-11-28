@@ -156,6 +156,7 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
+    assert_select "turbo-frame##{@frame_id}[src]", count: 0
     assert_select "turbo-frame##{@frame_id} ##{@run_id} .chat-footer [role=status]", text: "Завершено"
     assert_select "##{@run_id} li", count: 2 do |calls|
       assert_select calls.first, "[data-tool-error].text-error[title='Ошибка']", text: /read_file/

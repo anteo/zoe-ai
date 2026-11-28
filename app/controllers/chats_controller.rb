@@ -35,7 +35,7 @@ class ChatsController < ApplicationController
     if run.hidden_from_chat?
       render html: helpers.turbo_frame_tag(Chats::AgentRunComponent.frame_id(run.id)), layout: false
     else
-      render Chats::AgentRunComponent.new(chat: @history_chat, run:), layout: false
+      render Chats::AgentRunComponent.new(chat: @history_chat, run:, frame_response: true), layout: false
     end
   end
 
