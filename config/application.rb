@@ -55,6 +55,8 @@ module Ai
     config.active_job.queue_adapter = :solid_queue
 
     config.solid_queue.logger = ActiveSupport::Logger.new(STDOUT)
+    # Recurring schedules use the worker's local time zone.
+    config.solid_queue.time_zone = nil
     config.middleware.use Rack::Attack
 
     config.mission_control.jobs.http_basic_auth_enabled = false

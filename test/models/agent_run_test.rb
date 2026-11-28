@@ -5,7 +5,9 @@ class AgentRunTest < ActiveSupport::TestCase
 
   test "reconciles an interrupted attempt without expiring a claimed run or a new attempt" do
     chat = chats(:anton_with_zoe)
-    job = SolidQueue::Job.create!(active_job_id: SecureRandom.uuid, class_name: "RespondJob", queue_name: "default")
+    response = RespondJob.new(chat, chat.latest_user_message_id)
+    job = SolidQueue::Job.create!(active_job_id: response.job_id, class_name: response.class.name,
+                                  queue_name: response.queue_name, arguments: response.serialize)
     process = SolidQueue::Process.create!(
       name: "test-worker", kind: "Worker", pid: Process.pid, last_heartbeat_at: Time.current
     )

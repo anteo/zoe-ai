@@ -34,7 +34,7 @@ gem "omniauth-rails_csrf_protection"
 # Background jobs and operations
 gem "mission_control-jobs"
 gem "neighbor"
-gem "solid_queue"
+gem "solid_queue", "~> 1.7.2"
 gem "solid_cache"
 
 # AI and model tooling
