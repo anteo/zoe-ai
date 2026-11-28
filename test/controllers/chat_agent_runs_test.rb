@@ -131,6 +131,26 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "broadcasts the queued card when delegating a task in the background" do
+    profile = Agent.create!(name: "Project reviewer", instructions: "Review the requested project.")
+    delegation = nil
+    updates = capture_broadcasts(@chat.to_gid_param) do
+      I18n.with_locale(:en) do
+        delegation = AI::AgentDelegation.new(@chat).dispatch(task: "Review the deployment plan", profile:, background: true)
+      end
+    end
+
+    frame_id = Chats::AgentRunComponent.frame_id(delegation.fetch(:run_id))
+    update = updates.sole
+    assert_includes update, 'action="reload_agent_run"'
+    assert_includes update, "target=\"#{@active_runs_id}\""
+    assert_includes update, "<turbo-frame"
+    assert_includes update, "id=\"#{frame_id}\""
+    assert_includes update, "data-agent-run-active"
+    assert_includes update, "Review the deployment plan"
+    assert_includes update, "Queued"
+  end
+
   test "broadcasts a compact turn update and serves the completed public activity in the frame" do
     updates = capture_broadcasts(@chat.to_gid_param) do
       @run.append_event!("tool_call", data: { tool: "read_file", tool_call_id: "call-1", arguments: { path: "missing.md" } })

@@ -7,15 +7,21 @@ module AI
       }
     end
 
-    def self.broadcast(run)
+    def self.broadcast(run, include_card: false)
       url = Rails.application.routes.url_helpers.agent_run_chat_path(run.chat_id, run_id: run.id)
       options = stream_options(run, url:)
+      rendering = if include_card
+        card = Chats::AgentRunComponent.new(chat: run.chat, run:)
+        { html: ApplicationController.render(card, formats: [:html], layout: false) }
+      else
+        { render: false }
+      end
       Turbo::StreamsChannel.broadcast_action_to(
         run.chat,
         action: :reload_agent_run,
         target: options.fetch(:target),
         attributes: { data: options.fetch(:data) },
-        render: false,
+        **rendering,
       )
     rescue StandardError => error
       Rails.logger.warn("Failed to broadcast progress for agent run #{run.id}: #{error.class}")

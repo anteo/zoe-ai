@@ -12,6 +12,13 @@ Turbo.StreamActions.reload_agent_run = function () {
       if (frame.src) frame.reload()
       else frame.src = url
     } else {
+      const cardFrame = this.templateContent.firstElementChild
+      if (cardFrame) {
+        slot.append(cardFrame)
+        cardFrame.dispatchEvent(new CustomEvent("agent-run:inserted", { bubbles: true }))
+        continue
+      }
+
       const pendingFrame = document.createElement("turbo-frame")
       pendingFrame.id = frameId
       pendingFrame.className = "block"

@@ -16,7 +16,7 @@ module AI
       )
       run = create_run(conversation, task:, trigger_message_id:, project:, background:)
       if background
-        AgentRunProgress.broadcast(run)
+        AgentRunProgress.broadcast(run, include_card: true)
       else
         perform_run(run, profile, project:)
       end

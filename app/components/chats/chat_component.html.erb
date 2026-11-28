@@ -2,7 +2,7 @@
      id="<%= dom_id %>"
      data-controller="<%= [read_only? ? "history-chat" : "chat", "lightbox"].join(" ") %>"
      <% unless read_only? %>
-       data-action="scroll->chat#trackScroll:passive turbo:frame-render->chat#placeAgentRun"
+       data-action="scroll->chat#trackScroll:passive agent-run:inserted->chat#placeAgentRun turbo:frame-render->chat#placeAgentRun"
      <% end %>>
   <% if new? %>
     <% if pending_messages.empty? %>
