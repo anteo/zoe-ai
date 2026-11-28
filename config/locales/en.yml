@@ -95,6 +95,8 @@ en:
   date:
     formats:
       default: "%Y-%m-%d"
+  development:
+    label_ui_preview: Interface preview
   direct_speech: '%{character} said: "%{text}"'
   label_active: Active
   label_account_settings: Account settings

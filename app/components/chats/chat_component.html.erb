@@ -5,7 +5,9 @@
        data-active-agent-runs-target="messages"
        data-action="scroll->chat#trackScroll:passive scroll->active-agent-runs#queueUpdate:passive turbo:frame-render->chat#scrollAfterAgentRunsRender turbo:frame-render->active-agent-runs#queueUpdate"
      <% end %>>
-  <% if new? %>
+  <% if content? %>
+    <%= content %>
+  <% elsif new? %>
     <% if pending_messages.empty? %>
       <div id="<%= draft_empty_state_id %>" class="flex flex-col items-center justify-center h-full min-h-[300px]">
         <div class="animate-[float_6s_ease-in-out_infinite]">

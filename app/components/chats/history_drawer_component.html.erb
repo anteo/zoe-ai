@@ -6,16 +6,18 @@
          data-history-drawer-target="toggle"
          data-action="change->history-drawer#handleToggleChange">
 
-  <div class="drawer-content">
-    <button type="button"
-            class="btn btn-ghost btn-circle md:w-auto md:px-4"
-            title="<%= t(:label_chat_history) %>"
-            aria-label="<%= t(:label_chat_history) %>"
-            data-action="history-drawer#open">
-      <span class="icon-[lucide--history] w-4 h-4"></span>
-      <span class="hidden md:inline"><%= t(:label_chat_history) %></span>
-    </button>
-  </div>
+  <% if show_trigger %>
+    <div class="drawer-content">
+      <button type="button"
+              class="btn btn-ghost btn-circle md:w-auto md:px-4"
+              title="<%= t(:label_chat_history) %>"
+              aria-label="<%= t(:label_chat_history) %>"
+              data-action="history-drawer#open">
+        <span class="icon-[lucide--history] w-4 h-4"></span>
+        <span class="hidden md:inline"><%= t(:label_chat_history) %></span>
+      </button>
+    </div>
+  <% end %>
 
   <div class="drawer-side z-50">
     <label for="history-drawer-toggle"

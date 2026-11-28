@@ -18,6 +18,13 @@ Rails.application.routes.draw do
 
   root "chats#show"
 
+  if Rails.env.development?
+    namespace :development do
+      get "agent-activity", to: "agent_activity#show", as: :agent_activity
+      get "agent-activity/dialogs/:id", to: "agent_activity#dialog", as: :agent_activity_dialog
+    end
+  end
+
   resources :agents, only: [ :index, :new, :create, :edit, :update, :destroy ]
   resources :mcp_servers, only: [ :index, :new, :create, :edit, :update, :destroy ] do
     member do

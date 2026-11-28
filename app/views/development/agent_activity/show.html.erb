@@ -1,0 +1,36 @@
+<% content_for :title, t("development.label_ui_preview") %>
+
+<div class="app-shell app-shell-fixed relative grid min-h-0 grid-rows-[auto_1fr_auto] gap-4 bg-base-200"
+     data-controller="history-drawer active-agent-runs" data-action="keydown@window->history-drawer#handleKeydown">
+  <header class="relative z-10 flex items-center">
+    <h1 class="grow font-semibold"><%= t("development.label_ui_preview") %></h1>
+    <%= component :chats__history_drawer, show_trigger: false %>
+    <%= render "shared/theme_toggle" %>
+    <%= turbo_frame_tag :profile_menu do %>
+      <%= component :ui__profile_menu, current_user: %>
+    <% end %>
+  </header>
+
+  <% path_for_conversation = ->(run) { development_agent_activity_dialog_path(run.agent_conversation_id) } %>
+  <%= render Chats::ChatComponent.new(chat: @chat) do %>
+    <% @requests.zip(@runs).each do |message, run| %>
+      <div class="flow-root pb-6">
+        <%= component :chats__message, message:, current_character: %>
+        <%= render Chats::AgentRunsComponent.new(chat: @chat, trigger_message_id: message.id, runs: [ run ], path_for_conversation:) %>
+      </div>
+    <% end %>
+
+    <div class="flow-root min-h-full">
+      <% @followups.each do |message| %>
+        <%= component :chats__message, message:, current_character: %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="relative min-w-0">
+    <%= render "chats/active_agent_runs", chat: @chat %>
+    <div inert>
+      <%= component :chats__chat_input, current_character:, chat: @chat %>
+    </div>
+  </div>
+</div>

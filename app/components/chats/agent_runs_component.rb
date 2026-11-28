@@ -6,12 +6,13 @@ module Chats
       [ "agent-runs", chat_id, trigger_message_id ].compact.join("-")
     end
 
-    def initialize(chat:, trigger_message_id: nil, runs: [], read_only: false, fetch: false)
+    def initialize(chat:, trigger_message_id: nil, runs: [], read_only: false, fetch: false, path_for_conversation: nil)
       @chat = chat
       @trigger_message_id = trigger_message_id
       @runs = runs
       @read_only = read_only
       @fetch = fetch
+      @path_for_conversation = path_for_conversation
     end
 
     def render?
@@ -23,6 +24,8 @@ module Chats
     end
 
     def frame_options
+      return {} if @chat.new_record?
+
       url = helpers.agent_runs_chat_path(@chat, message_id: @trigger_message_id)
       {
         src: (url if @fetch),
@@ -42,7 +45,7 @@ module Chats
     def conversation_path(run)
       return if run.local_workspace? && !@chat.user.admin?
 
-      helpers.agent_conversation_chat_path(@chat, run.agent_conversation_id)
+      @path_for_conversation&.call(run) || helpers.agent_conversation_chat_path(@chat, run.agent_conversation_id)
     end
 
     def phase(run)

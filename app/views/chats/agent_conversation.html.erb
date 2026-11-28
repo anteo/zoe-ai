@@ -3,11 +3,11 @@
     <% unless turbo_frame_request? %>
       <header class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-lg font-bold wrap-anywhere"><%= @agent_conversation.agent_name %></h1>
-        <%= link_to t(:label_back), @history_chat.closed? ? root_path : chat_path(@history_chat),
+        <%= link_to t(:label_back), local_assigns.fetch(:back_path) { @history_chat.closed? ? root_path : chat_path(@history_chat) },
                     class: "btn btn-ghost btn-sm", data: { turbo_frame: "_top" } %>
       </header>
     <% end %>
 
-    <%= render "agent_conversation_runs", runs: @conversation_runs, sender: @history_chat.partner %>
+    <%= render "chats/agent_conversation_runs", runs: @conversation_runs, sender: @history_chat.partner %>
   </section>
 <% end %>

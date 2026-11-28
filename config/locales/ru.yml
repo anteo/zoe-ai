@@ -95,6 +95,8 @@ ru:
   date:
     formats:
       default: "%d %B %Y"
+  development:
+    label_ui_preview: Предпросмотр интерфейса
   direct_speech: "%{character} сказал(а): «%{text}»"
   label_active: Активен
   label_account_settings: Настройки аккаунта
