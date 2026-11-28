@@ -15,6 +15,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/.rake_tasks
 
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
