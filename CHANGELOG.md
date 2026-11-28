@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.8.0](https://github.com/anteo/zoe-ai/compare/v1.7.0...v1.8.0) (2026-11-28)
+
+### Features
+
+* **agents:** add Codex workspace delegation ([8e2b412](https://github.com/anteo/zoe-ai/commit/8e2b4129db5a2937cad5344357e2724f35761cc5))
+* **agents:** expose progress in agent history ([c18ff44](https://github.com/anteo/zoe-ai/commit/c18ff44d5d0c9608a1f5a7448d8c17d3e82fdc95))
+* **agents:** run delegated tasks in the background ([a6b03b1](https://github.com/anteo/zoe-ai/commit/a6b03b1190d9848c446441c78a7c75491439d993))
+* **chat:** place agent runs in the conversation timeline ([d00a2d7](https://github.com/anteo/zoe-ai/commit/d00a2d7578ee6fee41e02a3ebdb82b0b9498b5e4))
+* **chat:** show offscreen active agent runs ([85d28d2](https://github.com/anteo/zoe-ai/commit/85d28d26ec4763c86fe198fca5f0fa716c1657fc))
+* **dev:** add interface preview ([b339cc4](https://github.com/anteo/zoe-ai/commit/b339cc4c235fb7d339b87426a00ab9e84fed8255))
+* **dev:** simulate agent completion in the interface preview ([d13b9c7](https://github.com/anteo/zoe-ai/commit/d13b9c71e3fd29eb8cdd3a1063cb54c7e4214f17))
+
+### Bug Fixes
+
+* **agents:** delegate goals and report verified outcomes ([26e3976](https://github.com/anteo/zoe-ai/commit/26e39769633a5d945ab4097fb1ca69ee37cf3d53))
+* **chat:** keep agent cards visible after refresh ([a6a58fb](https://github.com/anteo/zoe-ai/commit/a6a58fbc4eb261fe2917c226d48287ba344c8382))
+* **chat:** preserve markdown when splitting replies ([c58b8f2](https://github.com/anteo/zoe-ai/commit/c58b8f2f8c054e9328834694e44c5745488f88f6))
+* **chat:** show agent cards immediately after delegation ([bbde3d3](https://github.com/anteo/zoe-ai/commit/bbde3d3e49cdf58537fd39785d567b3f10d83aae))
+* **chat:** show typing indicator for follow-up messages ([3377f66](https://github.com/anteo/zoe-ai/commit/3377f66394b3bc903cbd7bf8c1a9076de7d36456))
+
 ## [1.7.0](https://github.com/anteo/zoe-ai/compare/v1.6.0...v1.7.0) (2026-11-27)
 
 ### Features
