@@ -163,6 +163,10 @@ Ask Zoe to show recent commits from the original workstation repository for a pr
 
 The workstation stores its own detailed run history. Selected file excerpts are sent to the runner’s configured model provider. Zoe receives progress and the task result, which can include quoted text from files.
 
+### Delegate to Codex with ChatGPT
+
+The seeds also create a Codex agent with `{"workspace_backend": "codex"}` in its JSON configuration. Edit agent-specific settings in **Settings → Agents**. On the workstation, configure the runner's Codex home and sign in with ChatGPT, then enable the agent in Zoe. Zoe can ask the runner for the workspace project names when it needs to identify a project for a new task. Follow-up tasks reuse the project and Codex thread. Codex shares the runner's direct, read-only, and snapshot project settings. [Runner setup](https://github.com/anteo/zoe-workspace-runner#codex-with-chatgpt)
+
 ## Voice features
 
 Zoe supports both spoken replies and speech recognition in the main chat UI.

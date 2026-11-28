@@ -3,6 +3,7 @@ ru:
     attributes:
       agent:
         active: Активен
+        config_json: JSON-конфигурация
         description: Возможности
         instructions: Инструкции
         key: Ключ
@@ -38,6 +39,9 @@ ru:
           attributes:
             base:
               restrict_destroy: Встроенные агенты не могут быть удалены
+            config_json:
+              invalid_json: должен быть валидным JSON-объектом
+              unknown_workspace_backend: содержит неподдерживаемый бэкенд рабочего окружения
         mcp_server:
           attributes:
             config_json:

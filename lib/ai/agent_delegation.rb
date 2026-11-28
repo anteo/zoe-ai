@@ -6,15 +6,16 @@ module AI
       @chat = chat
     end
 
-    def dispatch(task:, profile:, conversation: nil)
+    def dispatch(task:, profile:, conversation: nil, project: nil)
       trigger_message_id = chat.agent_run_trigger_message_id || chat.latest_user_message_id
 
       conversation ||= ::AgentConversation.new(
         user: chat.user, character: chat.character, partner: chat.partner,
-        agent: profile, agent_name: profile.name, local_workspace: profile.mcp_servers.workspace_runner.exists?
+        agent: profile, agent_name: profile.name,
+        local_workspace: profile.workspace_backend.present? || profile.mcp_servers.workspace_runner.exists?
       )
       run = create_run(conversation, task:, trigger_message_id:)
-      perform_run(run, profile)
+      perform_run(run, profile, project:)
       {
         conversation_id: conversation.id, run_id: run.id, agent: run.agent_name,
         status: run.status, result: run.result, error: run.error
@@ -53,11 +54,11 @@ module AI
       end
     end
 
-    def perform_run(run, profile)
+    def perform_run(run, profile, project:)
       run.append_event!("status", data: { status: "running" })
       run.append_event!("user", message: run.task)
       if run.local_workspace?
-        run.finish!(result: run_workspace_task(run))
+        run.finish!(result: run_workspace_task(run, project:))
         return
       end
 
@@ -80,8 +81,8 @@ module AI
       run.finish!(error: "The delegated agent could not complete the task.")
     end
 
-    def run_workspace_task(run)
-      tool = Tools::RunWorkspaceTask.new(chat, run)
+    def run_workspace_task(run, project:)
+      tool = Tools::RunWorkspaceTask.new(chat, run, project:)
       details = { tool: tool.name, tool_call_id: "workspace-#{run.id}" }
       run.append_event!("tool_call", message: tool.name, data: details)
       result = tool.call({})

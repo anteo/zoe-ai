@@ -208,4 +208,12 @@ Agent.transaction do
       If a task requires local access and no local workspace tool is available, say the local workspace is disconnected.
     TEXT
   end
+
+  Agent.find_or_create_by!(key: "codex") do |agent|
+    agent.name = "Codex"
+    agent.description = "Uses Codex with a ChatGPT account to inspect and edit code, work with Git, and run tests on the workstation. Provide the exact workspace project name when starting a new conversation."
+    agent.config = { workspace_backend: "codex" }
+    agent.active = false
+    agent.mcp_servers = [workspace_runner]
+  end
 end

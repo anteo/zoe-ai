@@ -29,6 +29,15 @@
               required: false,
               input_html: { rows: 10 } %>
 
+  <%= f.input :config_json,
+              as: :text,
+              required: false,
+              input_html: {
+                rows: 6,
+                class: "font-mono text-xs",
+                data: { controller: "code-mirror", code_mirror_language_value: "json" }
+              } %>
+
   <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4">
     <legend class="fieldset-legend px-1"><%= Agent.human_attribute_name(:mcp_servers) %></legend>
 

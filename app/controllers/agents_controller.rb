@@ -55,6 +55,7 @@ class AgentsController < ApplicationController
 
   def agent_params
     allowed = [
+      :config_json,
       :instructions,
       :model_id,
       :name,

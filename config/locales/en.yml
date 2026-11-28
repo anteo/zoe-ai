@@ -3,6 +3,7 @@ en:
     attributes:
       agent:
         active: Active
+        config_json: JSON configuration
         description: Capabilities
         instructions: Instructions
         key: Key
@@ -38,6 +39,9 @@ en:
           attributes:
             base:
               restrict_destroy: Builtin agents cannot be deleted
+            config_json:
+              invalid_json: must be a valid JSON object
+              unknown_workspace_backend: specifies an unsupported workspace backend
         mcp_server:
           attributes:
             config_json:

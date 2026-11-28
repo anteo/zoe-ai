@@ -227,6 +227,41 @@ class DelegateTaskTest < ActiveSupport::TestCase
     assert client.stopped?
   end
 
+  test "discovers Codex projects and sends the selected backend and project to the runner" do
+    @chat.user.update!(admin: true)
+    @profile.update!(config: { workspace_backend: "codex" })
+    connect_workspace_runner
+    starts = []
+    client = stub_runner_client(
+      list_projects: StubTool.new(->(**) { { projects: %w[zoe-ai tools], truncated: false } }),
+      start_task: StubTool.new(lambda do |**arguments|
+        starts << arguments
+        runner_content("completed", [], result: "Project found")
+      end),
+      get_task: StubTool.new(->(**) { flunk "A completed task should not be polled" })
+    )
+
+    RubyLLM::MCP::Client.stub(:new, client) do
+      assert_no_difference -> { @chat.agent_runs.count } do
+        discovery = delegate(agent: @profile.name, task: "Find the project")
+        assert_equal %w[zoe-ai tools], discovery.fetch("projects")
+        assert discovery.fetch("needs_project")
+      end
+      reply = delegate(agent: @profile.name, task: "Inspect the project", project: "zoe-ai")
+      assert_equal "completed", reply.fetch("status")
+    end
+    assert_equal [{ backend: "codex", project: "zoe-ai" }], starts.map { |arguments| arguments.slice(:backend, :project) }
+  end
+
+  test "agent JSON settings allow backend-specific options and require an object" do
+    @profile.update!(config_json: '{"workspace_backend":"codex","options":{"example":true}}')
+    assert_equal "codex", @profile.reload.workspace_backend
+    assert_equal({ "example" => true }, @profile.config.fetch("options"))
+
+    assert_not @profile.update(config_json: '["codex"]')
+    assert @profile.errors.of_kind?(:config_json, :invalid_json)
+  end
+
   test "propagates a terminal runner failure without calling the model" do
     @chat.user.update!(admin: true)
     connect_workspace_runner
