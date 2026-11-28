@@ -6,8 +6,15 @@
                  class="group/run min-w-0"
                  data-action="turbo:before-morph-attribute->chat#preserveRunDetails">
           <% path = conversation_path(run) %>
-          <% latest_activity = phase(run) == "running" && helpers.agent_run_latest_activity(run) %>
-          <summary class="flex w-fit max-w-full cursor-pointer list-none flex-col items-start gap-1 py-1 text-sm [&::-webkit-details-marker]:hidden">
+          <% run_phase = phase(run) %>
+          <% latest_activity = run_phase == "running" && helpers.agent_run_latest_activity(run) %>
+          <summary class="flex w-fit max-w-full cursor-pointer list-none flex-col items-start gap-1 py-1 text-sm [&::-webkit-details-marker]:hidden"
+                   <% if live? && run.running? %>
+                     data-active-agent-runs-target="card"
+                     data-agent-run-name="<%= run.agent_name %>"
+                     data-agent-run-status="<%= t("agent_runs.status.#{run_phase}") %>"
+                     data-agent-run-task="<%= run.task.strip.lines.first.to_s.strip.truncate(160) %>"
+                   <% end %>>
             <span class="flex min-w-0 max-w-full items-center gap-2">
               <span class="icon-[lucide--workflow] size-4 shrink-0" aria-hidden="true"></span>
               <span class="min-w-0 font-medium wrap-anywhere"><%= run.agent_name %></span>
@@ -32,9 +39,9 @@
               <% end %>
               <% if latest_activity %>
                 <span class="group-open/run:hidden"><%= latest_activity %></span>
-                <span class="hidden group-open/run:inline"><%= t("agent_runs.status.#{phase(run)}") %></span>
+                <span class="hidden group-open/run:inline"><%= t("agent_runs.status.#{run_phase}") %></span>
               <% else %>
-                <%= t("agent_runs.status.#{phase(run)}") %>
+                <%= t("agent_runs.status.#{run_phase}") %>
               <% end %>
             </span>
           </summary>

@@ -14,18 +14,28 @@ export default class extends Controller {
 
   scrollToLastMessage(behavior = "instant") {
     const container = this.element
+    this.followingEnd = true
     container.scrollTo({
       top: container.scrollHeight - container.clientHeight,
       behavior
     })
   }
 
-  scrollAfterRender = () => {
+  trackScroll() {
+    const { scrollHeight, scrollTop, clientHeight } = this.element
+    this.followingEnd = scrollHeight - scrollTop - clientHeight <= 48
+  }
+
+  scrollAfterRender = (event) => {
+    if (event.detail?.action === "reload_agent_runs") return
+
     this.scrollToLastMessage("smooth")
   }
 
   scrollAfterAgentRunsRender(event) {
-    if (event.target.matches("turbo-frame[data-agent-runs-url]")) this.scrollAfterRender()
+    if (this.followingEnd && event.target.matches("turbo-frame[data-agent-runs-url]")) {
+      this.scrollToLastMessage("smooth")
+    }
   }
 
   preserveRunDetails(event) {

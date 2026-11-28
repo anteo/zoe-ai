@@ -1,5 +1,5 @@
 <div class="app-shell app-shell-fixed relative grid min-h-0 grid-rows-[auto_1fr_auto] gap-4 bg-base-200"
-     data-controller="history-drawer" data-action="keydown@window->history-drawer#handleKeydown"
+     data-controller="history-drawer active-agent-runs" data-action="keydown@window->history-drawer#handleKeydown"
      data-history-drawer-list-url-value="<%= history_list_chats_path(current_chat_id: chat&.id) %>">
   <header class="flex items-center relative z-10">
     <div class="flex-1 pl-2 shrink-0 min-w-fit">
@@ -43,7 +43,10 @@
 
   <%= component :chats__chat, chat: %>
 
-  <%= component :chats__chat_input, current_character:, chat: %>
+  <div class="relative min-w-0">
+    <%= render "chats/active_agent_runs", chat: chat if chat.persisted? %>
+    <%= component :chats__chat_input, current_character:, chat: %>
+  </div>
 
   <%= turbo_stream_from [current_user, current_character, current_partner, :pending_messages], class: "hidden" if chat.new_record? %>
   <%= turbo_stream_from chat, class: "hidden" if chat.persisted? %>
