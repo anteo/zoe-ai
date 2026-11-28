@@ -5,9 +5,8 @@ module ApplicationHelper
 
   def markdown(text, escape_html: false)
     return "" if text.blank?
-    renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html:, safe_links_only: escape_html, link_attributes: { target: "_blank", rel: "noopener" })
-    Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, tables: true, strikethrough: true, autolink: true, no_intra_emphasis: true)
-                       .render(text).html_safe
+
+    MarkdownRenderer.build(escape_html:).render(text).html_safe
   end
 
 

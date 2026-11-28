@@ -1,6 +1,7 @@
 module AI
   class SentenceSplitter
-    DEFAULT_MAX_MESSAGES = 3
+    PARAGRAPH_BREAK = /(\r?\n(?:[ \t]*\r?\n)+)/
+    HTML_TAG = /<!--|<\/?[a-z][a-z0-9:-]*(?=[[:space:]]|\/?>)/i
     LIST_MARKER_REGEXP = /^\s*(?:[-*+•]|(?:\d+[.)]))\s+/
     INLINE_LIST_ITEM_REGEXP = /\A[\p{Lu}А-ЯЁ][^.!?\n]{0,80}[.!?]\s+\S/
 
@@ -53,27 +54,47 @@ module AI
     end
 
     def segmenter(source_text)
-      PragmaticSegmenter::Segmenter.new(text: source_text, language: "ru_emoji")
+      PragmaticSegmenter::Segmenter.new(text: source_text, language: "ru_emoji", clean: false)
     end
 
     def chunks
-      units = semantic_units
-      return [] if units.empty?
+      source = text.to_s
+      return [] if source.blank?
+      # An HTML tag can span multiple paragraphs even when Markdown can render each fragment.
+      return [ Chunk.new(source) ] if max_messages <= 1 || source.match?(HTML_TAG)
 
-      balanced_units(units).map { Chunk.new(_1) }
+      breaks = split_points(source)
+      return [ Chunk.new(source) ] if breaks.empty?
+
+      split_at_safe_boundaries(source, breaks).map { Chunk.new(_1) }
     end
 
     private
 
-    def semantic_units
-      blocks = text.to_s.split(/\n{2,}/).map(&:strip).reject(&:blank?)
-      blocks.flat_map do |block|
-        if list_block?(block)
-          block
-        else
-          units = segmenter(block).segment.map(&:strip).reject(&:blank?)
-          units.presence || [ block ]
-        end
+    def split_points(source)
+      offset = 0
+      source.split(PARAGRAPH_BREAK).each_slice(2).flat_map do |block, separator|
+        points = list_block?(block) ? [] : sentence_breaks(block, offset)
+        offset += block.length
+        next points unless separator
+
+        separator_end = offset + separator.length
+        points << (offset...separator_end) unless block.blank? || separator_end == source.length
+        offset = separator_end
+        points
+      end
+    end
+
+    def sentence_breaks(block, offset)
+      position = 0
+      segmenter(block).segment.filter_map do |sentence|
+        start = /\G[[:space:]]*/.match(block, position).end(0)
+        # The segmenter can normalize text. Only use boundaries aligned with the original source.
+        return [] unless block[start, sentence.length] == sentence
+
+        gap = (offset + position)...(offset + start) if position.positive? && start > position
+        position = start + sentence.length
+        gap
       end
     end
 
@@ -88,16 +109,46 @@ module AI
       inline_items_count >= 3
     end
 
-    def balanced_units(units)
-      return units if units.size <= max_messages
+    def split_at_safe_boundaries(source, breaks)
+      renderer = MarkdownRenderer.build
+      offset = 0
+      rendered = renderer.render(source)
+      chunk_size = ((breaks.size + 1).fdiv(max_messages)).ceil
+      parts = []
 
-      chunk_size = (units.size.to_f / max_messages).ceil
-      units.each_slice(chunk_size).map { |slice| join_slice(slice) }
+      breaks.each_slice(chunk_size) do |group|
+        next if group.size < chunk_size
+
+        paragraph_break = group.reverse.find { |gap| PARAGRAPH_BREAK.match?(source[gap]) }
+        [ group.last, paragraph_break ].compact.uniq.each do |gap|
+          left = source[offset...gap.begin]
+          right = source[gap.end..]
+          next if left.blank? || right.blank?
+
+          right_html = renderer.render(right)
+          next unless same_markdown?(rendered, renderer.render(left), right_html, source[gap])
+
+          parts << left
+          offset = gap.end
+          rendered = right_html
+          break
+        end
+      end
+      parts << source[offset..]
     end
 
-    def join_slice(slice)
-      separator = slice.any? { |unit| unit.include?("\n") } ? "\n\n" : " "
-      slice.join(separator)
+    def same_markdown?(original, left_html, right_html, separator)
+      return false if left_html.blank? || right_html.blank?
+
+      # A bubble may add a block boundary or divide a paragraph, but must preserve its inline markup.
+      return true if original == left_html + right_html || original == "#{left_html}\n#{right_html}"
+      return false unless left_html.end_with?("</p>\n") && right_html.start_with?("<p>")
+
+      linebreak_count = separator.count("\n")
+      return false if linebreak_count > 1
+
+      joiner = linebreak_count == 1 ? "<br>\n" : separator
+      original == left_html.delete_suffix("</p>\n") + joiner + right_html.delete_prefix("<p>")
     end
   end
 end
