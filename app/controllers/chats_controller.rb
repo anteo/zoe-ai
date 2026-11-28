@@ -1,6 +1,6 @@
 class ChatsController < ApplicationController
   before_action :find_chat, only: [ :show ]
-  before_action :find_history_chat, only: [ :agent_conversation, :agent_runs, :history_detail, :destroy ]
+  before_action :find_history_chat, only: [ :agent_conversation, :agent_run, :history_detail, :destroy ]
   before_action :find_default_chat, only: [ :show ]
   before_action :build_default_chat, only: [ :new, :show ]
   before_action :load_history_chats, only: [ :history_list, :destroy ]
@@ -26,17 +26,17 @@ class ChatsController < ApplicationController
                              .order(:id).preload(:progress_events)
   end
 
-  def agent_runs
-    if params[:message_id].present?
-      trigger_message_id = Integer(params[:message_id], exception: false)
-      return head(:bad_request) unless trigger_message_id
-    end
-    runs = @history_chat.agent_runs.shown_in_chat.where(trigger_message_id:)
-    runs.reconcile_interrupted!
+  def agent_run
+    runs = @history_chat.agent_runs.where(id: params[:run_id])
+    runs.shown_in_chat.reconcile_interrupted!
+    run = runs.preload(:progress_events).first
+    return head(:not_found) unless run
 
-    render Chats::AgentRunsComponent.new(
-      chat: @history_chat, trigger_message_id:, runs: runs.order(:id).preload(:progress_events)
-    ), layout: false
+    if run.hidden_from_chat?
+      render html: helpers.turbo_frame_tag(Chats::AgentRunComponent.frame_id(run.id)), layout: false
+    else
+      render Chats::AgentRunComponent.new(chat: @history_chat, run:), layout: false
+    end
   end
 
   def destroy

@@ -71,7 +71,6 @@ en:
       tool_call: Calling a tool
       tool_call_named: "Calling %{tool}"
       tool_failed_named: "%{tool} failed"
-    label_active: Active tasks
     label_activity: Show agent activity
     label_arguments: Details
     label_calls: Agent tool calls

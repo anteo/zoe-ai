@@ -1,12 +1,15 @@
 module Chats
   class MessageComponent < ApplicationComponent
-    attr_reader :message, :current_character, :agent_runs
+    attr_reader :message, :current_character
 
-    def initialize(message:, current_character:, read_only: false, agent_runs: nil)
+    def initialize(message:, current_character:, read_only: false)
       @message = message
       @current_character = current_character
       @read_only = read_only
-      @agent_runs = agent_runs
+    end
+
+    def timeline_order
+      "#{message.created_at.utc.iso8601(6)}/0"
     end
 
     def sender

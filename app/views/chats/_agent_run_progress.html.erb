@@ -1,5 +1,6 @@
-<% if (calls = agent_run_tool_call_groups(run)).any? %>
-  <div class="<%= class_names("my-2 min-w-0 text-xs leading-5", local_assigns[:list_class]) %>">
+<% calls = local_assigns.fetch(:calls) { agent_run_tool_call_groups(run) } %>
+<% if calls.any? %>
+  <div class="<%= class_names("my-1 min-w-0 leading-5", local_assigns[:list_class]) %>">
     <ol aria-label="<%= t("agent_runs.label_calls") %>" role="list">
       <% calls.each do |group| %>
         <% event, result_event = group.first.values_at(:event, :result) %>

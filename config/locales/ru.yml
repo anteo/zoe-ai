@@ -71,7 +71,6 @@ ru:
       tool_call: Вызов инструмента
       tool_call_named: "Вызов %{tool}"
       tool_failed_named: "Ошибка инструмента %{tool}"
-    label_active: Активные задачи
     label_activity: Показать ход выполнения
     label_arguments: Подробности
     label_calls: Вызовы инструментов агента

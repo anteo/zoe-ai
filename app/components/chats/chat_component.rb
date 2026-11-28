@@ -1,17 +1,35 @@
 module Chats
   class ChatComponent < ApplicationComponent
-    attr_reader :chat, :dom_id
+    attr_reader :chat, :dom_id, :path_for_conversation
 
-    def initialize(chat:, read_only: false, dom_id: "chat-messages")
+    def self.active_runs_id(chat_id) = "active-agent-runs-#{chat_id}"
+    def self.placeholder_id(chat_id) = "message-placeholder-slot-#{chat_id}"
+
+    def initialize(chat:, read_only: false, dom_id: "chat-messages", messages: nil, agent_runs: nil, path_for_conversation: nil)
       @chat = chat
       @read_only = read_only
       @dom_id = dom_id
+      @messages = messages
+      @agent_runs = agent_runs
+      @path_for_conversation = path_for_conversation
     end
 
     def messages
-      @chat.messages_association.visible.order(:created_at).flat_map do |message|
+      records = @messages || chat.messages_association.visible.order(:created_at, :id)
+      records.flat_map do |message|
         self.class.display_messages(message)
       end
+    end
+
+    def timeline
+      entries = messages + agent_runs.reject(&:running?)
+      entries.sort_by.with_index do |entry, index|
+        entry.is_a?(AgentRun) ? [ entry.timeline_at, 1, entry.id ] : [ entry.created_at, 0, index ]
+      end
+    end
+
+    def active_runs
+      agent_runs.select(&:running?).sort_by { |run| [ run.created_at, run.id ] }
     end
 
     def pending_messages
@@ -22,24 +40,24 @@ module Chats
                     .flat_map { self.class.display_messages(it) }
     end
 
-    def agent_runs_by_message
-      @agent_runs_by_message ||= begin
+    def agent_runs
+      @agent_runs ||= begin
         chat.agent_runs.reconcile_interrupted!
-        chat.agent_runs.shown_in_chat.order(:id).preload(:progress_events).group_by(&:trigger_message_id)
+        chat.agent_runs.shown_in_chat.preload(:progress_events).to_a
       end
     end
 
     def new?
-      @chat.new_record?
+      chat.new_record? && @messages.nil?
     end
 
     def show_typing_indicator?
-      runs = agent_runs_by_message.values.flatten
-      return true if RespondJob.waiting_for_reply?(chat, delegated_job_ids: runs.map(&:respond_job_id))
+      return false if chat.new_record?
+      return true if RespondJob.waiting_for_reply?(chat, delegated_job_ids: agent_runs.map(&:respond_job_id))
       return false unless TypeSentenceJob.running_for?(chat)
 
       trigger_message_id = chat.latest_user_message_id
-      runs.none? { |run| run.running? && run.trigger_message_id == trigger_message_id }
+      agent_runs.none? { |run| run.running? && run.trigger_message_id == trigger_message_id }
     end
 
     def read_only?

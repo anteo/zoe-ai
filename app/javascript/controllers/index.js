@@ -6,7 +6,6 @@ import {application} from "./application"
 import HelloController from "./hello_controller"
 import ChatController from "./chat_controller"
 import ChatInputController from "./chat_input_controller"
-import ActiveAgentRunsController from "./active_agent_runs_controller"
 import MessageController from "./message_controller"
 import ThemeController from "./theme_controller"
 import ThemeSelectController from "./theme_select_controller"
@@ -36,7 +35,6 @@ import TranscriptionController from "./transcription_controller"
 application.register("hello", HelloController)
 application.register("chat", ChatController)
 application.register("chat-input", ChatInputController)
-application.register("active-agent-runs", ActiveAgentRunsController)
 application.register("message", MessageController)
 application.register("theme", ThemeController)
 application.register("theme-select", ThemeSelectController)

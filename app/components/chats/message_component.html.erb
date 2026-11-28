@@ -1,4 +1,5 @@
-<div id="message-<%= message.id || SecureRandom.uuid %>" class="group chat-message-enter" data-controller="message">
+<div id="message-<%= message.id || SecureRandom.uuid %>" class="group chat-message-enter" data-controller="message"
+     data-chat-order="<%= timeline_order %>">
   <div class="<%= bubble_class %>">
     <%= render "chats/message_component/header", component: self %>
 
@@ -15,10 +16,5 @@
 
   <% if message.attachments.attached? %>
     <%= render "chats/message_component/attachments", message:, bubble_class:, image_attachments:, file_attachments: %>
-  <% end %>
-
-  <% if message.is_a?(Message) && message.persisted? && message.user? %>
-    <% runs = agent_runs || [] %>
-    <%= render Chats::AgentRunsComponent.new(chat: message.chat, trigger_message_id: message.id, runs:, read_only: read_only?, fetch: agent_runs.nil? || runs.any?(&:running?)) %>
   <% end %>
 </div>

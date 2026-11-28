@@ -1,0 +1,50 @@
+<% card = capture do %>
+  <% path = conversation_path %>
+  <% run_phase = phase %>
+  <% latest_activity = helpers.agent_run_latest_activity(run) if run_phase == "running" %>
+  <% status_text = latest_activity || t("agent_runs.status.#{run_phase}") %>
+  <% status_icon = "loading loading-spinner loading-xs" if run.running? %>
+  <% calls = helpers.agent_run_tool_call_groups(run) %>
+  <div id="<%= card_id %>" class="group chat chat-start" data-chat-order="<%= timeline_order %>" <% if run.running? %>data-agent-run-active<% end %>>
+    <div class="chat-header px-4 flex items-center gap-1 mb-1">
+      <span><%= run.agent_name %></span>
+      <time class="text-xs opacity-50 ml-2" datetime="<%= run.timeline_at.iso8601 %>"><%= run.timeline_at.strftime("%H:%M") %></time>
+      <% if path %>
+        <span class="ml-1 flex items-center gap-0.5 transition-opacity pointer-fine:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
+          <%= link_to path, class: "btn btn-ghost btn-xs p-0.5 min-h-0 h-auto",
+                      title: t("agent_conversations.label_open"), aria: { label: t("agent_conversations.label_open"), controls: "agent-conversation-detail" },
+                      data: { action: "click->history-drawer#openAgentDetail", turbo_frame: "agent-conversation-detail", turbo_prefetch: false, agent_conversation_id: run.agent_conversation_id } do %>
+            <span class="icon-[lucide--message-square-text] w-3 h-3" aria-hidden="true"></span>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+
+    <div class="chat-bubble chat-bubble-agent prose prose-sm">
+      <%= markdown(run.task, escape_html: true) %>
+    </div>
+
+    <% if calls.any? %>
+      <details id="<%= card_id %>-progress" class="chat-footer group/run block min-w-0 max-w-full px-4"
+               data-action="turbo:before-morph-attribute->chat#preserveRunDetails">
+        <summary class="w-fit max-w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          <%= render Chats::ToolProgressComponent.new(chat: @chat, text: status_text, icon: status_icon, typography_class: nil) do %>
+            <span class="sr-only"><%= t("agent_runs.label_activity") %></span>
+            <span class="icon-[lucide--chevron-down] size-3 shrink-0 group-open/run:rotate-180" aria-hidden="true"></span>
+          <% end %>
+        </summary>
+        <%= render "chats/agent_run_progress", run:, calls:, id_prefix: card_id, show_arguments: path.present? %>
+      </details>
+    <% else %>
+      <div class="chat-footer min-w-0 max-w-full px-4">
+        <%= render Chats::ToolProgressComponent.new(chat: @chat, text: status_text, icon: status_icon, typography_class: nil) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if live? %>
+  <%= helpers.turbo_frame_tag(frame_id, **frame_options) { card } %>
+<% else %>
+  <%= card %>
+<% end %>

@@ -4,14 +4,25 @@ import "./controllers"
 import TC from "@rolemodel/turbo-confirm"
 import "./channels"
 
-Turbo.StreamActions.reload_agent_runs = function () {
-  for (const frame of this.targetElements) {
-    if (frame.src) frame.reload()
-    else frame.src = frame.dataset.agentRunsUrl
+Turbo.StreamActions.reload_agent_run = function () {
+  const { frameId, url, agentConversationId } = this.dataset
+  for (const slot of this.targetElements) {
+    const frame = document.getElementById(frameId)
+    if (frame) {
+      if (frame.src) frame.reload()
+      else frame.src = url
+    } else {
+      const pendingFrame = document.createElement("turbo-frame")
+      pendingFrame.id = frameId
+      pendingFrame.className = "block"
+      pendingFrame.dataset.agentRunFrame = "true"
+      pendingFrame.setAttribute("refresh", "morph")
+      pendingFrame.src = url
+      slot.append(pendingFrame)
+    }
   }
-  const conversationId = this.dataset.agentConversationId
   const dialog = document.querySelector('[data-agents="detail"] #agent-conversation-detail[src]')
-  if (conversationId && dialog?.dataset.agentConversationId === conversationId) {
+  if (agentConversationId && dialog?.dataset.agentConversationId === agentConversationId) {
     dialog.reload()
   }
 }

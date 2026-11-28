@@ -12,6 +12,10 @@ class AgentRun < ApplicationRecord
   enum :status, %w[running completed failed].index_by(&:itself), validate: true
   validate :matches_conversation, on: :create
 
+  def timeline_at
+    running? ? created_at : finished_at || created_at
+  end
+
   def self.reconcile_interrupted!
     running.where.not(respond_job_execution_id: nil).find_each do |run|
       owned = SolidQueue::ClaimedExecution.uncached do

@@ -203,6 +203,10 @@
     -webkit-box-decoration-break: clone;
 }
 
+.chat-bubble-agent {
+    background-color: color-mix(in oklab, var(--color-base-300), var(--color-secondary) 20%);
+}
+
 .chat-bubble-postponed {
     filter:
         drop-shadow(1px 0 0 var(--color-warning))

@@ -3,11 +3,9 @@ module Development
     before_action :build_preview
 
     def show
-      @requests = [
-        preview_message("user", "Запусти тесты Zoe AI и сообщи результат.", 0),
-        preview_message("user", "И посмотри, что изменилось в раннере.", 2)
-      ]
-      @followups = [
+      @messages = [
+        [ "user", "Запусти тесты Zoe AI и сообщи результат." ],
+        [ "user", "И посмотри, что изменилось в раннере." ],
         [ "assistant", "Обе задачи запущены. Я сообщу, когда будут результаты." ],
         [ "user", "Какой сейчас прогресс?" ],
         [ "assistant", "Codex выполняет `bin/rails test`. Workspace Assistant просматривает файлы раннера." ],
@@ -15,7 +13,7 @@ module Development
         [ "assistant", "Во время запроса прогресса отображается индикатор ответа. В `agent_history` теперь видны последние вызовы и их результаты." ],
         [ "user", "Где потом прочитать подробности?" ],
         [ "assistant", "В диалоге агента. Итог также появится в этой ленте." ]
-      ].map.with_index(3) { |(role, content), index| preview_message(role, content, index) }
+      ].map.with_index { |(role, content), index| preview_message(role, content, index) }
     end
 
     def dialog

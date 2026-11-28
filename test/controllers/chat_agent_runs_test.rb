@@ -12,7 +12,8 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     @message = @chat.messages.create!(role: "user", content: "Review the project")
     @run = @chat.agent_runs.create!(agent_conversation: @conversation, trigger_message: @message,
                                     agent_name: @conversation.agent_name, task: "Review the project")
-    @frame_id = "agent-runs-#{@chat.id}-#{@message.id}"
+    @frame_id = "agent-run-frame-#{@run.id}"
+    @active_runs_id = "active-agent-runs-#{@chat.id}"
     @run_id = "agent-run-#{@run.id}"
     sign_in users(:anton)
   end
@@ -27,7 +28,7 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     assert_select "turbo-stream[action='update'][target='message-placeholder-slot-#{@chat.id}'] .message-placeholder"
   end
 
-  test "shows latest delegated activity and tool arguments under the triggering message" do
+  test "shows latest delegated activity and tool arguments at the end of the live chat" do
     task = "Review the project.\n#{'Check each directory. ' * 20}Include the final summary."
     @run.update!(task:)
     @run.append_event!("status", data: { status: "running" })
@@ -46,15 +47,16 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#message-placeholder-slot-#{@chat.id} .message-placeholder", count: 0
-    assert_select "#message-#{@message.id} turbo-frame##{@frame_id} details##{@run_id} summary" do
-      assert_select "[role=status] > span", text: "Calling run_command"
+    assert_select "##{@active_runs_id} > turbo-frame##{@frame_id} ##{@run_id} > details.chat-footer summary" do
+      assert_select "[role=status]", text: "Calling run_command"
       assert_select "span", text: "Dialog ##{@conversation.id}", count: 0
     end
-    assert_select "details##{@run_id} > summary a.btn[href='#{agent_conversation_chat_path(@chat, @conversation)}'][data-turbo-frame='agent-conversation-detail']"
+    assert_select "turbo-frame##{@frame_id} .chat-header a.btn[href='#{agent_conversation_chat_path(@chat, @conversation)}'][data-turbo-frame='agent-conversation-detail']"
     assert_select ".drawer-end turbo-frame#agent-conversation-detail"
     assert_select ".drawer-content a[data-turbo-frame^='agent-conversation']", count: 0
-    assert_select "details##{@run_id} > div > p", text: /Include the final summary\./
-    assert_select "details##{@run_id} > div ol > li", count: 1 do
+    assert_select "##{@run_id} > .chat-bubble", text: /Include the final summary\./
+    assert_select "##{@run_id} > .chat-bubble [role=status]", count: 0
+    assert_select "##{@run_id} > details ol > li", count: 1 do
       assert_select "span", text: "run_command"
       assert_select "span[title='command = git status'] > span", text: "command ="
       assert_select "span[title='command = git status'] > code", text: "git status"
@@ -68,6 +70,31 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#agent-dialog-run-#{@run.id} ol > li code", text: "git status"
     assert_select "#agent-dialog-run-#{@run.id} .message-placeholder", count: 0
+  end
+
+  test "keeps active runs in launch order and places each finished card at its completion time" do
+    follow_up = @chat.messages.create!(role: "user", content: "One more task", created_at: @run.created_at + 1.second)
+    second_run = @chat.agent_runs.create!(agent_conversation: @conversation, trigger_message: follow_up,
+                                         agent_name: @conversation.agent_name, task: "Check another file",
+                                         created_at: @run.created_at + 2.seconds)
+    interim = @chat.messages.create!(role: "assistant", content: "I will send the report", created_at: @run.created_at + 3.seconds)
+
+    get chat_path(@chat)
+
+    assert_response :success
+    assert_select "##{@active_runs_id} > turbo-frame", count: 2 do |frames|
+      assert_equal [ @frame_id, "agent-run-frame-#{second_run.id}" ], frames.map { |frame| frame["id"] }
+    end
+
+    travel_to(@run.created_at + 4.seconds, with_usec: true) { second_run.finish!(result: "Second done") }
+    report = @chat.messages.create!(role: "assistant", content: "The second task is done", created_at: @run.created_at + 5.seconds)
+    travel_to(@run.created_at + 6.seconds, with_usec: true) { @run.finish!(result: "First done") }
+
+    get chat_path(@chat)
+
+    assert_response :success
+    assert_select "##{@active_runs_id} > turbo-frame", count: 0
+    assert_select "#message-#{interim.id} + #agent-run-frame-#{second_run.id} + #message-#{report.id} + ##{@frame_id}"
   end
 
   test "puts multiline tool arguments in a closed disclosure" do
@@ -116,20 +143,21 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
 
     assert_equal 5, updates.size
     updates.each do |update|
-      assert_includes update, 'action="reload_agent_runs"'
-      assert_includes update, "target=\"#{@frame_id}\""
+      assert_includes update, 'action="reload_agent_run"'
+      assert_includes update, "target=\"#{@active_runs_id}\""
+      assert_includes update, "data-frame-id=\"#{@frame_id}\""
       assert_includes update, "data-agent-conversation-id=\"#{@conversation.id}\""
       assert_operator update.bytesize, :<, 500
     end
 
     I18n.with_locale(:ru) do
-      get agent_runs_chat_path(@chat, message_id: @message.id),
+      get agent_run_chat_path(@chat, run_id: @run.id),
         headers: { "Turbo-Frame" => @frame_id, "Accept-Language" => "ru" }
     end
 
     assert_response :success
-    assert_select "turbo-frame##{@frame_id} details##{@run_id} summary [role=status]", text: "Завершено"
-    assert_select "details##{@run_id} li", count: 2 do |calls|
+    assert_select "turbo-frame##{@frame_id} ##{@run_id} .chat-footer [role=status]", text: "Завершено"
+    assert_select "##{@run_id} li", count: 2 do |calls|
       assert_select calls.first, "[data-tool-error].text-error[title='Ошибка']", text: /read_file/
       assert_select calls.last, "[data-tool-error]", count: 0
     end
@@ -143,7 +171,7 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     sign_out users(:anton)
     sign_in other_user
 
-    get agent_runs_chat_path(@chat, message_id: @message.id)
+    get agent_run_chat_path(@chat, run_id: @run.id)
 
     assert_response :not_found
   end
@@ -176,15 +204,15 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
       headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
     assert_response :success
-    assert_select "details##{@run_id}", count: 0
+    assert_select "##{@run_id}", count: 0
     assert_not Message.exists?(later.id)
     assert @run.reload.hidden_from_chat?
     assert later_run.reload.hidden_from_chat?
     assert_equal @message.id, @run.trigger_message_id
 
-    get agent_runs_chat_path(@chat, message_id: @message.id), headers: { "Turbo-Frame" => @frame_id }
+    get agent_run_chat_path(@chat, run_id: @run.id), headers: { "Turbo-Frame" => @frame_id }
     assert_response :success
-    assert_select "details##{@run_id}", count: 0
+    assert_select "##{@run_id}", count: 0
 
     get agent_conversation_chat_path(@chat, @conversation)
     assert_response :success
@@ -201,7 +229,7 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     assert_not Message.exists?(@message.id)
     assert_nil @run.reload.trigger_message_id
     assert @run.hidden_from_chat?
-    assert_select "details##{@run_id}", count: 0
+    assert_select "##{@run_id}", count: 0
   end
 
   test "opens the same dialog across chats for the current identity and renders public turns" do
@@ -259,6 +287,6 @@ class ChatAgentRunsTest < ActionDispatch::IntegrationTest
     get chat_path(@chat)
 
     assert_response :success
-    assert_select "details##{@run_id} a[href='#{agent_conversation_chat_path(@chat, @conversation)}']", count: 0
+    assert_select "turbo-frame##{@frame_id} a[href='#{agent_conversation_chat_path(@chat, @conversation)}']", count: 0
   end
 end

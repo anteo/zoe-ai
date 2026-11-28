@@ -1,8 +1,9 @@
-<div class="mt-1 px-3 chat-message-enter">
-  <div class="flex items-center gap-1.5 text-xs text-gray-500">
+<span class="mt-1 block chat-message-enter">
+  <span class="relative flex items-center gap-1.5 text-gray-500 <%= typography_class %>">
     <% if icon.present? %>
-      <span class="<%= icon %>"></span>
+      <span class="<%= icon %> absolute end-full me-1" aria-hidden="true"></span>
     <% end %>
-    <span><%= text %></span>
-  </div>
-</div>
+    <span class="min-w-0 wrap-anywhere" role="status"><%= text %></span>
+    <%= content %>
+  </span>
+</span>

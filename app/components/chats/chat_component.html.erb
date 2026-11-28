@@ -2,12 +2,9 @@
      id="<%= dom_id %>"
      data-controller="<%= [read_only? ? "history-chat" : "chat", "lightbox"].join(" ") %>"
      <% unless read_only? %>
-       data-active-agent-runs-target="messages"
-       data-action="scroll->chat#trackScroll:passive scroll->active-agent-runs#queueUpdate:passive turbo:frame-render->chat#scrollAfterAgentRunsRender turbo:frame-render->active-agent-runs#queueUpdate"
+       data-action="scroll->chat#trackScroll:passive turbo:frame-render->chat#placeAgentRun"
      <% end %>>
-  <% if content? %>
-    <%= content %>
-  <% elsif new? %>
+  <% if new? %>
     <% if pending_messages.empty? %>
       <div id="<%= draft_empty_state_id %>" class="flex flex-col items-center justify-center h-full min-h-[300px]">
         <div class="animate-[float_6s_ease-in-out_infinite]">
@@ -25,19 +22,30 @@
       <% end %>
     </div>
   <% else %>
-    <% messages.each do |message| %>
-      <%= helpers.component :chats__message, message:, current_character:, read_only: read_only?, agent_runs: agent_runs_by_message.fetch(message.id, []) %>
-    <% end %>
-
-    <%= render Chats::AgentRunsComponent.new(chat:, runs: agent_runs_by_message.fetch(nil, []), read_only: read_only?) %>
-
-    <% unless read_only? %>
-      <div id="message-placeholder-slot-<%= chat.id %>">
-        <% if show_typing_indicator? %>
-          <%= helpers.component :chats__message_placeholder, chat:, current_character: %>
+    <div data-chat-target="timeline">
+      <% timeline.each do |entry| %>
+        <% if entry.is_a?(AgentRun) %>
+          <%= render Chats::AgentRunComponent.new(chat:, run: entry, read_only: read_only?, path_for_conversation:) %>
+        <% else %>
+          <%= helpers.component :chats__message, message: entry, current_character:, read_only: read_only? %>
         <% end %>
-      </div>
-      <div id="tool-progress-slot-<%= chat.id %>"></div>
-    <% end %>
+      <% end %>
+
+      <% unless read_only? %>
+        <div id="<%= self.class.placeholder_id(chat.id) %>" data-chat-target="placeholder">
+          <% if show_typing_indicator? %>
+            <%= helpers.component :chats__message_placeholder, chat:, current_character: %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <% unless read_only? %><div id="tool-progress-slot-<%= chat.id %>"></div><% end %>
+
+    <div <% unless read_only? %>id="<%= self.class.active_runs_id(chat.id) %>" data-chat-target="activeRuns"<% end %>>
+      <% active_runs.each do |run| %>
+        <%= render Chats::AgentRunComponent.new(chat:, run:, read_only: read_only?, path_for_conversation:) %>
+      <% end %>
+    </div>
   <% end %>
 </div>

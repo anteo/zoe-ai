@@ -53,7 +53,7 @@ Rails.application.routes.draw do
 
     member do
       get "agent_conversations/:conversation_id", action: :agent_conversation, as: :agent_conversation
-      get :agent_runs
+      get "agent_runs/:run_id", action: :agent_run, as: :agent_run
       get :history_detail
     end
   end

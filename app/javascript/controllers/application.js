@@ -12,7 +12,9 @@ addEventListener("turbo:before-stream-render", (event) => {
 
   event.detail.render = function (streamElement) {
     originalRender(streamElement)
-    document.dispatchEvent(new CustomEvent("turbo:after-stream-render", { detail: { action: streamElement.action } }))
+    document.dispatchEvent(new CustomEvent("turbo:after-stream-render", {
+      detail: { action: streamElement.action, target: streamElement.target }
+    }))
   }
 })
 
