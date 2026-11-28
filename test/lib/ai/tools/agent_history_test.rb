@@ -32,6 +32,39 @@ class AgentHistoryTest < ActiveSupport::TestCase
     assert @tool.call(conversation_id: hidden.id).key?(:error)
   end
 
+  test "reports active calls and matches recent results to older calls" do
+    conversation = dialog(@chat)
+    run = @chat.agent_runs.create!(agent_conversation: conversation, agent: @agent, agent_name: @agent.name,
+                                  task: "Run checks", status: "running", workspace_status: "running")
+    run.events.create!(kind: "tool_call", data: { tool: "run_workspace_task", tool_call_id: "workspace-#{run.id}" })
+    run.events.create!(kind: "tool_call", data: { source: "workspace", tool: "run_command", tool_call_id: "build",
+                                                  arguments: { command: "make build" } })
+    run.events.create!(kind: "tool_call", data: { source: "workspace", tool: "run_command", tool_call_id: "check",
+                                                  arguments: { command: "make check", input: "private input" } })
+    AI::Tools::AgentHistory::EVENT_LIMIT.times do
+      run.events.create!(kind: "status", data: { status: "running" })
+    end
+    run.events.create!(kind: "tool_result", message: "private output",
+                       data: { source: "workspace", tool: "run_command", tool_call_id: "check", success: false, exit_status: 2 })
+    run.events.create!(kind: "assistant", message: "internal transcript")
+
+    turn = lookup(conversation_id: conversation.id).fetch("turns").sole
+    assert_equal [ "build" ], turn.fetch("active_calls").pluck("tool_call_id")
+    assert_equal "make build", turn.fetch("active_calls").sole.dig("arguments", "command")
+    events = turn.fetch("recent_events")
+    assert_equal AI::Tools::AgentHistory::EVENT_LIMIT, events.size
+    result = events.last
+    assert_equal "tool_result", result.fetch("kind")
+    assert_equal false, result.fetch("success")
+    assert_equal 2, result.fetch("exit_status")
+    assert_equal({ "command" => "make check" }, result.fetch("arguments"))
+    assert_not_includes turn.to_json, "private output"
+    assert_not_includes turn.to_json, "internal transcript"
+
+    run.update!(status: "failed", error: "Interrupted")
+    assert_empty lookup(conversation_id: conversation.id).fetch("turns").sole.fetch("active_calls")
+  end
+
   test "older pages of turns use an exclusive cursor" do
     conversation = dialog(@chat)
     first = add_run(@chat, conversation, "First")
